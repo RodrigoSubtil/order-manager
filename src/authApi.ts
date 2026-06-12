@@ -12,7 +12,33 @@ type LoginAppUserResponse = {
   user_bakery_name: string | null;
 };
 
-export async function getCurrentAppUser() {
+const sessionKey = 'encomendas-venus-user';
+
+function saveCurrentAppUser(user: LoggedUser) {
+  localStorage.setItem(sessionKey, JSON.stringify(user));
+}
+
+export async function getCurrentAppUser(): Promise<LoggedUser | null> {
+  const savedUser = localStorage.getItem(sessionKey);
+
+  if (!savedUser) {
+    return null;
+  }
+
+  try {
+    const parsedUser = JSON.parse(savedUser) as Partial<LoggedUser>;
+
+    if (parsedUser.id && parsedUser.username) {
+      return {
+        id: parsedUser.id,
+        username: parsedUser.username,
+        bakeryName: parsedUser.bakeryName ?? null,
+      };
+    }
+  } catch {
+    localStorage.removeItem(sessionKey);
+  }
+
   return null;
 }
 
@@ -40,13 +66,17 @@ export async function loginAppUser(username: string, password: string): Promise<
     throw new Error('Utilizador ou palavra-passe incorretos.');
   }
 
-  return {
+  const loggedUser = {
     id: user.user_id,
     username: user.user_username,
     bakeryName: user.user_bakery_name,
   };
+
+  saveCurrentAppUser(loggedUser);
+
+  return loggedUser;
 }
 
 export async function logoutAppUser() {
-  return;
+  localStorage.removeItem(sessionKey);
 }
