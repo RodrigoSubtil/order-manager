@@ -814,6 +814,7 @@ export default function App() {
           <div className="toolbar toolbar-layout">
             <div className="toolbar-top-row">
               <input
+                className="toolbar-date-input"
                 aria-label="Filtrar por data"
                 type="date"
                 value={dateFilter}
@@ -1006,6 +1007,7 @@ export default function App() {
                   <label>
                     Data de entrega
                     <input
+                      className="modal-date-input"
                       required
                       type="date"
                       value={form.deliveryDate}
@@ -1016,6 +1018,7 @@ export default function App() {
                   <label>
                     Hora
                     <input
+                      className="modal-time-input"
                       type="time"
                       value={form.deliveryTime}
                       onChange={(event) => updateField('deliveryTime', event.target.value)}

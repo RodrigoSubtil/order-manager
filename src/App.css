@@ -58,6 +58,23 @@ select {
   padding: 0 12px;
 }
 
+input[type="date"],
+input[type="time"] {
+  min-width: 0;
+  max-width: 100%;
+}
+
+input[type="date"]::-webkit-date-and-time-value,
+input[type="time"]::-webkit-date-and-time-value {
+  min-width: 0;
+  text-align: left;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  margin-left: auto;
+}
+
 textarea {
   min-height: 96px;
   padding: 12px;
@@ -1180,6 +1197,33 @@ button:disabled {
     border-radius: 10px;
   }
 
+  .toolbar-date-input {
+    padding-right: 10px;
+    padding-left: 28px;
+    text-align: center;
+  }
+
+  .toolbar-top-row select,
+  .toolbar-top-row button {
+    text-align: center;
+    text-align-last: center;
+  }
+
+  .toolbar-date-input::-webkit-date-and-time-value {
+    text-align: center;
+  }
+
+  .modal-date-input,
+  .modal-time-input {
+    padding-right: 10px;
+    text-align: left;
+  }
+
+  .modal-date-input::-webkit-date-and-time-value,
+  .modal-time-input::-webkit-date-and-time-value {
+    text-align: left;
+  }
+
   .toolbar-action-button {
     width: 100%;
     border-radius: 10px;
@@ -1362,7 +1406,7 @@ button:disabled {
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: 400px) {
   .toolbar-top-row {
     grid-template-columns: 1fr;
   }
