@@ -13,6 +13,13 @@ type OrderResponsibleRow = {
   name: string;
 };
 
+type ListOrderResponsibleRow = {
+  id?: string;
+  name?: string;
+  responsible_id?: string;
+  responsible_name?: string;
+};
+
 type OrderProductRow = {
   id: string;
   category: string;
@@ -152,33 +159,28 @@ export async function fetchOrders(appUserId: string) {
 export async function fetchOrderResponsibles(appUserId: string): Promise<OrderResponsible[]> {
   assertSupabaseConfigured();
 
-  const baseSelect = 'id, name';
+  const { data, error } = await supabase.rpc('list_order_responsibles', {
+    p_app_user_id: appUserId,
+  });
 
-  const { data, error } = await supabase
-    .from('order_responsibles')
-    .select(baseSelect)
-    .eq('app_user_id', appUserId)
-    .eq('is_active', true)
-    .order('position', { ascending: true })
-    .order('name', { ascending: true });
-
-  if (error) {
-    throw error;
-  }
-
-  if (data?.length) {
-    return data as OrderResponsible[];
+  if (!error) {
+    return ((data ?? []) as ListOrderResponsibleRow[])
+      .map((responsible) => ({
+        id: responsible.id ?? responsible.responsible_id ?? '',
+        name: responsible.name ?? responsible.responsible_name ?? '',
+      }))
+      .filter((responsible) => responsible.id && responsible.name);
   }
 
   const { data: fallbackData, error: fallbackError } = await supabase
     .from('order_responsibles')
-    .select(baseSelect)
+    .select('id, name')
     .eq('is_active', true)
     .order('position', { ascending: true })
     .order('name', { ascending: true });
 
   if (fallbackError) {
-    throw fallbackError;
+    throw new Error(error.message || fallbackError.message);
   }
 
   const uniqueResponsibles = new Map<string, OrderResponsible>();
