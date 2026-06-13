@@ -787,8 +787,10 @@ export default function App() {
               type="button"
               disabled={stats.previous === 0}
               onClick={openDeletePreviousModal}
+              aria-label="Excluir encomendas anteriores"
+              title="Excluir encomendas anteriores"
             >
-              Excluir anteriores
+              Limpar
             </button>
           </article>
 

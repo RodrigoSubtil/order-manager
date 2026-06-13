@@ -12,6 +12,12 @@
   --danger: #8b3f32;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* =========================
    BASE
 ========================= */
@@ -343,23 +349,35 @@ button:disabled {
 
 .previous-card {
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
+  align-items: start;
+}
+
+.previous-card > div {
+  display: grid;
+  gap: 10px;
 }
 
 .previous-card .previous-clean-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: auto;
+  height: 34px;
   min-height: 34px;
   padding: 0 10px;
-  color: var(--muted);
-  background: transparent;
-  border-color: var(--line);
-  font-size: 0.8rem;
+  color: #9f5a50;
+  background: #fff8f6;
+  border-color: rgba(139, 63, 50, 0.16);
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
   white-space: nowrap;
+  align-self: start;
 }
 
 .previous-card .previous-clean-button:hover:not(:disabled) {
   color: var(--danger);
-  background: var(--soft-white);
+  background: #fff1ee;
   border-color: rgba(139, 63, 50, 0.28);
 }
 
@@ -409,7 +427,12 @@ button:disabled {
 .toolbar-top-row select,
 .toolbar-top-row button {
   width: 100%;
+  min-width: 0;
   height: 46px;
+}
+
+.toolbar-top-row > * {
+  min-width: 0;
 }
 
 .search-input-full {
@@ -793,13 +816,15 @@ button:disabled {
   gap: 18px;
   min-height: 0;
   padding: 18px;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .field-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+  min-width: 0;
 }
 
 .single-last label:last-child {
@@ -945,6 +970,7 @@ button:disabled {
 .product-form-card {
   display: grid;
   gap: 14px;
+  min-width: 0;
   padding: 14px;
   background: var(--soft-white);
   border: 1px solid var(--line);
@@ -968,6 +994,7 @@ button:disabled {
   grid-template-columns: minmax(150px, 0.5fr) minmax(260px, 1.15fr) minmax(150px, 0.6fr);
   gap: 12px;
   align-items: start;
+  min-width: 0;
 }
 
 .product-name-field {
@@ -989,6 +1016,7 @@ button:disabled {
   display: grid;
   grid-template-columns: minmax(90px, 0.8fr) minmax(110px, 1fr);
   gap: 8px;
+  min-width: 0;
 }
 
 /* =========================
@@ -1031,6 +1059,17 @@ button:disabled {
 
   .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .previous-card {
+    align-items: center;
+  }
+
+  .previous-card .previous-clean-button {
+    width: auto;
+    height: 34px;
+    min-height: 34px;
+    align-self: start;
   }
 
   .toolbar-top-row {
@@ -1115,14 +1154,17 @@ button:disabled {
   }
 
   .previous-card {
-    align-items: stretch;
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .previous-card .previous-clean-button {
-    min-height: 30px;
+    width: auto;
+    height: 32px;
+    min-height: 32px;
     padding: 0 8px;
-    font-size: 0.68rem;
-    white-space: normal;
+    font-size: 0.7rem;
+    align-self: start;
   }
 
   .toolbar-top-row {
@@ -1222,6 +1264,7 @@ button:disabled {
     width: 100%;
     max-height: calc(100dvh - 16px);
     border-radius: 12px 12px 8px 8px;
+    overflow-x: hidden;
   }
 
   .modal-card form {
@@ -1242,6 +1285,20 @@ button:disabled {
   .modal-body {
     gap: 14px;
     padding-bottom: 94px;
+    overflow-x: hidden;
+  }
+
+  .modal-body label,
+  .modal-body input,
+  .modal-body select,
+  .modal-body textarea,
+  .field-grid,
+  .product-editor,
+  .product-form-card,
+  .product-form-grid,
+  .quantity-field-grid {
+    max-width: 100%;
+    min-width: 0;
   }
 
   .field-grid,
@@ -1301,6 +1358,12 @@ button:disabled {
   }
 
   .print-radio-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 390px) {
+  .toolbar-top-row {
     grid-template-columns: 1fr;
   }
 }
