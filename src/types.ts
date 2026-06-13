@@ -13,6 +13,12 @@ export type OrderResponsible = {
   name: string;
 };
 
+export type CatalogProduct = {
+  id: string;
+  category: Category;
+  name: string;
+};
+
 export type Order = {
   id: string;
   clientName: string;

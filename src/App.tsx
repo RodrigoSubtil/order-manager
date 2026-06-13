@@ -3,6 +3,7 @@ import {
   createOrder,
   deleteOrderById,
   deleteOrdersByDateRange,
+  fetchCatalogProducts,
   fetchOrderResponsibles,
   fetchOrders,
   updateOrder,
@@ -10,6 +11,7 @@ import {
 import { getCurrentAppUser, loginAppUser, logoutAppUser, type LoggedUser } from './authApi';
 import {
   categories,
+  type CatalogProduct,
   type Category,
   type Order,
   type OrderForm,
@@ -17,6 +19,9 @@ import {
   type ProductLine,
 } from './types';
 import './App.css';
+
+type PrintMode = 'orders' | 'summary';
+type PrintRangeMode = 'day' | 'period';
 
 function createId() {
   return crypto.randomUUID();
@@ -82,6 +87,30 @@ function resizeTextArea(textarea: HTMLTextAreaElement) {
   textarea.style.height = `${textarea.scrollHeight}px`;
 }
 
+function parseQuantity(quantity: string) {
+  const cleanQuantity = quantity.trim();
+  const match = cleanQuantity.match(/^([\d.,]+)/);
+
+  if (!match) {
+    return {
+      amount: cleanQuantity ? 1 : 0,
+      unit: cleanQuantity || 'unidade',
+    };
+  }
+
+  const amount = Number(match[1].replace(',', '.'));
+  const unit = cleanQuantity.slice(match[1].length).trim() || 'unidade';
+
+  return {
+    amount: Number.isFinite(amount) ? amount : 0,
+    unit,
+  };
+}
+
+function formatQuantityTotal(amount: number, unit: string) {
+  return `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 2 }).format(amount)} ${unit}`;
+}
+
 export default function App() {
   const [authUser, setAuthUser] = useState<LoggedUser | null>(null);
   const [loginUsername, setLoginUsername] = useState('');
@@ -92,6 +121,7 @@ export default function App() {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [responsibles, setResponsibles] = useState<OrderResponsible[]>([]);
+  const [catalogProducts, setCatalogProducts] = useState<CatalogProduct[]>([]);
   const [form, setForm] = useState<OrderForm>(createEmptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -99,6 +129,11 @@ export default function App() {
   const [categoryFilter, setCategoryFilter] = useState<'Todas' | Category>('Todas');
   const [printOrderId, setPrintOrderId] = useState<string | null>(null);
   const [printAll, setPrintAll] = useState(false);
+  const [printMode, setPrintMode] = useState<PrintMode>('orders');
+  const [printRangeMode, setPrintRangeMode] = useState<PrintRangeMode>('day');
+  const [printFrom, setPrintFrom] = useState(todayKey());
+  const [printUntil, setPrintUntil] = useState(todayKey());
+  const [isPrintOptionsOpen, setIsPrintOptionsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteOrderId, setDeleteOrderId] = useState<string | null>(null);
   const [isDeletePreviousOpen, setIsDeletePreviousOpen] = useState(false);
@@ -130,6 +165,14 @@ export default function App() {
     }
   }, []);
 
+  const loadCatalogProducts = useCallback(async () => {
+    try {
+      setCatalogProducts(await fetchCatalogProducts());
+    } catch (error) {
+      setAppError(error instanceof Error ? error.message : 'Nao foi possivel carregar os produtos.');
+    }
+  }, []);
+
   useEffect(() => {
     async function restoreSession() {
       setIsCheckingSession(true);
@@ -151,25 +194,28 @@ export default function App() {
     if (!authUser) {
       setOrders([]);
       setResponsibles([]);
+      setCatalogProducts([]);
       setIsLoading(false);
       return;
     }
 
+    void loadCatalogProducts();
     void loadResponsibles(authUser.id);
     void loadOrders(authUser.id);
-  }, [authUser, loadOrders, loadResponsibles]);
+  }, [authUser, loadCatalogProducts, loadOrders, loadResponsibles]);
 
   useEffect(() => {
     document.body.classList.toggle(
       'modal-open',
       isModalOpen ||
+      isPrintOptionsOpen ||
       Boolean(deleteOrderId) ||
       isDeletePreviousOpen ||
       isLogoutConfirmOpen,
     );
 
     return () => document.body.classList.remove('modal-open');
-  }, [deleteOrderId, isDeletePreviousOpen, isLogoutConfirmOpen, isModalOpen]);
+  }, [deleteOrderId, isDeletePreviousOpen, isLogoutConfirmOpen, isModalOpen, isPrintOptionsOpen]);
 
   const sortedOrders = useMemo(
     () =>
@@ -181,10 +227,33 @@ export default function App() {
     [orders],
   );
 
+  const responsibleNamesById = useMemo(
+    () => new Map(responsibles.map((responsible) => [responsible.id, responsible.name])),
+    [responsibles],
+  );
+
+  const getResponsibleName = useCallback(
+    (order: Order) =>
+      order.responsibleName || responsibleNamesById.get(order.responsibleId) || 'Nao informado',
+    [responsibleNamesById],
+  );
+
+  const catalogProductsByCategory = useMemo(() => {
+    const productMap = new Map<Category, CatalogProduct[]>();
+
+    categories.forEach((category) => productMap.set(category, []));
+    catalogProducts.forEach((product) => {
+      productMap.get(product.category)?.push(product);
+    });
+
+    return productMap;
+  }, [catalogProducts]);
+
   const filteredOrders = useMemo(() => {
     const term = search.trim().toLowerCase();
 
     return sortedOrders.filter((order) => {
+      const responsibleName = getResponsibleName(order).toLowerCase();
       const productText = order.products
         .map((product) => `${product.category} ${product.product} ${product.quantity} ${product.notes}`)
         .join(' ')
@@ -199,21 +268,83 @@ export default function App() {
       const matchesSearch =
         !term ||
         order.clientName.toLowerCase().includes(term) ||
-        order.responsibleName.toLowerCase().includes(term) ||
+        responsibleName.includes(term) ||
         order.phone.toLowerCase().includes(term) ||
         productText.includes(term);
 
       return matchesDate && matchesCategory && matchesSearch;
     });
-  }, [categoryFilter, dateFilter, search, sortedOrders]);
+  }, [categoryFilter, dateFilter, getResponsibleName, search, sortedOrders]);
 
   const printOrders = useMemo(() => {
-    if (printAll) {
-      return sortedOrders;
+    if (!printAll) {
+      return sortedOrders.filter((order) => order.id === printOrderId);
     }
 
-    return sortedOrders.filter((order) => order.id === printOrderId);
-  }, [printAll, printOrderId, sortedOrders]);
+    return sortedOrders.filter((order) => {
+      if (printRangeMode === 'day') {
+        return order.deliveryDate === printFrom;
+      }
+
+      return order.deliveryDate >= printFrom && order.deliveryDate <= printUntil;
+    });
+  }, [printAll, printFrom, printOrderId, printRangeMode, printUntil, sortedOrders]);
+
+  const printProductSummary = useMemo(() => {
+    const summary = new Map<
+      string,
+      {
+        category: Category;
+        product: string;
+        amount: number;
+        unit: string;
+      }
+    >();
+
+    printOrders.forEach((order) => {
+      order.products.forEach((product) => {
+        const { amount, unit } = parseQuantity(product.quantity);
+        const key = `${product.category}|${product.product}|${unit.toLowerCase()}`;
+        const current = summary.get(key);
+
+        if (current) {
+          current.amount += amount;
+          return;
+        }
+
+        summary.set(key, {
+          category: product.category,
+          product: product.product || 'Produto sem nome',
+          amount,
+          unit,
+        });
+      });
+    });
+
+    return categories
+      .map((category) => ({
+        category,
+        products: [...summary.values()]
+          .filter((product) => product.category === category)
+          .sort((a, b) => a.product.localeCompare(b.product)),
+      }))
+      .filter((group) => group.products.length > 0);
+  }, [printOrders]);
+
+  const printDescription = useMemo(() => {
+    if (!printAll) {
+      return 'Ficha individual';
+    }
+
+    const period =
+      printRangeMode === 'day'
+        ? formatDate(printFrom)
+        : `${formatDate(printFrom)} ate ${formatDate(printUntil)}`;
+
+    return printMode === 'summary'
+      ? `Resumo de producao - ${period}`
+      : `Encomendas detalhadas - ${period}`;
+  }, [printAll, printFrom, printMode, printRangeMode, printUntil]);
 
   const stats = useMemo(() => {
     const today = todayKey();
@@ -272,6 +403,7 @@ export default function App() {
       setAuthUser(null);
       setOrders([]);
       setResponsibles([]);
+      setCatalogProducts([]);
       setSearch('');
       setDateFilter(todayKey());
       setCategoryFilter('Todas');
@@ -299,6 +431,15 @@ export default function App() {
       ...current,
       products: current.products.map((product) =>
         product.id === id ? { ...product, [field]: value } : product,
+      ),
+    }));
+  }
+
+  function updateProductCategory(id: string, category: Category) {
+    setForm((current) => ({
+      ...current,
+      products: current.products.map((product) =>
+        product.id === id ? { ...product, category, product: '' } : product,
       ),
     }));
   }
@@ -451,7 +592,27 @@ export default function App() {
     setIsDeletePreviousOpen(true);
   }
 
+  function openPrintOptionsModal() {
+    const initialDate = dateFilter || todayKey();
+
+    setPrintMode('orders');
+    setPrintRangeMode('day');
+    setPrintFrom(initialDate);
+    setPrintUntil(initialDate);
+    setPrintOrderId(null);
+    setPrintAll(true);
+    setIsPrintOptionsOpen(true);
+  }
+
+  function confirmPrintOptions() {
+    setPrintAll(true);
+    setPrintOrderId(null);
+    setIsPrintOptionsOpen(false);
+    window.setTimeout(() => window.print(), 80);
+  }
+
   function startPrint(orderId?: string) {
+    setPrintMode('orders');
     setPrintAll(!orderId);
     setPrintOrderId(orderId ?? null);
     window.setTimeout(() => window.print(), 80);
@@ -613,7 +774,7 @@ export default function App() {
                 type="button"
                 aria-label="Imprimir todas"
                 title="Imprimir todas"
-                onClick={() => startPrint()}
+                onClick={openPrintOptionsModal}
               >
                 <span aria-hidden="true">⎙</span>
               </button>
@@ -678,7 +839,7 @@ export default function App() {
                         <span>Cliente</span>
                         <h2>{order.clientName}</h2>
                         <p>{order.phone || 'Sem telefone'}</p>
-                        <small>Responsavel: {order.responsibleName || 'Nao informado'}</small>
+                        <small>Responsavel: {getResponsibleName(order)}</small>
                       </div>
                     </header>
 
@@ -820,7 +981,7 @@ export default function App() {
                           <select
                             value={product.category}
                             onChange={(event) =>
-                              updateProductLine(product.id, 'category', event.target.value)
+                              updateProductCategory(product.id, event.target.value as Category)
                             }
                           >
                             {categories.map((category) => (
@@ -831,14 +992,24 @@ export default function App() {
 
                         <label className="product-name-field">
                           Produto
-                          <input
+                          <select
                             required
                             value={product.product}
                             onChange={(event) =>
                               updateProductLine(product.id, 'product', event.target.value)
                             }
-                            placeholder="Ex.: Bolo de chocolate"
-                          />
+                          >
+                            <option value="">Selecione um produto</option>
+                            {(catalogProductsByCategory.get(product.category) ?? []).map((catalogProduct) => (
+                              <option key={catalogProduct.id} value={catalogProduct.name}>
+                                {catalogProduct.name}
+                              </option>
+                            ))}
+                            {product.product &&
+                              !(catalogProductsByCategory.get(product.category) ?? []).some(
+                                (catalogProduct) => catalogProduct.name === product.product,
+                              ) && <option value={product.product}>{product.product}</option>}
+                          </select>
                         </label>
 
                         <label>
@@ -1025,6 +1196,127 @@ export default function App() {
         </div>
       )}
 
+      {isPrintOptionsOpen && (
+        <div className="modal-backdrop" role="presentation">
+          <section
+            className="confirm-card print-options-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="print-options-title"
+          >
+            <span className="eyebrow">Impressao</span>
+            <h2 id="print-options-title">Escolha o que deseja imprimir</h2>
+
+            <div className="print-options-section">
+              <strong>Periodo</strong>
+
+              <div className="print-radio-grid">
+                <label className="print-radio-option">
+                  <input
+                    type="radio"
+                    name="printRangeMode"
+                    checked={printRangeMode === 'day'}
+                    onChange={() => {
+                      setPrintRangeMode('day');
+                      setPrintUntil(printFrom);
+                    }}
+                  />
+                  <span>Somente um dia</span>
+                </label>
+
+                <label className="print-radio-option">
+                  <input
+                    type="radio"
+                    name="printRangeMode"
+                    checked={printRangeMode === 'period'}
+                    onChange={() => setPrintRangeMode('period')}
+                  />
+                  <span>De uma data ate outra</span>
+                </label>
+              </div>
+
+              <div className="confirm-date-grid">
+                <label>
+                  Data inicial
+                  <input
+                    type="date"
+                    value={printFrom}
+                    onChange={(event) => {
+                      setPrintFrom(event.target.value);
+                      if (printRangeMode === 'day') {
+                        setPrintUntil(event.target.value);
+                      }
+                    }}
+                  />
+                </label>
+
+                <label>
+                  Data final
+                  <input
+                    type="date"
+                    value={printUntil}
+                    disabled={printRangeMode === 'day'}
+                    onChange={(event) => setPrintUntil(event.target.value)}
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="print-options-section">
+              <strong>Formato</strong>
+
+              <div className="print-radio-grid">
+                <label className="print-radio-option">
+                  <input
+                    type="radio"
+                    name="printMode"
+                    checked={printMode === 'orders'}
+                    onChange={() => setPrintMode('orders')}
+                  />
+                  <span>Encomendas detalhadas</span>
+                </label>
+
+                <label className="print-radio-option">
+                  <input
+                    type="radio"
+                    name="printMode"
+                    checked={printMode === 'summary'}
+                    onChange={() => setPrintMode('summary')}
+                  />
+                  <span>Resumo por produto e secao</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="confirm-details">
+              <span>
+                {printOrders.length}{' '}
+                {printOrders.length === 1 ? 'encomenda encontrada' : 'encomendas encontradas'}
+              </span>
+            </div>
+
+            <div className="confirm-actions">
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={() => setIsPrintOptionsOpen(false)}
+              >
+                Cancelar
+              </button>
+
+              <button
+                className="primary-button"
+                type="button"
+                disabled={!printOrders.length}
+                onClick={confirmPrintOptions}
+              >
+                Imprimir
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
+
       <section className="print-area" aria-hidden="true">
         <div className="print-title">
           <div>
@@ -1032,28 +1324,34 @@ export default function App() {
             <span>Ordem de producao</span>
           </div>
 
-          <small>{printAll ? 'Todas as encomendas' : 'Ficha individual'}</small>
+          <small>{printDescription}</small>
         </div>
 
-        {printOrders.map((order) => (
-          <article className="print-card" key={order.id}>
+        {printMode === 'summary' && printAll ? (
+          <article className="print-card">
             <header className="print-card-header">
               <div className="print-client">
-                <span>Cliente</span>
-                <h2>{order.clientName}</h2>
-                <p>Telefone: {order.phone || 'Sem telefone'}</p>
-                <p>Responsavel: {order.responsibleName || 'Nao informado'}</p>
+                <span>Resumo</span>
+                <h2>Quantidade total por produto</h2>
+                <p>
+                  {printOrders.length}{' '}
+                  {printOrders.length === 1 ? 'encomenda considerada' : 'encomendas consideradas'}
+                </p>
               </div>
 
               <div className="print-delivery">
-                <span>Entrega</span>
-                <strong>{formatDate(order.deliveryDate)}</strong>
-                <small>{order.deliveryTime || 'Sem hora marcada'}</small>
+                <span>Periodo</span>
+                <strong>
+                  {printRangeMode === 'day'
+                    ? formatDate(printFrom)
+                    : `${formatDate(printFrom)} ate ${formatDate(printUntil)}`}
+                </strong>
+                <small>Produtos agrupados</small>
               </div>
             </header>
 
             <div className="print-products">
-              {groupProducts(order.products).map((group) => (
+              {printProductSummary.map((group) => (
                 <section className="print-group" key={group.category}>
                   <h3>{group.category}</h3>
 
@@ -1061,17 +1359,15 @@ export default function App() {
                     <thead>
                       <tr>
                         <th>Produto</th>
-                        <th>Quantidade</th>
-                        <th>Obs.</th>
+                        <th>Quantidade total</th>
                       </tr>
                     </thead>
 
                     <tbody>
                       {group.products.map((product) => (
-                        <tr key={product.id}>
+                        <tr key={`${product.category}-${product.product}-${product.unit}`}>
                           <td>{product.product}</td>
-                          <td>{product.quantity}</td>
-                          <td>{product.notes || '-'}</td>
+                          <td>{formatQuantityTotal(product.amount, product.unit)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -1080,7 +1376,54 @@ export default function App() {
               ))}
             </div>
           </article>
-        ))}
+        ) : (
+          printOrders.map((order) => (
+            <article className="print-card" key={order.id}>
+              <header className="print-card-header">
+                <div className="print-client">
+                  <span>Cliente</span>
+                  <h2>{order.clientName}</h2>
+                  <p>Telefone: {order.phone || 'Sem telefone'}</p>
+                  <p>Responsavel: {getResponsibleName(order)}</p>
+                </div>
+
+                <div className="print-delivery">
+                  <span>Entrega</span>
+                  <strong>{formatDate(order.deliveryDate)}</strong>
+                  <small>{order.deliveryTime || 'Sem hora marcada'}</small>
+                </div>
+              </header>
+
+              <div className="print-products">
+                {groupProducts(order.products).map((group) => (
+                  <section className="print-group" key={group.category}>
+                    <h3>{group.category}</h3>
+
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Produto</th>
+                          <th>Quantidade</th>
+                          <th>Obs.</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {group.products.map((product) => (
+                          <tr key={product.id}>
+                            <td>{product.product}</td>
+                            <td>{product.quantity}</td>
+                            <td>{product.notes || '-'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </section>
+                ))}
+              </div>
+            </article>
+          ))
+        )}
       </section>
     </>
   );

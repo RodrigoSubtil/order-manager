@@ -1,6 +1,7 @@
 import { assertSupabaseConfigured, supabase } from './supabaseClient';
 import {
   categories,
+  type CatalogProduct,
   type Category,
   type Order,
   type OrderForm,
@@ -18,6 +19,12 @@ type ListOrderResponsibleRow = {
   name?: string;
   responsible_id?: string;
   responsible_name?: string;
+};
+
+type CatalogProductRow = {
+  id: string;
+  category: string;
+  name: string;
 };
 
 type OrderProductRow = {
@@ -131,7 +138,7 @@ export async function fetchOrders(appUserId: string) {
         delivery_date,
         delivery_time,
         created_at,
-        order_responsibles (
+        order_responsibles!orders_responsible_id_fkey (
           id,
           name
         ),
@@ -192,6 +199,28 @@ export async function fetchOrderResponsibles(appUserId: string): Promise<OrderRe
   });
 
   return [...uniqueResponsibles.values()];
+}
+
+export async function fetchCatalogProducts(): Promise<CatalogProduct[]> {
+  assertSupabaseConfigured();
+
+  const { data, error } = await supabase
+    .from('catalog_products')
+    .select('id, category, name')
+    .eq('is_active', true)
+    .order('category', { ascending: true })
+    .order('position', { ascending: true })
+    .order('name', { ascending: true });
+
+  if (error) {
+    throw error;
+  }
+
+  return ((data ?? []) as CatalogProductRow[]).map((product) => ({
+    id: product.id,
+    category: toCategory(product.category),
+    name: product.name,
+  }));
 }
 
 export async function createOrder(appUserId: string, form: OrderForm) {

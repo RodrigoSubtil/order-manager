@@ -877,6 +877,49 @@ button:disabled {
   margin-top: 4px;
 }
 
+.print-options-card {
+  width: min(620px, 100%);
+}
+
+.print-options-section {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.print-options-section > strong {
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+
+.print-radio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.print-radio-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: var(--soft-white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.print-radio-option input {
+  width: auto;
+  height: auto;
+}
+
+.print-radio-option span {
+  font-weight: 900;
+}
+
 /* =========================
    PRODUCT EDITOR
 ========================= */
@@ -1035,6 +1078,10 @@ button:disabled {
   .confirm-date-grid {
     grid-template-columns: 1fr;
   }
+
+  .print-radio-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* =========================
@@ -1043,11 +1090,13 @@ button:disabled {
 
 @media print {
   @page {
-    size: A4;
-    margin: 12mm;
+    size: 80mm auto;
+    margin: 4mm;
   }
 
+  html,
   body {
+    width: 80mm;
     background: #ffffff;
   }
 
@@ -1058,53 +1107,60 @@ button:disabled {
 
   .print-area {
     display: block;
-    padding: 0;
+    width: 68mm;
+    max-width: 68mm;
+    margin: 0 auto;
+    padding: 2mm 0 0;
     color: #111111;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: Arial, "Segoe UI", sans-serif;
+    font-size: 10.5px;
+    line-height: 1.32;
   }
 
   .print-title {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    margin-bottom: 14px;
-    padding-bottom: 12px;
-    border-bottom: 3px solid #111111;
+    display: grid;
+    gap: 4px;
+    margin-bottom: 10px;
+    padding: 0 2mm 8px;
+    text-align: center;
+    border-bottom: 1px dashed #111111;
   }
 
   .print-title strong {
     display: block;
-    font-size: 1.35rem;
-    letter-spacing: 0.02em;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .print-title span,
   .print-title small {
     display: block;
-    color: #333333;
-    font-size: 0.78rem;
+    color: #111111;
+    font-size: 9px;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
   .print-card {
     break-inside: avoid;
     page-break-inside: avoid;
-    margin-bottom: 14px;
-    padding: 0;
-    overflow: hidden;
-    border: 1px solid #111111;
-    border-radius: 6px;
+    margin-bottom: 12px;
+    padding: 4mm 1mm 10px;
+    overflow: visible;
+    border: 0;
+    border-bottom: 1px dashed #111111;
+    border-radius: 0;
   }
 
   .print-card-header {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 190px;
-    gap: 14px;
-    padding: 14px;
-    background: #f4f4f4;
-    border-bottom: 1px solid #111111;
+    grid-template-columns: 1fr;
+    gap: 7px;
+    padding: 0 0 8px;
+    background: #ffffff;
+    border-bottom: 1px dashed #111111;
   }
 
   .print-card h2,
@@ -1116,61 +1172,66 @@ button:disabled {
   .print-client span,
   .print-delivery span {
     display: block;
-    color: #333333;
-    font-size: 0.72rem;
+    color: #111111;
+    font-size: 8px;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
   }
 
   .print-client h2 {
-    margin-top: 4px;
-    font-size: 1.32rem;
+    margin-top: 3px;
+    font-size: 13.5px;
+    text-transform: uppercase;
   }
 
   .print-client p {
-    margin-top: 6px;
+    margin-top: 4px;
     color: #111111;
+    font-size: 10px;
   }
 
   .print-delivery {
     display: grid;
     align-content: center;
-    gap: 4px;
-    padding: 10px;
-    text-align: right;
+    gap: 3px;
+    padding: 6px 7px;
+    text-align: left;
     background: #ffffff;
     border: 1px solid #111111;
-    border-radius: 6px;
+    border-radius: 0;
   }
 
   .print-delivery strong {
-    font-size: 1rem;
+    font-size: 11px;
   }
 
   .print-delivery small {
-    color: #333333;
+    color: #111111;
     font-weight: 700;
+    font-size: 9px;
   }
 
   .print-products {
     display: grid;
-    gap: 12px;
-    padding: 14px;
+    gap: 9px;
+    padding: 9px 0 0;
   }
 
   .print-group {
     break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .print-card h3 {
-    margin-bottom: 6px;
-    padding: 7px 9px;
+    margin-bottom: 5px;
+    padding: 5px 0;
     color: #ffffff;
     background: #111111;
-    border-radius: 5px 5px 0 0;
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
+    border-radius: 0;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-align: center;
     text-transform: uppercase;
   }
 
@@ -1178,35 +1239,45 @@ button:disabled {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    border: 1px solid #111111;
+    border: 0;
   }
 
   .print-card th,
   .print-card td {
-    padding: 9px;
+    padding: 5px 3px;
     text-align: left;
     vertical-align: top;
-    border-bottom: 1px solid #111111;
+    border-bottom: 1px dotted #111111;
     overflow-wrap: anywhere;
     white-space: pre-wrap;
+    font-size: 9.5px;
+  }
+
+  .print-card tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-card thead {
+    display: table-header-group;
   }
 
   .print-card th {
     color: #111111;
-    background: #eeeeee;
-    font-size: 0.76rem;
-    letter-spacing: 0.06em;
+    background: #ffffff;
+    font-size: 8px;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
   .print-card th:nth-child(2),
   .print-card td:nth-child(2) {
-    width: 28%;
+    width: 24%;
     font-weight: 700;
   }
 
   .print-card th:nth-child(3),
   .print-card td:nth-child(3) {
-    width: 34%;
+    width: 32%;
   }
 }
