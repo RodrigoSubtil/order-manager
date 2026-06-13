@@ -1,5 +1,17 @@
 import { assertSupabaseConfigured, supabase } from './supabaseClient';
-import { categories, type Category, type Order, type OrderForm, type ProductLine } from './types';
+import {
+  categories,
+  type Category,
+  type Order,
+  type OrderForm,
+  type OrderResponsible,
+  type ProductLine,
+} from './types';
+
+type OrderResponsibleRow = {
+  id: string;
+  name: string;
+};
 
 type OrderProductRow = {
   id: string;
@@ -15,9 +27,11 @@ type OrderRow = {
   app_user_id: string;
   client_name: string;
   phone: string | null;
+  responsible_id: string | null;
   delivery_date: string;
   delivery_time: string | null;
   created_at: string;
+  order_responsibles: OrderResponsibleRow | OrderResponsibleRow[] | null;
   order_products: OrderProductRow[];
 };
 
@@ -36,6 +50,10 @@ function toProduct(row: OrderProductRow): ProductLine {
 }
 
 function toOrder(row: OrderRow): Order {
+  const responsible = Array.isArray(row.order_responsibles)
+    ? row.order_responsibles[0]
+    : row.order_responsibles;
+
   const products = [...(row.order_products ?? [])]
     .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
     .map(toProduct);
@@ -44,6 +62,8 @@ function toOrder(row: OrderRow): Order {
     id: row.id,
     clientName: row.client_name,
     phone: row.phone ?? '',
+    responsibleId: row.responsible_id ?? '',
+    responsibleName: responsible?.name ?? '',
     deliveryDate: row.delivery_date,
     deliveryTime: row.delivery_time?.slice(0, 5) ?? '',
     products,
@@ -55,6 +75,7 @@ function toOrderPayload(form: OrderForm) {
   return {
     client_name: form.clientName,
     phone: form.phone || null,
+    responsible_id: form.responsibleId || null,
     delivery_date: form.deliveryDate,
     delivery_time: form.deliveryTime || null,
   };
@@ -99,9 +120,14 @@ export async function fetchOrders(appUserId: string) {
         app_user_id,
         client_name,
         phone,
+        responsible_id,
         delivery_date,
         delivery_time,
         created_at,
+        order_responsibles (
+          id,
+          name
+        ),
         order_products (
           id,
           category,
@@ -121,6 +147,24 @@ export async function fetchOrders(appUserId: string) {
   }
 
   return ((data ?? []) as OrderRow[]).map(toOrder);
+}
+
+export async function fetchOrderResponsibles(appUserId: string): Promise<OrderResponsible[]> {
+  assertSupabaseConfigured();
+
+  const { data, error } = await supabase
+    .from('order_responsibles')
+    .select('id, name')
+    .eq('app_user_id', appUserId)
+    .eq('is_active', true)
+    .order('position', { ascending: true })
+    .order('name', { ascending: true });
+
+  if (error) {
+    throw error;
+  }
+
+  return (data ?? []) as OrderResponsible[];
 }
 
 export async function createOrder(appUserId: string, form: OrderForm) {

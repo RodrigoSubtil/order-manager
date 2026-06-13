@@ -3,11 +3,19 @@ import {
   createOrder,
   deleteOrderById,
   deleteOrdersByDateRange,
+  fetchOrderResponsibles,
   fetchOrders,
   updateOrder,
 } from './ordersApi';
 import { getCurrentAppUser, loginAppUser, logoutAppUser, type LoggedUser } from './authApi';
-import { categories, type Category, type Order, type OrderForm, type ProductLine } from './types';
+import {
+  categories,
+  type Category,
+  type Order,
+  type OrderForm,
+  type OrderResponsible,
+  type ProductLine,
+} from './types';
 import './App.css';
 
 function createId() {
@@ -43,6 +51,8 @@ function createEmptyForm(): OrderForm {
   return {
     clientName: '',
     phone: '',
+    responsibleId: '',
+    responsibleName: '',
     deliveryDate: todayKey(),
     deliveryTime: '',
     products: [createProductLine()],
@@ -81,6 +91,7 @@ export default function App() {
   const [isCheckingSession, setIsCheckingSession] = useState(true);
 
   const [orders, setOrders] = useState<Order[]>([]);
+  const [responsibles, setResponsibles] = useState<OrderResponsible[]>([]);
   const [form, setForm] = useState<OrderForm>(createEmptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -111,6 +122,14 @@ export default function App() {
     }
   }, []);
 
+  const loadResponsibles = useCallback(async (appUserId: string) => {
+    try {
+      setResponsibles(await fetchOrderResponsibles(appUserId));
+    } catch (error) {
+      setAppError(error instanceof Error ? error.message : 'Nao foi possivel carregar os responsaveis.');
+    }
+  }, []);
+
   useEffect(() => {
     async function restoreSession() {
       setIsCheckingSession(true);
@@ -131,12 +150,14 @@ export default function App() {
   useEffect(() => {
     if (!authUser) {
       setOrders([]);
+      setResponsibles([]);
       setIsLoading(false);
       return;
     }
 
+    void loadResponsibles(authUser.id);
     void loadOrders(authUser.id);
-  }, [authUser, loadOrders]);
+  }, [authUser, loadOrders, loadResponsibles]);
 
   useEffect(() => {
     document.body.classList.toggle(
@@ -178,6 +199,7 @@ export default function App() {
       const matchesSearch =
         !term ||
         order.clientName.toLowerCase().includes(term) ||
+        order.responsibleName.toLowerCase().includes(term) ||
         order.phone.toLowerCase().includes(term) ||
         productText.includes(term);
 
@@ -249,6 +271,7 @@ export default function App() {
       await logoutAppUser();
       setAuthUser(null);
       setOrders([]);
+      setResponsibles([]);
       setSearch('');
       setDateFilter(todayKey());
       setCategoryFilter('Todas');
@@ -359,6 +382,8 @@ export default function App() {
     setForm({
       clientName: order.clientName,
       phone: order.phone,
+      responsibleId: order.responsibleId,
+      responsibleName: order.responsibleName,
       deliveryDate: order.deliveryDate,
       deliveryTime: order.deliveryTime,
       products: order.products.map((product) => ({ ...product })),
@@ -653,6 +678,7 @@ export default function App() {
                         <span>Cliente</span>
                         <h2>{order.clientName}</h2>
                         <p>{order.phone || 'Sem telefone'}</p>
+                        <small>Responsavel: {order.responsibleName || 'Nao informado'}</small>
                       </div>
                     </header>
 
@@ -728,6 +754,22 @@ export default function App() {
                       onChange={(event) => updateField('phone', event.target.value)}
                       placeholder="Ex.: 912 000 000"
                     />
+                  </label>
+
+                  <label>
+                    Responsavel pela encomenda
+                    <select
+                      required
+                      value={form.responsibleId}
+                      onChange={(event) => updateField('responsibleId', event.target.value)}
+                    >
+                      <option value="">Selecione quem recebeu o pedido</option>
+                      {responsibles.map((responsible) => (
+                        <option key={responsible.id} value={responsible.id}>
+                          {responsible.name}
+                        </option>
+                      ))}
+                    </select>
                   </label>
 
                   <label>
@@ -1000,6 +1042,7 @@ export default function App() {
                 <span>Cliente</span>
                 <h2>{order.clientName}</h2>
                 <p>Telefone: {order.phone || 'Sem telefone'}</p>
+                <p>Responsavel: {order.responsibleName || 'Nao informado'}</p>
               </div>
 
               <div className="print-delivery">

@@ -555,6 +555,19 @@ button:disabled {
   font-weight: 800;
 }
 
+.order-client small {
+  display: block;
+  width: fit-content;
+  margin-top: 8px;
+  padding: 6px 9px;
+  color: var(--ink);
+  background: var(--soft-white);
+  border: 1px solid var(--sand);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
 .order-products {
   display: grid;
   gap: 0;

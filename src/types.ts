@@ -8,10 +8,17 @@ export type ProductLine = {
   notes: string;
 };
 
+export type OrderResponsible = {
+  id: string;
+  name: string;
+};
+
 export type Order = {
   id: string;
   clientName: string;
   phone: string;
+  responsibleId: string;
+  responsibleName: string;
   deliveryDate: string;
   deliveryTime: string;
   products: ProductLine[];
