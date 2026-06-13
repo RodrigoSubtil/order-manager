@@ -1,4 +1,4 @@
-# Encomendas Venus
+# Order Manager
 
 Pagina React + TypeScript para organizar encomendas de pastelaria, padaria e salgados.
 

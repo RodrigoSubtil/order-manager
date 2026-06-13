@@ -760,7 +760,7 @@ export default function App() {
               type="button"
               tabIndex={-1}
             >
-              Empresa: {companyDisplayName}
+              Utilizador: {companyDisplayName}
             </button>
 
             <button
@@ -1418,7 +1418,7 @@ export default function App() {
       <section className="print-area" aria-hidden="true">
         <div className="print-title">
           <div>
-            <strong>Venus Encomendas</strong>
+            <strong>Order Manager</strong>
             <span>Ordem de producao</span>
           </div>
 

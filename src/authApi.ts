@@ -12,7 +12,7 @@ type LoginAppUserResponse = {
   user_bakery_name: string | null;
 };
 
-const sessionKey = 'encomendas-venus-user';
+const sessionKey = 'order-manager-user';
 
 function saveCurrentAppUser(user: LoggedUser) {
   localStorage.setItem(sessionKey, JSON.stringify(user));
