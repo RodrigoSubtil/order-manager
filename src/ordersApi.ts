@@ -152,9 +152,11 @@ export async function fetchOrders(appUserId: string) {
 export async function fetchOrderResponsibles(appUserId: string): Promise<OrderResponsible[]> {
   assertSupabaseConfigured();
 
+  const baseSelect = 'id, name';
+
   const { data, error } = await supabase
     .from('order_responsibles')
-    .select('id, name')
+    .select(baseSelect)
     .eq('app_user_id', appUserId)
     .eq('is_active', true)
     .order('position', { ascending: true })
@@ -164,7 +166,30 @@ export async function fetchOrderResponsibles(appUserId: string): Promise<OrderRe
     throw error;
   }
 
-  return (data ?? []) as OrderResponsible[];
+  if (data?.length) {
+    return data as OrderResponsible[];
+  }
+
+  const { data: fallbackData, error: fallbackError } = await supabase
+    .from('order_responsibles')
+    .select(baseSelect)
+    .eq('is_active', true)
+    .order('position', { ascending: true })
+    .order('name', { ascending: true });
+
+  if (fallbackError) {
+    throw fallbackError;
+  }
+
+  const uniqueResponsibles = new Map<string, OrderResponsible>();
+
+  ((fallbackData ?? []) as OrderResponsible[]).forEach((responsible) => {
+    if (!uniqueResponsibles.has(responsible.name)) {
+      uniqueResponsibles.set(responsible.name, responsible);
+    }
+  });
+
+  return [...uniqueResponsibles.values()];
 }
 
 export async function createOrder(appUserId: string, form: OrderForm) {
