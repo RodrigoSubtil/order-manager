@@ -813,13 +813,16 @@ export default function App() {
         <section className="orders-panel">
           <div className="toolbar toolbar-layout">
             <div className="toolbar-top-row">
-              <input
-                className="toolbar-date-input"
-                aria-label="Filtrar por data"
-                type="date"
-                value={dateFilter}
-                onChange={(event) => setDateFilter(event.target.value)}
-              />
+              <div className="date-control toolbar-date-control">
+                <input
+                  className="toolbar-date-input"
+                  aria-label="Filtrar por data"
+                  type="date"
+                  value={dateFilter}
+                  onChange={(event) => setDateFilter(event.target.value)}
+                />
+                <span className="date-control-icon calendar-control-icon" aria-hidden="true" />
+              </div>
 
               <select
                 aria-label="Filtrar por area"
@@ -1006,23 +1009,29 @@ export default function App() {
 
                   <label>
                     Data de entrega
-                    <input
-                      className="modal-date-input"
-                      required
-                      type="date"
-                      value={form.deliveryDate}
-                      onChange={(event) => updateField('deliveryDate', event.target.value)}
-                    />
+                    <div className="date-control modal-date-control">
+                      <input
+                        className="modal-date-input"
+                        required
+                        type="date"
+                        value={form.deliveryDate}
+                        onChange={(event) => updateField('deliveryDate', event.target.value)}
+                      />
+                      <span className="date-control-icon calendar-control-icon" aria-hidden="true" />
+                    </div>
                   </label>
 
                   <label>
                     Hora
-                    <input
-                      className="modal-time-input"
-                      type="time"
-                      value={form.deliveryTime}
-                      onChange={(event) => updateField('deliveryTime', event.target.value)}
-                    />
+                    <div className="date-control modal-date-control">
+                      <input
+                        className="modal-time-input"
+                        type="time"
+                        value={form.deliveryTime}
+                        onChange={(event) => updateField('deliveryTime', event.target.value)}
+                      />
+                      <span className="date-control-icon time-control-icon" aria-hidden="true" />
+                    </div>
                   </label>
                 </div>
 
