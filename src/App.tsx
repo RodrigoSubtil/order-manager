@@ -94,7 +94,8 @@ function parseQuantity(quantity: string) {
   if (!match) {
     return {
       amount: cleanQuantity ? 1 : 0,
-      unit: cleanQuantity || 'unidade',
+      unit: 'unidade',
+      raw: cleanQuantity,
     };
   }
 
@@ -103,12 +104,47 @@ function parseQuantity(quantity: string) {
 
   return {
     amount: Number.isFinite(amount) ? amount : 0,
-    unit,
+    unit: normalizeQuantityUnit(unit),
+    raw: cleanQuantity,
   };
+}
+
+function normalizeQuantityUnit(unit: string) {
+  const cleanUnit = unit.trim().toLowerCase();
+
+  if (['un', 'uni', 'unidade', 'unidades'].includes(cleanUnit)) return 'un';
+  if (['kg', 'quilo', 'quilos'].includes(cleanUnit)) return 'kg';
+  if (['g', 'grama', 'gramas'].includes(cleanUnit)) return 'g';
+
+  return cleanUnit || 'un';
+}
+
+function isSummableQuantityUnit(unit: string) {
+  return normalizeQuantityUnit(unit) === 'un';
 }
 
 function formatQuantityTotal(amount: number, unit: string) {
   return `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 2 }).format(amount)} ${unit}`;
+}
+
+function getQuantityAmount(quantity: string) {
+  const { amount } = parseQuantity(quantity);
+  return amount ? String(amount).replace('.', ',') : '';
+}
+
+function getQuantityUnit(quantity: string) {
+  return parseQuantity(quantity).unit;
+}
+
+function joinQuantity(amount: string, unit: string) {
+  const cleanAmount = amount.trim().replace(',', '.');
+  const cleanUnit = normalizeQuantityUnit(unit);
+
+  if (!cleanAmount) {
+    return '';
+  }
+
+  return `${cleanAmount} ${cleanUnit}`;
 }
 
 export default function App() {
@@ -298,17 +334,28 @@ export default function App() {
         product: string;
         amount: number;
         unit: string;
+        count: number;
+        displayQuantity: string;
       }
     >();
 
     printOrders.forEach((order) => {
       order.products.forEach((product) => {
-        const { amount, unit } = parseQuantity(product.quantity);
-        const key = `${product.category}|${product.product}|${unit.toLowerCase()}`;
+        const { amount, unit, raw } = parseQuantity(product.quantity);
+        const canSum = isSummableQuantityUnit(unit);
+        const key = canSum
+          ? `${product.category}|${product.product}|${unit}`
+          : `${product.category}|${product.product}|${raw || product.quantity}`;
         const current = summary.get(key);
 
         if (current) {
-          current.amount += amount;
+          current.count += 1;
+          if (canSum) {
+            current.amount += amount;
+            current.displayQuantity = formatQuantityTotal(current.amount, current.unit);
+          } else {
+            current.displayQuantity = `${current.count} pedidos x ${raw || product.quantity}`;
+          }
           return;
         }
 
@@ -317,6 +364,8 @@ export default function App() {
           product: product.product || 'Produto sem nome',
           amount,
           unit,
+          count: 1,
+          displayQuantity: canSum ? formatQuantityTotal(amount, unit) : raw || product.quantity,
         });
       });
     });
@@ -441,6 +490,25 @@ export default function App() {
       products: current.products.map((product) =>
         product.id === id ? { ...product, category, product: '' } : product,
       ),
+    }));
+  }
+
+  function updateProductQuantity(id: string, part: 'amount' | 'unit', value: string) {
+    setForm((current) => ({
+      ...current,
+      products: current.products.map((product) => {
+        if (product.id !== id) {
+          return product;
+        }
+
+        const amount = part === 'amount' ? value : getQuantityAmount(product.quantity);
+        const unit = part === 'unit' ? value : getQuantityUnit(product.quantity);
+
+        return {
+          ...product,
+          quantity: joinQuantity(amount, unit),
+        };
+      }),
     }));
   }
 
@@ -1014,14 +1082,30 @@ export default function App() {
 
                         <label>
                           Quantidade
-                          <input
-                            required
-                            value={product.quantity}
-                            onChange={(event) =>
-                              updateProductLine(product.id, 'quantity', event.target.value)
-                            }
-                            placeholder="Ex.: 2 kg ou 50 un."
-                          />
+                          <div className="quantity-field-grid">
+                            <input
+                              required
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              value={getQuantityAmount(product.quantity)}
+                              onChange={(event) =>
+                                updateProductQuantity(product.id, 'amount', event.target.value)
+                              }
+                              placeholder="Qtd."
+                            />
+
+                            <select
+                              value={getQuantityUnit(product.quantity)}
+                              onChange={(event) =>
+                                updateProductQuantity(product.id, 'unit', event.target.value)
+                              }
+                            >
+                              <option value="un">un</option>
+                              <option value="kg">kg</option>
+                              <option value="g">g</option>
+                            </select>
+                          </div>
                         </label>
 
                         <label className="product-note-field">
@@ -1367,7 +1451,7 @@ export default function App() {
                       {group.products.map((product) => (
                         <tr key={`${product.category}-${product.product}-${product.unit}`}>
                           <td>{product.product}</td>
-                          <td>{formatQuantityTotal(product.amount, product.unit)}</td>
+                          <td>{product.displayQuantity}</td>
                         </tr>
                       ))}
                     </tbody>

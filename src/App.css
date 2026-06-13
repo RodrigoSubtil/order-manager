@@ -985,6 +985,12 @@ button:disabled {
   resize: none;
 }
 
+.quantity-field-grid {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.8fr) minmax(110px, 1fr);
+  gap: 8px;
+}
+
 /* =========================
    PRINT HIDDEN AREA
 ========================= */
@@ -999,7 +1005,8 @@ button:disabled {
 
 @media (max-width: 900px) {
   .dashboard-shell {
-    padding: 10px;
+    gap: 12px;
+    padding: 12px;
   }
 
   .dashboard-topbar,
@@ -1007,6 +1014,15 @@ button:disabled {
     display: grid;
     align-items: stretch;
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-topbar {
+    padding: 16px;
+  }
+
+  .dashboard-topbar h1 {
+    font-size: 1.8rem;
+    line-height: 1.05;
   }
 
   .topbar-actions-logout {
@@ -1031,6 +1047,7 @@ button:disabled {
   .order-date-strip {
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
+    padding: 14px 16px;
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
@@ -1042,9 +1059,33 @@ button:disabled {
   .product-item {
     grid-template-columns: 104px minmax(0, 1fr) minmax(110px, auto);
   }
+
+  .modal-card,
+  .modal-card form {
+    max-height: calc(100dvh - 24px);
+  }
 }
 
 @media (max-width: 560px) {
+  input,
+  select {
+    height: 48px;
+    font-size: 1rem;
+  }
+
+  textarea {
+    font-size: 1rem;
+  }
+
+  button {
+    min-height: 44px;
+  }
+
+  .dashboard-shell {
+    gap: 10px;
+    padding: 8px;
+  }
+
   .dashboard-topbar,
   .orders-panel,
   .modal-header,
@@ -1054,11 +1095,61 @@ button:disabled {
   }
 
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .stats-grid article {
+    gap: 6px;
+    min-height: 92px;
+    padding: 12px;
+  }
+
+  .stats-grid span {
+    font-size: 0.68rem;
+    line-height: 1.2;
+  }
+
+  .stats-grid strong {
+    font-size: 1.55rem;
+  }
+
+  .previous-card {
+    align-items: stretch;
+  }
+
+  .previous-card .previous-clean-button {
+    min-height: 30px;
+    padding: 0 8px;
+    font-size: 0.68rem;
+    white-space: normal;
   }
 
   .toolbar-top-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .toolbar-top-row input,
+  .toolbar-top-row select,
+  .toolbar-top-row button,
+  .search-input-full {
+    height: 48px;
+    border-radius: 10px;
+  }
+
+  .toolbar-action-button {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .create-toolbar-button {
+    font-size: 1.6rem;
+  }
+
+  .active-filter {
+    font-size: 0.78rem;
+    line-height: 1.35;
   }
 
   .order-ticket-head,
@@ -1068,11 +1159,141 @@ button:disabled {
 
   .order-ticket-head {
     display: grid;
+    padding: 14px;
+  }
+
+  .order-card {
+    min-height: 0;
+    box-shadow: 0 8px 20px rgba(77, 67, 57, 0.08);
+  }
+
+  .order-card h2 {
+    font-size: 1.28rem;
+  }
+
+  .order-products {
+    margin: 0 12px 12px;
+    padding: 0;
+  }
+
+  .product-item {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .product-category-badge {
+    font-size: 0.7rem;
+  }
+
+  .product-copy strong {
+    font-size: 1rem;
   }
 
   .product-quantity {
+    width: 100%;
     max-width: 100%;
     text-align: left;
+  }
+
+  .order-footer {
+    padding: 10px 12px 12px;
+  }
+
+  .card-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    gap: 8px;
+  }
+
+  .card-actions button {
+    width: 100%;
+    min-height: 42px;
+    padding: 0 8px;
+    font-size: 0.82rem;
+  }
+
+  .modal-backdrop {
+    align-items: end;
+    padding: 8px;
+  }
+
+  .modal-card {
+    width: 100%;
+    max-height: calc(100dvh - 16px);
+    border-radius: 12px 12px 8px 8px;
+  }
+
+  .modal-card form {
+    max-height: calc(100dvh - 16px);
+  }
+
+  .modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--white);
+  }
+
+  .modal-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .modal-body {
+    gap: 14px;
+    padding-bottom: 94px;
+  }
+
+  .field-grid,
+  .product-form-grid {
+    gap: 12px;
+  }
+
+  .quantity-field-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .product-editor {
+    padding: 12px;
+  }
+
+  .product-editor-title {
+    gap: 10px;
+  }
+
+  .product-editor-title .secondary-button {
+    width: 100%;
+  }
+
+  .product-form-card {
+    padding: 12px;
+  }
+
+  .product-form-top button {
+    min-height: 34px;
+  }
+
+  .product-note-input {
+    min-height: 140px;
+  }
+
+  .modal-actions {
+    position: sticky;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--white);
+    box-shadow: 0 -10px 24px rgba(77, 67, 57, 0.08);
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+
+  .confirm-card {
+    width: 100%;
+    padding: 18px;
+    border-radius: 12px;
   }
 
   .confirm-date-grid {
