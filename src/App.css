@@ -560,6 +560,11 @@ button:disabled {
   box-shadow: 0 10px 24px rgba(77, 67, 57, 0.08);
 }
 
+.print-button-icon {
+  width: 25px;
+  height: 25px;
+}
+
 .create-toolbar-button {
   color: var(--white);
   background: var(--mocha);
@@ -568,10 +573,30 @@ button:disabled {
 }
 
 .active-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
   padding: 10px 0 0;
   color: var(--muted);
   font-size: 0.92rem;
   font-weight: 800;
+}
+
+.active-filter-title {
+  color: var(--ink);
+}
+
+.active-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 10px;
+  color: var(--muted);
+  background: var(--soft-white);
+  border: 1px solid var(--sand);
+  border-radius: 999px;
+  font-size: 0.82rem;
 }
 
 /* =========================
@@ -1314,6 +1339,12 @@ button:disabled {
   .active-filter {
     font-size: 0.78rem;
     line-height: 1.35;
+  }
+
+  .active-filter-chip {
+    min-height: 28px;
+    padding: 5px 8px;
+    font-size: 0.74rem;
   }
 
   .order-ticket-head,

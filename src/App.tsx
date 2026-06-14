@@ -850,7 +850,21 @@ export default function App() {
                 title="Imprimir todas"
                 onClick={openPrintOptionsModal}
               >
-                <span aria-hidden="true">⎙</span>
+                <svg
+                  className="print-button-icon"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.2"
+                >
+                  <path d="M6 9V3h12v6" />
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                  <path d="M6 14h12v7H6z" />
+                  <path d="M17 12h.01" />
+                </svg>
               </button>
 
               <button
@@ -874,17 +888,11 @@ export default function App() {
           </div>
 
           <div className="active-filter">
-            {dateFilter ? (
-              <span>
-                A mostrar encomendas de {formatDate(dateFilter)}
-                {categoryFilter !== 'Todas' && ` em ${categoryFilter}`}
-              </span>
-            ) : (
-              <span>
-                A mostrar encomendas de todas as datas
-                {categoryFilter !== 'Todas' && ` em ${categoryFilter}`}
-              </span>
-            )}
+            <span className="active-filter-title">Filtros:</span>
+            <span className="active-filter-chip">
+              Data: {dateFilter ? formatDate(dateFilter) : 'Todas as datas'}
+            </span>
+            <span className="active-filter-chip">Area: {categoryFilter}</span>
           </div>
 
           <div className="order-list">
@@ -985,9 +993,11 @@ export default function App() {
                   <label>
                     Telefone
                     <input
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       value={form.phone}
-                      onChange={(event) => updateField('phone', event.target.value)}
-                      placeholder="Ex.: 912 000 000"
+                      onChange={(event) => updateField('phone', event.target.value.replace(/\D/g, ''))}
+                      placeholder="Ex.: 912000000"
                     />
                   </label>
 
@@ -1074,24 +1084,23 @@ export default function App() {
 
                         <label className="product-name-field">
                           Produto
-                          <select
+                          <input
+                            list={`products-${product.id}`}
                             required
                             value={product.product}
                             onChange={(event) =>
                               updateProductLine(product.id, 'product', event.target.value)
                             }
-                          >
-                            <option value="">Selecione um produto</option>
+                            placeholder="Digite ou escolha o produto"
+                          />
+
+                          <datalist id={`products-${product.id}`}>
                             {(catalogProductsByCategory.get(product.category) ?? []).map((catalogProduct) => (
                               <option key={catalogProduct.id} value={catalogProduct.name}>
                                 {catalogProduct.name}
                               </option>
                             ))}
-                            {product.product &&
-                              !(catalogProductsByCategory.get(product.category) ?? []).some(
-                                (catalogProduct) => catalogProduct.name === product.product,
-                              ) && <option value={product.product}>{product.product}</option>}
-                          </select>
+                          </datalist>
                         </label>
 
                         <label>
