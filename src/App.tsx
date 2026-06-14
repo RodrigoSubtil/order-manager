@@ -159,6 +159,8 @@ export default function App() {
   const [responsibles, setResponsibles] = useState<OrderResponsible[]>([]);
   const [catalogProducts, setCatalogProducts] = useState<CatalogProduct[]>([]);
   const [form, setForm] = useState<OrderForm>(createEmptyForm);
+  const [openProductPickerId, setOpenProductPickerId] = useState<string | null>(null);
+  const [isResponsiblePickerOpen, setIsResponsiblePickerOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [dateFilter, setDateFilter] = useState(todayKey());
@@ -284,6 +286,16 @@ export default function App() {
 
     return productMap;
   }, [catalogProducts]);
+
+  const filteredResponsibles = useMemo(() => {
+    const term = form.responsibleName.trim().toLowerCase();
+
+    if (!term) {
+      return responsibles;
+    }
+
+    return responsibles.filter((responsible) => responsible.name.toLowerCase().includes(term));
+  }, [form.responsibleName, responsibles]);
 
   const filteredOrders = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -491,6 +503,7 @@ export default function App() {
         product.id === id ? { ...product, category, product: '' } : product,
       ),
     }));
+    setOpenProductPickerId(id);
   }
 
   function updateProductQuantity(id: string, part: 'amount' | 'unit', value: string) {
@@ -532,6 +545,8 @@ export default function App() {
   function openNewOrderModal() {
     setForm(createEmptyForm());
     setEditingId(null);
+    setOpenProductPickerId(null);
+    setIsResponsiblePickerOpen(false);
     setIsModalOpen(true);
   }
 
@@ -539,6 +554,8 @@ export default function App() {
     setIsModalOpen(false);
     setForm(createEmptyForm());
     setEditingId(null);
+    setOpenProductPickerId(null);
+    setIsResponsiblePickerOpen(false);
   }
 
   async function saveOrder(event: FormEvent<HTMLFormElement>) {
@@ -562,6 +579,12 @@ export default function App() {
       .filter((product) => product.product || product.quantity);
 
     if (!cleanProducts.length) {
+      setIsSaving(false);
+      return;
+    }
+
+    if (!form.responsibleId) {
+      setAppError('Selecione um responsavel valido da lista.');
       setIsSaving(false);
       return;
     }
@@ -755,21 +778,34 @@ export default function App() {
           </div>
 
           <div className="topbar-actions topbar-actions-logout">
-            <button
-              className="secondary-button logout-button topbar-user-button"
-              type="button"
-              tabIndex={-1}
-            >
-              Utilizador: {companyDisplayName}
-            </button>
+            <div className="topbar-session-control">
+              <span className="topbar-user-label">
+                Utilizador: {companyDisplayName}
+              </span>
 
-            <button
-              className="secondary-button logout-button"
-              type="button"
-              onClick={() => setIsLogoutConfirmOpen(true)}
-            >
-              Sair
-            </button>
+              <button
+                className="logout-button"
+                type="button"
+                aria-label="Sair"
+                title="Sair"
+                onClick={() => setIsLogoutConfirmOpen(true)}
+              >
+                <svg
+                  className="logout-button-icon"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.6"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <path d="M16 17l5-5-5-5" />
+                  <path d="M21 12H9" />
+                </svg>
+              </button>
+            </div>
           </div>
         </header>
 
@@ -1003,18 +1039,61 @@ export default function App() {
 
                   <label>
                     Responsavel pela encomenda
-                    <select
-                      required
-                      value={form.responsibleId}
-                      onChange={(event) => updateField('responsibleId', event.target.value)}
-                    >
-                      <option value="">Selecione quem recebeu o pedido</option>
-                      {responsibles.map((responsible) => (
-                        <option key={responsible.id} value={responsible.id}>
-                          {responsible.name}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="product-combobox">
+                      <input
+                        required
+                        value={form.responsibleName}
+                        onChange={(event) => {
+                          const nextName = event.target.value;
+                          const matchingResponsible = responsibles.find(
+                            (responsible) => responsible.name.toLowerCase() === nextName.trim().toLowerCase(),
+                          );
+
+                          updateField('responsibleName', nextName);
+                          updateField('responsibleId', matchingResponsible?.id ?? '');
+                          setIsResponsiblePickerOpen(true);
+                        }}
+                        onFocus={() => setIsResponsiblePickerOpen(true)}
+                        placeholder="Digite ou escolha o responsavel"
+                        autoComplete="off"
+                      />
+
+                      <button
+                        className="product-combobox-button"
+                        type="button"
+                        aria-label="Mostrar responsaveis"
+                        aria-expanded={isResponsiblePickerOpen}
+                        onClick={() => setIsResponsiblePickerOpen((current) => !current)}
+                      >
+                        <span aria-hidden="true" />
+                      </button>
+
+                      {isResponsiblePickerOpen && (
+                        <div className="product-combobox-list">
+                          {filteredResponsibles.map((responsible) => (
+                            <button
+                              className="product-combobox-option"
+                              key={responsible.id}
+                              type="button"
+                              onMouseDown={(event) => event.preventDefault()}
+                              onClick={() => {
+                                updateField('responsibleId', responsible.id);
+                                updateField('responsibleName', responsible.name);
+                                setIsResponsiblePickerOpen(false);
+                              }}
+                            >
+                              {responsible.name}
+                            </button>
+                          ))}
+
+                          {filteredResponsibles.length === 0 && (
+                            <span className="product-combobox-empty">
+                              Nenhum responsavel encontrado.
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </label>
 
                   <label>
@@ -1084,23 +1163,68 @@ export default function App() {
 
                         <label className="product-name-field">
                           Produto
-                          <input
-                            list={`products-${product.id}`}
-                            required
-                            value={product.product}
-                            onChange={(event) =>
-                              updateProductLine(product.id, 'product', event.target.value)
-                            }
-                            placeholder="Digite ou escolha o produto"
-                          />
+                          <div className="product-combobox">
+                            <input
+                              required
+                              value={product.product}
+                              onChange={(event) => {
+                                updateProductLine(product.id, 'product', event.target.value);
+                                setOpenProductPickerId(product.id);
+                              }}
+                              onFocus={() => setOpenProductPickerId(product.id)}
+                              placeholder="Digite ou escolha o produto"
+                              autoComplete="off"
+                            />
 
-                          <datalist id={`products-${product.id}`}>
-                            {(catalogProductsByCategory.get(product.category) ?? []).map((catalogProduct) => (
-                              <option key={catalogProduct.id} value={catalogProduct.name}>
-                                {catalogProduct.name}
-                              </option>
-                            ))}
-                          </datalist>
+                            <button
+                              className="product-combobox-button"
+                              type="button"
+                              aria-label="Mostrar produtos"
+                              aria-expanded={openProductPickerId === product.id}
+                              onClick={() =>
+                                setOpenProductPickerId((current) =>
+                                  current === product.id ? null : product.id,
+                                )
+                              }
+                            >
+                              <span aria-hidden="true" />
+                            </button>
+
+                            {openProductPickerId === product.id && (
+                              <div className="product-combobox-list">
+                                {(catalogProductsByCategory.get(product.category) ?? [])
+                                  .filter((catalogProduct) =>
+                                    catalogProduct.name
+                                      .toLowerCase()
+                                      .includes(product.product.trim().toLowerCase()),
+                                  )
+                                  .map((catalogProduct) => (
+                                    <button
+                                      className="product-combobox-option"
+                                      key={catalogProduct.id}
+                                      type="button"
+                                      onMouseDown={(event) => event.preventDefault()}
+                                      onClick={() => {
+                                        updateProductLine(product.id, 'product', catalogProduct.name);
+                                        setOpenProductPickerId(null);
+                                      }}
+                                    >
+                                      {catalogProduct.name}
+                                    </button>
+                                  ))}
+
+                                {(catalogProductsByCategory.get(product.category) ?? []).filter((catalogProduct) =>
+                                  catalogProduct.name
+                                    .toLowerCase()
+                                    .includes(product.product.trim().toLowerCase()),
+                                ).length === 0 && (
+                                  <span className="product-combobox-empty">
+                                    Nenhum produto encontrado. Pode escrever um novo.
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </label>
 
                         <label>
