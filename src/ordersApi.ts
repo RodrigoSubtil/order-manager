@@ -38,6 +38,7 @@ type OrderProductRow = {
 
 type OrderRow = {
   id: string;
+  order_number: number | null;
   app_user_id: string;
   client_name: string;
   phone: string | null;
@@ -74,6 +75,7 @@ function toOrder(row: OrderRow): Order {
 
   return {
     id: row.id,
+    orderNumber: row.order_number,
     clientName: row.client_name,
     phone: row.phone ?? '',
     responsibleId: row.responsible_id ?? '',
@@ -131,6 +133,7 @@ export async function fetchOrders(appUserId: string) {
     .select(
       `
         id,
+        order_number,
         app_user_id,
         client_name,
         phone,

@@ -54,6 +54,7 @@ function createProductLine(
 
 function createEmptyForm(): OrderForm {
   return {
+    orderNumber: null,
     clientName: '',
     phone: '',
     responsibleId: '',
@@ -160,11 +161,14 @@ export default function App() {
   const [catalogProducts, setCatalogProducts] = useState<CatalogProduct[]>([]);
   const [form, setForm] = useState<OrderForm>(createEmptyForm);
   const [openProductPickerId, setOpenProductPickerId] = useState<string | null>(null);
+  const [openCategoryPickerId, setOpenCategoryPickerId] = useState<string | null>(null);
+  const [openUnitPickerId, setOpenUnitPickerId] = useState<string | null>(null);
   const [isResponsiblePickerOpen, setIsResponsiblePickerOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [dateFilter, setDateFilter] = useState(todayKey());
   const [categoryFilter, setCategoryFilter] = useState<'Todas' | Category>('Todas');
+  const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(false);
   const [printOrderId, setPrintOrderId] = useState<string | null>(null);
   const [printAll, setPrintAll] = useState(false);
   const [printMode, setPrintMode] = useState<PrintMode>('orders');
@@ -254,6 +258,24 @@ export default function App() {
 
     return () => document.body.classList.remove('modal-open');
   }, [deleteOrderId, isDeletePreviousOpen, isLogoutConfirmOpen, isModalOpen, isPrintOptionsOpen]);
+
+  useEffect(() => {
+    function closeDropdownsOnOutsideClick(event: PointerEvent) {
+      if (event.target instanceof Element && event.target.closest('.product-combobox')) {
+        return;
+      }
+
+      setOpenProductPickerId(null);
+      setOpenCategoryPickerId(null);
+      setOpenUnitPickerId(null);
+      setIsCategoryFilterOpen(false);
+      setIsResponsiblePickerOpen(false);
+    }
+
+    document.addEventListener('pointerdown', closeDropdownsOnOutsideClick);
+
+    return () => document.removeEventListener('pointerdown', closeDropdownsOnOutsideClick);
+  }, []);
 
   const sortedOrders = useMemo(
     () =>
@@ -503,7 +525,9 @@ export default function App() {
         product.id === id ? { ...product, category, product: '' } : product,
       ),
     }));
-    setOpenProductPickerId(id);
+    setOpenProductPickerId(null);
+    setOpenCategoryPickerId(null);
+    setOpenUnitPickerId(null);
   }
 
   function updateProductQuantity(id: string, part: 'amount' | 'unit', value: string) {
@@ -546,6 +570,8 @@ export default function App() {
     setForm(createEmptyForm());
     setEditingId(null);
     setOpenProductPickerId(null);
+    setOpenCategoryPickerId(null);
+    setOpenUnitPickerId(null);
     setIsResponsiblePickerOpen(false);
     setIsModalOpen(true);
   }
@@ -555,6 +581,8 @@ export default function App() {
     setForm(createEmptyForm());
     setEditingId(null);
     setOpenProductPickerId(null);
+    setOpenCategoryPickerId(null);
+    setOpenUnitPickerId(null);
     setIsResponsiblePickerOpen(false);
   }
 
@@ -612,6 +640,7 @@ export default function App() {
 
   function editOrder(order: Order) {
     setForm({
+      orderNumber: order.orderNumber,
       clientName: order.clientName,
       phone: order.phone,
       responsibleId: order.responsibleId,
@@ -860,16 +889,38 @@ export default function App() {
                 <span className="date-control-icon calendar-control-icon" aria-hidden="true" />
               </div>
 
-              <select
-                aria-label="Filtrar por area"
-                value={categoryFilter}
-                onChange={(event) => setCategoryFilter(event.target.value as 'Todas' | Category)}
-              >
-                <option value="Todas">Todas as areas</option>
-                {categories.map((category) => (
-                  <option key={category}>{category}</option>
-                ))}
-              </select>
+              <div className="product-combobox toolbar-combobox">
+                <input aria-label="Filtrar por area" value={categoryFilter} readOnly />
+
+                <button
+                  className="product-combobox-button"
+                  type="button"
+                  aria-label="Mostrar areas do filtro"
+                  aria-expanded={isCategoryFilterOpen}
+                  onClick={() => setIsCategoryFilterOpen((current) => !current)}
+                >
+                  <span aria-hidden="true" />
+                </button>
+
+                {isCategoryFilterOpen && (
+                  <div className="product-combobox-list">
+                    {(['Todas', ...categories] as Array<'Todas' | Category>).map((category) => (
+                      <button
+                        className="product-combobox-option"
+                        key={category}
+                        type="button"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => {
+                          setCategoryFilter(category);
+                          setIsCategoryFilterOpen(false);
+                        }}
+                      >
+                        {category === 'Todas' ? 'Todas as areas' : category}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               <button className="secondary-button" type="button" onClick={() => setDateFilter(todayKey())}>
                 Hoje
@@ -954,11 +1005,16 @@ export default function App() {
                   <div className="order-ticket">
                     <header className="order-ticket-head">
                       <div className="order-client">
+                        <div className="order-meta-row">
+                          <span>Responsavel: {getResponsibleName(order)}</span>
+                        </div>
+
                         <span>Cliente</span>
                         <h2>{order.clientName}</h2>
-                        <p>{order.phone || 'Sem telefone'}</p>
-                        <small>Responsavel: {getResponsibleName(order)}</small>
+                        <p>Telefone: {order.phone || 'Sem telefone'}</p>
                       </div>
+
+                      <span className="order-number-corner">Pedido #{order.orderNumber ?? '-'}</span>
                     </header>
 
                     <div className="order-products" aria-label="Produtos da encomenda">
@@ -971,7 +1027,10 @@ export default function App() {
                             {product.notes && <small>{product.notes}</small>}
                           </div>
 
-                          <span className="product-quantity">{product.quantity || 'Quantidade nao indicada'}</span>
+                          <span className="product-quantity">
+                            <small>Qtd.</small>
+                            {product.quantity || 'Nao indicada'}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -1149,16 +1208,42 @@ export default function App() {
                       <div className="product-form-grid">
                         <label>
                           Area
-                          <select
-                            value={product.category}
-                            onChange={(event) =>
-                              updateProductCategory(product.id, event.target.value as Category)
-                            }
-                          >
-                            {categories.map((category) => (
-                              <option key={category}>{category}</option>
-                            ))}
-                          </select>
+                          <div className="product-combobox">
+                            <input value={product.category} readOnly />
+
+                            <button
+                              className="product-combobox-button"
+                              type="button"
+                              aria-label="Mostrar areas"
+                              aria-expanded={openCategoryPickerId === product.id}
+                              onClick={() =>
+                                setOpenCategoryPickerId((current) =>
+                                  current === product.id ? null : product.id,
+                                )
+                              }
+                            >
+                              <span aria-hidden="true" />
+                            </button>
+
+                            {openCategoryPickerId === product.id && (
+                              <div className="product-combobox-list">
+                                {categories.map((category) => (
+                                  <button
+                                    className="product-combobox-option"
+                                    key={category}
+                                    type="button"
+                                    onMouseDown={(event) => event.preventDefault()}
+                                    onClick={() => {
+                                      updateProductCategory(product.id, category);
+                                      setOpenCategoryPickerId(null);
+                                    }}
+                                  >
+                                    {category}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </label>
 
                         <label className="product-name-field">
@@ -1242,16 +1327,42 @@ export default function App() {
                               placeholder="Qtd."
                             />
 
-                            <select
-                              value={getQuantityUnit(product.quantity)}
-                              onChange={(event) =>
-                                updateProductQuantity(product.id, 'unit', event.target.value)
-                              }
-                            >
-                              <option value="un">un</option>
-                              <option value="kg">kg</option>
-                              <option value="g">g</option>
-                            </select>
+                            <div className="product-combobox quantity-unit-combobox">
+                              <input value={getQuantityUnit(product.quantity)} readOnly />
+
+                              <button
+                                className="product-combobox-button"
+                                type="button"
+                                aria-label="Mostrar unidades"
+                                aria-expanded={openUnitPickerId === product.id}
+                                onClick={() =>
+                                  setOpenUnitPickerId((current) =>
+                                    current === product.id ? null : product.id,
+                                  )
+                                }
+                              >
+                                <span aria-hidden="true" />
+                              </button>
+
+                              {openUnitPickerId === product.id && (
+                                <div className="product-combobox-list">
+                                  {['un', 'kg', 'g'].map((unit) => (
+                                    <button
+                                      className="product-combobox-option"
+                                      key={unit}
+                                      type="button"
+                                      onMouseDown={(event) => event.preventDefault()}
+                                      onClick={() => {
+                                        updateProductQuantity(product.id, 'unit', unit);
+                                        setOpenUnitPickerId(null);
+                                      }}
+                                    >
+                                      {unit}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </label>
 
@@ -1305,6 +1416,7 @@ export default function App() {
             </p>
 
             <div className="confirm-details">
+              <span>Pedido #{orderToDelete.orderNumber ?? '-'}</span>
               <span>{formatDate(orderToDelete.deliveryDate)}</span>
               <span>{orderToDelete.deliveryTime || 'Sem hora marcada'}</span>
               <span>{orderToDelete.phone || 'Sem telefone'}</span>
@@ -1613,6 +1725,7 @@ export default function App() {
               <header className="print-card-header">
                 <div className="print-client">
                   <span>Cliente</span>
+                  <p>Pedido #{order.orderNumber ?? '-'}</p>
                   <h2>{order.clientName}</h2>
                   <p>Telefone: {order.phone || 'Sem telefone'}</p>
                   <p>Responsavel: {getResponsibleName(order)}</p>

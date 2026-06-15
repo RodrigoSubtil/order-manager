@@ -21,6 +21,7 @@ export type CatalogProduct = {
 
 export type Order = {
   id: string;
+  orderNumber: number | null;
   clientName: string;
   phone: string;
   responsibleId: string;

@@ -527,7 +527,7 @@ button:disabled {
 
 .toolbar-top-row input,
 .toolbar-top-row select,
-.toolbar-top-row button {
+.toolbar-top-row > button {
   width: 100%;
   min-width: 0;
   height: 46px;
@@ -535,6 +535,21 @@ button:disabled {
 
 .toolbar-top-row .date-control {
   height: 46px;
+}
+
+.toolbar-combobox {
+  height: 46px;
+}
+
+.toolbar-combobox input {
+  height: 46px;
+  text-align: center;
+}
+
+.toolbar-combobox .product-combobox-button {
+  width: 34px;
+  min-height: 34px;
+  height: 34px;
 }
 
 .toolbar-top-row > * {
@@ -699,13 +714,13 @@ button:disabled {
 }
 
 .order-date-strip small {
-  width: fit-content;
-  padding: 6px 9px;
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.66);
-  border: 1px solid rgba(165, 142, 116, 0.42);
-  border-radius: 999px;
-  font-size: 0.82rem;
+  width: auto;
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 0.86rem;
   font-weight: 900;
 }
 
@@ -716,11 +731,18 @@ button:disabled {
 }
 
 .order-ticket-head {
-  display: flex;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
   align-items: start;
-  justify-content: space-between;
   padding: 18px 20px 14px;
+}
+
+.order-number-corner {
+  color: var(--mocha);
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
 }
 
 .order-card h2 {
@@ -731,24 +753,28 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
+.order-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--sand);
+}
+
+.order-meta-row span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .order-client p {
   margin: 8px 0 0;
   color: var(--muted);
   font-size: 0.92rem;
   font-weight: 800;
-}
-
-.order-client small {
-  display: block;
-  width: fit-content;
-  margin-top: 8px;
-  padding: 6px 9px;
-  color: var(--ink);
-  background: var(--soft-white);
-  border: 1px solid var(--sand);
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 900;
 }
 
 .order-products {
@@ -807,7 +833,7 @@ button:disabled {
 
 .product-item {
   display: grid;
-  grid-template-columns: 118px minmax(0, 1fr) minmax(120px, auto);
+  grid-template-columns: 96px minmax(0, 1fr) minmax(96px, auto);
   gap: 16px;
   align-items: center;
   min-width: 0;
@@ -819,16 +845,16 @@ button:disabled {
 }
 
 .product-category-badge {
-  width: fit-content;
+  width: auto;
   max-width: 100%;
-  padding: 7px 10px;
-  color: var(--mocha);
-  background: var(--white);
-  border: 1px solid var(--taupe);
-  border-radius: 999px;
-  font-size: 0.76rem;
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 0.74rem;
   font-weight: 900;
-  line-height: 1;
+  line-height: 1.25;
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
@@ -858,17 +884,26 @@ button:disabled {
 }
 
 .product-quantity {
-  width: fit-content;
+  display: grid;
+  gap: 2px;
+  width: auto;
   max-width: 190px;
-  padding: 6px 10px;
+  padding: 0;
   color: var(--ink);
   text-align: right;
-  background: var(--white);
-  border: 1px solid var(--taupe);
-  border-radius: 8px;
-  font-size: 1rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 0.96rem;
   font-weight: 900;
   overflow-wrap: anywhere;
+}
+
+.product-quantity small {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 /* =========================
@@ -1259,6 +1294,10 @@ button:disabled {
   min-width: 0;
 }
 
+.quantity-unit-combobox input {
+  text-transform: lowercase;
+}
+
 /* =========================
    PRINT HIDDEN AREA
 ========================= */
@@ -1414,7 +1453,7 @@ button:disabled {
 
   .toolbar-top-row input,
   .toolbar-top-row select,
-  .toolbar-top-row button,
+  .toolbar-top-row > button,
   .search-input-full {
     height: 48px;
     border-radius: 10px;
@@ -1430,8 +1469,19 @@ button:disabled {
     height: 48px;
   }
 
+  .toolbar-combobox,
+  .toolbar-combobox input {
+    height: 48px;
+  }
+
+  .toolbar-combobox .product-combobox-button {
+    width: 36px;
+    min-height: 36px;
+    height: 36px;
+  }
+
   .toolbar-top-row select,
-  .toolbar-top-row button {
+  .toolbar-top-row > button {
     text-align: center;
     text-align-last: center;
   }
@@ -1482,7 +1532,21 @@ button:disabled {
 
   .order-ticket-head {
     display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     padding: 14px;
+  }
+
+  .order-number-corner {
+    font-size: 0.72rem;
+  }
+
+  .order-meta-row {
+    gap: 4px;
+  }
+
+  .order-meta-row span {
+    width: 100%;
+    font-size: 0.74rem;
   }
 
   .order-card {
