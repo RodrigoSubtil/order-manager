@@ -38,9 +38,7 @@
           }
         },
         "summary": "Check API liveness",
-        "tags": [
-          "Health"
-        ]
+        "tags": ["Health"]
       }
     },
     "/api/v1/health/ready": {
@@ -63,9 +61,7 @@
           }
         },
         "summary": "Check API readiness, including database connectivity",
-        "tags": [
-          "Health"
-        ]
+        "tags": ["Health"]
       }
     },
     "/api/v1/health/metrics": {
@@ -89,11 +85,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "generatedAt",
-                    "counters",
-                    "durations"
-                  ],
+                  "required": ["generatedAt", "counters", "durations"],
                   "properties": {
                     "generatedAt": {
                       "type": "string",
@@ -103,11 +95,7 @@
                       "type": "array",
                       "items": {
                         "type": "object",
-                        "required": [
-                          "name",
-                          "labels",
-                          "value"
-                        ],
+                        "required": ["name", "labels", "value"],
                         "properties": {
                           "name": {
                             "type": "string",
@@ -130,12 +118,7 @@
                       "type": "array",
                       "items": {
                         "type": "object",
-                        "required": [
-                          "name",
-                          "labels",
-                          "value",
-                          "maxMs"
-                        ],
+                        "required": ["name", "labels", "value", "maxMs"],
                         "properties": {
                           "name": {
                             "type": "string",
@@ -165,9 +148,7 @@
           }
         },
         "summary": "Read internal metrics with an operations token",
-        "tags": [
-          "Health"
-        ]
+        "tags": ["Health"]
       }
     },
     "/api/v1/auth/csrf": {
@@ -215,9 +196,7 @@
           }
         },
         "summary": "Issue a CSRF token for cookie-based session operations",
-        "tags": [
-          "Authentication"
-        ]
+        "tags": ["Authentication"]
       }
     },
     "/api/v1/auth/login": {
@@ -320,9 +299,7 @@
           }
         ],
         "summary": "Sign in through Supabase Auth and set HttpOnly session cookies",
-        "tags": [
-          "Authentication"
-        ]
+        "tags": ["Authentication"]
       }
     },
     "/api/v1/auth/password-recovery": {
@@ -397,9 +374,7 @@
           }
         ],
         "summary": "Request password recovery instructions without revealing account existence",
-        "tags": [
-          "Authentication"
-        ]
+        "tags": ["Authentication"]
       }
     },
     "/api/v1/auth/refresh": {
@@ -485,9 +460,7 @@
           }
         ],
         "summary": "Refresh the Supabase session and rotate HttpOnly cookies",
-        "tags": [
-          "Authentication"
-        ]
+        "tags": ["Authentication"]
       }
     },
     "/api/v1/auth/logout": {
@@ -559,9 +532,7 @@
           }
         ],
         "summary": "End the Supabase session and clear local session cookies",
-        "tags": [
-          "Authentication"
-        ]
+        "tags": ["Authentication"]
       }
     },
     "/api/v1/auth/me": {
@@ -626,9 +597,7 @@
           }
         ],
         "summary": "Return verified identity, active tenant and role",
-        "tags": [
-          "Authentication"
-        ]
+        "tags": ["Authentication"]
       }
     },
     "/api/v1/tenants/memberships": {
@@ -706,9 +675,7 @@
           }
         ],
         "summary": "List memberships belonging to the verified identity",
-        "tags": [
-          "Tenants and memberships"
-        ]
+        "tags": ["Tenants and memberships"]
       }
     },
     "/api/v1/tenants/memberships/current-tenant": {
@@ -786,9 +753,7 @@
           }
         ],
         "summary": "List members of the active company for administration",
-        "tags": [
-          "Tenants and memberships"
-        ]
+        "tags": ["Tenants and memberships"]
       }
     },
     "/api/v1/tenants": {
@@ -876,9 +841,7 @@
           }
         ],
         "summary": "Create a tenant and its first active OWNER membership atomically",
-        "tags": [
-          "Tenants and memberships"
-        ]
+        "tags": ["Tenants and memberships"]
       }
     },
     "/api/v1/tenants/switch": {
@@ -967,9 +930,7 @@
           }
         ],
         "summary": "Switch company using an opaque membership id validated by the server",
-        "tags": [
-          "Tenants and memberships"
-        ]
+        "tags": ["Tenants and memberships"]
       }
     },
     "/api/v1/tenants/memberships/{membershipId}/accept": {
@@ -1057,9 +1018,7 @@
           }
         ],
         "summary": "Accept an invitation owned by the verified identity",
-        "tags": [
-          "Tenants and memberships"
-        ]
+        "tags": ["Tenants and memberships"]
       }
     },
     "/api/v1/tenants/memberships/invite": {
@@ -1147,9 +1106,7 @@
           }
         ],
         "summary": "Invite a user to the active company",
-        "tags": [
-          "Tenants and memberships"
-        ]
+        "tags": ["Tenants and memberships"]
       }
     },
     "/api/v1/tenants/memberships/{membershipId}": {
@@ -1247,9 +1204,7 @@
           }
         ],
         "summary": "Activate, suspend, revoke or change a membership role",
-        "tags": [
-          "Tenants and memberships"
-        ]
+        "tags": ["Tenants and memberships"]
       }
     },
     "/api/v1/orders": {
@@ -1404,9 +1359,7 @@
           }
         ],
         "summary": "List orders with server-side filters and pagination",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       },
       "post": {
         "operationId": "OrdersController_create",
@@ -1492,9 +1445,7 @@
           }
         ],
         "summary": "Create an order and all items atomically",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       }
     },
     "/api/v1/orders/{id}": {
@@ -1592,9 +1543,7 @@
           }
         ],
         "summary": "Get a tenant-scoped order with its items",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       },
       "patch": {
         "operationId": "OrdersController_update",
@@ -1710,9 +1659,7 @@
           }
         ],
         "summary": "Update an order with optimistic concurrency",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       },
       "delete": {
         "operationId": "OrdersController_remove",
@@ -1821,9 +1768,7 @@
           }
         ],
         "summary": "Soft delete one order",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       }
     },
     "/api/v1/orders/bulk-delete/preview": {
@@ -1911,9 +1856,7 @@
           }
         ],
         "summary": "Preview orders affected by a date-range soft delete",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       }
     },
     "/api/v1/orders/bulk-delete/confirm": {
@@ -2001,9 +1944,7 @@
           }
         ],
         "summary": "Confirm a date-range soft delete after preview",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       }
     },
     "/api/v1/catalog/products": {
@@ -2130,9 +2071,7 @@
           }
         ],
         "summary": "List active tenant catalog products",
-        "tags": [
-          "Catalog"
-        ]
+        "tags": ["Catalog"]
       },
       "post": {
         "operationId": "CatalogController_create",
@@ -2218,9 +2157,7 @@
           }
         ],
         "summary": "Create a tenant catalog product",
-        "tags": [
-          "Catalog"
-        ]
+        "tags": ["Catalog"]
       }
     },
     "/api/v1/catalog/products/{id}": {
@@ -2318,9 +2255,7 @@
           }
         ],
         "summary": "Get one tenant-scoped catalog product",
-        "tags": [
-          "Catalog"
-        ]
+        "tags": ["Catalog"]
       },
       "patch": {
         "operationId": "CatalogController_update",
@@ -2436,9 +2371,7 @@
           }
         ],
         "summary": "Update a catalog product with optimistic concurrency",
-        "tags": [
-          "Catalog"
-        ]
+        "tags": ["Catalog"]
       },
       "delete": {
         "operationId": "CatalogController_remove",
@@ -2547,9 +2480,7 @@
           }
         ],
         "summary": "Soft delete a catalog product",
-        "tags": [
-          "Catalog"
-        ]
+        "tags": ["Catalog"]
       }
     },
     "/api/v1/responsibles": {
@@ -2668,9 +2599,7 @@
           }
         ],
         "summary": "List tenant responsibles",
-        "tags": [
-          "Responsibles"
-        ]
+        "tags": ["Responsibles"]
       },
       "post": {
         "operationId": "ResponsiblesController_create",
@@ -2756,9 +2685,7 @@
           }
         ],
         "summary": "Create a tenant responsible",
-        "tags": [
-          "Responsibles"
-        ]
+        "tags": ["Responsibles"]
       }
     },
     "/api/v1/responsibles/{id}": {
@@ -2856,9 +2783,7 @@
           }
         ],
         "summary": "Get one tenant-scoped responsible",
-        "tags": [
-          "Responsibles"
-        ]
+        "tags": ["Responsibles"]
       },
       "patch": {
         "operationId": "ResponsiblesController_update",
@@ -2974,9 +2899,7 @@
           }
         ],
         "summary": "Update a responsible with optimistic concurrency",
-        "tags": [
-          "Responsibles"
-        ]
+        "tags": ["Responsibles"]
       },
       "delete": {
         "operationId": "ResponsiblesController_remove",
@@ -3085,9 +3008,7 @@
           }
         ],
         "summary": "Soft delete a responsible",
-        "tags": [
-          "Responsibles"
-        ]
+        "tags": ["Responsibles"]
       }
     },
     "/api/v1/reports/detailed": {
@@ -3203,9 +3124,7 @@
           }
         ],
         "summary": "Get tenant-scoped detailed orders for browser printing or future PDF generation",
-        "tags": [
-          "Reports"
-        ]
+        "tags": ["Reports"]
       }
     },
     "/api/v1/reports/production-summary": {
@@ -3321,9 +3240,7 @@
           }
         ],
         "summary": "Get production totals grouped by category, product and unit",
-        "tags": [
-          "Reports"
-        ]
+        "tags": ["Reports"]
       }
     }
   },
@@ -3374,9 +3291,7 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": [
-              "ok"
-            ],
+            "enum": ["ok"],
             "example": "ok"
           },
           "timestamp": {
@@ -3385,10 +3300,7 @@
             "example": "2026-07-16T12:00:00.000Z"
           }
         },
-        "required": [
-          "status",
-          "timestamp"
-        ]
+        "required": ["status", "timestamp"]
       },
       "ApiErrorResponseDto": {
         "type": "object",
@@ -3404,9 +3316,7 @@
           },
           "details": {
             "nullable": true,
-            "example": [
-              "email must be an email"
-            ],
+            "example": ["email must be an email"],
             "description": "Validation messages when available; otherwise null.",
             "type": "array",
             "items": {
@@ -3420,12 +3330,7 @@
             "description": "Request correlation identifier used in structured logs."
           }
         },
-        "required": [
-          "code",
-          "message",
-          "details",
-          "traceId"
-        ]
+        "required": ["code", "message", "details", "traceId"]
       },
       "CsrfResponseDto": {
         "type": "object",
@@ -3436,9 +3341,7 @@
             "description": "Token that must also be sent in the X-CSRF-Token header for session mutations."
           }
         },
-        "required": [
-          "csrfToken"
-        ]
+        "required": ["csrfToken"]
       },
       "LoginDto": {
         "type": "object",
@@ -3462,10 +3365,7 @@
             "description": "Keeps the session cookie after the browser is closed. It never stores a password."
           }
         },
-        "required": [
-          "email",
-          "password"
-        ]
+        "required": ["email", "password"]
       },
       "AuthenticatedUserResponseDto": {
         "type": "object",
@@ -3486,11 +3386,7 @@
             "example": "Ana Silva"
           }
         },
-        "required": [
-          "id",
-          "email",
-          "displayName"
-        ]
+        "required": ["id", "email", "displayName"]
       },
       "AuthenticatedTenantResponseDto": {
         "type": "object",
@@ -3505,18 +3401,11 @@
             "example": "pastelaria-centro"
           }
         },
-        "required": [
-          "id",
-          "slug"
-        ]
+        "required": ["id", "slug"]
       },
       "MembershipRole": {
         "type": "string",
-        "enum": [
-          "OWNER",
-          "ADMIN",
-          "OPERATOR"
-        ]
+        "enum": ["OWNER", "ADMIN", "OPERATOR"]
       },
       "SessionResponseDto": {
         "type": "object",
@@ -3547,12 +3436,7 @@
             "example": false
           }
         },
-        "required": [
-          "user",
-          "tenant",
-          "role",
-          "tenantSelectionRequired"
-        ]
+        "required": ["user", "tenant", "role", "tenantSelectionRequired"]
       },
       "PasswordRecoveryDto": {
         "type": "object",
@@ -3564,9 +3448,7 @@
             "example": "owner@example.com"
           }
         },
-        "required": [
-          "email"
-        ]
+        "required": ["email"]
       },
       "PasswordRecoveryResponseDto": {
         "type": "object",
@@ -3576,18 +3458,11 @@
             "example": "If the account exists, recovery instructions will be sent."
           }
         },
-        "required": [
-          "message"
-        ]
+        "required": ["message"]
       },
       "MembershipStatus": {
         "type": "string",
-        "enum": [
-          "ACTIVE",
-          "INVITED",
-          "SUSPENDED",
-          "REVOKED"
-        ]
+        "enum": ["ACTIVE", "INVITED", "SUSPENDED", "REVOKED"]
       },
       "TenantSummaryDto": {
         "type": "object",
@@ -3605,11 +3480,7 @@
             "example": "Pastelaria Centro"
           }
         },
-        "required": [
-          "id",
-          "slug",
-          "name"
-        ]
+        "required": ["id", "slug", "name"]
       },
       "MembershipResponseDto": {
         "type": "object",
@@ -3636,12 +3507,7 @@
             "$ref": "#/components/schemas/TenantSummaryDto"
           }
         },
-        "required": [
-          "id",
-          "role",
-          "status",
-          "tenant"
-        ]
+        "required": ["id", "role", "status", "tenant"]
       },
       "MembershipListResponseDto": {
         "type": "object",
@@ -3658,9 +3524,7 @@
             "nullable": true
           }
         },
-        "required": [
-          "items"
-        ]
+        "required": ["items"]
       },
       "TenantMemberUserDto": {
         "type": "object",
@@ -3680,10 +3544,7 @@
             "example": "ana@example.com"
           }
         },
-        "required": [
-          "id",
-          "displayName"
-        ]
+        "required": ["id", "displayName"]
       },
       "TenantMemberResponseDto": {
         "type": "object",
@@ -3713,13 +3574,7 @@
             "$ref": "#/components/schemas/TenantMemberUserDto"
           }
         },
-        "required": [
-          "id",
-          "role",
-          "status",
-          "tenant",
-          "user"
-        ]
+        "required": ["id", "role", "status", "tenant", "user"]
       },
       "TenantMemberListResponseDto": {
         "type": "object",
@@ -3731,9 +3586,7 @@
             }
           }
         },
-        "required": [
-          "items"
-        ]
+        "required": ["items"]
       },
       "CreateTenantDto": {
         "type": "object",
@@ -3750,10 +3603,7 @@
             "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
           }
         },
-        "required": [
-          "name",
-          "slug"
-        ]
+        "required": ["name", "slug"]
       },
       "SwitchTenantDto": {
         "type": "object",
@@ -3764,9 +3614,7 @@
             "description": "Opaque membership identifier. tenant_id is never accepted from the frontend."
           }
         },
-        "required": [
-          "membershipId"
-        ]
+        "required": ["membershipId"]
       },
       "ActiveTenantResponseDto": {
         "type": "object",
@@ -3786,11 +3634,7 @@
             ]
           }
         },
-        "required": [
-          "membershipId",
-          "tenant",
-          "role"
-        ]
+        "required": ["membershipId", "tenant", "role"]
       },
       "InviteMemberDto": {
         "type": "object",
@@ -3808,10 +3652,7 @@
             ]
           }
         },
-        "required": [
-          "email",
-          "role"
-        ]
+        "required": ["email", "role"]
       },
       "UpdateMembershipDto": {
         "type": "object",
@@ -3825,36 +3666,21 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "ACTIVE",
-              "SUSPENDED",
-              "REVOKED"
-            ]
+            "enum": ["ACTIVE", "SUSPENDED", "REVOKED"]
           }
         }
       },
       "ProductCategory": {
         "type": "string",
-        "enum": [
-          "PASTELARIA",
-          "PADARIA",
-          "SALGADOS"
-        ]
+        "enum": ["PASTELARIA", "PADARIA", "SALGADOS"]
       },
       "OrderStatusFilter": {
         "type": "string",
-        "enum": [
-          "ACTIVE",
-          "DELETED"
-        ]
+        "enum": ["ACTIVE", "DELETED"]
       },
       "QuantityUnit": {
         "type": "string",
-        "enum": [
-          "UN",
-          "KG",
-          "G"
-        ]
+        "enum": ["UN", "KG", "G"]
       },
       "OrderItemResponseDto": {
         "type": "object",
@@ -4017,12 +3843,7 @@
             "example": 87
           }
         },
-        "required": [
-          "items",
-          "page",
-          "pageSize",
-          "total"
-        ]
+        "required": ["items", "page", "pageSize", "total"]
       },
       "OrderItemDto": {
         "type": "object",
@@ -4070,12 +3891,7 @@
             "example": 0
           }
         },
-        "required": [
-          "category",
-          "productName",
-          "quantityValue",
-          "quantityUnit"
-        ]
+        "required": ["category", "productName", "quantityValue", "quantityUnit"]
       },
       "CreateOrderDto": {
         "type": "object",
@@ -4113,11 +3929,7 @@
             }
           }
         },
-        "required": [
-          "clientName",
-          "deliveryDate",
-          "items"
-        ]
+        "required": ["clientName", "deliveryDate", "items"]
       },
       "UpdateOrderDto": {
         "type": "object",
@@ -4164,9 +3976,7 @@
             }
           }
         },
-        "required": [
-          "version"
-        ]
+        "required": ["version"]
       },
       "BulkDeleteOrdersDto": {
         "type": "object",
@@ -4182,9 +3992,7 @@
             "description": "Must be true only when calling the confirmation endpoint."
           }
         },
-        "required": [
-          "confirmation"
-        ]
+        "required": ["confirmation"]
       },
       "BulkDeleteOrderPreviewItemDto": {
         "type": "object",
@@ -4208,12 +4016,7 @@
             "example": "2026-07-20"
           }
         },
-        "required": [
-          "id",
-          "orderNumber",
-          "clientName",
-          "deliveryDate"
-        ]
+        "required": ["id", "orderNumber", "clientName", "deliveryDate"]
       },
       "BulkDeleteOrdersPreviewResponseDto": {
         "type": "object",
@@ -4236,11 +4039,7 @@
             "description": "True when total is larger than the 100-item preview."
           }
         },
-        "required": [
-          "total",
-          "preview",
-          "truncated"
-        ]
+        "required": ["total", "preview", "truncated"]
       },
       "BulkDeleteOrdersResultDto": {
         "type": "object",
@@ -4251,9 +4050,7 @@
             "example": 150
           }
         },
-        "required": [
-          "deleted"
-        ]
+        "required": ["deleted"]
       },
       "CatalogProductResponseDto": {
         "type": "object",
@@ -4375,12 +4172,7 @@
             "example": 42
           }
         },
-        "required": [
-          "items",
-          "page",
-          "pageSize",
-          "total"
-        ]
+        "required": ["items", "page", "pageSize", "total"]
       },
       "CreateCatalogProductDto": {
         "type": "object",
@@ -4417,10 +4209,7 @@
             "default": 0
           }
         },
-        "required": [
-          "category",
-          "name"
-        ]
+        "required": ["category", "name"]
       },
       "UpdateCatalogProductDto": {
         "type": "object",
@@ -4459,9 +4248,7 @@
             "minimum": 0
           }
         },
-        "required": [
-          "version"
-        ]
+        "required": ["version"]
       },
       "ResponsibleResponseDto": {
         "type": "object",
@@ -4565,12 +4352,7 @@
             "example": 12
           }
         },
-        "required": [
-          "items",
-          "page",
-          "pageSize",
-          "total"
-        ]
+        "required": ["items", "page", "pageSize", "total"]
       },
       "CreateResponsibleDto": {
         "type": "object",
@@ -4591,9 +4373,7 @@
             "default": 0
           }
         },
-        "required": [
-          "name"
-        ]
+        "required": ["name"]
       },
       "UpdateResponsibleDto": {
         "type": "object",
@@ -4618,9 +4398,7 @@
             "minimum": 0
           }
         },
-        "required": [
-          "version"
-        ]
+        "required": ["version"]
       },
       "ReportTenantResponseDto": {
         "type": "object",
@@ -4634,10 +4412,7 @@
             "example": "pastelaria-centro"
           }
         },
-        "required": [
-          "id",
-          "slug"
-        ]
+        "required": ["id", "slug"]
       },
       "DetailedReportResponsibleDto": {
         "type": "object",
@@ -4651,10 +4426,7 @@
             "example": "Joana Silva"
           }
         },
-        "required": [
-          "id",
-          "name"
-        ]
+        "required": ["id", "name"]
       },
       "DetailedReportItemDto": {
         "type": "object",
@@ -4781,9 +4553,7 @@
           },
           "format": {
             "type": "string",
-            "enum": [
-              "DETAILED"
-            ],
+            "enum": ["DETAILED"],
             "example": "DETAILED"
           },
           "orders": {
@@ -4793,14 +4563,7 @@
             }
           }
         },
-        "required": [
-          "generatedAt",
-          "from",
-          "until",
-          "tenant",
-          "format",
-          "orders"
-        ]
+        "required": ["generatedAt", "from", "until", "tenant", "format", "orders"]
       },
       "ProductionSummaryItemDto": {
         "type": "object",
@@ -4834,13 +4597,7 @@
             "example": 2
           }
         },
-        "required": [
-          "category",
-          "productName",
-          "quantityValue",
-          "quantityUnit",
-          "orderCount"
-        ]
+        "required": ["category", "productName", "quantityValue", "quantityUnit", "orderCount"]
       },
       "ProductionSummaryGroupDto": {
         "type": "object",
@@ -4859,10 +4616,7 @@
             }
           }
         },
-        "required": [
-          "category",
-          "items"
-        ]
+        "required": ["category", "items"]
       },
       "ProductionSummaryResponseDto": {
         "type": "object",
@@ -4884,9 +4638,7 @@
           },
           "format": {
             "type": "string",
-            "enum": [
-              "PRODUCTION_SUMMARY"
-            ],
+            "enum": ["PRODUCTION_SUMMARY"],
             "example": "PRODUCTION_SUMMARY"
           },
           "orderCount": {
@@ -4901,15 +4653,7 @@
             }
           }
         },
-        "required": [
-          "generatedAt",
-          "from",
-          "until",
-          "tenant",
-          "format",
-          "orderCount",
-          "groups"
-        ]
+        "required": ["generatedAt", "from", "until", "tenant", "format", "orderCount", "groups"]
       }
     }
   }
