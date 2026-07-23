@@ -2,7 +2,6 @@
   "name": "@order-manager/api",
   "private": true,
   "version": "0.1.0",
-  "type": "module",
   "scripts": {
     "build": "npm run prisma:generate && tsc -p tsconfig.build.json",
     "db:check": "tsx prisma/check-connection.ts",
