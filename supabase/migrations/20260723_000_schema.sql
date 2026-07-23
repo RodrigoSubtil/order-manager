@@ -148,6 +148,24 @@ create table if not exists public.order_items (
   constraint order_items_tenant_id_id_unique unique (tenant_id, id)
 );
 
+-- Existing target tables created by an earlier version did not generate UUIDs
+-- automatically. These defaults make the migration safe for both a fresh
+-- project and that previously prepared staging schema.
+alter table public.tenants alter column id set default gen_random_uuid();
+alter table public.tenant_memberships alter column id set default gen_random_uuid();
+alter table public.responsibles alter column id set default gen_random_uuid();
+alter table public.catalog_products alter column id set default gen_random_uuid();
+alter table public.orders alter column id set default gen_random_uuid();
+alter table public.order_items alter column id set default gen_random_uuid();
+
+alter table public.tenants alter column updated_at set default now();
+alter table public.users alter column updated_at set default now();
+alter table public.tenant_memberships alter column updated_at set default now();
+alter table public.responsibles alter column updated_at set default now();
+alter table public.catalog_products alter column updated_at set default now();
+alter table public.orders alter column updated_at set default now();
+alter table public.order_items alter column updated_at set default now();
+
 create unique index if not exists tenant_memberships_one_default_per_user
   on public.tenant_memberships (user_id)
   where is_default and status = 'ACTIVE';

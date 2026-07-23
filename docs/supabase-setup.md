@@ -16,7 +16,7 @@ Num projeto Supabase novo, reveja e aplique no SQL Editor, por esta ordem:
 1. [schema base](../supabase/migrations/20260723_000_schema.sql);
 2. [RPCs do frontend](../supabase/migrations/20260723_001_direct-web-rpcs.sql).
 
-A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users` para `public.users`. A segunda cria as operações que o frontend chama. Elas:
+A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users` para `public.users`. Ela também normaliza os valores padrão de UUID e `updated_at`, para que um schema-alvo preparado anteriormente continue compatível. A segunda cria as operações que o frontend chama. Elas:
 
 - mantém as tabelas de negócio protegidas por RLS;
 - resolve a empresa por `auth.uid()` e pela membership padrão;
@@ -26,7 +26,7 @@ A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users
 
 Não aplique essas migrations em produção sem backup verificado e revisão manual.
 
-> Se o projeto Supabase já tiver tabelas antigas ou com outro formato, não aplique o schema base por cima delas. Como os dados atuais são descartáveis, a opção segura é criar outro projeto vazio ou pedir uma limpeza controlada do schema antes da aplicação.
+> Se o projeto Supabase tiver tabelas antigas com outro formato, não aplique o schema base por cima delas. Os ajustes de compatibilidade são apenas para o schema-alvo já preparado; um legado diferente requer uma limpeza controlada ou uma migração revisada antes da aplicação.
 
 ## Primeiro acesso
 
