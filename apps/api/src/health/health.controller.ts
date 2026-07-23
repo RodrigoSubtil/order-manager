@@ -122,6 +122,7 @@ function collectErrorCodes(error: unknown): string[] {
 
     const record = current as Record<string, unknown>;
     if (typeof record.code === 'string') codes.add(record.code);
+    if (typeof record.originalCode === 'string') codes.add(record.originalCode);
     if (record.cause) queue.push(record.cause);
     if (record.meta) queue.push(record.meta);
     if (record.driverAdapterError) queue.push(record.driverAdapterError);
