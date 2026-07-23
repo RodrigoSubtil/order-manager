@@ -1,8 +1,15 @@
 node_modules
+coverage
+playwright-report
+test-results
 dist
 .npm-cache
 .env
+apps/api/src/generated/prisma
 .DS_Store
 *.local
 vite-*.log
 .repo_git
+# Exports autorizados podem conter PII e nunca devem entrar no repositório.
+apps/api/prisma/legacy/private/
+*.authorized-legacy-export.json

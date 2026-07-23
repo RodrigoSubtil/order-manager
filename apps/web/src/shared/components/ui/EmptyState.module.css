@@ -1,0 +1,17 @@
+.emptyState {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  min-height: 300px;
+  padding: 24px;
+  color: var(--color-muted);
+  text-align: center;
+  background: var(--color-white);
+  border: 1px dashed var(--color-taupe);
+  border-radius: var(--radius-md);
+}
+
+.emptyState strong {
+  color: var(--color-ink);
+}

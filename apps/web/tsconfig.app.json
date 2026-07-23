@@ -1,0 +1,8 @@
+{
+  "extends": "@order-manager/tsconfig/react.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "allowJs": false
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,66 @@
+.content {
+  display: grid;
+  gap: 12px;
+  padding: 22px;
+}
+
+.content h2 {
+  color: var(--color-ink);
+  font-size: 1.35rem;
+}
+
+.content p {
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+.content p strong {
+  color: var(--color-ink);
+}
+
+.details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background: var(--color-soft-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+
+.details span {
+  color: var(--color-muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.dateGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dateField {
+  padding: 10px;
+  background: var(--color-soft-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+@media (max-width: 560px) {
+  .content {
+    padding: 18px;
+  }
+
+  .dateGrid {
+    grid-template-columns: 1fr;
+  }
+}

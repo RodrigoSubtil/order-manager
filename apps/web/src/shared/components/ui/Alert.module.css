@@ -1,0 +1,17 @@
+.alert {
+  padding: 12px 14px;
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  font-weight: 800;
+}
+
+.error {
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+  border-color: rgb(139 63 50 / 35%);
+}
+
+.info {
+  color: var(--color-ink);
+}

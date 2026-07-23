@@ -1,0 +1,20 @@
+export default {
+  extends: ['stylelint-config-standard'],
+  ignoreFiles: ['node_modules/**', 'coverage/**', 'dist/**'],
+  rules: {
+    'alpha-value-notation': null,
+    'at-rule-descriptor-value-no-unknown': null,
+    'color-function-alias-notation': null,
+    'color-function-notation': null,
+    'color-hex-length': null,
+    'comment-empty-line-before': null,
+    'declaration-block-no-redundant-longhand-properties': null,
+    'declaration-property-value-keyword-no-deprecated': null,
+    'media-feature-range-notation': null,
+    'no-descending-specificity': null,
+    'property-no-deprecated': null,
+    'property-no-vendor-prefix': null,
+    'selector-class-pattern': null,
+    'value-keyword-case': null,
+  },
+};

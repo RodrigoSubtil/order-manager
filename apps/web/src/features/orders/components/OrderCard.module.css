@@ -1,0 +1,255 @@
+.card {
+  display: grid;
+  grid-template-columns: 174px minmax(0, 1fr);
+  min-height: 210px;
+  overflow: hidden;
+}
+
+.dateStrip {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  padding: 22px 18px;
+  color: var(--color-ink);
+  background: var(--color-cream);
+  border-right: 1px solid var(--color-line);
+}
+
+.dateStrip span,
+.client > span {
+  color: var(--color-muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dateStrip strong {
+  max-width: 130px;
+  font-size: 1.22rem;
+  line-height: 1.12;
+}
+
+.dateStrip small {
+  color: var(--color-muted);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.ticket {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-width: 0;
+}
+
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  padding: 18px 20px 14px;
+}
+
+.number {
+  color: var(--color-accent);
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.card h2 {
+  margin-top: 4px;
+  font-size: 1.55rem;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-sand);
+}
+
+.meta span {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.client p {
+  margin-top: 8px;
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.products {
+  display: grid;
+  gap: 0;
+  margin: 0 20px 16px;
+  overflow: hidden;
+  background: var(--color-soft-white);
+  border: 1px solid var(--color-sand);
+  border-radius: var(--radius-md);
+}
+
+.product {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) minmax(96px, auto);
+  gap: 16px;
+  align-items: center;
+  min-width: 0;
+  padding: 13px 14px;
+}
+
+.product + .product {
+  border-top: 1px dashed var(--color-line);
+}
+
+.category {
+  color: var(--color-muted);
+  font-size: 0.74rem;
+  font-weight: 900;
+  line-height: 1.25;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.copy {
+  min-width: 0;
+}
+
+.copy strong {
+  display: block;
+  font-size: 1.02rem;
+  overflow-wrap: anywhere;
+}
+
+.copy small {
+  display: block;
+  margin-top: 5px;
+  color: var(--color-muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.quantity {
+  display: grid;
+  gap: 2px;
+  max-width: 190px;
+  text-align: right;
+  font-size: 0.96rem;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.quantity small {
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.footer {
+  display: grid;
+  justify-items: end;
+  padding: 12px 20px 18px;
+  border-top: 1px solid var(--color-sand);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+
+  .dateStrip {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 14px 16px;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .dateStrip strong {
+    max-width: none;
+  }
+
+  .product {
+    grid-template-columns: 104px minmax(0, 1fr) minmax(110px, auto);
+  }
+}
+
+@media (max-width: 560px) {
+  .card {
+    min-height: 0;
+    box-shadow: 0 8px 20px rgb(77 67 57 / 8%);
+  }
+
+  .head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 14px;
+  }
+
+  .number {
+    font-size: 0.72rem;
+  }
+
+  .meta {
+    gap: 4px;
+  }
+
+  .meta span {
+    width: 100%;
+    font-size: 0.74rem;
+  }
+
+  .card h2 {
+    font-size: 1.28rem;
+  }
+
+  .products {
+    margin: 0 12px 12px;
+  }
+
+  .product {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .quantity {
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .footer {
+    padding: 10px 12px 12px;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    gap: 8px;
+  }
+
+  .actions button {
+    width: 100%;
+    min-height: 42px;
+    padding: 0 8px;
+    font-size: 0.82rem;
+  }
+}

@@ -1,0 +1,124 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top left, rgb(187 165 142 / 20%), transparent 35%),
+    linear-gradient(135deg, var(--color-cream), var(--color-white));
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  border-color: rgb(77 67 57 / 10%);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 24px 70px rgb(77 67 57 / 14%);
+}
+
+.brand {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.brand h1 {
+  margin: 8px 0;
+  color: var(--color-ink);
+  font-size: 2rem;
+}
+
+.brand p {
+  color: var(--color-muted);
+}
+
+.loading {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input {
+  height: auto;
+  padding: 14px 16px;
+  border-color: rgb(77 67 57 / 14%);
+  border-radius: var(--radius-lg);
+}
+
+.submit {
+  width: 100%;
+}
+
+.recoveryToggle {
+  align-self: center;
+  color: var(--color-muted);
+  font-size: 0.86rem;
+}
+
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.rememberMe input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--color-primary);
+}
+
+.recovery {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgb(77 67 57 / 12%);
+}
+
+.recovery h2,
+.recovery p {
+  margin: 0;
+}
+
+.recovery p {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.recovery label {
+  display: grid;
+  gap: 8px;
+}
+
+.recoveryActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 560px) {
+  .shell {
+    padding: 16px;
+  }
+
+  .card {
+    padding: 24px;
+  }
+}

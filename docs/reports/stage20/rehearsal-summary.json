@@ -1,0 +1,22 @@
+{
+  "scope": "LOCAL_SYNTHETIC_FIXTURE",
+  "productionTouched": false,
+  "sourceExportAvailable": false,
+  "database": "order_manager_migration_test",
+  "anomalyStatus": "BLOCKED",
+  "firstRunStatus": "MIGRATED",
+  "replayStatus": "MIGRATED",
+  "idempotentReplay": true,
+  "sentinelTenantUnchanged": true,
+  "restoration": {
+    "strategy": "LOCAL_POSTGRES_TEMPLATE_SNAPSHOT",
+    "restored": true,
+    "migrationsAfterRestore": 3,
+    "tenantsAfterRestore": 0,
+    "elapsedMs": 286,
+    "limitation": "This proves local snapshot restoration only; Supabase backup or PITR must be rehearsed separately before production."
+  },
+  "startedAt": "2026-07-20T00:36:14.081Z",
+  "finishedAt": "2026-07-20T00:36:21.996Z",
+  "elapsedMs": 7915
+}

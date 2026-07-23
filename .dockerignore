@@ -1,0 +1,15 @@
+.git
+.agents
+.codex
+node_modules
+coverage
+dist
+playwright-report
+test-results
+.env
+**/.env
+**/.env.*
+*.local
+apps/api/src/generated/prisma
+apps/api/prisma/legacy/private
+docs/reports
