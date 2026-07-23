@@ -1,7 +1,5 @@
-import type { ApiRequestError } from '@order-manager/api-client';
-
 export function getApiErrorStatus(error: unknown): number | undefined {
-  const candidate = error as Partial<ApiRequestError> | null;
+  const candidate = error as { status?: unknown } | null;
   return typeof candidate?.status === 'number' ? candidate.status : undefined;
 }
 

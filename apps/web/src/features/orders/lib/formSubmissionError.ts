@@ -17,7 +17,7 @@ export function getFormSubmissionError(
   const candidate = error as ErrorLike | null;
   const code = typeof candidate?.code === 'string' ? candidate.code : '';
   const status = Number(candidate?.status ?? candidate?.statusCode);
-  const conflict = code === 'VERSION_CONFLICT' || status === 409;
+  const conflict = code === 'VERSION_CONFLICT' || code === '40001' || status === 409;
 
   if (conflict) {
     return {

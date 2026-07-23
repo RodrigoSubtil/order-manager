@@ -1,7 +1,0 @@
-{
-  "extends": "@order-manager/tsconfig/react.json",
-  "compilerOptions": {
-    "types": ["react"]
-  },
-  "include": ["src/**/*.ts"]
-}

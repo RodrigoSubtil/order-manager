@@ -6,28 +6,24 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "check:api-boundary": "node scripts/check-api-boundary.mjs",
-    "lint": "npm run check:api-boundary && npm run lint:js && npm run lint:css",
+    "lint": "npm run lint:js && npm run lint:css",
     "lint:js": "eslint .",
     "lint:css": "stylelint \"src/**/*.css\"",
     "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "test": "vitest run --config vitest.config.mjs",
+    "test:watch": "vitest --config vitest.config.mjs",
+    "test:coverage": "vitest run --config vitest.config.mjs --coverage",
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
-    "@order-manager/api-client": "0.1.0",
     "@sentry/react": "^10.67.0",
+    "@supabase/supabase-js": "^2.110.8",
     "@tanstack/react-query": "^5.101.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.81.0",
     "react-router-dom": "^7.18.1",
     "zod": "^4.4.3"
-  },
-  "devDependencies": {
-    "msw": "^2.15.0"
   }
 }

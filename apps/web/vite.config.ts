@@ -13,7 +13,7 @@ export default defineConfig({
       'react/jsx-runtime',
       'react-dom/client',
       'react-router-dom',
-      '@tanstack/react-query',
+      '@supabase/supabase-js',
     ],
   },
 });

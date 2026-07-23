@@ -1,5 +1,4 @@
-import { useOrdersControllerCreate, useOrdersControllerUpdate } from '@order-manager/api-client';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
 import { useFieldArray, useForm, useWatch } from 'react-hook-form';
@@ -11,7 +10,7 @@ import {
   type Order,
   type OrderResponsible,
 } from '../../../shared/lib/domain';
-import { createOrderFromForm, updateOrderFromForm } from '../lib/apiMappers';
+import { saveOrder as saveOrderInSupabase } from '../../../shared/lib/supabaseData';
 import { getFormSubmissionError } from '../lib/formSubmissionError';
 import {
   createEmptyOrderFormValues,
@@ -29,8 +28,15 @@ type UseOrderFormOptions = {
 
 export function useOrderForm({ catalogProducts, responsibles, setAppError }: UseOrderFormOptions) {
   const queryClient = useQueryClient();
-  const createMutation = useOrdersControllerCreate();
-  const updateMutation = useOrdersControllerUpdate();
+  const saveMutation = useMutation({
+    mutationFn: ({
+      form,
+      current,
+    }: {
+      form: ReturnType<typeof formValuesToOrderForm>;
+      current?: Order;
+    }) => saveOrderInSupabase(form, current),
+  });
   const methods = useForm<OrderFormValues>({
     defaultValues: createEmptyOrderFormValues(),
     resolver: zodResolver(orderSchema),
@@ -107,14 +113,11 @@ export function useOrderForm({ catalogProducts, responsibles, setAppError }: Use
       if (editingOrder) {
         if (!editingOrder.version)
           throw new Error('A versão da encomenda não está disponível. Recarregue os dados.');
-        await updateMutation.mutateAsync({
-          id: editingOrder.id,
-          data: updateOrderFromForm(form, editingOrder.version),
-        });
+        await saveMutation.mutateAsync({ form, current: editingOrder });
       } else {
-        await createMutation.mutateAsync({ data: createOrderFromForm(form) });
+        await saveMutation.mutateAsync({ form });
       }
-      await queryClient.invalidateQueries({ queryKey: ['/api/v1/orders'] });
+      await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
       closeModal();
     } catch (error) {
       const submissionError = getFormSubmissionError(
@@ -122,7 +125,7 @@ export function useOrderForm({ catalogProducts, responsibles, setAppError }: Use
         'Não foi possível guardar a encomenda.',
       );
       if (submissionError.conflict)
-        await queryClient.invalidateQueries({ queryKey: ['/api/v1/orders'] });
+        await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
       methods.setError(submissionError.conflict ? 'root.conflict' : 'root.api', {
         message: submissionError.message,
       });

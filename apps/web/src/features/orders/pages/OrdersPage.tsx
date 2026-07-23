@@ -1,19 +1,11 @@
-import {
-  useOrdersControllerConfirmBulkDelete,
-  useOrdersControllerPreviewBulkDelete,
-  useOrdersControllerRemove,
-  type BulkDeleteOrdersPreviewResponseDto,
-} from '@order-manager/api-client';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { LogoutConfirmDialog } from '../../auth/components/LogoutConfirmDialog';
 import { SessionHeader } from '../../auth/components/SessionHeader';
-import { TenantSelectorDialog } from '../../auth/components/TenantSelectorDialog';
 import { useSession } from '../../auth/hooks/useSession';
 import { LoginPage } from '../../auth/pages/LoginPage';
-import { TenantAccessPage } from '../../auth/pages/TenantAccessPage';
 import { PrintOptionsDialog } from '../../reports/components/PrintOptionsDialog';
 import { PrintableOrders } from '../../reports/components/PrintableOrders';
 import { usePrintOrders } from '../../reports/hooks/usePrintOrders';
@@ -21,6 +13,12 @@ import { useModalBodyClass, useOutsidePointerDown } from '../../../shared/hooks'
 import { Alert } from '../../../shared/components/ui';
 import { getApiErrorMessage } from '../../../shared/lib/apiError';
 import { yesterdayKey } from '../../../shared/lib/dateUtils';
+import {
+  confirmBulkDelete,
+  deleteOrder,
+  previewBulkDelete,
+  type BulkDeletePreview,
+} from '../../../shared/lib/supabaseData';
 import { DeleteOrderDialog } from '../components/DeleteOrderDialog';
 import { DeletePreviousOrdersDialog } from '../components/DeletePreviousOrdersDialog';
 import { OrderFilters } from '../components/OrderFilters';
@@ -38,10 +36,7 @@ export default function OrdersPage() {
   const session = useSession();
   const queryClient = useQueryClient();
   const filterState = useOrderFilterState();
-  const data = useApiOrderData(
-    filterState.queryParams,
-    Boolean(session.authUser && !session.tenantSelectionRequired),
-  );
+  const data = useApiOrderData(filterState.queryParams, Boolean(session.authUser));
   const filters = useOrderFilters(data.orders, data.responsibles, filterState);
   const [appError, setAppError] = useState('');
   const orderForm = useOrderForm({
@@ -50,22 +45,29 @@ export default function OrdersPage() {
     setAppError,
   });
   const print = usePrintOrders(filters.sortedOrders, filters.dateFilter, filters.categoryFilter);
-  const removeMutation = useOrdersControllerRemove();
-  const previewBulkDeleteMutation = useOrdersControllerPreviewBulkDelete();
-  const confirmBulkDeleteMutation = useOrdersControllerConfirmBulkDelete();
+  const removeMutation = useMutation({
+    mutationFn: ({ id, version }: { id: string; version: number }) => deleteOrder(id, version),
+  });
+  const previewBulkDeleteMutation = useMutation({
+    mutationFn: ({ from, until }: { from: string; until: string }) =>
+      previewBulkDelete(from, until),
+  });
+  const confirmBulkDeleteMutation = useMutation({
+    mutationFn: ({ from, until }: { from: string; until: string }) =>
+      confirmBulkDelete(from, until),
+  });
   const [deleteOrderId, setDeleteOrderId] = useState<string | null>(null);
   const [isDeletePreviousOpen, setIsDeletePreviousOpen] = useState(false);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
-  const [isTenantSelectorOpen, setIsTenantSelectorOpen] = useState(false);
   const [deletePreviousFrom, setDeletePreviousFrom] = useState('');
   const [deletePreviousUntil, setDeletePreviousUntil] = useState(yesterdayKey);
-  const [bulkPreview, setBulkPreview] = useState<BulkDeleteOrdersPreviewResponseDto | null>(null);
+  const [bulkPreview, setBulkPreview] = useState<BulkDeletePreview | null>(null);
 
   const isSaving =
     removeMutation.isPending ||
     previewBulkDeleteMutation.isPending ||
     confirmBulkDeleteMutation.isPending;
-  const canDeleteOrders = session.role === 'OWNER' || session.role === 'ADMIN';
+  const canDeleteOrders = session.role === 'OWNER';
 
   function closeDropdowns() {
     orderForm.setOpenProductPickerId(null);
@@ -80,8 +82,7 @@ export default function OrdersPage() {
       print.isPrintOptionsOpen ||
       Boolean(deleteOrderId) ||
       isDeletePreviousOpen ||
-      isLogoutConfirmOpen ||
-      isTenantSelectorOpen,
+      isLogoutConfirmOpen,
   );
 
   const orderToDelete = useMemo(
@@ -112,34 +113,6 @@ export default function OrdersPage() {
       setAppError(getApiErrorMessage(error, 'Não foi possível terminar sessão.'));
     }
   }
-  async function handleTenantSwitch(membershipId: string) {
-    setAppError('');
-    try {
-      await session.switchTenant(membershipId);
-      setIsTenantSelectorOpen(false);
-      filterState.setPage(1);
-    } catch (error) {
-      setAppError(getApiErrorMessage(error, 'Não foi possível trocar de empresa.'));
-    }
-  }
-  async function handleInvitationAcceptance(membershipId: string) {
-    setAppError('');
-    try {
-      await session.acceptInvitation(membershipId);
-      filterState.setPage(1);
-    } catch (error) {
-      setAppError(getApiErrorMessage(error, 'Não foi possível aceitar o convite.'));
-    }
-  }
-  async function handleTenantCreation(name: string, slug: string) {
-    setAppError('');
-    try {
-      await session.createTenant(name, slug);
-      filterState.setPage(1);
-    } catch (error) {
-      setAppError(getApiErrorMessage(error, 'Não foi possível criar a empresa.'));
-    }
-  }
   async function confirmDeleteOrder() {
     if (!orderToDelete?.version) {
       setAppError('A versão da encomenda não está disponível. Recarregue os dados.');
@@ -147,11 +120,8 @@ export default function OrdersPage() {
     }
     setAppError('');
     try {
-      await removeMutation.mutateAsync({
-        id: orderToDelete.id,
-        params: { version: orderToDelete.version },
-      });
-      await queryClient.invalidateQueries({ queryKey: ['/api/v1/orders'] });
+      await removeMutation.mutateAsync({ id: orderToDelete.id, version: orderToDelete.version });
+      await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
       setDeleteOrderId(null);
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível apagar a encomenda.'));
@@ -167,13 +137,17 @@ export default function OrdersPage() {
       if (!bulkPreview) {
         setBulkPreview(
           await previewBulkDeleteMutation.mutateAsync({
-            data: { ...request, confirmation: false },
+            from: request.from ?? '',
+            until: request.until,
           }),
         );
         return;
       }
-      await confirmBulkDeleteMutation.mutateAsync({ data: { ...request, confirmation: true } });
-      await queryClient.invalidateQueries({ queryKey: ['/api/v1/orders'] });
+      await confirmBulkDeleteMutation.mutateAsync({
+        from: request.from ?? '',
+        until: request.until,
+      });
+      await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
       setBulkPreview(null);
       setIsDeletePreviousOpen(false);
     } catch (error) {
@@ -206,19 +180,6 @@ export default function OrdersPage() {
     );
   }
 
-  if (session.tenantSelectionRequired) {
-    return (
-      <TenantAccessPage
-        error={appError || session.sessionError}
-        isSaving={session.isTenantActionPending}
-        memberships={session.memberships}
-        onAcceptInvitation={handleInvitationAcceptance}
-        onCreateTenant={handleTenantCreation}
-        onSelectTenant={handleTenantSwitch}
-      />
-    );
-  }
-
   const companyDisplayName = session.authUser.bakeryName || 'Empresa';
   const visibleError = appError || data.appError || print.printError;
 
@@ -227,12 +188,11 @@ export default function OrdersPage() {
       <main className={styles.shell} data-screen-only>
         <SessionHeader
           companyDisplayName={companyDisplayName}
-          isAdmin={session.isAdmin}
+          isOwner={session.isOwner}
           role={session.role ?? ''}
           userDisplayName={session.authUser.displayName}
           onLogoutRequest={() => setIsLogoutConfirmOpen(true)}
           onOpenSettings={() => navigate('/settings')}
-          onOpenTenantSelector={() => setIsTenantSelectorOpen(true)}
         />
         {visibleError && <Alert tone="error">{visibleError}</Alert>}
         <OrderIndicators
@@ -323,17 +283,6 @@ export default function OrdersPage() {
           isSaving={isSaving}
           onCancel={() => setIsLogoutConfirmOpen(false)}
           onConfirm={handleLogout}
-        />
-      )}
-      {isTenantSelectorOpen && (
-        <TenantSelectorDialog
-          activeMembershipId={session.activeMembershipId}
-          error={appError}
-          isSaving={session.isTenantActionPending}
-          memberships={session.memberships}
-          onAcceptInvitation={(membershipId) => void handleInvitationAcceptance(membershipId)}
-          onClose={() => setIsTenantSelectorOpen(false)}
-          onSelect={(membershipId) => void handleTenantSwitch(membershipId)}
         />
       )}
       {print.isPrintOptionsOpen && (

@@ -1,9 +1,8 @@
-import type { OrdersControllerListParams } from '@order-manager/api-client';
 import { useCallback, useMemo, useState } from 'react';
 
 import { todayKey } from '../../../shared/lib/dateUtils';
 import type { Category, Order, OrderResponsible } from '../../../shared/lib/domain';
-import { categoryToApi } from '../lib/apiMappers';
+import type { OrderListParams } from '../../../shared/lib/supabaseData';
 
 export type OrderFilterState = ReturnType<typeof useOrderFilterState>;
 
@@ -15,10 +14,10 @@ export function useOrderFilterState() {
   const [page, setPage] = useState(1);
   const pageSize = 25;
 
-  const queryParams = useMemo<OrdersControllerListParams>(
+  const queryParams = useMemo<OrderListParams>(
     () => ({
       ...(dateFilter ? { from: dateFilter, until: dateFilter } : {}),
-      ...(categoryToApi(categoryFilter) ? { category: categoryToApi(categoryFilter) } : {}),
+      ...(categoryFilter !== 'Todas' ? { category: categoryFilter } : {}),
       ...(search.trim() ? { search: search.trim() } : {}),
       page,
       pageSize,

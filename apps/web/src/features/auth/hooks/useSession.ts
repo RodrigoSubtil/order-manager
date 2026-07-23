@@ -1,182 +1,145 @@
-import {
-  getAuthControllerMeQueryKey,
-  getAuthControllerCsrfQueryKey,
-  getTenantsControllerListMembershipsQueryKey,
-  useAuthControllerCsrf,
-  useAuthControllerLogin,
-  useAuthControllerLogout,
-  useAuthControllerRequestPasswordRecovery,
-  useAuthControllerMe,
-  useAuthControllerRefresh,
-  useTenantsControllerAcceptInvitation,
-  useTenantsControllerCreateTenant,
-  useTenantsControllerListMemberships,
-  useTenantsControllerSwitchTenant,
-} from '@order-manager/api-client';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { getApiErrorMessage, getApiErrorStatus } from '../../../shared/lib/apiError';
+import {
+  getSessionContext,
+  type MembershipRole,
+  type SessionContext,
+} from '../../../shared/lib/supabaseData';
+import {
+  assertSupabaseConfigured,
+  setSessionPersistence,
+  supabase,
+} from '../../../shared/lib/supabase';
 import type { LoginFormValues } from '../schemas/loginSchema';
+
+type AuthUser = {
+  id: string;
+  username: string;
+  displayName: string;
+  bakeryName: string | null;
+};
+
+function displayNameFromSession(session: {
+  user: { email?: string | null; user_metadata?: Record<string, unknown> };
+}) {
+  const metadata = session.user.user_metadata ?? {};
+  return (
+    (typeof metadata.display_name === 'string' && metadata.display_name) ||
+    (typeof metadata.full_name === 'string' && metadata.full_name) ||
+    session.user.email?.split('@')[0] ||
+    'Utilizador'
+  );
+}
 
 export function useSession() {
   const queryClient = useQueryClient();
-  const csrf = useAuthControllerCsrf({
-    query: { queryKey: getAuthControllerCsrfQueryKey(), enabled: false, retry: false },
-  });
-  const me = useAuthControllerMe({
-    query: { queryKey: getAuthControllerMeQueryKey(), retry: false, refetchOnWindowFocus: false },
-  });
-  const loginMutation = useAuthControllerLogin();
-  const logoutMutation = useAuthControllerLogout();
-  const passwordRecoveryMutation = useAuthControllerRequestPasswordRecovery();
-  const refreshMutation = useAuthControllerRefresh();
-  const memberships = useTenantsControllerListMemberships({
-    query: {
-      queryKey: getTenantsControllerListMembershipsQueryKey(),
-      enabled: Boolean(me.data),
-      retry: false,
-      staleTime: 30_000,
-    },
-  });
-  const createTenantMutation = useTenantsControllerCreateTenant();
-  const acceptInvitationMutation = useTenantsControllerAcceptInvitation();
-  const switchTenantMutation = useTenantsControllerSwitchTenant();
-  const refreshAttempted = useRef(false);
-  const activeTenantId = useRef<string | null>(null);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [context, setContext] = useState<SessionContext | null>(null);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [sessionError, setSessionError] = useState('');
 
-  const ensureCsrf = useCallback(async () => {
-    await csrf.refetch({ throwOnError: true });
-  }, [csrf]);
+  const refreshSession = useCallback(async () => {
+    assertSupabaseConfigured();
+    const { data, error } = await supabase.auth.getSession();
+    if (error) throw error;
+    if (!data.session) {
+      setAuthUser(null);
+      setContext(null);
+      return;
+    }
+
+    const nextContext = await getSessionContext();
+    if (!nextContext) {
+      throw new Error('A sua conta não tem acesso ativo a esta empresa. Contacte o dono.');
+    }
+
+    setContext(nextContext);
+    setAuthUser({
+      id: data.session.user.id,
+      username: data.session.user.email ?? data.session.user.id,
+      displayName: nextContext.user.displayName || displayNameFromSession(data.session),
+      bakeryName: nextContext.tenant.name,
+    });
+  }, []);
 
   useEffect(() => {
-    if (!me.isError || getApiErrorStatus(me.error) !== 401 || refreshAttempted.current) return;
-
-    refreshAttempted.current = true;
+    let active = true;
     void (async () => {
       try {
-        await ensureCsrf();
-        await refreshMutation.mutateAsync();
-        await me.refetch();
-      } catch {
-        // A query /auth/me permanece em erro 401 até um login bem-sucedido substituir o cache.
-        // Removê-la aqui desmontaria o formulário enquanto o utilizador o está a preencher.
+        await refreshSession();
+        if (active) setSessionError('');
+      } catch (error) {
+        if (active) {
+          setAuthUser(null);
+          setContext(null);
+          setSessionError(
+            error instanceof Error ? error.message : 'Não foi possível verificar a sessão.',
+          );
+        }
+      } finally {
+        if (active) setIsCheckingSession(false);
       }
     })();
-  }, [ensureCsrf, me, queryClient, refreshMutation]);
 
-  useEffect(() => {
-    const nextTenantId = me.data?.tenant?.id ?? null;
-    if (activeTenantId.current && activeTenantId.current !== nextTenantId) {
-      queryClient.removeQueries({
-        predicate: (query) => query.queryKey[0] !== '/api/v1/auth/me',
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+        queryClient.clear();
+      }
+      void refreshSession().catch(() => {
+        if (active) {
+          setAuthUser(null);
+          setContext(null);
+        }
       });
-    }
-    activeTenantId.current = nextTenantId;
-  }, [me.data?.tenant?.id, queryClient]);
+    });
+    return () => {
+      active = false;
+      data.subscription.unsubscribe();
+    };
+  }, [queryClient, refreshSession]);
 
   const login = useCallback(
     async (values: LoginFormValues) => {
-      await ensureCsrf();
-      const session = await loginMutation.mutateAsync({
-        data: {
-          email: values.username.trim(),
-          password: values.password,
-          rememberMe: values.rememberMe,
-        },
+      assertSupabaseConfigured();
+      queryClient.clear();
+      setSessionPersistence(values.rememberMe === true);
+      const { error } = await supabase.auth.signInWithPassword({
+        email: values.username.trim(),
+        password: values.password,
       });
-      refreshAttempted.current = false;
-      queryClient.setQueryData(getAuthControllerMeQueryKey(), session);
+      if (error) throw new Error('Email ou palavra-passe incorretos.');
+      await refreshSession();
+      setSessionError('');
     },
-    [ensureCsrf, loginMutation, queryClient],
+    [queryClient, refreshSession],
   );
 
   const logout = useCallback(async () => {
-    await ensureCsrf();
-    await logoutMutation.mutateAsync();
-    activeTenantId.current = null;
+    const { error } = await supabase.auth.signOut();
+    if (error) throw new Error('Não foi possível terminar sessão.');
     queryClient.clear();
-  }, [ensureCsrf, logoutMutation, queryClient]);
+    setAuthUser(null);
+    setContext(null);
+  }, [queryClient]);
 
-  const switchTenant = useCallback(
-    async (membershipId: string) => {
-      await ensureCsrf();
-      await switchTenantMutation.mutateAsync({ data: { membershipId } });
-      queryClient.removeQueries({
-        predicate: (query) => query.queryKey[0] !== '/api/v1/auth/me',
-      });
-      await me.refetch({ throwOnError: true });
-      await memberships.refetch({ throwOnError: true });
-    },
-    [ensureCsrf, me, memberships, queryClient, switchTenantMutation],
-  );
+  const requestPasswordRecovery = useCallback(async (email: string) => {
+    assertSupabaseConfigured();
+    const redirectTo = import.meta.env.VITE_APP_URL || window.location.origin;
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+    if (error) throw new Error('Não foi possível pedir a recuperação da palavra-passe.');
+  }, []);
 
-  const acceptInvitation = useCallback(
-    async (membershipId: string) => {
-      await ensureCsrf();
-      await acceptInvitationMutation.mutateAsync({ membershipId });
-      await me.refetch({ throwOnError: true });
-      await memberships.refetch({ throwOnError: true });
-    },
-    [acceptInvitationMutation, ensureCsrf, me, memberships],
-  );
-
-  const createTenant = useCallback(
-    async (name: string, slug: string) => {
-      await ensureCsrf();
-      await createTenantMutation.mutateAsync({ data: { name, slug } });
-      await me.refetch({ throwOnError: true });
-      await memberships.refetch({ throwOnError: true });
-    },
-    [createTenantMutation, ensureCsrf, me, memberships],
-  );
-
-  const requestPasswordRecovery = useCallback(
-    async (email: string) => {
-      await ensureCsrf();
-      await passwordRecoveryMutation.mutateAsync({ data: { email } });
-    },
-    [ensureCsrf, passwordRecoveryMutation],
-  );
-
-  const authUser = me.data
-    ? {
-        id: me.data.user.id,
-        username: me.data.user.email ?? me.data.user.displayName,
-        displayName: me.data.user.displayName,
-        bakeryName:
-          memberships.data?.items.find((item) => item.id === memberships.data?.activeMembershipId)
-            ?.tenant.name ??
-          me.data.tenant?.slug ??
-          null,
-      }
-    : null;
-  const isUnauthenticated = me.isError && getApiErrorStatus(me.error) === 401;
-  const sessionError =
-    me.isError && !isUnauthenticated
-      ? getApiErrorMessage(me.error, 'Não foi possível verificar a sessão.')
-      : '';
+  const role: MembershipRole | null = context?.role ?? null;
 
   return {
     authUser,
-    acceptInvitation,
-    createTenant,
-    isAdmin: me.data?.role === 'OWNER' || me.data?.role === 'ADMIN',
-    isCheckingSession: me.isLoading || refreshMutation.isPending,
-    isTenantActionPending:
-      createTenantMutation.isPending ||
-      acceptInvitationMutation.isPending ||
-      switchTenantMutation.isPending,
-    isLoadingMemberships: memberships.isLoading,
+    isCheckingSession,
+    isOwner: role === 'OWNER',
     login,
     logout,
-    memberships: memberships.data?.items ?? [],
-    activeMembershipId: memberships.data?.activeMembershipId ?? null,
     requestPasswordRecovery,
-    ensureCsrf,
-    role: me.data?.role ?? null,
+    role,
     sessionError,
-    switchTenant,
-    tenantSelectionRequired: Boolean(me.data?.tenantSelectionRequired || !me.data?.tenant),
   };
 }
