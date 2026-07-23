@@ -1,0 +1,126 @@
+{
+  "batchId": "stage20-fixture-v1",
+  "sourceKind": "FIXTURE",
+  "status": "MIGRATED",
+  "database": "order_manager_migration_test",
+  "startedAt": "2026-07-20T00:36:21.309Z",
+  "finishedAt": "2026-07-20T00:36:21.659Z",
+  "elapsedMs": 350,
+  "idempotentReplay": true,
+  "metadataConfirmed": true,
+  "sourceCounts": {
+    "appUsers": 2,
+    "orders": 2,
+    "orderItems": 4,
+    "responsibles": 2,
+    "catalogProducts": 3
+  },
+  "destinationCounts": {
+    "users": 2,
+    "memberships": 2,
+    "orders": 2,
+    "orderItems": 4,
+    "responsibles": 2,
+    "catalogProducts": 3
+  },
+  "issues": [
+    {
+      "severity": "WARNING",
+      "code": "ID_REKEYED",
+      "entity": "ORDER_ITEM",
+      "sourceId": "legacy-item-4",
+      "message": "The non-UUID legacy id was mapped deterministically and recorded."
+    }
+  ],
+  "duplicateGroups": [],
+  "idMappings": [
+    {
+      "entity": "RESPONSIBLE",
+      "sourceId": "94000000-0000-4000-8000-000000000001",
+      "targetId": "94000000-0000-4000-8000-000000000001",
+      "preserved": true
+    },
+    {
+      "entity": "RESPONSIBLE",
+      "sourceId": "94000000-0000-4000-8000-000000000002",
+      "targetId": "94000000-0000-4000-8000-000000000002",
+      "preserved": true
+    },
+    {
+      "entity": "CATALOG_PRODUCT",
+      "sourceId": "95000000-0000-4000-8000-000000000001",
+      "targetId": "95000000-0000-4000-8000-000000000001",
+      "preserved": true
+    },
+    {
+      "entity": "CATALOG_PRODUCT",
+      "sourceId": "95000000-0000-4000-8000-000000000002",
+      "targetId": "95000000-0000-4000-8000-000000000002",
+      "preserved": true
+    },
+    {
+      "entity": "CATALOG_PRODUCT",
+      "sourceId": "95000000-0000-4000-8000-000000000003",
+      "targetId": "95000000-0000-4000-8000-000000000003",
+      "preserved": true
+    },
+    {
+      "entity": "ORDER",
+      "sourceId": "92000000-0000-4000-8000-000000000001",
+      "targetId": "92000000-0000-4000-8000-000000000001",
+      "preserved": true
+    },
+    {
+      "entity": "ORDER",
+      "sourceId": "92000000-0000-4000-8000-000000000002",
+      "targetId": "92000000-0000-4000-8000-000000000002",
+      "preserved": true
+    },
+    {
+      "entity": "ORDER_ITEM",
+      "sourceId": "93000000-0000-4000-8000-000000000001",
+      "targetId": "93000000-0000-4000-8000-000000000001",
+      "preserved": true
+    },
+    {
+      "entity": "ORDER_ITEM",
+      "sourceId": "93000000-0000-4000-8000-000000000002",
+      "targetId": "93000000-0000-4000-8000-000000000002",
+      "preserved": true
+    },
+    {
+      "entity": "ORDER_ITEM",
+      "sourceId": "93000000-0000-4000-8000-000000000003",
+      "targetId": "93000000-0000-4000-8000-000000000003",
+      "preserved": true
+    },
+    {
+      "entity": "ORDER_ITEM",
+      "sourceId": "legacy-item-4",
+      "targetId": "80bb9aa4-ee1d-5e2d-8000-35d0db2c0056",
+      "preserved": false
+    }
+  ],
+  "orphanCounts": {
+    "sourceOrderProducts": 0,
+    "sourceResponsibles": 0,
+    "destinationOrderItems": 0
+  },
+  "ordersWithoutItems": {
+    "source": [],
+    "destination": []
+  },
+  "isolation": {
+    "expectedTenantId": "90000000-0000-4000-8000-000000000001",
+    "foreignTenantRows": 0
+  },
+  "nextOrderNumber": "43",
+  "checks": {
+    "countsMatch": true,
+    "noSourceOrphans": true,
+    "noDestinationOrphans": true,
+    "everyOrderHasItems": true,
+    "tenantIsolation": true,
+    "nextOrderNumberValid": true
+  }
+}

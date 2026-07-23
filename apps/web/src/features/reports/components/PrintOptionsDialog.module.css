@@ -1,0 +1,86 @@
+.content {
+  display: grid;
+  gap: 12px;
+  width: min(620px, 100%);
+  padding: 22px;
+}
+
+.content h2 {
+  color: var(--color-ink);
+  font-size: 1.35rem;
+}
+
+.section {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.section > strong {
+  color: var(--color-ink);
+  font-size: 0.92rem;
+}
+
+.radioGrid,
+.dateGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.radio {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  color: var(--color-ink);
+  background: var(--color-soft-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.radio:has(input:checked) {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgb(118 95 75 / 16%);
+}
+
+.radio input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+}
+
+.radio span {
+  font-weight: 900;
+}
+
+.details {
+  padding: 10px;
+  color: var(--color-muted);
+  background: var(--color-soft-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+@media (max-width: 560px) {
+  .content {
+    padding: 18px;
+  }
+
+  .radioGrid,
+  .dateGrid {
+    grid-template-columns: 1fr;
+  }
+}

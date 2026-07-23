@@ -1,0 +1,115 @@
+.editor {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  background: var(--color-white);
+  border: 1px solid var(--color-sand);
+  border-radius: var(--radius-md);
+}
+
+.title {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-sand);
+}
+
+.title h3 {
+  margin: 0;
+}
+
+.card {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px;
+  background: var(--color-soft-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+
+.cardTop {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardTop strong {
+  font-size: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.5fr) minmax(260px, 1.15fr) minmax(150px, 0.6fr);
+  gap: 12px;
+  align-items: start;
+  min-width: 0;
+}
+
+.noteField {
+  grid-column: 1 / -1;
+}
+
+.note {
+  min-height: 116px;
+  overflow: hidden;
+  line-height: 1.35;
+  resize: none;
+}
+
+.quantityGrid {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.8fr) minmax(110px, 1fr);
+  gap: 8px;
+  min-width: 0;
+}
+
+.unitInput {
+  text-transform: lowercase;
+}
+
+@media (max-width: 900px) {
+  .title,
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 560px) {
+  .editor {
+    padding: 12px;
+  }
+
+  .title {
+    gap: 10px;
+  }
+
+  .title button {
+    width: 100%;
+  }
+
+  .card {
+    padding: 12px;
+  }
+
+  .cardTop button {
+    min-height: 34px;
+  }
+
+  .grid {
+    gap: 12px;
+  }
+
+  .quantityGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .note {
+    min-height: 140px;
+  }
+}

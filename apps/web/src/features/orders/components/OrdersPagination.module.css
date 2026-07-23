@@ -1,0 +1,28 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 2px 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.pagination > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination button {
+  width: auto;
+  min-height: 34px;
+  padding: 0 10px;
+}
+
+@media (max-width: 560px) {
+  .pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

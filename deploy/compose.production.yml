@@ -1,0 +1,59 @@
+name: order-manager-production
+
+# This file is intentionally a runtime template only. There is no production
+# deployment or migration workflow in this repository.
+services:
+  api:
+    image: ${API_IMAGE:-order-manager-api:production}
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:-}
+      API_HOST: 0.0.0.0
+      API_PORT: 3000
+      API_CORS_ORIGINS: ${API_CORS_ORIGINS:-}
+      API_SWAGGER_ENABLED: 'false'
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+      SUPABASE_INVITE_REDIRECT_URL: ${SUPABASE_INVITE_REDIRECT_URL:-}
+      SESSION_CONTEXT_SECRET: ${SESSION_CONTEXT_SECRET:-}
+      METRICS_ENABLED: ${METRICS_ENABLED:-false}
+      METRICS_AUTH_TOKEN: ${METRICS_AUTH_TOKEN:-}
+      SENTRY_ENABLED: ${SENTRY_ENABLED:-false}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_TRACES_SAMPLE_RATE: ${SENTRY_TRACES_SAMPLE_RATE:-0.05}
+    restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+    expose:
+      - '3000'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:3000/api/v1/health/ready').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  web:
+    image: ${WEB_IMAGE:-order-manager-web:production}
+    restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    expose:
+      - '8080'
+    depends_on:
+      api:
+        condition: service_healthy

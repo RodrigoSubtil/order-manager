@@ -1,0 +1,137 @@
+{
+  "batchId": "stage20-fixture-anomalies-v1",
+  "sourceKind": "FIXTURE",
+  "status": "BLOCKED",
+  "database": null,
+  "startedAt": "2026-07-20T00:36:20.654Z",
+  "finishedAt": "2026-07-20T00:36:20.658Z",
+  "elapsedMs": 4,
+  "idempotentReplay": false,
+  "metadataConfirmed": true,
+  "sourceCounts": {
+    "appUsers": 2,
+    "orders": 2,
+    "orderItems": 3,
+    "responsibles": 2,
+    "catalogProducts": 3
+  },
+  "destinationCounts": {},
+  "issues": [
+    {
+      "severity": "BLOCKING",
+      "code": "RESPONSIBLE_ORPHAN",
+      "entity": "orders",
+      "sourceId": "92000000-0000-4000-8000-000000000001",
+      "field": "responsible_id",
+      "rawValue": "99999999-0000-4000-8000-000000000099",
+      "message": "Migration is blocked until this discrepancy has an approved resolution."
+    },
+    {
+      "severity": "BLOCKING",
+      "code": "QUANTITY_UNCONVERTIBLE",
+      "entity": "order_products",
+      "sourceId": "93000000-0000-4000-8000-000000000001",
+      "field": "quantity",
+      "rawValue": "doze caixas",
+      "message": "Expected a positive number followed by UN, KG or G."
+    },
+    {
+      "severity": "BLOCKING",
+      "code": "ORDER_PRODUCT_ORPHAN",
+      "entity": "order_products",
+      "sourceId": "orphan-item-for-rehearsal",
+      "field": "order_id",
+      "rawValue": "99999999-0000-4000-8000-000000000098",
+      "message": "Migration is blocked until this discrepancy has an approved resolution."
+    },
+    {
+      "severity": "BLOCKING",
+      "code": "ORDER_WITHOUT_ITEMS",
+      "entity": "orders",
+      "sourceId": "92000000-0000-4000-8000-000000000002",
+      "message": "Migration is blocked until this discrepancy has an approved resolution."
+    },
+    {
+      "severity": "BLOCKING",
+      "code": "ORDER_NUMBER_DUPLICATE",
+      "entity": "orders",
+      "sourceId": "92000000-0000-4000-8000-000000000002",
+      "field": "order_number",
+      "rawValue": "41",
+      "message": "Order number duplicates source order 92000000-0000-4000-8000-000000000001."
+    }
+  ],
+  "duplicateGroups": [],
+  "idMappings": [
+    {
+      "entity": "RESPONSIBLE",
+      "sourceId": "94000000-0000-4000-8000-000000000001",
+      "targetId": "94000000-0000-4000-8000-000000000001",
+      "preserved": true
+    },
+    {
+      "entity": "RESPONSIBLE",
+      "sourceId": "94000000-0000-4000-8000-000000000002",
+      "targetId": "94000000-0000-4000-8000-000000000002",
+      "preserved": true
+    },
+    {
+      "entity": "CATALOG_PRODUCT",
+      "sourceId": "95000000-0000-4000-8000-000000000001",
+      "targetId": "95000000-0000-4000-8000-000000000001",
+      "preserved": true
+    },
+    {
+      "entity": "CATALOG_PRODUCT",
+      "sourceId": "95000000-0000-4000-8000-000000000002",
+      "targetId": "95000000-0000-4000-8000-000000000002",
+      "preserved": true
+    },
+    {
+      "entity": "CATALOG_PRODUCT",
+      "sourceId": "95000000-0000-4000-8000-000000000003",
+      "targetId": "95000000-0000-4000-8000-000000000003",
+      "preserved": true
+    },
+    {
+      "entity": "ORDER",
+      "sourceId": "92000000-0000-4000-8000-000000000001",
+      "targetId": "92000000-0000-4000-8000-000000000001",
+      "preserved": true
+    },
+    {
+      "entity": "ORDER",
+      "sourceId": "92000000-0000-4000-8000-000000000002",
+      "targetId": "92000000-0000-4000-8000-000000000002",
+      "preserved": true
+    },
+    {
+      "entity": "ORDER_ITEM",
+      "sourceId": "93000000-0000-4000-8000-000000000002",
+      "targetId": "93000000-0000-4000-8000-000000000002",
+      "preserved": true
+    }
+  ],
+  "orphanCounts": {
+    "sourceOrderProducts": 1,
+    "sourceResponsibles": 1,
+    "destinationOrderItems": 0
+  },
+  "ordersWithoutItems": {
+    "source": ["92000000-0000-4000-8000-000000000002"],
+    "destination": []
+  },
+  "isolation": {
+    "expectedTenantId": "90000000-0000-4000-8000-000000000001",
+    "foreignTenantRows": 0
+  },
+  "nextOrderNumber": null,
+  "checks": {
+    "countsMatch": false,
+    "noSourceOrphans": false,
+    "noDestinationOrphans": false,
+    "everyOrderHasItems": false,
+    "tenantIsolation": false,
+    "nextOrderNumberValid": false
+  }
+}
