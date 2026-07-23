@@ -5,16 +5,18 @@ Esta aplicação usa Supabase Auth e PostgreSQL diretamente pelo frontend.
 ## Pré-requisitos
 
 1. Crie um projeto Supabase separado para staging ou produção.
-2. Configure no Vercel apenas `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` e `VITE_APP_URL`.
-3. Configure as URLs de redirecionamento do Auth para o domínio Vercel e para `http://localhost:5173`.
-4. Crie o utilizador no Supabase Auth e uma membership ativa com papel `OWNER`.
+2. Configure no Vercel apenas `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`.
+3. Crie o utilizador no Supabase Auth e uma membership ativa com papel `OWNER`.
 
 ## Banco e segurança
 
 Num projeto Supabase novo, reveja e aplique no SQL Editor, por esta ordem:
 
 1. [schema base](../supabase/migrations/20260723_000_schema.sql);
-2. [RPCs do frontend](../supabase/migrations/20260723_001_direct-web-rpcs.sql).
+2. [RPCs do frontend](../supabase/migrations/20260723_001_direct-web-rpcs.sql);
+3. [autenticação por utilizador](../supabase/migrations/20260723_002_username_auth.sql);
+4. [acesso gerencial](../supabase/migrations/20260724_003_management_access.sql);
+5. [dados iniciais da Pastelaria Vénus](../supabase/migrations/20260724_004_venus_initial_data.sql), somente no projeto destinado a essa empresa.
 
 A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users` para `public.users`. Ela também normaliza os valores padrão de UUID e `updated_at`, para que um schema-alvo preparado anteriormente continue compatível. A segunda cria as operações que o frontend chama. Elas:
 
@@ -30,7 +32,9 @@ Não aplique essas migrations em produção sem backup verificado e revisão man
 
 ## Primeiro acesso
 
-Depois de criar o primeiro utilizador em **Authentication > Users**, execute este bloco no SQL Editor, substituindo o email e o nome da pastelaria. Ele cria somente a empresa e a membership `OWNER` do utilizador indicado:
+O campo visível aceita um nome amigável com espaços e acentos. A aplicação normaliza esse nome para a identidade interna do Supabase. Por exemplo, `Pastelaria Vénus` corresponde internamente a `pastelaria-venus@users.order-manager.invalid`. Marque a conta como confirmada e defina a senha inicial. Esse identificador técnico nunca é mostrado como contacto.
+
+Depois, execute este bloco no SQL Editor, substituindo o utilizador e o nome da pastelaria. Ele cria somente a empresa e a membership `OWNER`:
 
 ```sql
 do $$
@@ -38,7 +42,7 @@ declare
   owner_id uuid;
   new_tenant_id uuid := gen_random_uuid();
 begin
-  select id into owner_id from auth.users where email = 'dono@exemplo.pt';
+  select id into owner_id from public.users where username = 'dono';
   if owner_id is null then
     raise exception 'Crie primeiro o utilizador no Supabase Auth.';
   end if;
@@ -54,4 +58,12 @@ begin
 end $$;
 ```
 
-Em seguida, entre no site com esse email e palavra-passe. O `OWNER` pode criar os produtos e responsáveis em **Configurações**. Para criar um `OPERATOR` futuramente, crie-o primeiro no Supabase Auth e adicione uma membership ativa para o mesmo `tenant_id`; não envie `tenant_id` pelo navegador.
+Em seguida, entre no site com o utilizador e a senha. O botão **Gerenciar** solicita uma segunda senha antes de permitir alterações de catálogo e responsáveis. Essa senha:
+
+- é guardada somente como hash `bcrypt` no PostgreSQL;
+- não fica no React, no Git ou em variáveis `VITE_*`;
+- libera apenas o `session_id` atual por 15 minutos;
+- bloqueia novas tentativas durante 15 minutos após cinco erros;
+- continua exigindo uma membership `OWNER` no servidor.
+
+Consulte [management-access.md](./management-access.md) para o fluxo completo. Para criar um `OPERATOR` futuramente, crie primeiro a identidade técnica correspondente no Supabase Auth e adicione uma membership ativa para o mesmo `tenant_id`; não envie `tenant_id` pelo navegador.

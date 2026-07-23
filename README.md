@@ -14,8 +14,9 @@ Não há API NestJS, Prisma, Docker, Compose ou Render nesta versão. A chave us
 
 ## Papéis
 
-- `OWNER`: gere catálogo, responsáveis e exclusões.
-- `OPERATOR`: cria, consulta, edita e imprime encomendas.
+- o acesso operacional cria, consulta, edita, exclui e imprime encomendas;
+- alterações de catálogo e responsáveis exigem a segunda senha no botão **Gerenciar**;
+- o Supabase exige internamente papel `OWNER` e um desbloqueio gerencial válido para essas alterações.
 
 O tenant é resolvido pelo Supabase através da sessão e membership ativa. O frontend não envia `tenant_id`.
 

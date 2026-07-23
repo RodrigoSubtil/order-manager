@@ -10,6 +10,7 @@ import {
   ComboboxList,
   ComboboxOption,
   ComboboxTrigger,
+  DatePicker,
   Dialog,
   FieldError,
   Input,
@@ -189,17 +190,22 @@ export function OrderFormModal(props: OrderFormModalProps) {
             <div data-form-field>
               <label htmlFor="order-delivery-date">
                 Data de entrega
-                <div className={styles.dateControl}>
-                  <Input
-                    id="order-delivery-date"
-                    className={styles.dateInput}
-                    {...register('deliveryDate')}
-                    aria-describedby={errors.deliveryDate ? 'order-delivery-date-error' : undefined}
-                    aria-invalid={Boolean(errors.deliveryDate)}
-                    type="date"
-                  />
-                  <span className={`${styles.dateIcon} ${styles.calendar}`} aria-hidden="true" />
-                </div>
+                <Controller
+                  control={control}
+                  name="deliveryDate"
+                  render={({ field }) => (
+                    <DatePicker
+                      id="order-delivery-date"
+                      className={styles.dateInput}
+                      aria-describedby={
+                        errors.deliveryDate ? 'order-delivery-date-error' : undefined
+                      }
+                      aria-invalid={Boolean(errors.deliveryDate)}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
               </label>
               <FieldError id="order-delivery-date-error" message={errors.deliveryDate?.message} />
             </div>

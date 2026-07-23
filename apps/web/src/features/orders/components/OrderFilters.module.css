@@ -25,42 +25,15 @@
 }
 
 .dateControl {
-  position: relative;
+  min-width: 0;
 }
 
 .dateInput {
   height: 46px;
 }
 
-.dateIcon {
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  display: grid;
-  width: 18px;
-  height: 18px;
-  place-items: center;
-  color: var(--color-accent);
-  pointer-events: none;
-  transform: translateY(-50%);
-}
-
-.dateIcon::before {
-  content: '';
-  width: 15px;
-  height: 14px;
-  border: 2px solid currentcolor;
-  border-radius: 4px;
-  box-shadow: inset 0 4px 0 rgb(165 142 116 / 20%);
-}
-
-.dateIcon::after {
-  content: '';
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 10px;
-  border-top: 2px solid currentcolor;
+.dateInput button {
+  height: 46px;
 }
 
 .categoryInput {
@@ -180,9 +153,11 @@
   }
 
   .dateInput {
-    padding-right: 36px;
-    padding-left: 36px;
     text-align: center;
+  }
+
+  .dateInput button {
+    height: 48px;
   }
 
   .active {

@@ -5,23 +5,20 @@ import { useNavigate } from 'react-router-dom';
 import { SessionHeader } from '../../auth/components/SessionHeader';
 import { useSession } from '../../auth/hooks/useSession';
 import { LoginPage } from '../../auth/pages/LoginPage';
-import {
-  Alert,
-  Button,
-  Card,
-  EmptyState,
-  Input,
-  Select,
-  Spinner,
-} from '../../../shared/components/ui';
+import { ManagementAccessGate } from '../components/ManagementAccessGate';
+import { Alert, Button, Card, Input, Select, Spinner } from '../../../shared/components/ui';
 import type { Category } from '../../../shared/lib/domain';
 import {
   deleteCatalogProduct,
   deleteResponsible,
+  getManagementAccessStatus,
+  initializeManagementPassword,
   listCatalogProducts,
   listResponsibles,
+  lockManagementAccess,
   saveCatalogProduct,
   saveResponsible,
+  unlockManagementAccess,
   type QuantityUnit,
 } from '../../../shared/lib/supabaseData';
 import styles from './SettingsPage.module.css';
@@ -50,7 +47,14 @@ export default function SettingsPage() {
   const [product, setProduct] = useState<ProductDraft>(emptyProduct);
   const [responsible, setResponsible] = useState<ResponsibleDraft>(emptyResponsible);
 
-  const canLoadData = Boolean(session.authUser);
+  const canCheckManagement = Boolean(session.authUser);
+  const managementStatus = useQuery({
+    queryKey: ['supabase', 'management-access'],
+    queryFn: getManagementAccessStatus,
+    enabled: canCheckManagement,
+    retry: false,
+  });
+  const canLoadData = Boolean(managementStatus.data?.unlocked);
   const catalog = useQuery({
     queryKey: ['supabase', 'catalog'],
     queryFn: listCatalogProducts,
@@ -73,11 +77,49 @@ export default function SettingsPage() {
     mutationFn: ({ id, version }: { id: string; version: number }) =>
       deleteResponsible(id, version),
   });
+  const unlockManagementMutation = useMutation({
+    mutationFn: ({ initialize, password }: { initialize: boolean; password: string }) =>
+      initialize ? initializeManagementPassword(password) : unlockManagementAccess(password),
+  });
+  const lockManagementMutation = useMutation({ mutationFn: lockManagementAccess });
   const isSaving =
     saveProductMutation.isPending ||
     deleteProductMutation.isPending ||
     saveResponsibleMutation.isPending ||
     deleteResponsibleMutation.isPending;
+  const isCheckingManagement = managementStatus.isLoading || unlockManagementMutation.isPending;
+
+  async function submitManagementPassword(password: string) {
+    setError('');
+    try {
+      const nextStatus = await unlockManagementMutation.mutateAsync({
+        initialize: !managementStatus.data?.configured,
+        password,
+      });
+      queryClient.setQueryData(['supabase', 'management-access'], nextStatus);
+    } catch (cause) {
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : 'Não foi possível validar a senha de gerenciamento.',
+      );
+    }
+  }
+
+  async function leaveSettings() {
+    try {
+      if (managementStatus.data?.unlocked) {
+        await lockManagementMutation.mutateAsync();
+        queryClient.setQueryData(['supabase', 'management-access'], {
+          configured: true,
+          unlocked: false,
+          unlockedUntil: null,
+        });
+      }
+    } finally {
+      navigate('/');
+    }
+  }
 
   async function refreshSettings() {
     await Promise.all([
@@ -144,17 +186,45 @@ export default function SettingsPage() {
         isCheckingSession={session.isCheckingSession}
         sessionError={session.sessionError}
         onLogin={session.login}
-        onRequestPasswordRecovery={session.requestPasswordRecovery}
       />
     );
   }
 
-  if (!session.isOwner) {
+  const companyDisplayName = session.authUser.bakeryName ?? 'Empresa';
+
+  if (managementStatus.isLoading) {
     return (
       <main className={styles.shell}>
-        <EmptyState
-          title="Sem permissão para configurações"
-          description="Apenas o OWNER pode gerir catálogo e responsáveis."
+        <SessionHeader
+          companyDisplayName={companyDisplayName}
+          userDisplayName={session.authUser.displayName}
+          onLogoutRequest={() => void session.logout()}
+          onOpenSettings={() => undefined}
+        />
+        <div className={styles.loading}>
+          <Spinner label="A verificar acesso gerencial" />
+        </div>
+      </main>
+    );
+  }
+
+  if (!managementStatus.data?.unlocked) {
+    return (
+      <main className={styles.shell}>
+        <SessionHeader
+          companyDisplayName={companyDisplayName}
+          userDisplayName={session.authUser.displayName}
+          onLogoutRequest={() => void session.logout()}
+          onOpenSettings={() => undefined}
+        />
+        <ManagementAccessGate
+          configured={managementStatus.data?.configured ?? false}
+          error={
+            error || (managementStatus.error instanceof Error ? managementStatus.error.message : '')
+          }
+          isSubmitting={isCheckingManagement}
+          onCancel={() => navigate('/')}
+          onSubmit={submitManagementPassword}
         />
       </main>
     );
@@ -163,18 +233,16 @@ export default function SettingsPage() {
   return (
     <main className={styles.shell}>
       <SessionHeader
-        companyDisplayName={session.authUser.bakeryName ?? 'Empresa'}
-        isOwner
-        role={session.role ?? ''}
+        companyDisplayName={companyDisplayName}
         userDisplayName={session.authUser.displayName}
         onLogoutRequest={() => void session.logout()}
         onOpenSettings={() => undefined}
       />
       <div className={styles.back}>
-        <Button onClick={() => navigate('/')}>Voltar às encomendas</Button>
+        <Button onClick={() => void leaveSettings()}>Voltar às encomendas</Button>
       </div>
       <header className={styles.heading}>
-        <span data-eyebrow>Configurações</span>
+        <span data-eyebrow>Gerenciar</span>
         <h1>Catálogo e responsáveis</h1>
         <p>Estas alterações aplicam-se à empresa associada à sua sessão.</p>
       </header>

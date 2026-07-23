@@ -25,8 +25,8 @@ Os schemas Zod do browser não são partilhados automaticamente com Prisma ou co
 
 ### Login
 
-- email obrigatório e com formato válido;
-- palavra-passe obrigatória;
+- utilizador amigável obrigatório; espaços e acentos são aceites e normalizados apenas para a identidade técnica do Supabase;
+- senha obrigatória;
 - mensagem de erro retornada pela integração;
 - foco automático no primeiro campo inválido;
 - botão bloqueado e texto de loading durante a submissão;

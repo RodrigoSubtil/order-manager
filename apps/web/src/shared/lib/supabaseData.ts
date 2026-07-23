@@ -14,7 +14,7 @@ export type QuantityUnit = 'UN' | 'KG' | 'G';
 export type SessionContext = {
   user: {
     id: string;
-    email: string | null;
+    username: string;
     displayName: string;
   };
   tenant: {
@@ -32,6 +32,12 @@ export type CatalogProductRecord = CatalogProduct & {
 
 export type ResponsibleRecord = OrderResponsible & {
   version: number;
+};
+
+export type ManagementAccessStatus = {
+  configured: boolean;
+  unlocked: boolean;
+  unlockedUntil: string | null;
 };
 
 export type OrderListParams = {
@@ -171,6 +177,33 @@ async function rpc<T>(fn: string, args: Record<string, unknown> = {}): Promise<T
 
 export async function getSessionContext(): Promise<SessionContext | null> {
   return rpc<SessionContext | null>('web_session_context');
+}
+
+export async function getManagementAccessStatus(): Promise<ManagementAccessStatus> {
+  return rpc<ManagementAccessStatus>('web_management_status');
+}
+
+export async function initializeManagementPassword(password: string) {
+  const response = await rpc<ManagementAccessStatus & { error?: string }>(
+    'web_initialize_management_password',
+    {
+      p_password: password,
+    },
+  );
+  if (response.error) throw new Error(response.error);
+  return response;
+}
+
+export async function unlockManagementAccess(password: string) {
+  const response = await rpc<ManagementAccessStatus & { error?: string }>('web_unlock_management', {
+    p_password: password,
+  });
+  if (response.error) throw new Error(response.error);
+  return response;
+}
+
+export async function lockManagementAccess() {
+  return rpc<void>('web_lock_management');
 }
 
 export async function listOrders(params: OrderListParams): Promise<PaginatedOrders> {

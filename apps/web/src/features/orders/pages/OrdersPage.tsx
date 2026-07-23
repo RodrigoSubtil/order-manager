@@ -67,7 +67,7 @@ export default function OrdersPage() {
     removeMutation.isPending ||
     previewBulkDeleteMutation.isPending ||
     confirmBulkDeleteMutation.isPending;
-  const canDeleteOrders = session.role === 'OWNER';
+  const canDeleteOrders = Boolean(session.authUser);
 
   function closeDropdowns() {
     orderForm.setOpenProductPickerId(null);
@@ -175,7 +175,6 @@ export default function OrdersPage() {
         isCheckingSession={session.isCheckingSession}
         sessionError={session.sessionError}
         onLogin={session.login}
-        onRequestPasswordRecovery={session.requestPasswordRecovery}
       />
     );
   }
@@ -188,8 +187,6 @@ export default function OrdersPage() {
       <main className={styles.shell} data-screen-only>
         <SessionHeader
           companyDisplayName={companyDisplayName}
-          isOwner={session.isOwner}
-          role={session.role ?? ''}
           userDisplayName={session.authUser.displayName}
           onLogoutRequest={() => setIsLogoutConfirmOpen(true)}
           onOpenSettings={() => navigate('/settings')}
@@ -198,7 +195,7 @@ export default function OrdersPage() {
         <OrderIndicators
           stats={filters.stats}
           total={data.pagination.total}
-          canDeletePrevious={canDeleteOrders}
+          canDeletePrevious={canDeleteOrders && filters.stats.previous > 0}
           onDeletePrevious={openDeletePreviousModal}
         />
         <section className={styles.ordersPanel} aria-label="Encomendas">

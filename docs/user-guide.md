@@ -7,15 +7,27 @@ O Order Manager organiza encomendas da empresa ativa: consulta, criação, alter
 ## Entrar e sair
 
 1. Abra o endereço fornecido pela empresa em navegador atualizado.
-2. Introduza email e palavra-passe e selecione **Entrar**.
-3. Se a sessão expirar, entre novamente. Não partilhe a palavra-passe nem deixe o dispositivo aberto.
-4. Para terminar, use **Sair** e confirme. Isto limpa a sessão local.
+2. Introduza o utilizador e a senha fornecidos pelo administrador e selecione **Entrar**.
+3. Se o dispositivo for pessoal e protegido, pode ativar **Manter conectado**. Não utilize esta opção num equipamento partilhado.
+4. Se a sessão expirar, entre novamente. Não partilhe a senha nem deixe o dispositivo aberto.
+5. Para terminar, use **Sair** e confirme. Isto limpa a sessão local.
 
 Se receber acesso negado, confirme com o administrador se a sua membership está ativa e se tem o papel correto.
 
+## Gerenciar produtos e responsáveis
+
+O botão **Gerenciar** é reservado aos chefes:
+
+1. selecione **Gerenciar** no cabeçalho;
+2. introduza a senha gerencial;
+3. crie, edite ou apague produtos e responsáveis;
+4. selecione **Voltar às encomendas** ao terminar.
+
+O desbloqueio é temporário e válido somente naquela sessão do navegador. Operadores que não possuam a senha continuam com acesso normal às encomendas, mas não conseguem alterar os dados administrativos.
+
 ## Consultar e filtrar
 
-- Escolha uma data, **Hoje** ou **Todas as datas**.
+- Escolha uma data no calendário do Order Manager, **Hoje** ou **Todas as datas**. O mesmo calendário é usado ao criar ou editar uma encomenda, para manter a data consistente em computador e telemóvel.
 - Selecione a área: Todas, Pastelaria, Padaria ou Salgados.
 - Pesquise por cliente, telefone ou produto.
 - Consulte os indicadores e cartões resultantes. Os resultados pertencem somente à empresa ativa.

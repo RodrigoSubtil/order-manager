@@ -3,20 +3,23 @@ import { describe, expect, it } from 'vitest';
 import { loginSchema } from './loginSchema';
 
 describe('loginSchema', () => {
-  it('accepts a valid email and password', () => {
+  it('accepts a friendly username with spaces and accents', () => {
     const result = loginSchema.safeParse({
-      username: 'gestor@padaria.test',
-      password: 'uma-palavra-passe',
+      username: '  Pastelaria Vénus  ',
+      password: 'uma-senha',
     });
 
     expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.username).toBe('Pastelaria Vénus');
+    }
   });
 
   it('accepts an optional remember-me choice', () => {
     expect(
       loginSchema.safeParse({
-        username: 'gestor@padaria.test',
-        password: 'uma-palavra-passe',
+        username: 'operador',
+        password: 'uma-senha',
         rememberMe: true,
       }).success,
     ).toBe(true);
@@ -24,8 +27,8 @@ describe('loginSchema', () => {
 
   it.each([
     [{ username: '', password: 'segredo' }, 'username'],
-    [{ username: 'email-invalido', password: 'segredo' }, 'username'],
-    [{ username: 'gestor@padaria.test', password: '' }, 'password'],
+    [{ username: 'ç', password: 'segredo' }, 'username'],
+    [{ username: 'operador', password: '' }, 'password'],
   ])('rejects invalid login values %#', (values, expectedField) => {
     const result = loginSchema.safeParse(values);
 

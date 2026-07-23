@@ -11,6 +11,7 @@ import {
   setSessionPersistence,
   supabase,
 } from '../../../shared/lib/supabase';
+import { usernameToAuthIdentity } from '../lib/authIdentity';
 import type { LoginFormValues } from '../schemas/loginSchema';
 
 type AuthUser = {
@@ -20,14 +21,12 @@ type AuthUser = {
   bakeryName: string | null;
 };
 
-function displayNameFromSession(session: {
-  user: { email?: string | null; user_metadata?: Record<string, unknown> };
-}) {
+function displayNameFromSession(session: { user: { user_metadata?: Record<string, unknown> } }) {
   const metadata = session.user.user_metadata ?? {};
   return (
     (typeof metadata.display_name === 'string' && metadata.display_name) ||
     (typeof metadata.full_name === 'string' && metadata.full_name) ||
-    session.user.email?.split('@')[0] ||
+    (typeof metadata.username === 'string' && metadata.username) ||
     'Utilizador'
   );
 }
@@ -57,7 +56,7 @@ export function useSession() {
     setContext(nextContext);
     setAuthUser({
       id: data.session.user.id,
-      username: data.session.user.email ?? data.session.user.id,
+      username: nextContext.user.username,
       displayName: nextContext.user.displayName || displayNameFromSession(data.session),
       bakeryName: nextContext.tenant.name,
     });
@@ -105,10 +104,10 @@ export function useSession() {
       queryClient.clear();
       setSessionPersistence(values.rememberMe === true);
       const { error } = await supabase.auth.signInWithPassword({
-        email: values.username.trim(),
+        email: usernameToAuthIdentity(values.username),
         password: values.password,
       });
-      if (error) throw new Error('Email ou palavra-passe incorretos.');
+      if (error) throw new Error('Utilizador ou senha incorretos.');
       await refreshSession();
       setSessionError('');
     },
@@ -123,13 +122,6 @@ export function useSession() {
     setContext(null);
   }, [queryClient]);
 
-  const requestPasswordRecovery = useCallback(async (email: string) => {
-    assertSupabaseConfigured();
-    const redirectTo = import.meta.env.VITE_APP_URL || window.location.origin;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-    if (error) throw new Error('Não foi possível pedir a recuperação da palavra-passe.');
-  }, []);
-
   const role: MembershipRole | null = context?.role ?? null;
 
   return {
@@ -138,7 +130,6 @@ export function useSession() {
     isOwner: role === 'OWNER',
     login,
     logout,
-    requestPasswordRecovery,
     role,
     sessionError,
   };

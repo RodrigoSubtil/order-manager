@@ -10,6 +10,12 @@
   justify-content: flex-start;
 }
 
+.loading {
+  display: grid;
+  min-height: 240px;
+  place-items: center;
+}
+
 .heading h1,
 .heading p,
 .card h2 {

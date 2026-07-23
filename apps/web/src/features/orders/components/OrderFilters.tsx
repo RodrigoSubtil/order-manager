@@ -5,6 +5,7 @@ import {
   ComboboxList,
   ComboboxOption,
   ComboboxTrigger,
+  DatePicker,
   Input,
 } from '../../../shared/components/ui';
 import { formatDate, todayKey } from '../../../shared/lib/dateUtils';
@@ -41,14 +42,13 @@ export function OrderFilters({
       <div className={styles.toolbar}>
         <div className={styles.topRow}>
           <div className={styles.dateControl}>
-            <Input
+            <DatePicker
               className={styles.dateInput}
               aria-label="Filtrar por data"
-              type="date"
               value={dateFilter}
-              onChange={(event) => onDateChange(event.target.value)}
+              onChange={onDateChange}
+              withClearAction
             />
-            <span className={styles.dateIcon} aria-hidden="true" />
           </div>
 
           <Combobox

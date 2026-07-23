@@ -6,7 +6,7 @@ vi.mock('./supabase', () => ({
   supabase: { rpc },
 }));
 
-import { listAllOrders, SupabaseRpcError } from './supabaseData';
+import { listAllOrders, SupabaseRpcError, unlockManagementAccess } from './supabaseData';
 
 function page(page: number, total: number, id: string) {
   return {
@@ -63,5 +63,22 @@ describe('Supabase data adapter', () => {
       code: '40001',
       status: 409,
     } satisfies Partial<SupabaseRpcError>);
+  });
+
+  it('does not treat an incorrect management password as an unlocked response', async () => {
+    rpc.mockReset();
+    rpc.mockResolvedValue({
+      data: {
+        configured: true,
+        unlocked: false,
+        unlockedUntil: null,
+        error: 'Senha de gerenciamento incorreta.',
+      },
+      error: null,
+    });
+
+    await expect(unlockManagementAccess('incorreta')).rejects.toThrow(
+      'Senha de gerenciamento incorreta.',
+    );
   });
 });

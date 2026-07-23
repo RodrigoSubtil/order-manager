@@ -3,8 +3,6 @@ import styles from './SessionHeader.module.css';
 
 type SessionHeaderProps = {
   companyDisplayName: string;
-  isOwner: boolean;
-  role: string;
   userDisplayName: string;
   onLogoutRequest: () => void;
   onOpenSettings: () => void;
@@ -12,8 +10,6 @@ type SessionHeaderProps = {
 
 export function SessionHeader({
   companyDisplayName,
-  isOwner,
-  role,
   userDisplayName,
   onLogoutRequest,
   onOpenSettings,
@@ -27,14 +23,12 @@ export function SessionHeader({
 
       <div className={styles.actions}>
         <span className={styles.tenant}>Empresa: {companyDisplayName}</span>
-        {isOwner && (
-          <Button className={styles.settings} variant="ghost" onClick={onOpenSettings}>
-            Configurações
-          </Button>
-        )}
+        <Button className={styles.settings} variant="ghost" onClick={onOpenSettings}>
+          Gerenciar
+        </Button>
         <div className={styles.session}>
-          <span className={styles.userLabel} title={`${userDisplayName} — ${role}`}>
-            {userDisplayName} · {role}
+          <span className={styles.userLabel} title={userDisplayName}>
+            {userDisplayName}
           </span>
           <Button
             className={styles.logout}

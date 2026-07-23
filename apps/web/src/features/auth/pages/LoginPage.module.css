@@ -56,61 +56,145 @@
   padding: 14px 16px;
   border-color: rgb(77 67 57 / 14%);
   border-radius: var(--radius-lg);
+  font-weight: 800;
+}
+
+.input::placeholder {
+  color: var(--color-muted);
+  font-weight: 800;
+  opacity: 1;
+}
+
+.passwordInput {
+  position: relative;
+}
+
+.passwordInput .input {
+  padding-right: 50px;
+}
+
+.passwordVisibility {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--color-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.passwordVisibility:hover {
+  color: var(--color-ink);
+  background: var(--color-soft-white);
+  border-color: var(--color-line);
+}
+
+.passwordVisibility:focus-visible {
+  color: var(--color-ink);
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px rgb(91 120 199 / 20%);
+  outline: none;
+}
+
+.passwordVisibility svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 
 .submit {
   width: 100%;
 }
 
-.recoveryToggle {
-  align-self: center;
-  color: var(--color-muted);
-  font-size: 0.86rem;
-}
-
-.rememberMe {
+.loginOptions {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  color: var(--color-muted);
-  font-size: 0.875rem;
+  justify-content: flex-start;
+  min-width: 0;
+  padding: var(--space-1) 0;
+}
+
+.form .rememberMe {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
   cursor: pointer;
 }
 
 .rememberMe input {
-  width: 1rem;
-  height: 1rem;
-  accent-color: var(--color-primary);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.recovery {
-  display: grid;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid rgb(77 67 57 / 12%);
+.checkbox {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  background: var(--color-white);
+  border: 1px solid var(--color-taupe);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 2px rgb(77 67 57 / 8%);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
-.recovery h2,
-.recovery p {
-  margin: 0;
+.rememberMe:hover .checkbox {
+  border-color: var(--color-accent);
 }
 
-.recovery p {
-  color: var(--color-muted);
-  font-size: 0.9rem;
+.rememberMe input:focus-visible + .checkbox {
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px rgb(91 120 199 / 20%);
 }
 
-.recovery label {
-  display: grid;
-  gap: 8px;
+.rememberMe input:checked + .checkbox {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
-.recoveryActions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
+.rememberMe input:checked + .checkbox::after {
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 5px;
+  height: 10px;
+  content: '';
+  border: solid var(--color-white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.rememberLabel {
+  color: var(--color-ink);
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 @media (max-width: 560px) {
