@@ -9,7 +9,10 @@ import { StructuredLogger } from './common/logging/structured.logger';
 import { initializeSentry } from './observability/sentry';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create(AppModule, {
+    abortOnError: false,
+    bufferLogs: true,
+  });
   app.useLogger(new StructuredLogger());
   configureApplication(app);
 
