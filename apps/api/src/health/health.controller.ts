@@ -9,6 +9,7 @@ import {
 
 import { Public } from '../common/auth/public.decorator';
 import { SkipTenantDatabaseContext } from '../common/auth/skip-tenant-database-context.decorator';
+import { StructuredLogger } from '../common/logging/structured.logger';
 import { ApiStandardErrors } from '../common/swagger/api-standard-errors.decorator';
 import { ObservabilityService } from '../observability/observability.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -17,6 +18,8 @@ import { HealthResponseDto } from './dto/health-response.dto';
 @ApiTags('Health')
 @Controller('health')
 export class HealthController {
+  private readonly logger = new StructuredLogger();
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly observability: ObservabilityService,
@@ -47,7 +50,12 @@ export class HealthController {
     try {
       await this.prisma.checkConnection();
       return { status: 'ok' as const, timestamp: new Date().toISOString() };
-    } catch {
+    } catch (error) {
+      this.logger.error({
+        event: 'database_readiness_failed',
+        errorCodes: collectErrorCodes(error),
+        errorName: error instanceof Error ? error.name : 'UnknownError',
+      });
       this.observability.recordIntegrationFailure('database');
       throw new ServiceUnavailableException({
         code: 'DATABASE_UNAVAILABLE',
@@ -102,4 +110,21 @@ export class HealthController {
   metrics(@Headers('x-metrics-token') token: string | undefined) {
     return this.observability.snapshot(token);
   }
+}
+
+function collectErrorCodes(error: unknown): string[] {
+  const codes = new Set<string>();
+  const queue: unknown[] = [error];
+
+  while (queue.length > 0 && codes.size < 8) {
+    const current = queue.shift();
+    if (!current || typeof current !== 'object') continue;
+
+    const record = current as Record<string, unknown>;
+    if (typeof record.code === 'string') codes.add(record.code);
+    if (record.cause) queue.push(record.cause);
+    if (Array.isArray(record.errors)) queue.push(...record.errors);
+  }
+
+  return [...codes];
 }
