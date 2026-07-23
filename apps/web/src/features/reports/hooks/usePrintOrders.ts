@@ -1,21 +1,13 @@
-import {
-  useReportsControllerDetailed,
-  useReportsControllerProductionSummary,
-  getReportsControllerDetailedQueryKey,
-  getReportsControllerProductionSummaryQueryKey,
-  type ProductCategory,
-} from '@order-manager/api-client';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 
-import { getApiErrorMessage } from '../../../shared/lib/apiError';
 import { formatDate, todayKey } from '../../../shared/lib/dateUtils';
 import type { Category, Order } from '../../../shared/lib/domain';
-import type { PrintProductSummary } from '../../../shared/lib/productGrouping';
 import {
-  categoryToApi,
-  orderFromDetailedReport,
-  summaryFromApi,
-} from '../../orders/lib/apiMappers';
+  buildPrintProductSummary,
+  type PrintProductSummary,
+} from '../../../shared/lib/productGrouping';
+import { listAllOrders } from '../../../shared/lib/supabaseData';
 
 export type PrintMode = 'orders' | 'summary';
 export type PrintRangeMode = 'day' | 'period';
@@ -39,34 +31,26 @@ export function usePrintOrders(
   const [printUntil, setPrintUntil] = useState(todayKey());
   const [isPrintOptionsOpen, setIsPrintOptionsOpen] = useState(false);
   const [request, setRequest] = useState<PrintRequest | null>(null);
-  const category = categoryToApi(categoryFilter) as ProductCategory | undefined;
-  const reportParams = request
-    ? { from: request.from, until: request.until, ...(category ? { category } : {}) }
-    : { from: todayKey(), until: todayKey(), ...(category ? { category } : {}) };
-  const detailedQuery = useReportsControllerDetailed(reportParams, {
-    query: {
-      queryKey: getReportsControllerDetailedQueryKey(reportParams),
-      enabled: Boolean(request),
-      retry: false,
-      staleTime: 0,
-    },
-  });
-  const summaryQuery = useReportsControllerProductionSummary(reportParams, {
-    query: {
-      queryKey: getReportsControllerProductionSummaryQueryKey(reportParams),
-      enabled: Boolean(request) && request?.mode === 'summary',
-      retry: false,
-      staleTime: 0,
-    },
+  const report = useQuery({
+    queryKey: ['supabase', 'print-report', request, categoryFilter],
+    queryFn: () =>
+      listAllOrders({
+        from: request?.from,
+        until: request?.until,
+        ...(categoryFilter !== 'Todas' ? { category: categoryFilter } : {}),
+      }),
+    enabled: Boolean(request),
+    retry: false,
+    staleTime: 0,
   });
 
   const printOrders = useMemo(() => {
-    const orders = (detailedQuery.data?.orders ?? []).map(orderFromDetailedReport);
+    const orders = report.data ?? [];
     return request?.orderId ? orders.filter((order) => order.id === request.orderId) : orders;
-  }, [detailedQuery.data?.orders, request?.orderId]);
+  }, [report.data, request?.orderId]);
   const printProductSummary = useMemo<PrintProductSummary>(
-    () => (summaryQuery.data ? summaryFromApi(summaryQuery.data) : []),
-    [summaryQuery.data],
+    () => buildPrintProductSummary(printOrders),
+    [printOrders],
   );
   const printDescription = useMemo(() => {
     if (!printAll) return 'Ficha individual';
@@ -79,22 +63,14 @@ export function usePrintOrders(
       : `Encomendas detalhadas - ${period}`;
   }, [printAll, printFrom, printMode, printRangeMode, printUntil]);
 
-  const isPreparingPrint =
-    Boolean(request) &&
-    (detailedQuery.isFetching || (request?.mode === 'summary' && summaryQuery.isFetching));
-  const printError = detailedQuery.error
-    ? getApiErrorMessage(detailedQuery.error, 'Não foi possível preparar a impressão.')
-    : summaryQuery.error
-      ? getApiErrorMessage(summaryQuery.error, 'Não foi possível preparar o resumo de produção.')
-      : '';
+  const isPreparingPrint = Boolean(request) && report.isFetching;
+  const printError = report.error instanceof Error ? report.error.message : '';
 
   useEffect(() => {
-    if (!request || isPreparingPrint || printError) return;
-    if (request.mode === 'orders' && !detailedQuery.data) return;
-    if (request.mode === 'summary' && !summaryQuery.data) return;
+    if (!request || isPreparingPrint || printError || !report.data) return;
     window.setTimeout(() => window.print(), 80);
     setRequest(null);
-  }, [detailedQuery.data, isPreparingPrint, printError, request, summaryQuery.data]);
+  }, [isPreparingPrint, printError, report.data, request]);
 
   function openPrintOptions() {
     const initialDate = dateFilter || todayKey();
@@ -135,7 +111,7 @@ export function usePrintOrders(
     printError,
     printFrom,
     printMode,
-    printOrderCount: summaryQuery.data?.orderCount ?? printOrders.length,
+    printOrderCount: printOrders.length,
     printOrders,
     printProductSummary,
     printRangeMode,

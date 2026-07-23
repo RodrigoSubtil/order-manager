@@ -3,22 +3,20 @@ import styles from './SessionHeader.module.css';
 
 type SessionHeaderProps = {
   companyDisplayName: string;
-  isAdmin: boolean;
+  isOwner: boolean;
   role: string;
   userDisplayName: string;
   onLogoutRequest: () => void;
   onOpenSettings: () => void;
-  onOpenTenantSelector: () => void;
 };
 
 export function SessionHeader({
   companyDisplayName,
-  isAdmin,
+  isOwner,
   role,
   userDisplayName,
   onLogoutRequest,
   onOpenSettings,
-  onOpenTenantSelector,
 }: SessionHeaderProps) {
   return (
     <header className={styles.topbar}>
@@ -28,10 +26,8 @@ export function SessionHeader({
       </div>
 
       <div className={styles.actions}>
-        <Button className={styles.tenant} variant="ghost" onClick={onOpenTenantSelector}>
-          Empresa: {companyDisplayName}
-        </Button>
-        {isAdmin && (
+        <span className={styles.tenant}>Empresa: {companyDisplayName}</span>
+        {isOwner && (
           <Button className={styles.settings} variant="ghost" onClick={onOpenSettings}>
             Configurações
           </Button>

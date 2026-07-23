@@ -1,24 +1,16 @@
 # Changelog
 
-Este projeto segue versionamento semântico quando houver uma versão comercial publicada. Enquanto não houver release de produção, entradas são candidatas e não representam disponibilidade comercial.
-
 ## [Unreleased]
 
-### Added
+### Changed
 
-- Arquitetura multi-tenant com NestJS, Prisma, RLS, papéis e auditoria.
-- API versionada em `/api/v1`, contrato OpenAPI e cliente Orval.
-- Encomendas, catálogo, responsáveis, relatórios e impressão no fluxo atual.
-- Testes, Docker, CI, segurança, recuperação, observabilidade, staging e piloto.
-- Runbook de produção, guias de utilizador/administração e processo de suporte.
+- Simplificada a arquitetura para React/Vite no Vercel com Supabase Auth e PostgreSQL.
+- Removidos NestJS, Prisma, OpenAPI/Orval, Docker, Compose e Render da versão atual.
+- Mantidos apenas os papéis `OWNER` e `OPERATOR`.
+- Adicionadas RPCs Supabase para resolver tenant pela sessão e proteger operações de encomendas, catálogo e responsáveis.
 
 ### Security
 
-- Tenant é determinado pela sessão validada no servidor; o frontend não envia `tenant_id`.
-- Cookies HttpOnly, CSRF, CORS configurável, rate limiting, logs sanitizados e RLS são camadas de defesa.
-
-### Not released
-
-- Produção não foi promovida.
-- Staging/piloto ainda requerem execução e aprovação formal.
-- SLA, RPO/RTO e fornecedores precisam de confirmação contratual por cliente.
+- O browser usa somente a chave pública do Supabase.
+- `tenant_id` não é enviado pelo frontend.
+- `service_role`, passwords e `DATABASE_URL` não fazem parte das variáveis do frontend.

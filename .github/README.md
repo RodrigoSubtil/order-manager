@@ -1,3 +1,3 @@
-# GitHub automation placeholder
+# GitHub Actions
 
-This directory is reserved for future GitHub Actions workflows. No CI workflow is introduced in this workspace migration.
+O workflow `quality.yml` valida formatação, lint, tipos, testes e build do frontend React.
