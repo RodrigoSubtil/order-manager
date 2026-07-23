@@ -26,4 +26,16 @@ async function bootstrap() {
   await app.listen(port, host);
 }
 
-void bootstrap();
+function safeBootstrapError(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+
+  // A failed connection can contain a full database URL. Platform logs must never
+  // reveal its credentials, even while making an otherwise opaque boot failure
+  // diagnosable during deployment.
+  return message.replace(/postgres(?:ql)?:\/\/[^\s@]+@/gi, 'postgresql://***@');
+}
+
+void bootstrap().catch((error: unknown) => {
+  process.stderr.write(`API bootstrap failed: ${safeBootstrapError(error)}\n`);
+  process.exitCode = 1;
+});
