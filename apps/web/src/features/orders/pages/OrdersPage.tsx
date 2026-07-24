@@ -15,11 +15,11 @@ import { getApiErrorMessage } from '../../../shared/lib/apiError';
 import type { Order } from '../../../shared/lib/domain';
 import { completeOrder, deleteOrder } from '../../../shared/lib/supabaseData';
 import { DeleteOrderDialog } from '../components/DeleteOrderDialog';
-import { OrderCompletionDialog } from '../components/OrderCompletionDialog';
 import { OrderFilters } from '../components/OrderFilters';
 import { OrderFormModal } from '../components/OrderFormModal';
 import { OrderIndicators } from '../components/OrderIndicators';
 import { OrderList } from '../components/OrderList';
+import { OrderSuccessDialog } from '../components/OrderSuccessDialog';
 import { useApiOrderData } from '../hooks/useApiOrderData';
 import { useOrderFilters, useOrderFilterState } from '../hooks/useOrderFilters';
 import { useOrderForm } from '../hooks/useOrderForm';
@@ -57,6 +57,7 @@ export default function OrdersPage() {
   });
   const [deleteOrderId, setDeleteOrderId] = useState<string | null>(null);
   const [completionMessage, setCompletionMessage] = useState('');
+  const [deletionMessage, setDeletionMessage] = useState('');
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
   const isSaving = removeMutation.isPending || completeMutation.isPending;
@@ -81,6 +82,7 @@ export default function OrdersPage() {
       print.isPrintOptionsOpen ||
       Boolean(deleteOrderId) ||
       Boolean(completionMessage) ||
+      Boolean(deletionMessage) ||
       isLogoutConfirmOpen,
   );
 
@@ -105,6 +107,7 @@ export default function OrdersPage() {
       orderForm.closeModal();
       setDeleteOrderId(null);
       setCompletionMessage('');
+      setDeletionMessage('');
       setIsLogoutConfirmOpen(false);
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível terminar sessão.'));
@@ -123,7 +126,7 @@ export default function OrdersPage() {
       await removeMutation.mutateAsync({ id: orderToDelete.id, version: orderToDelete.version });
       await refreshOrderData();
       setDeleteOrderId(null);
-      setAppSuccess('Encomenda apagada com sucesso.');
+      setDeletionMessage(`Encomenda #${orderToDelete.orderNumber ?? '-'} apagada com sucesso.`);
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível apagar a encomenda.'));
     }
@@ -244,11 +247,22 @@ export default function OrdersPage() {
         />
       )}
       {completionMessage && (
-        <OrderCompletionDialog
+        <OrderSuccessDialog
+          description="A encomenda foi concluída corretamente e retirada da lista de pedidos ativos."
           message={completionMessage}
           onClose={() => {
             setCompletionMessage('');
             setAppSuccess(completionMessage);
+          }}
+        />
+      )}
+      {deletionMessage && (
+        <OrderSuccessDialog
+          description="A encomenda foi apagada corretamente."
+          message={deletionMessage}
+          onClose={() => {
+            setDeletionMessage('');
+            setAppSuccess(deletionMessage);
           }}
         />
       )}

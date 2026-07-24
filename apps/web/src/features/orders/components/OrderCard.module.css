@@ -164,9 +164,29 @@
 
 .actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 8px;
+}
+
+.actionButton {
+  width: 44px;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.actionButton svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.deleteAction {
+  color: var(--color-danger);
 }
 
 @media (max-width: 900px) {
@@ -240,16 +260,14 @@
   }
 
   .actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: 100%;
+    display: flex;
+    width: auto;
     gap: 8px;
   }
 
   .actions button {
-    width: 100%;
-    min-height: 42px;
-    padding: 0 8px;
-    font-size: 0.82rem;
+    width: 44px;
+    min-height: 44px;
+    padding: 0;
   }
 }

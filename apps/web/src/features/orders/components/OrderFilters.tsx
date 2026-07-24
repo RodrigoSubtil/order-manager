@@ -46,6 +46,7 @@ export function OrderFilters({
       <div className={styles.toolbar}>
         <div className={styles.topRow}>
           <Combobox
+            className={styles.areaFilter}
             id="category-filter"
             isOpen={isCategoryFilterOpen}
             onOpenChange={onCategoryOpenChange}
@@ -77,10 +78,16 @@ export function OrderFilters({
             </ComboboxList>
           </Combobox>
 
-          <Button className={styles.filterButton} onClick={() => onDateChange(todayKey())}>
+          <Button
+            className={`${styles.filterButton} ${styles.todayFilter}`}
+            onClick={() => onDateChange(todayKey())}
+          >
             Hoje
           </Button>
-          <Button className={styles.filterButton} onClick={() => onDateChange('')}>
+          <Button
+            className={`${styles.filterButton} ${styles.allDatesFilter}`}
+            onClick={() => onDateChange('')}
+          >
             Todas as datas
           </Button>
 
@@ -94,6 +101,18 @@ export function OrderFilters({
             />
           </div>
 
+          <Button
+            className={`${styles.action} ${styles.create}`}
+            variant="primary"
+            aria-label="Nova encomenda"
+            title={
+              isReadOnly ? 'Indisponível enquanto o site usa o backup local' : 'Nova encomenda'
+            }
+            disabled={isReadOnly}
+            onClick={onCreate}
+          >
+            <span aria-hidden="true">+</span>
+          </Button>
           <Button
             className={`${styles.action} ${styles.print}`}
             aria-label="Imprimir todas"
@@ -116,27 +135,29 @@ export function OrderFilters({
               <path d="M17 12h.01" />
             </svg>
           </Button>
-          <Button
-            className={`${styles.action} ${styles.create}`}
-            variant="primary"
-            aria-label="Nova encomenda"
-            title={
-              isReadOnly ? 'Indisponível enquanto o site usa o backup local' : 'Nova encomenda'
-            }
-            disabled={isReadOnly}
-            onClick={onCreate}
-          >
-            <span aria-hidden="true">+</span>
-          </Button>
         </div>
 
-        <Input
-          className={styles.search}
-          aria-label="Pesquisar encomendas"
-          value={search}
-          onChange={(event) => onSearchChange(event.target.value)}
-          placeholder="Pesquisar por cliente, telefone ou produto"
-        />
+        <div className={styles.searchControl}>
+          <Input
+            className={styles.search}
+            aria-label="Pesquisar encomendas"
+            value={search}
+            onChange={(event) => onSearchChange(event.target.value)}
+            placeholder="Pesquisar por cliente, telefone ou produto"
+          />
+          <svg
+            className={styles.searchIcon}
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeWidth="2"
+          >
+            <circle cx="11" cy="11" r="6.5" />
+            <path d="m16 16 4 4" />
+          </svg>
+        </div>
       </div>
 
       <div className={styles.active} aria-live="polite">

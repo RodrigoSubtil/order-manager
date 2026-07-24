@@ -71,6 +71,12 @@
   text-transform: lowercase;
 }
 
+.addProduct {
+  justify-self: end;
+  min-width: 240px;
+  margin-top: 2px;
+}
+
 @media (max-width: 900px) {
   .title,
   .grid {
@@ -89,8 +95,9 @@
     gap: 10px;
   }
 
-  .title button {
+  .addProduct {
     width: 100%;
+    min-width: 0;
   }
 
   .card {

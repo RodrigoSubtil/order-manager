@@ -1,5 +1,4 @@
 import { Button, Dialog } from '../../../shared/components/ui';
-import { formatDate } from '../../../shared/lib/dateUtils';
 import type { Order } from '../../../shared/lib/domain';
 import styles from './ConfirmationDialog.module.css';
 
@@ -18,23 +17,26 @@ export function DeleteOrderDialog({
 }: DeleteOrderDialogProps) {
   return (
     <Dialog className={styles.content} titleId="delete-title" onClose={onCancel}>
-      <span data-eyebrow>Confirmar exclusão</span>
-      <h2 id="delete-title">Apagar esta encomenda?</h2>
-      <p>
-        Esta ação vai remover a encomenda de <strong>{order.clientName}</strong>.
-      </p>
+      <h2 id="delete-title">Apagar encomenda?</h2>
+      <p>Esta ação não pode ser anulada.</p>
       <div className={styles.details}>
         <span>Pedido #{order.orderNumber ?? '-'}</span>
-        <span>{formatDate(order.deliveryDate)}</span>
-        <span>{order.deliveryTime || 'Sem hora marcada'}</span>
-        <span>{order.phone || 'Sem telefone'}</span>
       </div>
       <div className={styles.actions}>
         <Button data-autofocus disabled={isSaving} onClick={onCancel}>
           Cancelar
         </Button>
-        <Button variant="danger" disabled={isSaving} onClick={onConfirm}>
-          {isSaving ? 'A apagar...' : 'Apagar encomenda'}
+        <Button
+          className={styles.deleteButton}
+          variant="danger"
+          aria-label={isSaving ? 'A apagar encomenda' : 'Apagar encomenda'}
+          title={isSaving ? 'A apagar encomenda' : 'Apagar encomenda'}
+          disabled={isSaving}
+          onClick={onConfirm}
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6" />
+          </svg>
         </Button>
       </div>
     </Dialog>

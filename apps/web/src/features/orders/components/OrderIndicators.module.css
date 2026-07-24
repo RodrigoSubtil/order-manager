@@ -45,22 +45,26 @@
 
 @media (max-width: 560px) {
   .grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .card {
-    min-height: 88px;
-    gap: 6px;
-    padding: 12px;
+    min-height: 78px;
+    align-content: center;
+    justify-items: center;
+    gap: 5px;
+    padding: 10px 6px;
+    text-align: center;
   }
 
   .card span {
-    font-size: 0.68rem;
+    font-size: clamp(0.58rem, 2.8vw, 0.7rem);
     line-height: 1.2;
   }
 
   .card strong {
-    font-size: 1.55rem;
+    margin-top: 0;
+    font-size: clamp(1.35rem, 7vw, 1.7rem);
   }
 }

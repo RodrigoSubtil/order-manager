@@ -83,15 +83,17 @@ export function OrderFormModal(props: OrderFormModalProps) {
   return (
     <Dialog className={styles.dialog} size="large" titleId="modal-title" onClose={closeDialog}>
       <form noValidate onSubmit={onSubmit}>
-        <header className={styles.header}>
-          <div>
-            <span data-eyebrow>{editingId ? 'Editar pedido' : 'Novo pedido'}</span>
-            <h2 id="modal-title">{editingId ? 'Editar encomenda' : 'Adicionar encomenda'}</h2>
-          </div>
-          <Button iconOnly variant="ghost" aria-label="Fechar" onClick={closeDialog}>
-            ×
-          </Button>
-        </header>
+        {!savedOrderMessage && (
+          <header className={styles.header}>
+            <div>
+              <span data-eyebrow>{editingId ? 'Editar pedido' : 'Novo pedido'}</span>
+              <h2 id="modal-title">{editingId ? 'Editar encomenda' : 'Adicionar encomenda'}</h2>
+            </div>
+            <Button iconOnly variant="ghost" aria-label="Fechar" onClick={closeDialog}>
+              ×
+            </Button>
+          </header>
+        )}
 
         {savedOrderMessage ? (
           <SuccessMessage
@@ -99,168 +101,175 @@ export function OrderFormModal(props: OrderFormModalProps) {
             description="A encomenda foi gravada corretamente e os dados serão atualizados no painel."
             onAction={() => void onReturnToOrders()}
             title={savedOrderMessage}
+            titleId="modal-title"
           />
         ) : (
           <>
             <div className={styles.body}>
               {submissionError && <Alert tone="error">{submissionError}</Alert>}
 
-              <div className={styles.fieldGrid}>
-                <div data-form-field>
-                  <label htmlFor="order-client-name">
-                    Nome do cliente
-                    <Input
-                      id="order-client-name"
-                      data-autofocus
-                      required
-                      {...register('clientName')}
-                      aria-describedby={errors.clientName ? 'order-client-name-error' : undefined}
-                      aria-invalid={Boolean(errors.clientName)}
-                      placeholder="Ex.: Ana Silva"
-                    />
-                  </label>
-                  <FieldError id="order-client-name-error" message={errors.clientName?.message} />
+              <section className={styles.detailsSection} aria-labelledby="order-details-title">
+                <div className={styles.sectionTitle}>
+                  <span data-eyebrow>Encomenda</span>
+                  <h3 id="order-details-title">Dados da encomenda</h3>
                 </div>
-                <div data-form-field>
-                  <label htmlFor="order-phone">
-                    Telefone
-                    <Controller
-                      control={control}
-                      name="phone"
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          id="order-phone"
-                          required
-                          aria-describedby={errors.phone ? 'order-phone-error' : undefined}
-                          aria-invalid={Boolean(errors.phone)}
-                          inputMode="numeric"
-                          onChange={(event) =>
-                            field.onChange(event.target.value.replace(/\D/g, ''))
-                          }
-                          placeholder="Ex.: 912000000"
-                        />
-                      )}
-                    />
-                  </label>
-                  <FieldError id="order-phone-error" message={errors.phone?.message} />
-                </div>
-                <div data-form-field>
-                  <label htmlFor="order-responsible">Responsável pela encomenda</label>
-                  <Combobox
-                    id="order-responsible"
-                    isOpen={isResponsiblePickerOpen}
-                    onOpenChange={setIsResponsiblePickerOpen}
-                  >
-                    <Controller
-                      control={control}
-                      name="responsibleName"
-                      render={({ field }) => (
-                        <ComboboxInput
-                          name={field.name}
-                          ref={field.ref}
-                          value={field.value}
-                          required
-                          readOnly
-                          inputMode="none"
-                          aria-describedby={
-                            responsibleError ? 'order-responsible-error' : undefined
-                          }
-                          aria-invalid={Boolean(responsibleError)}
-                          onBlur={field.onBlur}
-                          onFocus={() => setIsResponsiblePickerOpen(true)}
-                          onKeyDown={(event) => {
-                            if (
-                              event.key.length === 1 ||
-                              event.key === 'Backspace' ||
-                              event.key === 'Delete'
-                            ) {
-                              event.preventDefault();
-                            }
-                          }}
-                          onPaste={(event) => event.preventDefault()}
-                          onDrop={(event) => event.preventDefault()}
-                          placeholder="Escolha o responsável"
-                          autoComplete="off"
-                        />
-                      )}
-                    />
-                    <Input type="hidden" {...register('responsibleId')} />
-                    <ComboboxTrigger aria-label="Mostrar responsáveis" />
-                    <ComboboxList>
-                      {responsibles.map((responsible) => (
-                        <ComboboxOption
-                          key={responsible.id}
-                          aria-selected={methods.getValues('responsibleId') === responsible.id}
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => {
-                            setValue('responsibleId', responsible.id, {
-                              shouldDirty: true,
-                              shouldValidate: true,
-                            });
-                            setValue('responsibleName', responsible.name, {
-                              shouldDirty: true,
-                              shouldValidate: true,
-                            });
-                            setIsResponsiblePickerOpen(false);
-                          }}
-                        >
-                          {responsible.name}
-                        </ComboboxOption>
-                      ))}
-                      {responsibles.length === 0 && (
-                        <ComboboxEmpty>Nenhum responsável encontrado.</ComboboxEmpty>
-                      )}
-                    </ComboboxList>
-                  </Combobox>
-                  <FieldError id="order-responsible-error" message={responsibleError} />
-                </div>
-                <div data-form-field>
-                  <label htmlFor="order-delivery-date">Data de entrega</label>
-                  <Controller
-                    control={control}
-                    name="deliveryDate"
-                    render={({ field }) => (
-                      <DatePicker
-                        id="order-delivery-date"
-                        className={styles.dateInput}
-                        minDate={todayKey()}
+                <div className={styles.fieldGrid}>
+                  <div data-form-field>
+                    <label htmlFor="order-client-name">
+                      Nome do cliente
+                      <Input
+                        id="order-client-name"
+                        data-autofocus
                         required
-                        aria-describedby={
-                          errors.deliveryDate ? 'order-delivery-date-error' : undefined
-                        }
-                        aria-invalid={Boolean(errors.deliveryDate)}
-                        value={field.value}
-                        onChange={field.onChange}
+                        {...register('clientName')}
+                        aria-describedby={errors.clientName ? 'order-client-name-error' : undefined}
+                        aria-invalid={Boolean(errors.clientName)}
+                        placeholder="Ex.: Ana Silva"
                       />
-                    )}
-                  />
-                  <FieldError
-                    id="order-delivery-date-error"
-                    message={errors.deliveryDate?.message}
-                  />
-                </div>
-                <div data-form-field>
-                  <label htmlFor="order-delivery-time">
-                    Hora
-                    <Input
-                      id="order-delivery-time"
-                      className={styles.dateInput}
-                      required
-                      {...register('deliveryTime')}
-                      aria-describedby={
-                        errors.deliveryTime ? 'order-delivery-time-error' : undefined
-                      }
-                      aria-invalid={Boolean(errors.deliveryTime)}
-                      type="time"
+                    </label>
+                    <FieldError id="order-client-name-error" message={errors.clientName?.message} />
+                  </div>
+                  <div data-form-field>
+                    <label htmlFor="order-phone">
+                      Telefone
+                      <Controller
+                        control={control}
+                        name="phone"
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            id="order-phone"
+                            required
+                            aria-describedby={errors.phone ? 'order-phone-error' : undefined}
+                            aria-invalid={Boolean(errors.phone)}
+                            inputMode="numeric"
+                            onChange={(event) =>
+                              field.onChange(event.target.value.replace(/\D/g, ''))
+                            }
+                            placeholder="Ex.: 912000000"
+                          />
+                        )}
+                      />
+                    </label>
+                    <FieldError id="order-phone-error" message={errors.phone?.message} />
+                  </div>
+                  <div data-form-field>
+                    <label htmlFor="order-responsible">Responsável pela encomenda</label>
+                    <Combobox
+                      id="order-responsible"
+                      isOpen={isResponsiblePickerOpen}
+                      onOpenChange={setIsResponsiblePickerOpen}
+                    >
+                      <Controller
+                        control={control}
+                        name="responsibleName"
+                        render={({ field }) => (
+                          <ComboboxInput
+                            name={field.name}
+                            ref={field.ref}
+                            value={field.value}
+                            required
+                            readOnly
+                            inputMode="none"
+                            aria-describedby={
+                              responsibleError ? 'order-responsible-error' : undefined
+                            }
+                            aria-invalid={Boolean(responsibleError)}
+                            onBlur={field.onBlur}
+                            onFocus={() => setIsResponsiblePickerOpen(true)}
+                            onKeyDown={(event) => {
+                              if (
+                                event.key.length === 1 ||
+                                event.key === 'Backspace' ||
+                                event.key === 'Delete'
+                              ) {
+                                event.preventDefault();
+                              }
+                            }}
+                            onPaste={(event) => event.preventDefault()}
+                            onDrop={(event) => event.preventDefault()}
+                            placeholder="Escolha o responsável"
+                            autoComplete="off"
+                          />
+                        )}
+                      />
+                      <Input type="hidden" {...register('responsibleId')} />
+                      <ComboboxTrigger aria-label="Mostrar responsáveis" />
+                      <ComboboxList>
+                        {responsibles.map((responsible) => (
+                          <ComboboxOption
+                            key={responsible.id}
+                            aria-selected={methods.getValues('responsibleId') === responsible.id}
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => {
+                              setValue('responsibleId', responsible.id, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                              });
+                              setValue('responsibleName', responsible.name, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                              });
+                              setIsResponsiblePickerOpen(false);
+                            }}
+                          >
+                            {responsible.name}
+                          </ComboboxOption>
+                        ))}
+                        {responsibles.length === 0 && (
+                          <ComboboxEmpty>Nenhum responsável encontrado.</ComboboxEmpty>
+                        )}
+                      </ComboboxList>
+                    </Combobox>
+                    <FieldError id="order-responsible-error" message={responsibleError} />
+                  </div>
+                  <div data-form-field>
+                    <label htmlFor="order-delivery-date">Data de entrega</label>
+                    <Controller
+                      control={control}
+                      name="deliveryDate"
+                      render={({ field }) => (
+                        <DatePicker
+                          id="order-delivery-date"
+                          className={styles.dateInput}
+                          minDate={todayKey()}
+                          required
+                          aria-describedby={
+                            errors.deliveryDate ? 'order-delivery-date-error' : undefined
+                          }
+                          aria-invalid={Boolean(errors.deliveryDate)}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
                     />
-                  </label>
-                  <FieldError
-                    id="order-delivery-time-error"
-                    message={errors.deliveryTime?.message}
-                  />
+                    <FieldError
+                      id="order-delivery-date-error"
+                      message={errors.deliveryDate?.message}
+                    />
+                  </div>
+                  <div data-form-field>
+                    <label htmlFor="order-delivery-time">
+                      Hora
+                      <Input
+                        id="order-delivery-time"
+                        className={styles.dateInput}
+                        required
+                        {...register('deliveryTime')}
+                        aria-describedby={
+                          errors.deliveryTime ? 'order-delivery-time-error' : undefined
+                        }
+                        aria-invalid={Boolean(errors.deliveryTime)}
+                        type="time"
+                      />
+                    </label>
+                    <FieldError
+                      id="order-delivery-time-error"
+                      message={errors.deliveryTime?.message}
+                    />
+                  </div>
                 </div>
-              </div>
+              </section>
 
               <ProductEditor
                 catalogProductsByCategory={catalogProductsByCategory}

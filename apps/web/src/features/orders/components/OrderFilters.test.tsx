@@ -30,11 +30,15 @@ describe('OrderFilters', () => {
     const today = screen.getByRole('button', { name: 'Hoje' });
     const allDates = screen.getByRole('button', { name: 'Todas as datas' });
     const date = screen.getByRole('button', { name: 'Filtrar por data' });
+    const create = screen.getByRole('button', { name: 'Nova encomenda' });
+    const print = screen.getByRole('button', { name: 'Imprimir todas' });
 
     expect(area).toHaveValue('Todas as áreas');
     expect(area.compareDocumentPosition(today)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(today.compareDocumentPosition(allDates)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(allDates.compareDocumentPosition(date)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(date.compareDocumentPosition(create)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(create.compareDocumentPosition(print)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(screen.getByText('12 resultados')).toBeInTheDocument();
 
     await user.click(today);

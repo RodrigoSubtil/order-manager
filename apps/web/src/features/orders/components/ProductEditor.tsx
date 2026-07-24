@@ -56,10 +56,9 @@ export function ProductEditor({
     <section className={styles.editor} aria-labelledby="product-editor-title">
       <div className={styles.title}>
         <div>
-          <span data-eyebrow>Preparação</span>
+          <span data-eyebrow>Produtos</span>
           <h3 id="product-editor-title">Produtos separados por área</h3>
         </div>
-        <Button onClick={onAdd}>Adicionar produto</Button>
       </div>
 
       <FieldError id="order-items-error" message={errors.items?.root?.message} />
@@ -259,6 +258,10 @@ export function ProductEditor({
           </article>
         );
       })}
+
+      <Button className={styles.addProduct} onClick={onAdd}>
+        Adicionar mais um produto
+      </Button>
     </section>
   );
 }
