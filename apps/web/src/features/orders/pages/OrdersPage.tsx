@@ -46,7 +46,6 @@ export default function OrdersPage() {
       filterState.setDateFilter(deliveryDate);
       filterState.setPage(1);
     },
-    responsibles: data.responsibles,
     setAppError,
     setAppSuccess,
   });
@@ -248,7 +247,6 @@ export default function OrdersPage() {
         <OrderFormModal
           catalogProductsByCategory={orderForm.catalogProductsByCategory}
           editingId={orderForm.editingId}
-          filteredResponsibles={orderForm.filteredResponsibles}
           isResponsiblePickerOpen={orderForm.isResponsiblePickerOpen}
           itemFields={orderForm.itemFields}
           methods={orderForm.methods}

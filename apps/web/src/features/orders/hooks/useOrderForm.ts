@@ -1,14 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
-import { useFieldArray, useForm, useWatch } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 
 import {
   categories,
   type CatalogProduct,
   type Category,
   type Order,
-  type OrderResponsible,
 } from '../../../shared/lib/domain';
 import { saveOrder as saveOrderInSupabase } from '../../../shared/lib/supabaseData';
 import { getFormSubmissionError } from '../lib/formSubmissionError';
@@ -23,7 +22,6 @@ import { orderSchema, type OrderFormValues } from '../schemas/orderSchema';
 type UseOrderFormOptions = {
   catalogProducts: CatalogProduct[];
   onReturnToOrders: (deliveryDate: string) => void;
-  responsibles: OrderResponsible[];
   setAppError: Dispatch<SetStateAction<string>>;
   setAppSuccess: Dispatch<SetStateAction<string>>;
 };
@@ -36,7 +34,6 @@ type SavedOrderConfirmation = {
 export function useOrderForm({
   catalogProducts,
   onReturnToOrders,
-  responsibles,
   setAppError,
   setAppSuccess,
 }: UseOrderFormOptions) {
@@ -61,7 +58,6 @@ export function useOrderForm({
     remove,
     replace,
   } = useFieldArray({ control: methods.control, keyName: 'fieldKey', name: 'items' });
-  const responsibleName = useWatch({ control: methods.control, name: 'responsibleName' });
   const [openProductPickerId, setOpenProductPickerId] = useState<string | null>(null);
   const [openCategoryPickerId, setOpenCategoryPickerId] = useState<string | null>(null);
   const [openUnitPickerId, setOpenUnitPickerId] = useState<string | null>(null);
@@ -77,12 +73,6 @@ export function useOrderForm({
     catalogProducts.forEach((product) => productMap.get(product.category)?.push(product));
     return productMap;
   }, [catalogProducts]);
-  const filteredResponsibles = useMemo(() => {
-    const term = responsibleName.trim().toLowerCase();
-    if (!term) return responsibles;
-    return responsibles.filter((responsible) => responsible.name.toLowerCase().includes(term));
-  }, [responsibleName, responsibles]);
-
   function closeProductPickers() {
     setOpenProductPickerId(null);
     setOpenCategoryPickerId(null);
@@ -192,7 +182,6 @@ export function useOrderForm({
     closePickers,
     editOrder,
     editingId: editingOrder?.id ?? null,
-    filteredResponsibles,
     isModalOpen,
     isResponsiblePickerOpen,
     itemFields,

@@ -23,7 +23,6 @@ import styles from './OrderFormModal.module.css';
 type OrderFormModalProps = {
   catalogProductsByCategory: Map<Category, CatalogProduct[]>;
   editingId: string | null;
-  filteredResponsibles: OrderResponsible[];
   isResponsiblePickerOpen: boolean;
   itemFields: FieldArrayWithId<OrderFormValues, 'items', 'fieldKey'>[];
   methods: UseFormReturn<OrderFormValues>;
@@ -47,7 +46,6 @@ export function OrderFormModal(props: OrderFormModalProps) {
   const {
     catalogProductsByCategory,
     editingId,
-    filteredResponsibles,
     isResponsiblePickerOpen,
     itemFields,
     methods,
@@ -68,7 +66,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
   } = props;
   const {
     control,
-    formState: { errors, isSubmitted, isSubmitting },
+    formState: { errors, isSubmitting },
     register,
     setValue,
   } = methods;
@@ -161,27 +159,30 @@ export function OrderFormModal(props: OrderFormModalProps) {
                       name="responsibleName"
                       render={({ field }) => (
                         <ComboboxInput
-                          {...field}
+                          name={field.name}
+                          ref={field.ref}
+                          value={field.value}
                           required
+                          readOnly
+                          inputMode="none"
                           aria-describedby={
                             responsibleError ? 'order-responsible-error' : undefined
                           }
                           aria-invalid={Boolean(responsibleError)}
-                          onChange={(event) => {
-                            const nextName = event.target.value;
-                            const matchingResponsible = responsibles.find(
-                              (responsible) =>
-                                responsible.name.toLowerCase() === nextName.trim().toLowerCase(),
-                            );
-                            field.onChange(nextName);
-                            setValue('responsibleId', matchingResponsible?.id ?? '', {
-                              shouldDirty: true,
-                              shouldValidate: isSubmitted,
-                            });
-                            setIsResponsiblePickerOpen(true);
-                          }}
+                          onBlur={field.onBlur}
                           onFocus={() => setIsResponsiblePickerOpen(true)}
-                          placeholder="Digite ou escolha o responsável"
+                          onKeyDown={(event) => {
+                            if (
+                              event.key.length === 1 ||
+                              event.key === 'Backspace' ||
+                              event.key === 'Delete'
+                            ) {
+                              event.preventDefault();
+                            }
+                          }}
+                          onPaste={(event) => event.preventDefault()}
+                          onDrop={(event) => event.preventDefault()}
+                          placeholder="Escolha o responsável"
                           autoComplete="off"
                         />
                       )}
@@ -189,7 +190,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                     <Input type="hidden" {...register('responsibleId')} />
                     <ComboboxTrigger aria-label="Mostrar responsáveis" />
                     <ComboboxList>
-                      {filteredResponsibles.map((responsible) => (
+                      {responsibles.map((responsible) => (
                         <ComboboxOption
                           key={responsible.id}
                           aria-selected={methods.getValues('responsibleId') === responsible.id}
@@ -209,7 +210,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                           {responsible.name}
                         </ComboboxOption>
                       ))}
-                      {filteredResponsibles.length === 0 && (
+                      {responsibles.length === 0 && (
                         <ComboboxEmpty>Nenhum responsável encontrado.</ComboboxEmpty>
                       )}
                     </ComboboxList>

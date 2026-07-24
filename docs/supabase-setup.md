@@ -29,6 +29,12 @@ A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users
 
 A sexta migration impede também no PostgreSQL a gravação de encomendas sem telefone, responsável ou hora de entrega. Ela interrompe com erro antes de alterar o schema caso encontre registos antigos incompletos.
 
+Para demonstração visual da Pastelaria Vénus, o seed opcional
+[`20260724_venus_showcase_orders.sql`](../supabase/seeds/20260724_venus_showcase_orders.sql)
+cria dez encomendas variadas sem substituir encomendas existentes. O script é
+transacional, preserva a sequência atual e não duplica os registos quando
+executado novamente.
+
 Não aplique essas migrations em produção sem backup verificado e revisão manual.
 
 > Se o projeto Supabase tiver tabelas antigas com outro formato, não aplique o schema base por cima delas. Os ajustes de compatibilidade são apenas para o schema-alvo já preparado; um legado diferente requer uma limpeza controlada ou uma migração revisada antes da aplicação.
