@@ -10,7 +10,9 @@ type OrderListProps = {
   getResponsibleName: (order: Order) => string;
   canDelete: boolean;
   canEdit: boolean;
+  canComplete: boolean;
   onDelete: (id: string) => void;
+  onComplete: (order: Order) => void;
   onEdit: (order: Order) => void;
   onPrint: (id: string) => void;
 };
@@ -22,7 +24,9 @@ export function OrderList({
   getResponsibleName,
   canDelete,
   canEdit,
+  canComplete,
   onDelete,
+  onComplete,
   onEdit,
   onPrint,
 }: OrderListProps) {
@@ -52,6 +56,7 @@ export function OrderList({
             search={search}
             responsibleName={getResponsibleName(order)}
             onDelete={canDelete ? () => onDelete(order.id) : undefined}
+            onComplete={canComplete ? () => onComplete(order) : undefined}
             onEdit={canEdit ? () => onEdit(order) : undefined}
             onPrint={() => onPrint(order.id)}
           />

@@ -295,24 +295,8 @@ export async function deleteOrder(id: string, version: number) {
   return rpc<void>('web_delete_order', { p_order_id: id, p_version: version });
 }
 
-export type BulkDeletePreview = {
-  total: number;
-  preview: Array<Pick<Order, 'id' | 'orderNumber' | 'clientName' | 'deliveryDate'>>;
-  truncated: boolean;
-};
-
-export async function previewBulkDelete(from: string, until: string) {
-  return rpc<BulkDeletePreview>('web_preview_bulk_delete_orders', {
-    p_from: from || null,
-    p_until: until,
-  });
-}
-
-export async function confirmBulkDelete(from: string, until: string) {
-  return rpc<{ deleted: number }>('web_confirm_bulk_delete_orders', {
-    p_from: from || null,
-    p_until: until,
-  });
+export async function completeOrder(id: string, version: number) {
+  return rpc<void>('web_complete_order', { p_order_id: id, p_version: version });
 }
 
 export async function saveCatalogProduct(input: {

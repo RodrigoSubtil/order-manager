@@ -16,6 +16,7 @@ import {
   Input,
 } from '../../../shared/components/ui';
 import type { CatalogProduct, Category, OrderResponsible } from '../../../shared/lib/domain';
+import { todayKey } from '../../../shared/lib/dateUtils';
 import type { OrderFormValues } from '../schemas/orderSchema';
 import { ProductEditor } from './ProductEditor';
 import styles from './OrderFormModal.module.css';
@@ -226,6 +227,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                       <DatePicker
                         id="order-delivery-date"
                         className={styles.dateInput}
+                        minDate={todayKey()}
                         required
                         aria-describedby={
                           errors.deliveryDate ? 'order-delivery-date-error' : undefined

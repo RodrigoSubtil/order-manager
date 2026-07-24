@@ -117,10 +117,10 @@
   line-height: 1;
 }
 
-.header button:hover,
-.header button:focus-visible,
-.todayAction:hover,
-.todayAction:focus-visible,
+.header button:hover:not(:disabled),
+.header button:focus-visible:not(:disabled),
+.todayAction:hover:not(:disabled),
+.todayAction:focus-visible:not(:disabled),
 .clear:hover,
 .clear:focus-visible {
   background: var(--color-cream);
@@ -155,11 +155,18 @@
   font-weight: 800;
 }
 
-.day:hover,
-.day:focus-visible {
+.day:hover:not(:disabled),
+.day:focus-visible:not(:disabled) {
   background: var(--color-cream);
   border-color: var(--color-sand);
   outline: none;
+}
+
+.day:disabled,
+.header button:disabled,
+.todayAction:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
 }
 
 .outsideMonth {

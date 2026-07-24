@@ -17,6 +17,7 @@ type OrderFiltersProps = {
   dateFilter: string;
   isCategoryFilterOpen: boolean;
   isReadOnly?: boolean;
+  resultCount: number;
   search: string;
   onCategoryChange: (category: 'Todas' | Category) => void;
   onCategoryOpenChange: (open: boolean) => void;
@@ -31,6 +32,7 @@ export function OrderFilters({
   dateFilter,
   isCategoryFilterOpen,
   isReadOnly = false,
+  resultCount,
   search,
   onCategoryChange,
   onCategoryOpenChange,
@@ -43,16 +45,6 @@ export function OrderFilters({
     <>
       <div className={styles.toolbar}>
         <div className={styles.topRow}>
-          <div className={styles.dateControl}>
-            <DatePicker
-              className={styles.dateInput}
-              aria-label="Filtrar por data"
-              value={dateFilter}
-              onChange={onDateChange}
-              withClearAction
-            />
-          </div>
-
           <Combobox
             id="category-filter"
             isOpen={isCategoryFilterOpen}
@@ -61,7 +53,7 @@ export function OrderFilters({
             <ComboboxInput
               className={styles.categoryInput}
               aria-label="Filtrar por área"
-              value={categoryFilter}
+              value={categoryFilter === 'Todas' ? 'Todas as áreas' : categoryFilter}
               readOnly
             />
             <ComboboxTrigger
@@ -91,6 +83,17 @@ export function OrderFilters({
           <Button className={styles.filterButton} onClick={() => onDateChange('')}>
             Todas as datas
           </Button>
+
+          <div className={styles.dateControl}>
+            <DatePicker
+              className={styles.dateInput}
+              aria-label="Filtrar por data"
+              minDate={todayKey()}
+              value={dateFilter}
+              onChange={onDateChange}
+            />
+          </div>
+
           <Button
             className={`${styles.action} ${styles.print}`}
             aria-label="Imprimir todas"
@@ -137,11 +140,16 @@ export function OrderFilters({
       </div>
 
       <div className={styles.active} aria-live="polite">
-        <span className={styles.activeTitle}>Filtros:</span>
-        <span className={styles.chip}>
-          Data: {dateFilter ? formatDate(dateFilter) : 'Todas as datas'}
-        </span>
-        <span className={styles.chip}>Área: {categoryFilter}</span>
+        <div className={styles.activeSummary}>
+          <span className={styles.activeTitle}>Filtros:</span>
+          <span className={styles.chip}>
+            Data: {dateFilter ? formatDate(dateFilter) : 'Todas as datas'}
+          </span>
+          <span className={styles.chip}>Área: {categoryFilter}</span>
+        </div>
+        <strong className={styles.resultCount}>
+          {resultCount} {resultCount === 1 ? 'resultado' : 'resultados'}
+        </strong>
       </div>
     </>
   );

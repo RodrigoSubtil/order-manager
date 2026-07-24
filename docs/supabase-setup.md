@@ -18,6 +18,9 @@ Num projeto Supabase novo, reveja e aplique no SQL Editor, por esta ordem:
 4. [acesso gerencial](../supabase/migrations/20260724_003_management_access.sql);
 5. [dados iniciais da Pastelaria Vénus](../supabase/migrations/20260724_004_venus_initial_data.sql), somente no projeto destinado a essa empresa.
 6. [campos obrigatórios da encomenda](../supabase/migrations/20260724_005_required_order_fields.sql).
+7. [pesquisa e exportação de backup](../supabase/migrations/20260724_006_search_and_backup_export.sql).
+8. [proteção das funções](../supabase/migrations/20260724_007_function_security_hardening.sql).
+9. [conclusão e retenção de encomendas](../supabase/migrations/20260724_008_complete_orders_and_retention.sql).
 
 A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users` para `public.users`. Ela também normaliza os valores padrão de UUID e `updated_at`, para que um schema-alvo preparado anteriormente continue compatível. A segunda cria as operações que o frontend chama. Elas:
 
@@ -28,6 +31,8 @@ A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users
 - concentra escritas sensíveis em RPCs PostgreSQL.
 
 A sexta migration impede também no PostgreSQL a gravação de encomendas sem telefone, responsável ou hora de entrega. Ela interrompe com erro antes de alterar o schema caso encontre registos antigos incompletos.
+
+A nona migration adiciona o fluxo **Concluir**, oculta as encomendas concluídas da listagem operacional e agenda no `pg_cron` a eliminação diária dos registos com mais de 7 dias. Encomendas ativas não são alteradas.
 
 Para demonstração visual da Pastelaria Vénus, o seed opcional
 [`20260724_venus_showcase_orders.sql`](../supabase/seeds/20260724_venus_showcase_orders.sql)

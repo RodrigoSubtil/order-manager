@@ -2,16 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 
 import {
-  paginateContingencyOrders,
+  filterContingencyOrders,
   readContingencySnapshot,
   saveContingencySnapshot,
-  shouldPreserveContingencySnapshot,
   type ContingencySnapshot,
 } from '../../../shared/lib/contingencyStore';
 import {
   listAllOrders,
   listCatalogProducts,
-  listOrders,
   listResponsibles,
   type OrderListParams,
 } from '../../../shared/lib/supabaseData';
@@ -19,7 +17,7 @@ import {
 export function useApiOrderData(params: OrderListParams, enabled: boolean, tenantId: string) {
   const ordersQuery = useQuery({
     queryKey: ['supabase', 'orders', params],
-    queryFn: () => listOrders(params),
+    queryFn: () => listAllOrders(params),
     enabled,
     placeholderData: (previous) => previous,
     retry: false,
@@ -41,17 +39,11 @@ export function useApiOrderData(params: OrderListParams, enabled: boolean, tenan
   const contingencyQuery = useQuery({
     queryKey: ['supabase', 'contingency-snapshot', tenantId],
     queryFn: async () => {
-      const previous = readContingencySnapshot(tenantId);
       const [orders, catalogProducts, responsibles] = await Promise.all([
         listAllOrders({}),
         listCatalogProducts(),
         listResponsibles(),
       ]);
-      if (shouldPreserveContingencySnapshot(previous, orders)) {
-        throw new Error(
-          'O servidor devolveu zero encomendas inesperadamente. Foi preservado o último backup local.',
-        );
-      }
       const snapshot: ContingencySnapshot = {
         version: 1,
         tenantId,
@@ -75,8 +67,8 @@ export function useApiOrderData(params: OrderListParams, enabled: boolean, tenan
     storedSnapshot &&
     (ordersQuery.error || catalogQuery.error || responsiblesQuery.error || contingencyQuery.error),
   );
-  const contingencyPage = useMemo(
-    () => (storedSnapshot ? paginateContingencyOrders(storedSnapshot.orders, params) : null),
+  const filteredContingencyOrders = useMemo(
+    () => (storedSnapshot ? filterContingencyOrders(storedSnapshot.orders, params) : []),
     [params, storedSnapshot],
   );
 
@@ -100,14 +92,14 @@ export function useApiOrderData(params: OrderListParams, enabled: boolean, tenan
     isContingencyMode,
     isLoading: ordersQuery.isLoading && !isContingencyMode,
     loadOrders,
-    orders: (isContingencyMode ? contingencyPage?.items : ordersQuery.data?.items) ?? [],
-    pagination: {
-      page: (isContingencyMode ? contingencyPage?.page : ordersQuery.data?.page) ?? params.page,
-      pageSize:
-        (isContingencyMode ? contingencyPage?.pageSize : ordersQuery.data?.pageSize) ??
-        params.pageSize,
-      total: (isContingencyMode ? contingencyPage?.total : ordersQuery.data?.total) ?? 0,
-    },
+    orders: isContingencyMode ? filteredContingencyOrders : (ordersQuery.data ?? []),
+    overviewOrders:
+      (isContingencyMode ? storedSnapshot?.orders : contingencyQuery.data?.orders) ??
+      storedSnapshot?.orders ??
+      [],
+    resultTotal: isContingencyMode
+      ? filteredContingencyOrders.length
+      : (ordersQuery.data?.length ?? 0),
     responsibles: (isContingencyMode ? storedSnapshot?.responsibles : responsiblesQuery.data) ?? [],
   };
 }

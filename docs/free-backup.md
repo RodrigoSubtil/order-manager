@@ -29,12 +29,14 @@ Rotina mínima recomendada:
 
 ## Modo de contingência do navegador
 
-Depois de uma sincronização bem-sucedida, o painel mantém no navegador uma cópia local das encomendas ativas, catálogo e responsáveis daquela empresa. Se uma consulta ao Supabase falhar, ou se o servidor devolver inesperadamente zero encomendas depois de existirem encomendas, o painel:
+Depois de uma sincronização bem-sucedida, o painel mantém no navegador uma cópia local das encomendas ativas, catálogo e responsáveis daquela empresa. Se uma consulta ao Supabase falhar, o painel:
 
 - mostra um aviso permanente com a data e hora da última sincronização;
-- permite consultar, pesquisar, paginar e imprimir o backup local;
-- bloqueia criação, edição e exclusão para evitar duplicados e conflitos;
+- permite consultar, pesquisar e imprimir o backup local;
+- bloqueia criação, edição, conclusão e exclusão para evitar duplicados e conflitos;
 - volta a usar o Supabase quando a ligação e os dados forem corrigidos.
+
+Uma resposta válida com zero encomendas é guardada normalmente e mostra o estado vazio do painel; ela não ativa o modo de contingência.
 
 Esta cópia é separada por `tenant_id` e nunca contém passwords, tokens ou chaves. Ela não substitui a exportação externa: se o computador ou o perfil do navegador for perdido, a cópia local também se perde.
 

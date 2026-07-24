@@ -9,6 +9,7 @@ type OrderCardProps = {
   search: string;
   responsibleName: string;
   onDelete?: () => void;
+  onComplete?: () => void;
   onEdit?: () => void;
   onPrint: () => void;
 };
@@ -18,6 +19,7 @@ export function OrderCard({
   search,
   responsibleName,
   onDelete,
+  onComplete,
   onEdit,
   onPrint,
 }: OrderCardProps) {
@@ -71,6 +73,9 @@ export function OrderCard({
 
         <footer className={styles.footer}>
           <div className={styles.actions}>
+            <Button variant="primary" disabled={!onComplete} onClick={onComplete}>
+              Concluir
+            </Button>
             <Button variant="ghost" disabled={!onEdit} onClick={onEdit}>
               Editar
             </Button>

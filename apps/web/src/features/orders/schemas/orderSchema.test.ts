@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { todayKey, yesterdayKey } from '../../../shared/lib/dateUtils';
 import { orderSchema, type OrderFormValues } from './orderSchema';
 
 function validOrder(overrides: Partial<OrderFormValues> = {}): OrderFormValues {
@@ -9,7 +10,7 @@ function validOrder(overrides: Partial<OrderFormValues> = {}): OrderFormValues {
     phone: '912345678',
     responsibleId: 'responsible-1',
     responsibleName: 'Maria',
-    deliveryDate: '2026-07-20',
+    deliveryDate: todayKey(),
     deliveryTime: '10:30',
     items: [
       {
@@ -55,6 +56,15 @@ describe('orderSchema', () => {
 
     expect(result.success).toBe(false);
     if (!result.success) expect(result.error.issues[0]?.path).toEqual(['items']);
+  });
+
+  it('rejects a delivery date before today', () => {
+    const result = orderSchema.safeParse(validOrder({ deliveryDate: yesterdayKey() }));
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some((issue) => issue.path[0] === 'deliveryDate')).toBe(true);
+    }
   });
 
   it.each([

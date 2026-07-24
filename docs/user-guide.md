@@ -52,17 +52,17 @@ Ao guardar, o sistema verifica se outra pessoa alterou a encomenda. Se aparecer 
 3. aplique novamente apenas as alterações necessárias;
 4. contacte o suporte se houver dúvida sobre qual informação é correta.
 
-## Excluir e imprimir
+## Concluir, excluir e imprimir
 
-Administradores autorizados podem excluir uma encomenda individual ou preparar exclusão em lote por período. Confirme sempre prévia, intervalo e quantidade. A exclusão é lógica (soft delete), não deve contornar retenção ou auditoria.
+Quando a produção estiver pronta, selecione **Concluir**. Depois da confirmação do Supabase, a encomenda sai do painel, permanece retida na base durante sete dias e é eliminada automaticamente pela rotina diária. **Apagar** continua reservado a correções de encomendas lançadas por engano.
 
 Para imprimir, escolha impressão na lista ou numa encomenda, selecione dia/intervalo e o formato detalhado ou resumo por produto. Defina a “Hora inicial” e a “Hora final” para considerar somente as encomendas dentro desse intervalo. Num período entre datas, a hora inicial aplica-se ao primeiro dia e a hora final ao último. O padrão `00:00–23:59` inclui o dia inteiro, e a quantidade apresentada no diálogo já respeita as duas horas. Confirme empresa, período e horários antes de entregar o documento.
 
 ## Backup e modo de contingência
 
-Depois de uma sincronização válida, o painel conserva neste navegador uma cópia das encomendas ativas, produtos e responsáveis. Se o Supabase ficar indisponível ou devolver inesperadamente zero encomendas, aparece um aviso de **Modo de contingência** com a data da última sincronização.
+Depois de uma sincronização válida, o painel conserva neste navegador uma cópia das encomendas ativas, produtos e responsáveis. Se uma consulta ao Supabase falhar, aparece um aviso de **Modo de contingência** com a data da última sincronização. Uma empresa sem encomendas mostra apenas o estado vazio normal.
 
-Neste modo é possível consultar, pesquisar, paginar e imprimir os dados guardados. Criar, editar e apagar ficam temporariamente bloqueados para impedir encomendas duplicadas ou alterações concorrentes. Assim que o Supabase voltar a responder com dados consistentes, o painel retoma a operação normal.
+Neste modo é possível consultar, pesquisar e imprimir os dados guardados. Criar, editar, concluir e apagar ficam temporariamente bloqueados para impedir encomendas duplicadas ou alterações concorrentes. Assim que o Supabase voltar a responder, o painel retoma a operação normal.
 
 O dono deve também abrir **Gerenciar > Cópia de segurança** e transferir regularmente o JSON organizado. Essa cópia contém dados pessoais de clientes e deve ser guardada num local privado, cifrado e fora do computador de uso diário. Consulte [free-backup.md](./free-backup.md) para a rotina e os limites.
 

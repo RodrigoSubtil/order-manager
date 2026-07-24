@@ -9,36 +9,42 @@ export type OrderFilterState = ReturnType<typeof useOrderFilterState>;
 
 export { compareOrdersByDelivery } from '../../../shared/lib/contingencyStore';
 
+export function getOrderStats(orders: Order[], today = todayKey()) {
+  return orders.reduce(
+    (acc, order) => {
+      if (order.deliveryDate === today) acc.today += 1;
+      if (order.deliveryDate > today) acc.upcoming += 1;
+      return acc;
+    },
+    { today: 0, upcoming: 0 },
+  );
+}
+
 export function useOrderFilterState() {
   const [search, setSearch] = useState('');
   const [dateFilter, setDateFilter] = useState(todayKey());
   const [categoryFilter, setCategoryFilter] = useState<'Todas' | Category>('Todas');
   const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(false);
-  const [page, setPage] = useState(1);
-  const pageSize = 25;
 
   const queryParams = useMemo<OrderListParams>(
     () => ({
       ...(dateFilter ? { from: dateFilter, until: dateFilter } : {}),
       ...(categoryFilter !== 'Todas' ? { category: categoryFilter } : {}),
       ...(search.trim() ? { search: search.trim() } : {}),
-      page,
-      pageSize,
+      page: 1,
+      pageSize: 100,
     }),
-    [categoryFilter, dateFilter, page, pageSize, search],
+    [categoryFilter, dateFilter, search],
   );
 
   const changeSearch = useCallback((value: string) => {
     setSearch(value);
-    setPage(1);
   }, []);
   const changeDateFilter = useCallback((value: string) => {
     setDateFilter(value);
-    setPage(1);
   }, []);
   const changeCategoryFilter = useCallback((value: 'Todas' | Category) => {
     setCategoryFilter(value);
-    setPage(1);
   }, []);
 
   const resetFilters = useCallback(() => {
@@ -46,28 +52,25 @@ export function useOrderFilterState() {
     setDateFilter(todayKey());
     setCategoryFilter('Todas');
     setIsCategoryFilterOpen(false);
-    setPage(1);
   }, []);
 
   return {
     categoryFilter,
     dateFilter,
     isCategoryFilterOpen,
-    page,
-    pageSize,
     queryParams,
     resetFilters,
     search,
     setCategoryFilter: changeCategoryFilter,
     setDateFilter: changeDateFilter,
     setIsCategoryFilterOpen,
-    setPage,
     setSearch: changeSearch,
   };
 }
 
 export function useOrderFilters(
   orders: Order[],
+  overviewOrders: Order[],
   responsibles: OrderResponsible[],
   state: OrderFilterState,
 ) {
@@ -85,17 +88,8 @@ export function useOrderFilters(
   );
 
   const stats = useMemo(() => {
-    const today = todayKey();
-    return orders.reduce(
-      (acc, order) => {
-        if (order.deliveryDate && order.deliveryDate < today) acc.previous += 1;
-        if (order.deliveryDate === today) acc.today += 1;
-        if (order.deliveryDate > today) acc.upcoming += 1;
-        return acc;
-      },
-      { previous: 0, today: 0, upcoming: 0 },
-    );
-  }, [orders]);
+    return getOrderStats(overviewOrders);
+  }, [overviewOrders]);
 
   return {
     ...state,

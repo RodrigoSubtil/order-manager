@@ -1,32 +1,15 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { OrderIndicators } from './OrderIndicators';
 
 describe('OrderIndicators', () => {
-  it('mantém a limpeza desativada quando não existem encomendas anteriores', () => {
-    render(
-      <OrderIndicators
-        stats={{ previous: 0, today: 0, upcoming: 0 }}
-        total={0}
-        canDeletePrevious={false}
-        onDeletePrevious={vi.fn()}
-      />,
-    );
+  it('shows global operational totals without an old-orders card', () => {
+    render(<OrderIndicators stats={{ today: 2, upcoming: 3 }} total={5} />);
 
-    expect(screen.getByRole('button', { name: 'Excluir encomendas anteriores' })).toBeDisabled();
-  });
-
-  it('permite a limpeza quando existem encomendas anteriores e o utilizador está autorizado', () => {
-    render(
-      <OrderIndicators
-        stats={{ previous: 2, today: 1, upcoming: 3 }}
-        total={6}
-        canDeletePrevious
-        onDeletePrevious={vi.fn()}
-      />,
-    );
-
-    expect(screen.getByRole('button', { name: 'Excluir encomendas anteriores' })).toBeEnabled();
+    expect(screen.getByText('Total encomendas')).toBeInTheDocument();
+    expect(screen.getByText('Para hoje')).toBeInTheDocument();
+    expect(screen.getByText('Próximos dias')).toBeInTheDocument();
+    expect(screen.queryByText('Encomendas anteriores')).not.toBeInTheDocument();
   });
 });

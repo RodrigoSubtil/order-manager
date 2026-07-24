@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { todayKey } from '../../../shared/lib/dateUtils';
 import { categories } from '../../../shared/lib/domain';
 
 export const quantityUnits = ['UN', 'KG', 'G'] as const;
@@ -53,7 +54,11 @@ export const orderSchema = z.object({
     .string()
     .min(1, 'Indique a data de entrega.')
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'Use uma data válida.')
-    .refine(isValidCalendarDate, 'Use uma data válida.'),
+    .refine(isValidCalendarDate, 'Use uma data válida.')
+    .refine(
+      (value) => !isValidCalendarDate(value) || value >= todayKey(),
+      'A data de entrega não pode ser anterior a hoje.',
+    ),
   deliveryTime: z
     .string()
     .trim()

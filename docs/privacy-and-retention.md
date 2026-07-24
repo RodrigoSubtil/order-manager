@@ -1,13 +1,13 @@
 # Privacidade, RGPD e retenção
 
-Atualizado em 22 de julho de 2026. Este documento organiza a implementação técnica para RGPD; a base legal, os prazos definitivos e os textos para titulares devem ser aprovados pelo responsável jurídico do cliente antes de produção.
+Atualizado em 24 de julho de 2026. Este documento organiza a implementação técnica para RGPD; a base legal e os textos para titulares devem ser aprovados pelo responsável jurídico do cliente.
 
 ## Dados e minimização
 
 | Dado                                 | Finalidade                           | Acesso técnico                                   | Retenção                                                         |
 | ------------------------------------ | ------------------------------------ | ------------------------------------------------ | ---------------------------------------------------------------- |
-| Nome e telefone do cliente           | Preparar e contactar sobre encomenda | Apenas membros autorizados do tenant             | Definir por cliente em `tenant_settings.order_retention_days`.   |
-| Encomenda, itens, data e responsável | Produção, atendimento e auditoria    | Tenant ativo e papel autorizado                  | Mesmo prazo da encomenda, salvo obrigação legal maior.           |
+| Nome e telefone do cliente           | Preparar e contactar sobre encomenda | Apenas membros autorizados do tenant             | Enquanto ativa e por 7 dias após a conclusão da encomenda.       |
+| Encomenda, itens, data e responsável | Produção, atendimento e auditoria    | Tenant ativo e papel autorizado                  | Enquanto ativa e por 7 dias após a conclusão da encomenda.       |
 | Utilizador, membership e papel       | Segurança e administração            | Próprio utilizador e administradores autorizados | Enquanto necessário para segurança/auditoria.                    |
 | Audit log                            | Rastrear alterações e incidentes     | `OWNER`/`ADMIN`                                  | Prazo aprovado por contrato e necessidade de defesa de direitos. |
 
@@ -37,26 +37,21 @@ Não existe endpoint público de exportação nesta etapa, porque critérios de 
 
 1. Verificar identidade e se há obrigação legal/contratual de retenção.
 2. Corrigir dados no tenant ou aplicar soft delete/anonimização conforme a política aprovada.
-3. Não executar `DELETE` físico em tabelas de negócio; RLS e políticas já o bloqueiam.
+3. Não executar `DELETE` físico manual em tabelas de negócio; a única exceção operacional é o expurgo automático de encomendas já concluídas após o prazo definido abaixo.
 4. Registar decisão, fundamento, operador e referência do pedido no audit log.
 5. Informar que cópias de backup expiram pelo ciclo de retenção; não se alteram backups históricos individualmente.
 
 ## Política de retenção
 
-`order_retention_days` já existe no modelo de tenant, mas não há prazo global ativo por padrão. Antes de ativar expurgo automático, cada cliente deve aprovar:
+Ao selecionar **Concluir**, a encomenda deixa imediatamente do dashboard, mas permanece no PostgreSQL com `completed_at` e `completed_by`. O job `order-manager-purge-completed-orders` é executado diariamente às 03:15 UTC e elimina fisicamente a encomenda e os respetivos itens somente depois de completados 7 dias.
 
-- prazo por tipo de dado e fundamento;
-- se expira para soft delete, anonimização ou eliminação física pós-backup;
-- exceções por litígio, contabilidade e obrigação legal;
-- responsável pela aprovação e revisão anual.
-
-O job de retenção só pode ser implementado após essas decisões e deve produzir relatório, permitir dry-run e preservar audit log pelo prazo aprovado.
+Por ser diário, o momento efetivo da eliminação acontece entre 7 e menos de 8 dias após a conclusão. O prazo pode ser revisto futuramente por tenant usando `tenant_settings.order_retention_days`; isso exige uma migration e aprovação da empresa antes de alterar a regra atual.
 
 ## Evidências para go-live
 
 - DPA com cada subprocessador e lista de regiões;
 - aviso de privacidade e base legal aprovados;
 - titular de dados, canal e SLA de direitos definidos;
-- política de retenção preenchida para cada tenant;
+- política de retenção de 7 dias comunicada e aprovada pela empresa;
 - teste de exportação e eliminação em staging com dois tenants, sem exposição cruzada;
 - registro do último exercício de direitos e do responsável pela revisão.

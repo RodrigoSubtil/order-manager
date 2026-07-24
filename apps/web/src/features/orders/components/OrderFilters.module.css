@@ -105,13 +105,20 @@
 
 .active {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  gap: 12px;
   align-items: center;
+  justify-content: space-between;
   padding: 10px 0 0;
   color: var(--color-muted);
   font-size: 0.92rem;
   font-weight: 800;
+}
+
+.activeSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
 }
 
 .activeTitle {
@@ -129,6 +136,13 @@
   content: '/';
   margin-right: 6px;
   color: var(--color-taupe);
+}
+
+.resultCount {
+  flex: 0 0 auto;
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 @media (max-width: 900px) {
@@ -161,12 +175,17 @@
   }
 
   .active {
+    align-items: flex-start;
     font-size: 0.78rem;
     line-height: 1.35;
   }
 
   .chip {
     font-size: 0.76rem;
+  }
+
+  .resultCount {
+    font-size: 0.78rem;
   }
 }
 

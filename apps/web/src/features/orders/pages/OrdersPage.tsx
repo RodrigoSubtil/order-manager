@@ -9,23 +9,16 @@ import { LoginPage } from '../../auth/pages/LoginPage';
 import { PrintOptionsDialog } from '../../reports/components/PrintOptionsDialog';
 import { PrintableOrders } from '../../reports/components/PrintableOrders';
 import { usePrintOrders } from '../../reports/hooks/usePrintOrders';
-import { useModalBodyClass, useOutsidePointerDown } from '../../../shared/hooks';
 import { Alert } from '../../../shared/components/ui';
+import { useModalBodyClass, useOutsidePointerDown } from '../../../shared/hooks';
 import { getApiErrorMessage } from '../../../shared/lib/apiError';
-import { yesterdayKey } from '../../../shared/lib/dateUtils';
-import {
-  confirmBulkDelete,
-  deleteOrder,
-  previewBulkDelete,
-  type BulkDeletePreview,
-} from '../../../shared/lib/supabaseData';
+import type { Order } from '../../../shared/lib/domain';
+import { completeOrder, deleteOrder } from '../../../shared/lib/supabaseData';
 import { DeleteOrderDialog } from '../components/DeleteOrderDialog';
-import { DeletePreviousOrdersDialog } from '../components/DeletePreviousOrdersDialog';
 import { OrderFilters } from '../components/OrderFilters';
 import { OrderFormModal } from '../components/OrderFormModal';
 import { OrderIndicators } from '../components/OrderIndicators';
 import { OrderList } from '../components/OrderList';
-import { OrdersPagination } from '../components/OrdersPagination';
 import { useApiOrderData } from '../hooks/useApiOrderData';
 import { useOrderFilters, useOrderFilterState } from '../hooks/useOrderFilters';
 import { useOrderForm } from '../hooks/useOrderForm';
@@ -41,7 +34,7 @@ export default function OrdersPage() {
     Boolean(session.authUser),
     session.authUser?.tenantId ?? '',
   );
-  const filters = useOrderFilters(data.orders, data.responsibles, filterState);
+  const filters = useOrderFilters(data.orders, data.overviewOrders, data.responsibles, filterState);
   const [appError, setAppError] = useState('');
   const [appSuccess, setAppSuccess] = useState('');
   const orderForm = useOrderForm({
@@ -58,26 +51,14 @@ export default function OrdersPage() {
   const removeMutation = useMutation({
     mutationFn: ({ id, version }: { id: string; version: number }) => deleteOrder(id, version),
   });
-  const previewBulkDeleteMutation = useMutation({
-    mutationFn: ({ from, until }: { from: string; until: string }) =>
-      previewBulkDelete(from, until),
-  });
-  const confirmBulkDeleteMutation = useMutation({
-    mutationFn: ({ from, until }: { from: string; until: string }) =>
-      confirmBulkDelete(from, until),
+  const completeMutation = useMutation({
+    mutationFn: ({ id, version }: { id: string; version: number }) => completeOrder(id, version),
   });
   const [deleteOrderId, setDeleteOrderId] = useState<string | null>(null);
-  const [isDeletePreviousOpen, setIsDeletePreviousOpen] = useState(false);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
-  const [deletePreviousFrom, setDeletePreviousFrom] = useState('');
-  const [deletePreviousUntil, setDeletePreviousUntil] = useState(yesterdayKey);
-  const [bulkPreview, setBulkPreview] = useState<BulkDeletePreview | null>(null);
 
-  const isSaving =
-    removeMutation.isPending ||
-    previewBulkDeleteMutation.isPending ||
-    confirmBulkDeleteMutation.isPending;
-  const canDeleteOrders = Boolean(session.authUser) && !data.isContingencyMode;
+  const isSaving = removeMutation.isPending || completeMutation.isPending;
+  const canChangeOrders = Boolean(session.authUser) && !data.isContingencyMode;
 
   useEffect(() => {
     if (!appSuccess) return;
@@ -97,7 +78,6 @@ export default function OrdersPage() {
     orderForm.isModalOpen ||
       print.isPrintOptionsOpen ||
       Boolean(deleteOrderId) ||
-      isDeletePreviousOpen ||
       isLogoutConfirmOpen,
   );
 
@@ -105,16 +85,13 @@ export default function OrdersPage() {
     () => data.orders.find((order) => order.id === deleteOrderId) ?? null,
     [data.orders, deleteOrderId],
   );
-  const deletePreviousCount = useMemo(
-    () =>
-      data.orders.filter(
-        (order) =>
-          order.deliveryDate &&
-          (!deletePreviousFrom || order.deliveryDate >= deletePreviousFrom) &&
-          order.deliveryDate <= deletePreviousUntil,
-      ).length,
-    [data.orders, deletePreviousFrom, deletePreviousUntil],
-  );
+
+  async function refreshOrderData() {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
+      queryClient.invalidateQueries({ queryKey: ['supabase', 'contingency-snapshot'] }),
+    ]);
+  }
 
   async function handleLogout() {
     setAppError('');
@@ -124,12 +101,12 @@ export default function OrdersPage() {
       filters.resetFilters();
       orderForm.closeModal();
       setDeleteOrderId(null);
-      setIsDeletePreviousOpen(false);
       setIsLogoutConfirmOpen(false);
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível terminar sessão.'));
     }
   }
+
   async function confirmDeleteOrder() {
     if (!orderToDelete?.version) {
       setAppSuccess('');
@@ -140,65 +117,29 @@ export default function OrdersPage() {
     setAppSuccess('');
     try {
       await removeMutation.mutateAsync({ id: orderToDelete.id, version: orderToDelete.version });
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
-        queryClient.invalidateQueries({ queryKey: ['supabase', 'contingency-snapshot'] }),
-      ]);
+      await refreshOrderData();
       setDeleteOrderId(null);
       setAppSuccess('Encomenda apagada com sucesso.');
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível apagar a encomenda.'));
     }
   }
-  async function confirmDeletePreviousOrders() {
+
+  async function handleCompleteOrder(order: Order) {
+    if (!order.version) {
+      setAppSuccess('');
+      setAppError('A versão da encomenda não está disponível. Recarregue os dados.');
+      return;
+    }
     setAppError('');
     setAppSuccess('');
-    const request = {
-      ...(deletePreviousFrom ? { from: deletePreviousFrom } : {}),
-      until: deletePreviousUntil,
-    };
     try {
-      if (!bulkPreview) {
-        setBulkPreview(
-          await previewBulkDeleteMutation.mutateAsync({
-            from: request.from ?? '',
-            until: request.until,
-          }),
-        );
-        return;
-      }
-      const result = await confirmBulkDeleteMutation.mutateAsync({
-        from: request.from ?? '',
-        until: request.until,
-      });
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
-        queryClient.invalidateQueries({ queryKey: ['supabase', 'contingency-snapshot'] }),
-      ]);
-      setBulkPreview(null);
-      setIsDeletePreviousOpen(false);
-      setAppSuccess(
-        `${result.deleted} ${
-          result.deleted === 1 ? 'encomenda apagada' : 'encomendas apagadas'
-        } com sucesso.`,
-      );
+      await completeMutation.mutateAsync({ id: order.id, version: order.version });
+      await refreshOrderData();
+      setAppSuccess(`Encomenda #${order.orderNumber ?? '-'} concluída com sucesso.`);
     } catch (error) {
-      setAppError(getApiErrorMessage(error, 'Não foi possível excluir o período.'));
+      setAppError(getApiErrorMessage(error, 'Não foi possível concluir a encomenda.'));
     }
-  }
-  function openDeletePreviousModal() {
-    setDeletePreviousFrom('');
-    setDeletePreviousUntil(yesterdayKey());
-    setBulkPreview(null);
-    setIsDeletePreviousOpen(true);
-  }
-  function changeDeletePreviousFrom(value: string) {
-    setBulkPreview(null);
-    setDeletePreviousFrom(value);
-  }
-  function changeDeletePreviousUntil(value: string) {
-    setBulkPreview(null);
-    setDeletePreviousUntil(value);
   }
 
   if (session.isCheckingSession || !session.authUser) {
@@ -225,29 +166,25 @@ export default function OrdersPage() {
         {appSuccess && <Alert tone="success">{appSuccess}</Alert>}
         {data.isContingencyMode && (
           <Alert tone="info">
-            Modo de contingência: o Supabase está indisponível ou devolveu dados inconsistentes.
-            Estão a ser mostrados os dados guardados localmente em{' '}
+            Modo de contingência: o Supabase está indisponível. Estão a ser mostrados os dados
+            guardados localmente em{' '}
             {new Intl.DateTimeFormat('pt-PT', {
               dateStyle: 'short',
               timeStyle: 'short',
             }).format(new Date(data.contingencySavedAt))}
-            . Pode consultar, pesquisar e imprimir normalmente. Criar, editar e apagar ficam
-            bloqueados até a ligação ser corrigida.
+            . Pode consultar, pesquisar e imprimir normalmente. Criar, editar, concluir e apagar
+            ficam bloqueados até a ligação ser corrigida.
           </Alert>
         )}
         {visibleError && <Alert tone="error">{visibleError}</Alert>}
-        <OrderIndicators
-          stats={filters.stats}
-          total={data.pagination.total}
-          canDeletePrevious={canDeleteOrders && filters.stats.previous > 0}
-          onDeletePrevious={openDeletePreviousModal}
-        />
+        <OrderIndicators stats={filters.stats} total={data.overviewOrders.length} />
         <section className={styles.ordersPanel} aria-label="Encomendas">
           <OrderFilters
             categoryFilter={filters.categoryFilter}
             dateFilter={filters.dateFilter}
             isCategoryFilterOpen={filters.isCategoryFilterOpen}
             isReadOnly={data.isContingencyMode}
+            resultCount={data.resultTotal}
             search={filters.search}
             onCategoryChange={filters.setCategoryFilter}
             onCategoryOpenChange={filters.setIsCategoryFilterOpen}
@@ -258,20 +195,16 @@ export default function OrdersPage() {
           />
           <OrderList
             isLoading={data.isLoading}
-            canDelete={canDeleteOrders}
-            canEdit={!data.isContingencyMode}
+            canComplete={canChangeOrders}
+            canDelete={canChangeOrders}
+            canEdit={canChangeOrders}
             orders={filters.filteredOrders}
             search={filters.search}
             getResponsibleName={filters.getResponsibleName}
+            onComplete={handleCompleteOrder}
             onDelete={setDeleteOrderId}
             onEdit={orderForm.editOrder}
             onPrint={print.startPrint}
-          />
-          <OrdersPagination
-            page={data.pagination.page}
-            pageSize={data.pagination.pageSize}
-            total={data.pagination.total}
-            onPageChange={filterState.setPage}
           />
         </section>
       </main>
@@ -304,22 +237,6 @@ export default function OrdersPage() {
           order={orderToDelete}
           onCancel={() => setDeleteOrderId(null)}
           onConfirm={confirmDeleteOrder}
-        />
-      )}
-      {isDeletePreviousOpen && (
-        <DeletePreviousOrdersDialog
-          count={bulkPreview?.total ?? deletePreviousCount}
-          from={deletePreviousFrom}
-          isPreviewed={Boolean(bulkPreview)}
-          isSaving={isSaving}
-          until={deletePreviousUntil}
-          onCancel={() => {
-            setBulkPreview(null);
-            setIsDeletePreviousOpen(false);
-          }}
-          onConfirm={confirmDeletePreviousOrders}
-          onFromChange={changeDeletePreviousFrom}
-          onUntilChange={changeDeletePreviousUntil}
         />
       )}
       {isLogoutConfirmOpen && (

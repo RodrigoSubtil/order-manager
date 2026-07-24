@@ -2,12 +2,10 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
   filterContingencyOrders,
-  paginateContingencyOrders,
   readCachedSessionContext,
   readContingencySnapshot,
   saveCachedSessionContext,
   saveContingencySnapshot,
-  shouldPreserveContingencySnapshot,
   type ContingencySnapshot,
 } from './contingencyStore';
 import type { Order } from './domain';
@@ -104,26 +102,18 @@ describe('contingencyStore', () => {
     expect(filterContingencyOrders(orders, {}).map(({ id }) => id)).toEqual(['earlier', 'later']);
   });
 
-  it('paginates the cached result instead of moving a recent edit to page one', () => {
-    const page = paginateContingencyOrders(orders, { page: 2, pageSize: 1 });
-
-    expect(page.items.map(({ id }) => id)).toEqual(['later']);
-    expect(page.total).toBe(2);
-  });
-
-  it('preserves existing cached orders when the server unexpectedly returns zero', () => {
-    const previous: ContingencySnapshot = {
+  it('accepts an empty successful snapshot as a valid business state', () => {
+    const emptySnapshot: ContingencySnapshot = {
       version: 1,
       tenantId: 'tenant-1',
       savedAt: '2026-07-24T12:00:00Z',
-      orders,
+      orders: [],
       catalogProducts: [],
       responsibles: [],
     };
 
-    expect(shouldPreserveContingencySnapshot(previous, [])).toBe(true);
-    expect(shouldPreserveContingencySnapshot(previous, orders)).toBe(false);
-    expect(shouldPreserveContingencySnapshot({ ...previous, orders: [] }, [])).toBe(false);
-    expect(shouldPreserveContingencySnapshot(null, [])).toBe(false);
+    saveContingencySnapshot(emptySnapshot);
+
+    expect(readContingencySnapshot('tenant-1')).toEqual(emptySnapshot);
   });
 });

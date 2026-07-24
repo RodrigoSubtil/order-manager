@@ -1,5 +1,5 @@
 import type { CatalogProduct, Order, OrderResponsible } from './domain';
-import type { OrderListParams, PaginatedOrders, SessionContext } from './supabaseData';
+import type { OrderListParams, SessionContext } from './supabaseData';
 
 export type ContingencySnapshot = {
   catalogProducts: CatalogProduct[];
@@ -45,13 +45,6 @@ export function readContingencySnapshot(tenantId: string) {
 export function saveContingencySnapshot(snapshot: ContingencySnapshot) {
   if (typeof window === 'undefined') return;
   window.localStorage.setItem(storageKey(snapshot.tenantId), JSON.stringify(snapshot));
-}
-
-export function shouldPreserveContingencySnapshot(
-  previous: ContingencySnapshot | null,
-  receivedOrders: Order[],
-) {
-  return Boolean(previous?.orders.length && receivedOrders.length === 0);
 }
 
 function isSessionContext(value: unknown): value is SessionContext {
@@ -135,18 +128,4 @@ export function filterContingencyOrders(
         (!params.search || matchesSearch(order, params.search)),
     ),
   );
-}
-
-export function paginateContingencyOrders(
-  orders: Order[],
-  params: OrderListParams,
-): PaginatedOrders {
-  const filtered = filterContingencyOrders(orders, params);
-  const start = (params.page - 1) * params.pageSize;
-  return {
-    items: filtered.slice(start, start + params.pageSize),
-    page: params.page,
-    pageSize: params.pageSize,
-    total: filtered.length,
-  };
 }

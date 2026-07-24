@@ -1,6 +1,6 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
   gap: 12px;
 }
 
@@ -25,44 +25,31 @@
   line-height: 1;
 }
 
-.previous {
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
+.total {
+  color: var(--color-white);
+  background:
+    linear-gradient(135deg, rgb(118 95 75 / 98%), rgb(87 68 53 / 96%)), var(--color-accent);
+  border-color: transparent;
 }
 
-.previous > div {
-  display: grid;
-  gap: 10px;
-}
-
-.clean {
-  width: auto;
-  height: 34px;
-  min-height: 34px;
-  align-self: start;
-  padding: 0 10px;
-  color: var(--color-danger);
-  background: #fff8f6;
-  border-color: rgb(139 63 50 / 20%);
-  font-size: 0.76rem;
-  line-height: 1;
-  white-space: nowrap;
+.total span {
+  color: rgb(255 255 255 / 78%);
 }
 
 @media (max-width: 900px) {
   .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 560px) {
   .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 8px;
   }
 
   .card {
-    min-height: 92px;
+    min-height: 88px;
     gap: 6px;
     padding: 12px;
   }
@@ -74,12 +61,5 @@
 
   .card strong {
     font-size: 1.55rem;
-  }
-
-  .clean {
-    height: 32px;
-    min-height: 32px;
-    padding: 0 8px;
-    font-size: 0.7rem;
   }
 }

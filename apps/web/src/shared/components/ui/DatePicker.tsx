@@ -9,6 +9,7 @@ type DatePickerProps = {
   className?: string;
   disabled?: boolean;
   id?: string;
+  minDate?: string;
   onChange: (value: string) => void;
   placeholder?: string;
   required?: boolean;
@@ -71,6 +72,7 @@ export function DatePicker({
   className,
   disabled = false,
   id,
+  minDate: minimumDateValue,
   onChange,
   placeholder = 'Selecionar data',
   required = false,
@@ -81,11 +83,17 @@ export function DatePicker({
   const controlId = id ?? `date-picker-${generatedId}`;
   const rootRef = useRef<HTMLDivElement>(null);
   const selectedDate = parseDate(value);
+  const minimumDate = parseDate(minimumDateValue ?? '');
   const [isOpen, setIsOpen] = useState(false);
   const [viewDate, setViewDate] = useState(() => selectedDate ?? new Date());
   const calendarDays = useMemo(() => getCalendarDays(viewDate), [viewDate]);
   const selectedDateKey = selectedDate ? toDateKey(selectedDate) : '';
   const todayDateKey = toDateKey(new Date());
+  const minimumDateKey = minimumDate ? toDateKey(minimumDate) : '';
+  const canGoToPreviousMonth =
+    !minimumDate ||
+    new Date(viewDate.getFullYear(), viewDate.getMonth(), 1, 12) >
+      new Date(minimumDate.getFullYear(), minimumDate.getMonth(), 1, 12);
   const monthTitle = new Intl.DateTimeFormat('pt-PT', {
     month: 'long',
     year: 'numeric',
@@ -124,7 +132,9 @@ export function DatePicker({
   }
 
   function selectDate(date: Date) {
-    onChange(toDateKey(date));
+    const dateKey = toDateKey(date);
+    if (minimumDateKey && dateKey < minimumDateKey) return;
+    onChange(dateKey);
     setIsOpen(false);
   }
 
@@ -162,7 +172,12 @@ export function DatePicker({
       {isOpen && (
         <div className={styles.calendar} role="dialog" aria-label="Escolher data">
           <header className={styles.header}>
-            <button type="button" aria-label="Mês anterior" onClick={() => changeMonth(-1)}>
+            <button
+              type="button"
+              aria-label="Mês anterior"
+              disabled={!canGoToPreviousMonth}
+              onClick={() => changeMonth(-1)}
+            >
               ‹
             </button>
             <strong>{monthTitle}</strong>
@@ -183,6 +198,7 @@ export function DatePicker({
               const isCurrentMonth = date.getMonth() === viewDate.getMonth();
               const isSelected = dateKey === selectedDateKey;
               const isToday = dateKey === todayDateKey;
+              const isBeforeMinimum = Boolean(minimumDateKey && dateKey < minimumDateKey);
 
               return (
                 <button
@@ -190,6 +206,7 @@ export function DatePicker({
                   type="button"
                   aria-label={formatDayLabel(date)}
                   aria-pressed={isSelected}
+                  disabled={isBeforeMinimum}
                   className={[
                     styles.day,
                     !isCurrentMonth && styles.outsideMonth,
@@ -215,6 +232,7 @@ export function DatePicker({
             <button
               type="button"
               className={styles.todayAction}
+              disabled={Boolean(minimumDateKey && todayDateKey < minimumDateKey)}
               onClick={() => selectDate(new Date())}
             >
               Hoje

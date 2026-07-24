@@ -14,7 +14,8 @@ Não há API NestJS, Prisma, Docker, Compose ou Render nesta versão. A chave us
 
 ## Papéis
 
-- o acesso operacional cria, consulta, edita, exclui e imprime encomendas;
+- o acesso operacional cria, consulta, edita, conclui, exclui e imprime encomendas;
+- uma encomenda concluída sai do dashboard e é eliminada automaticamente do banco após 7 dias;
 - alterações de catálogo e responsáveis exigem a segunda senha no botão **Gerenciar**;
 - o Supabase exige internamente papel `OWNER` e um desbloqueio gerencial válido para essas alterações.
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { Order } from '../../../shared/lib/domain';
-import { compareOrdersByDelivery } from './useOrderFilters';
+import { compareOrdersByDelivery, getOrderStats } from './useOrderFilters';
 
 function order(overrides: Partial<Order>): Order {
   return {
@@ -35,5 +35,20 @@ describe('compareOrdersByDelivery', () => {
       'late',
       'tomorrow',
     ]);
+  });
+});
+
+describe('getOrderStats', () => {
+  it('counts the complete unfiltered collection passed to the indicators', () => {
+    const overviewOrders = [
+      order({ id: 'today', deliveryDate: '2026-07-24' }),
+      order({ id: 'tomorrow', deliveryDate: '2026-07-25' }),
+      order({ id: 'later', deliveryDate: '2026-07-30' }),
+    ];
+
+    expect(getOrderStats(overviewOrders, '2026-07-24')).toEqual({
+      today: 1,
+      upcoming: 2,
+    });
   });
 });
