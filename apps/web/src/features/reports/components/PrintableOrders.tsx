@@ -9,12 +9,14 @@ type PrintableOrdersProps = {
   printAll: boolean;
   printDescription: string;
   printFrom: string;
+  printFromTime: string;
   printMode: PrintMode;
   printOrderCount: number;
   printOrders: Order[];
   printProductSummary: PrintProductSummary;
   printRangeMode: PrintRangeMode;
   printUntil: string;
+  printUntilTime: string;
 };
 
 export function PrintableOrders({
@@ -22,12 +24,14 @@ export function PrintableOrders({
   printAll,
   printDescription,
   printFrom,
+  printFromTime,
   printMode,
   printOrderCount,
   printOrders,
   printProductSummary,
   printRangeMode,
   printUntil,
+  printUntilTime,
 }: PrintableOrdersProps) {
   return (
     <section className={styles.area} data-print-root aria-hidden="true">
@@ -57,7 +61,9 @@ export function PrintableOrders({
                   ? formatDate(printFrom)
                   : `${formatDate(printFrom)} ate ${formatDate(printUntil)}`}
               </strong>
-              <small>Produtos agrupados</small>
+              <small>
+                {printFromTime}–{printUntilTime} · Produtos agrupados
+              </small>
             </div>
           </header>
           <div className={styles.products}>

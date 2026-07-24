@@ -22,10 +22,31 @@
 }
 
 .radioGrid,
-.dateGrid {
+.dateGrid,
+.timeGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+.radioGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dateGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.timeGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.helper {
+  display: block;
+  margin-top: 5px;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 .radio {
@@ -80,7 +101,8 @@
   }
 
   .radioGrid,
-  .dateGrid {
+  .dateGrid,
+  .timeGrid {
     grid-template-columns: 1fr;
   }
 }

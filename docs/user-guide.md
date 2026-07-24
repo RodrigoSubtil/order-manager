@@ -56,7 +56,7 @@ Ao guardar, o sistema verifica se outra pessoa alterou a encomenda. Se aparecer 
 
 Administradores autorizados podem excluir uma encomenda individual ou preparar exclusão em lote por período. Confirme sempre prévia, intervalo e quantidade. A exclusão é lógica (soft delete), não deve contornar retenção ou auditoria.
 
-Para imprimir, escolha impressão na lista ou numa encomenda, selecione dia/intervalo e o formato detalhado ou resumo por produto. Confirme empresa e período antes de entregar o documento.
+Para imprimir, escolha impressão na lista ou numa encomenda, selecione dia/intervalo e o formato detalhado ou resumo por produto. Defina a “Hora inicial” e a “Hora final” para considerar somente as encomendas dentro desse intervalo. Num período entre datas, a hora inicial aplica-se ao primeiro dia e a hora final ao último. O padrão `00:00–23:59` inclui o dia inteiro, e a quantidade apresentada no diálogo já respeita as duas horas. Confirme empresa, período e horários antes de entregar o documento.
 
 ## Acessibilidade e suporte
 

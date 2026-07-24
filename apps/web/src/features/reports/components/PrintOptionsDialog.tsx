@@ -1,40 +1,61 @@
-import { Button, Dialog, Input } from '../../../shared/components/ui';
+import { Alert, Button, Dialog, Input } from '../../../shared/components/ui';
 import type { PrintMode, PrintRangeMode } from '../hooks/usePrintOrders';
 import styles from './PrintOptionsDialog.module.css';
 
 type PrintOptionsDialogProps = {
-  orderCount: number;
+  error?: string;
   isPreparing?: boolean;
+  orderCount: number;
   printFrom: string;
+  printFromTime: string;
   printMode: PrintMode;
   printRangeMode: PrintRangeMode;
   printUntil: string;
+  printUntilTime: string;
   onCancel: () => void;
   onConfirm: () => void;
   onFromChange: (value: string) => void;
+  onFromTimeChange: (value: string) => void;
   onModeChange: (mode: PrintMode) => void;
   onRangeModeChange: (mode: PrintRangeMode) => void;
   onUntilChange: (value: string) => void;
+  onUntilTimeChange: (value: string) => void;
 };
 
 export function PrintOptionsDialog({
-  orderCount,
+  error = '',
   isPreparing = false,
+  orderCount,
   printFrom,
+  printFromTime,
   printMode,
   printRangeMode,
   printUntil,
+  printUntilTime,
   onCancel,
   onConfirm,
   onFromChange,
+  onFromTimeChange,
   onModeChange,
   onRangeModeChange,
   onUntilChange,
+  onUntilTimeChange,
 }: PrintOptionsDialogProps) {
+  const finalDate = printRangeMode === 'day' ? printFrom : printUntil;
+  const hasValidRange = Boolean(printFrom && finalDate && finalDate >= printFrom);
+  const hasValidTimes =
+    /^([01]\d|2[0-3]):[0-5]\d$/.test(printFromTime) &&
+    /^([01]\d|2[0-3]):[0-5]\d$/.test(printUntilTime);
+  const hasValidDateTimeRange =
+    hasValidRange &&
+    hasValidTimes &&
+    `${printFrom}T${printFromTime}` <= `${finalDate}T${printUntilTime}`;
+
   return (
     <Dialog className={styles.content} titleId="print-options-title" onClose={onCancel}>
       <span data-eyebrow>Impressão</span>
       <h2 id="print-options-title">Escolha o que deseja imprimir</h2>
+      {error && <Alert tone="error">{error}</Alert>}
       <fieldset className={styles.section}>
         <legend>Período</legend>
         <div className={styles.radioGrid}>
@@ -79,11 +100,39 @@ export function PrintOptionsDialog({
               id="print-until"
               type="date"
               value={printUntil}
+              min={printFrom}
               disabled={printRangeMode === 'day'}
               onChange={(event) => onUntilChange(event.target.value)}
             />
           </label>
         </div>
+        <div className={styles.timeGrid}>
+          <label htmlFor="print-from-time">
+            Hora inicial
+            <Input
+              id="print-from-time"
+              type="time"
+              value={printFromTime}
+              required
+              onChange={(event) => onFromTimeChange(event.target.value)}
+            />
+          </label>
+          <label htmlFor="print-until-time">
+            Hora final
+            <Input
+              id="print-until-time"
+              type="time"
+              value={printUntilTime}
+              required
+              onChange={(event) => onUntilTimeChange(event.target.value)}
+            />
+          </label>
+        </div>
+        <small className={styles.helper}>
+          {printRangeMode === 'day'
+            ? 'Serão consideradas apenas encomendas entre estes horários.'
+            : 'A hora inicial aplica-se ao primeiro dia e a hora final ao último dia.'}
+        </small>
       </fieldset>
       <fieldset className={styles.section}>
         <legend>Formato</legend>
@@ -115,7 +164,11 @@ export function PrintOptionsDialog({
         <Button data-autofocus onClick={onCancel}>
           Cancelar
         </Button>
-        <Button variant="primary" disabled={!orderCount || isPreparing} onClick={onConfirm}>
+        <Button
+          variant="primary"
+          disabled={!orderCount || isPreparing || !hasValidDateTimeRange || Boolean(error)}
+          onClick={onConfirm}
+        >
           {isPreparing ? 'A preparar...' : 'Imprimir'}
         </Button>
       </div>

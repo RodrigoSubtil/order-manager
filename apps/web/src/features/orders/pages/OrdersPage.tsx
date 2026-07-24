@@ -300,18 +300,23 @@ export default function OrdersPage() {
       )}
       {print.isPrintOptionsOpen && (
         <PrintOptionsDialog
-          isPreparing={print.isPreparingPrint}
-          orderCount={filters.sortedOrders.length}
+          error={print.printOptionsError}
+          isPreparing={print.isPreparingPrintOptions}
+          orderCount={print.printOptionsOrderCount}
           printFrom={print.printFrom}
+          printFromTime={print.printFromTime}
           printMode={print.printMode}
           printRangeMode={print.printRangeMode}
           printUntil={print.printUntil}
+          printUntilTime={print.printUntilTime}
           onCancel={() => print.setIsPrintOptionsOpen(false)}
           onConfirm={print.confirmPrintOptions}
           onFromChange={print.setPrintFrom}
+          onFromTimeChange={print.setPrintFromTime}
           onModeChange={print.setPrintMode}
           onRangeModeChange={print.setPrintRangeMode}
           onUntilChange={print.setPrintUntil}
+          onUntilTimeChange={print.setPrintUntilTime}
         />
       )}
       <PrintableOrders
@@ -319,12 +324,14 @@ export default function OrdersPage() {
         printAll={print.printAll}
         printDescription={print.printDescription}
         printFrom={print.printFrom}
+        printFromTime={print.printFromTime}
         printMode={print.printMode}
         printOrderCount={print.printOrderCount}
         printOrders={print.printOrders}
         printProductSummary={print.printProductSummary}
         printRangeMode={print.printRangeMode}
         printUntil={print.printUntil}
+        printUntilTime={print.printUntilTime}
       />
     </>
   );

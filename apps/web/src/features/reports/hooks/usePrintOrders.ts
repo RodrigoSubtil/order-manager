@@ -14,10 +14,44 @@ export type PrintRangeMode = 'day' | 'period';
 
 type PrintRequest = {
   from: string;
+  fromTime: string;
   until: string;
+  untilTime: string;
   mode: PrintMode;
   orderId: string | null;
 };
+
+const startOfDay = '00:00';
+const endOfDay = '23:59';
+
+function isValidTime(value: string) {
+  return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+}
+
+function isValidDateTimeRange(from: string, fromTime: string, until: string, untilTime: string) {
+  return (
+    Boolean(from && until) &&
+    isValidTime(fromTime) &&
+    isValidTime(untilTime) &&
+    `${from}T${fromTime}` <= `${until}T${untilTime}`
+  );
+}
+
+export function filterOrdersByDateTime(
+  orders: Order[],
+  from: string,
+  fromTime: string,
+  until: string,
+  untilTime: string,
+) {
+  if (!isValidDateTimeRange(from, fromTime, until, untilTime)) return [];
+  const start = `${from}T${fromTime}`;
+  const end = `${until}T${untilTime}`;
+  return orders.filter((order) => {
+    const delivery = `${order.deliveryDate}T${order.deliveryTime}`;
+    return delivery >= start && delivery <= end;
+  });
+}
 
 export function usePrintOrders(
   currentOrders: Order[],
@@ -29,8 +63,29 @@ export function usePrintOrders(
   const [printRangeMode, setPrintRangeMode] = useState<PrintRangeMode>('day');
   const [printFrom, setPrintFrom] = useState(todayKey());
   const [printUntil, setPrintUntil] = useState(todayKey());
+  const [printFromTime, setPrintFromTime] = useState(startOfDay);
+  const [printUntilTime, setPrintUntilTime] = useState(endOfDay);
   const [isPrintOptionsOpen, setIsPrintOptionsOpen] = useState(false);
   const [request, setRequest] = useState<PrintRequest | null>(null);
+  const optionsUntil = printRangeMode === 'day' ? printFrom : printUntil;
+  const printOptionsReport = useQuery({
+    queryKey: ['supabase', 'print-options-preview', printFrom, optionsUntil, categoryFilter],
+    queryFn: () =>
+      listAllOrders({
+        from: printFrom,
+        until: optionsUntil,
+        ...(categoryFilter !== 'Todas' ? { category: categoryFilter } : {}),
+      }),
+    enabled:
+      isPrintOptionsOpen &&
+      Boolean(printFrom) &&
+      Boolean(optionsUntil) &&
+      optionsUntil >= printFrom &&
+      isValidTime(printFromTime) &&
+      isValidTime(printUntilTime),
+    retry: false,
+    staleTime: 0,
+  });
   const report = useQuery({
     queryKey: ['supabase', 'print-report', request, categoryFilter],
     queryFn: () =>
@@ -45,9 +100,28 @@ export function usePrintOrders(
   });
 
   const printOrders = useMemo(() => {
-    const orders = report.data ?? [];
+    const orders = request
+      ? filterOrdersByDateTime(
+          report.data ?? [],
+          request.from,
+          request.fromTime,
+          request.until,
+          request.untilTime,
+        )
+      : [];
     return request?.orderId ? orders.filter((order) => order.id === request.orderId) : orders;
-  }, [report.data, request?.orderId]);
+  }, [report.data, request]);
+  const printOptionsOrderCount = useMemo(
+    () =>
+      filterOrdersByDateTime(
+        printOptionsReport.data ?? [],
+        printFrom,
+        printFromTime,
+        optionsUntil,
+        printUntilTime,
+      ).length,
+    [optionsUntil, printFrom, printFromTime, printOptionsReport.data, printUntilTime],
+  );
   const printProductSummary = useMemo<PrintProductSummary>(
     () => buildPrintProductSummary(printOrders),
     [printOrders],
@@ -56,15 +130,18 @@ export function usePrintOrders(
     if (!printAll) return 'Ficha individual';
     const period =
       printRangeMode === 'day'
-        ? formatDate(printFrom)
-        : `${formatDate(printFrom)} até ${formatDate(printUntil)}`;
+        ? `${formatDate(printFrom)} · ${printFromTime}–${printUntilTime}`
+        : `${formatDate(printFrom)} ${printFromTime} até ${formatDate(printUntil)} ${printUntilTime}`;
     return printMode === 'summary'
       ? `Resumo de produção - ${period}`
       : `Encomendas detalhadas - ${period}`;
-  }, [printAll, printFrom, printMode, printRangeMode, printUntil]);
+  }, [printAll, printFrom, printFromTime, printMode, printRangeMode, printUntil, printUntilTime]);
 
   const isPreparingPrint = Boolean(request) && report.isFetching;
+  const isPreparingPrintOptions = isPrintOptionsOpen && printOptionsReport.isFetching;
   const printError = report.error instanceof Error ? report.error.message : '';
+  const printOptionsError =
+    printOptionsReport.error instanceof Error ? printOptionsReport.error.message : '';
 
   useEffect(() => {
     if (!request || isPreparingPrint || printError || !report.data) return;
@@ -81,15 +158,28 @@ export function usePrintOrders(
     setPrintRangeMode('day');
     setPrintFrom(initialDate);
     setPrintUntil(initialDate);
+    setPrintFromTime(startOfDay);
+    setPrintUntilTime(endOfDay);
     setPrintAll(true);
     setIsPrintOptionsOpen(true);
   }
   function confirmPrintOptions() {
+    const until = printRangeMode === 'day' ? printFrom : printUntil;
+    if (
+      !printFrom ||
+      !until ||
+      !isValidDateTimeRange(printFrom, printFromTime, until, printUntilTime) ||
+      !printOptionsOrderCount
+    ) {
+      return;
+    }
     setPrintAll(true);
     setIsPrintOptionsOpen(false);
     setRequest({
       from: printFrom,
-      until: printRangeMode === 'day' ? printFrom : printUntil,
+      fromTime: printFromTime,
+      until,
+      untilTime: printUntilTime,
       mode: printMode,
       orderId: null,
     });
@@ -101,29 +191,45 @@ export function usePrintOrders(
     setPrintAll(!orderId);
     setPrintFrom(date);
     setPrintUntil(date);
-    setRequest({ from: date, until: date, mode: 'orders', orderId: orderId ?? null });
+    setPrintFromTime(startOfDay);
+    setPrintUntilTime(endOfDay);
+    setRequest({
+      from: date,
+      fromTime: startOfDay,
+      until: date,
+      untilTime: endOfDay,
+      mode: 'orders',
+      orderId: orderId ?? null,
+    });
   }
 
   return {
     confirmPrintOptions,
     isPreparingPrint,
+    isPreparingPrintOptions,
     isPrintOptionsOpen,
     openPrintOptions,
     printAll,
     printDescription,
     printError,
     printFrom,
+    printFromTime,
     printMode,
     printOrderCount: printOrders.length,
+    printOptionsError,
+    printOptionsOrderCount,
     printOrders,
     printProductSummary,
     printRangeMode,
     printUntil,
+    printUntilTime,
     setIsPrintOptionsOpen,
     setPrintFrom,
+    setPrintFromTime,
     setPrintMode,
     setPrintRangeMode,
     setPrintUntil,
+    setPrintUntilTime,
     startPrint,
   };
 }

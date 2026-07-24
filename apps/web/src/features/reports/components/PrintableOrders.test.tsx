@@ -34,12 +34,14 @@ describe('PrintableOrders', () => {
         printAll={false}
         printDescription="Ficha individual"
         printFrom={order.deliveryDate}
+        printFromTime="00:00"
         printMode="orders"
         printOrderCount={1}
         printOrders={[order]}
         printProductSummary={[]}
         printRangeMode="day"
         printUntil={order.deliveryDate}
+        printUntilTime="23:59"
       />,
     );
 
