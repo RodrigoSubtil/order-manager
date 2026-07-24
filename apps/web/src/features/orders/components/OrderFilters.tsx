@@ -16,6 +16,7 @@ type OrderFiltersProps = {
   categoryFilter: 'Todas' | Category;
   dateFilter: string;
   isCategoryFilterOpen: boolean;
+  isReadOnly?: boolean;
   search: string;
   onCategoryChange: (category: 'Todas' | Category) => void;
   onCategoryOpenChange: (open: boolean) => void;
@@ -29,6 +30,7 @@ export function OrderFilters({
   categoryFilter,
   dateFilter,
   isCategoryFilterOpen,
+  isReadOnly = false,
   search,
   onCategoryChange,
   onCategoryOpenChange,
@@ -115,7 +117,10 @@ export function OrderFilters({
             className={`${styles.action} ${styles.create}`}
             variant="primary"
             aria-label="Nova encomenda"
-            title="Nova encomenda"
+            title={
+              isReadOnly ? 'Indisponível enquanto o site usa o backup local' : 'Nova encomenda'
+            }
+            disabled={isReadOnly}
             onClick={onCreate}
           >
             <span aria-hidden="true">+</span>

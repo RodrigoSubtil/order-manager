@@ -21,6 +21,24 @@ describe('DatePicker', () => {
     expect(screen.queryByRole('dialog', { name: 'Escolher data' })).not.toBeInTheDocument();
   });
 
+  it('closes after selection when used next to its form label', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+
+    render(
+      <div data-form-field>
+        <label htmlFor="delivery-date">Data de entrega</label>
+        <DatePicker id="delivery-date" value="2026-01-10" onChange={onChange} />
+      </div>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Data de entrega' }));
+    await user.click(screen.getByRole('button', { name: /15 de janeiro de 2026/i }));
+
+    expect(onChange).toHaveBeenCalledWith('2026-01-15');
+    expect(screen.queryByRole('dialog', { name: 'Escolher data' })).not.toBeInTheDocument();
+  });
+
   it('allows the filter calendar to clear its selected date', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();

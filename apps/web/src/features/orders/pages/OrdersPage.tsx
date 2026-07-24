@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { LogoutConfirmDialog } from '../../auth/components/LogoutConfirmDialog';
@@ -36,20 +36,25 @@ export default function OrdersPage() {
   const session = useSession();
   const queryClient = useQueryClient();
   const filterState = useOrderFilterState();
-  const data = useApiOrderData(filterState.queryParams, Boolean(session.authUser));
+  const data = useApiOrderData(
+    filterState.queryParams,
+    Boolean(session.authUser),
+    session.authUser?.tenantId ?? '',
+  );
   const filters = useOrderFilters(data.orders, data.responsibles, filterState);
   const [appError, setAppError] = useState('');
   const [appSuccess, setAppSuccess] = useState('');
   const orderForm = useOrderForm({
     catalogProducts: data.catalogProducts,
-    onReturnToOrders: (deliveryDate) => {
-      filterState.setDateFilter(deliveryDate);
-      filterState.setPage(1);
-    },
     setAppError,
     setAppSuccess,
   });
-  const print = usePrintOrders(filters.sortedOrders, filters.dateFilter, filters.categoryFilter);
+  const print = usePrintOrders(
+    filters.sortedOrders,
+    filters.dateFilter,
+    filters.categoryFilter,
+    data.contingencyOrders,
+  );
   const removeMutation = useMutation({
     mutationFn: ({ id, version }: { id: string; version: number }) => deleteOrder(id, version),
   });
@@ -72,7 +77,13 @@ export default function OrdersPage() {
     removeMutation.isPending ||
     previewBulkDeleteMutation.isPending ||
     confirmBulkDeleteMutation.isPending;
-  const canDeleteOrders = Boolean(session.authUser);
+  const canDeleteOrders = Boolean(session.authUser) && !data.isContingencyMode;
+
+  useEffect(() => {
+    if (!appSuccess) return;
+    const timer = window.setTimeout(() => setAppSuccess(''), 5_000);
+    return () => window.clearTimeout(timer);
+  }, [appSuccess]);
 
   function closeDropdowns() {
     orderForm.setOpenProductPickerId(null);
@@ -129,7 +140,10 @@ export default function OrdersPage() {
     setAppSuccess('');
     try {
       await removeMutation.mutateAsync({ id: orderToDelete.id, version: orderToDelete.version });
-      await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
+        queryClient.invalidateQueries({ queryKey: ['supabase', 'contingency-snapshot'] }),
+      ]);
       setDeleteOrderId(null);
       setAppSuccess('Encomenda apagada com sucesso.');
     } catch (error) {
@@ -157,7 +171,10 @@ export default function OrdersPage() {
         from: request.from ?? '',
         until: request.until,
       });
-      await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
+        queryClient.invalidateQueries({ queryKey: ['supabase', 'contingency-snapshot'] }),
+      ]);
       setBulkPreview(null);
       setIsDeletePreviousOpen(false);
       setAppSuccess(
@@ -206,6 +223,18 @@ export default function OrdersPage() {
           onOpenSettings={() => navigate('/settings')}
         />
         {appSuccess && <Alert tone="success">{appSuccess}</Alert>}
+        {data.isContingencyMode && (
+          <Alert tone="info">
+            Modo de contingência: o Supabase está indisponível ou devolveu dados inconsistentes.
+            Estão a ser mostrados os dados guardados localmente em{' '}
+            {new Intl.DateTimeFormat('pt-PT', {
+              dateStyle: 'short',
+              timeStyle: 'short',
+            }).format(new Date(data.contingencySavedAt))}
+            . Pode consultar, pesquisar e imprimir normalmente. Criar, editar e apagar ficam
+            bloqueados até a ligação ser corrigida.
+          </Alert>
+        )}
         {visibleError && <Alert tone="error">{visibleError}</Alert>}
         <OrderIndicators
           stats={filters.stats}
@@ -218,6 +247,7 @@ export default function OrdersPage() {
             categoryFilter={filters.categoryFilter}
             dateFilter={filters.dateFilter}
             isCategoryFilterOpen={filters.isCategoryFilterOpen}
+            isReadOnly={data.isContingencyMode}
             search={filters.search}
             onCategoryChange={filters.setCategoryFilter}
             onCategoryOpenChange={filters.setIsCategoryFilterOpen}
@@ -229,7 +259,9 @@ export default function OrdersPage() {
           <OrderList
             isLoading={data.isLoading}
             canDelete={canDeleteOrders}
+            canEdit={!data.isContingencyMode}
             orders={filters.filteredOrders}
+            search={filters.search}
             getResponsibleName={filters.getResponsibleName}
             onDelete={setDeleteOrderId}
             onEdit={orderForm.editOrder}

@@ -7,6 +7,10 @@ import {
   type SessionContext,
 } from '../../../shared/lib/supabaseData';
 import {
+  readCachedSessionContext,
+  saveCachedSessionContext,
+} from '../../../shared/lib/contingencyStore';
+import {
   assertSupabaseConfigured,
   setSessionPersistence,
   supabase,
@@ -16,6 +20,7 @@ import type { LoginFormValues } from '../schemas/loginSchema';
 
 type AuthUser = {
   id: string;
+  tenantId: string;
   username: string;
   displayName: string;
   bakeryName: string | null;
@@ -48,7 +53,16 @@ export function useSession() {
       return;
     }
 
-    const nextContext = await getSessionContext();
+    let nextContext: SessionContext | null;
+    let isUsingCachedContext = false;
+    try {
+      nextContext = await getSessionContext();
+      if (nextContext) saveCachedSessionContext(nextContext);
+    } catch (error) {
+      nextContext = readCachedSessionContext(data.session.user.id);
+      if (!nextContext) throw error;
+      isUsingCachedContext = true;
+    }
     if (!nextContext) {
       throw new Error('A sua conta não tem acesso ativo a esta empresa. Contacte o dono.');
     }
@@ -56,10 +70,16 @@ export function useSession() {
     setContext(nextContext);
     setAuthUser({
       id: data.session.user.id,
+      tenantId: nextContext.tenant.id,
       username: nextContext.user.username,
       displayName: nextContext.user.displayName || displayNameFromSession(data.session),
       bakeryName: nextContext.tenant.name,
     });
+    setSessionError(
+      isUsingCachedContext
+        ? 'Não foi possível confirmar a sessão no Supabase. Está a ser usado o contexto local da última sessão válida.'
+        : '',
+    );
   }, []);
 
   useEffect(() => {
@@ -67,7 +87,6 @@ export function useSession() {
     void (async () => {
       try {
         await refreshSession();
-        if (active) setSessionError('');
       } catch (error) {
         if (active) {
           setAuthUser(null);
@@ -109,7 +128,6 @@ export function useSession() {
       });
       if (error) throw new Error('Utilizador ou senha incorretos.');
       await refreshSession();
-      setSessionError('');
     },
     [queryClient, refreshSession],
   );

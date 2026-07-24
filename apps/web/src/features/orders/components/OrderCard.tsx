@@ -1,17 +1,26 @@
 import { Button, Card } from '../../../shared/components/ui';
 import { formatDate } from '../../../shared/lib/dateUtils';
 import type { Order } from '../../../shared/lib/domain';
+import { SearchHighlight } from './SearchHighlight';
 import styles from './OrderCard.module.css';
 
 type OrderCardProps = {
   order: Order;
+  search: string;
   responsibleName: string;
   onDelete?: () => void;
-  onEdit: () => void;
+  onEdit?: () => void;
   onPrint: () => void;
 };
 
-export function OrderCard({ order, responsibleName, onDelete, onEdit, onPrint }: OrderCardProps) {
+export function OrderCard({
+  order,
+  search,
+  responsibleName,
+  onDelete,
+  onEdit,
+  onPrint,
+}: OrderCardProps) {
   return (
     <Card as="article" className={styles.card}>
       <aside className={styles.dateStrip} aria-label="Data de entrega">
@@ -23,11 +32,17 @@ export function OrderCard({ order, responsibleName, onDelete, onEdit, onPrint }:
         <header className={styles.head}>
           <div className={styles.client}>
             <div className={styles.meta}>
-              <span>Responsável: {responsibleName}</span>
+              <span>
+                Responsável: <SearchHighlight query={search} text={responsibleName} />
+              </span>
             </div>
             <span>Cliente</span>
-            <h2>{order.clientName}</h2>
-            <p>Telefone: {order.phone || 'Sem telefone'}</p>
+            <h2>
+              <SearchHighlight query={search} text={order.clientName} />
+            </h2>
+            <p>
+              Telefone: <SearchHighlight query={search} text={order.phone || 'Sem telefone'} />
+            </p>
           </div>
           <span className={styles.number}>Pedido #{order.orderNumber ?? '-'}</span>
         </header>
@@ -37,8 +52,14 @@ export function OrderCard({ order, responsibleName, onDelete, onEdit, onPrint }:
             <div className={styles.product} key={product.id}>
               <span className={styles.category}>{product.category}</span>
               <div className={styles.copy}>
-                <strong>{product.product || 'Produto sem nome'}</strong>
-                {product.notes && <small>{product.notes}</small>}
+                <strong>
+                  <SearchHighlight query={search} text={product.product || 'Produto sem nome'} />
+                </strong>
+                {product.notes && (
+                  <small>
+                    <SearchHighlight query={search} text={product.notes} />
+                  </small>
+                )}
               </div>
               <span className={styles.quantity}>
                 <small>Qtd.</small>
@@ -50,7 +71,7 @@ export function OrderCard({ order, responsibleName, onDelete, onEdit, onPrint }:
 
         <footer className={styles.footer}>
           <div className={styles.actions}>
-            <Button variant="ghost" onClick={onEdit}>
+            <Button variant="ghost" disabled={!onEdit} onClick={onEdit}>
               Editar
             </Button>
             <Button variant="ghost" onClick={onPrint}>

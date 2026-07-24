@@ -76,7 +76,7 @@ export function Combobox({
 }
 
 export const ComboboxInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
-  function ComboboxInput({ className, id, ...props }, ref) {
+  function ComboboxInput({ className, id, onClick, ...props }, ref) {
     const context = useComboboxContext();
     return (
       <Input
@@ -88,6 +88,10 @@ export const ComboboxInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HT
         aria-autocomplete={props.readOnly ? 'none' : 'list'}
         aria-controls={context.listId}
         aria-expanded={context.isOpen}
+        onClick={(event) => {
+          onClick?.(event);
+          if (!event.defaultPrevented) context.onOpenChange(true);
+        }}
       />
     );
   },

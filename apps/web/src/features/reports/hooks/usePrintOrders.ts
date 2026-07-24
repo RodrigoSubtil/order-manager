@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { formatDate, todayKey } from '../../../shared/lib/dateUtils';
 import type { Category, Order } from '../../../shared/lib/domain';
+import { filterContingencyOrders } from '../../../shared/lib/contingencyStore';
 import {
   buildPrintProductSummary,
   type PrintProductSummary,
@@ -57,6 +58,7 @@ export function usePrintOrders(
   currentOrders: Order[],
   dateFilter: string,
   categoryFilter: Category | 'Todas',
+  contingencyOrders: Order[] | null = null,
 ) {
   const [printAll, setPrintAll] = useState(false);
   const [printMode, setPrintMode] = useState<PrintMode>('orders');
@@ -68,14 +70,26 @@ export function usePrintOrders(
   const [isPrintOptionsOpen, setIsPrintOptionsOpen] = useState(false);
   const [request, setRequest] = useState<PrintRequest | null>(null);
   const optionsUntil = printRangeMode === 'day' ? printFrom : printUntil;
+  const loadPrintOrders = (from: string, until: string) => {
+    const params = {
+      from,
+      until,
+      ...(categoryFilter !== 'Todas' ? { category: categoryFilter } : {}),
+    };
+    return contingencyOrders
+      ? Promise.resolve(filterContingencyOrders(contingencyOrders, params))
+      : listAllOrders(params);
+  };
   const printOptionsReport = useQuery({
-    queryKey: ['supabase', 'print-options-preview', printFrom, optionsUntil, categoryFilter],
-    queryFn: () =>
-      listAllOrders({
-        from: printFrom,
-        until: optionsUntil,
-        ...(categoryFilter !== 'Todas' ? { category: categoryFilter } : {}),
-      }),
+    queryKey: [
+      'supabase',
+      'print-options-preview',
+      printFrom,
+      optionsUntil,
+      categoryFilter,
+      Boolean(contingencyOrders),
+    ],
+    queryFn: () => loadPrintOrders(printFrom, optionsUntil),
     enabled:
       isPrintOptionsOpen &&
       Boolean(printFrom) &&
@@ -87,13 +101,8 @@ export function usePrintOrders(
     staleTime: 0,
   });
   const report = useQuery({
-    queryKey: ['supabase', 'print-report', request, categoryFilter],
-    queryFn: () =>
-      listAllOrders({
-        from: request?.from,
-        until: request?.until,
-        ...(categoryFilter !== 'Todas' ? { category: categoryFilter } : {}),
-      }),
+    queryKey: ['supabase', 'print-report', request, categoryFilter, Boolean(contingencyOrders)],
+    queryFn: () => loadPrintOrders(request?.from ?? '', request?.until ?? ''),
     enabled: Boolean(request),
     retry: false,
     staleTime: 0,

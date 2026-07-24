@@ -21,7 +21,6 @@ import { orderSchema, type OrderFormValues } from '../schemas/orderSchema';
 
 type UseOrderFormOptions = {
   catalogProducts: CatalogProduct[];
-  onReturnToOrders: (deliveryDate: string) => void;
   setAppError: Dispatch<SetStateAction<string>>;
   setAppSuccess: Dispatch<SetStateAction<string>>;
 };
@@ -31,12 +30,7 @@ type SavedOrderConfirmation = {
   message: string;
 };
 
-export function useOrderForm({
-  catalogProducts,
-  onReturnToOrders,
-  setAppError,
-  setAppSuccess,
-}: UseOrderFormOptions) {
+export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: UseOrderFormOptions) {
   const queryClient = useQueryClient();
   const saveMutation = useMutation({
     mutationFn: ({
@@ -129,7 +123,10 @@ export function useOrderForm({
         } else {
           await saveMutation.mutateAsync({ form });
         }
-        await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
+          queryClient.invalidateQueries({ queryKey: ['supabase', 'contingency-snapshot'] }),
+        ]);
         setSavedOrderConfirmation({
           deliveryDate: values.deliveryDate,
           message: editingOrder
@@ -160,9 +157,11 @@ export function useOrderForm({
   async function returnToOrders() {
     if (!savedOrderConfirmation) return;
     const confirmation = savedOrderConfirmation;
-    onReturnToOrders(confirmation.deliveryDate);
     try {
-      await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
+        queryClient.invalidateQueries({ queryKey: ['supabase', 'contingency-snapshot'] }),
+      ]);
       setAppError('');
       setAppSuccess(confirmation.message);
     } catch {

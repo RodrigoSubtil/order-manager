@@ -22,6 +22,9 @@
     "test:coverage": "npm run test:coverage --workspace @order-manager/web",
     "typecheck": "npm run typecheck --workspace @order-manager/web"
   },
+  "overrides": {
+    "esbuild": "0.28.1"
+  },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
     "@testing-library/jest-dom": "^6.9.1",

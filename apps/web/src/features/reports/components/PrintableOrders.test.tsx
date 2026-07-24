@@ -48,5 +48,29 @@ describe('PrintableOrders', () => {
     expect(screen.getByText('Pastel de Nata')).toBeInTheDocument();
     expect(screen.getByText('12 un')).toBeInTheDocument();
     expect(screen.getByText('Caixa separada')).toBeInTheDocument();
+    expect(screen.getByText('Ficha individual')).toBeInTheDocument();
+    expect(screen.getByText('Ordem de produção')).toBeInTheDocument();
+  });
+
+  it('repeats the production header for every order in a general print', () => {
+    render(
+      <PrintableOrders
+        getResponsibleName={(item) => item.responsibleName}
+        printAll
+        printDescription="Encomendas detalhadas"
+        printFrom={order.deliveryDate}
+        printFromTime="00:00"
+        printMode="orders"
+        printOrderCount={2}
+        printOrders={[order, { ...order, id: 'order-2', orderNumber: 28 }]}
+        printProductSummary={[]}
+        printRangeMode="day"
+        printUntil={order.deliveryDate}
+        printUntilTime="23:59"
+      />,
+    );
+
+    expect(screen.getAllByText('Ordem de produção')).toHaveLength(2);
+    expect(screen.getAllByText('Encomendas detalhadas')).toHaveLength(2);
   });
 });

@@ -6,8 +6,10 @@ import styles from './OrderList.module.css';
 type OrderListProps = {
   isLoading: boolean;
   orders: Order[];
+  search: string;
   getResponsibleName: (order: Order) => string;
   canDelete: boolean;
+  canEdit: boolean;
   onDelete: (id: string) => void;
   onEdit: (order: Order) => void;
   onPrint: (id: string) => void;
@@ -16,8 +18,10 @@ type OrderListProps = {
 export function OrderList({
   isLoading,
   orders,
+  search,
   getResponsibleName,
   canDelete,
+  canEdit,
   onDelete,
   onEdit,
   onPrint,
@@ -45,9 +49,10 @@ export function OrderList({
           <OrderCard
             key={order.id}
             order={order}
+            search={search}
             responsibleName={getResponsibleName(order)}
             onDelete={canDelete ? () => onDelete(order.id) : undefined}
-            onEdit={() => onEdit(order)}
+            onEdit={canEdit ? () => onEdit(order) : undefined}
             onPrint={() => onPrint(order.id)}
           />
         ))

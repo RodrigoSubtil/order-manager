@@ -51,6 +51,9 @@ describe('accessible UI primitives', () => {
     await user.click(screen.getByRole('button', { name: 'Mostrar áreas' }));
     expect(onOpenChange).toHaveBeenCalledWith(true);
 
+    await user.click(screen.getByRole('combobox', { name: 'Área' }));
+    expect(onOpenChange).toHaveBeenLastCalledWith(true);
+
     rerender(
       <Combobox id="area" isOpen onOpenChange={onOpenChange}>
         <ComboboxInput aria-label="Área" value="Todas" readOnly />

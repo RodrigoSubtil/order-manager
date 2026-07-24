@@ -39,6 +39,21 @@
   padding: 18px;
 }
 
+.backup {
+  grid-column: 1 / -1;
+}
+
+.backup p,
+.backup small {
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.backup small {
+  max-width: 560px;
+  font-weight: 700;
+}
+
 .card label {
   display: grid;
   gap: 6px;
@@ -104,6 +119,10 @@
   }
 
   .members {
+    grid-column: auto;
+  }
+
+  .backup {
     grid-column: auto;
   }
 

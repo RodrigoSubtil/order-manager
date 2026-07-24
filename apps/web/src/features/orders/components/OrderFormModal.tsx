@@ -218,26 +218,24 @@ export function OrderFormModal(props: OrderFormModalProps) {
                   <FieldError id="order-responsible-error" message={responsibleError} />
                 </div>
                 <div data-form-field>
-                  <label htmlFor="order-delivery-date">
-                    Data de entrega
-                    <Controller
-                      control={control}
-                      name="deliveryDate"
-                      render={({ field }) => (
-                        <DatePicker
-                          id="order-delivery-date"
-                          className={styles.dateInput}
-                          required
-                          aria-describedby={
-                            errors.deliveryDate ? 'order-delivery-date-error' : undefined
-                          }
-                          aria-invalid={Boolean(errors.deliveryDate)}
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      )}
-                    />
-                  </label>
+                  <label htmlFor="order-delivery-date">Data de entrega</label>
+                  <Controller
+                    control={control}
+                    name="deliveryDate"
+                    render={({ field }) => (
+                      <DatePicker
+                        id="order-delivery-date"
+                        className={styles.dateInput}
+                        required
+                        aria-describedby={
+                          errors.deliveryDate ? 'order-delivery-date-error' : undefined
+                        }
+                        aria-invalid={Boolean(errors.deliveryDate)}
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
                   <FieldError
                     id="order-delivery-date-error"
                     message={errors.deliveryDate?.message}
@@ -246,19 +244,17 @@ export function OrderFormModal(props: OrderFormModalProps) {
                 <div data-form-field>
                   <label htmlFor="order-delivery-time">
                     Hora
-                    <div className={styles.dateControl}>
-                      <Input
-                        id="order-delivery-time"
-                        className={styles.dateInput}
-                        required
-                        {...register('deliveryTime')}
-                        aria-describedby={
-                          errors.deliveryTime ? 'order-delivery-time-error' : undefined
-                        }
-                        aria-invalid={Boolean(errors.deliveryTime)}
-                        type="time"
-                      />
-                    </div>
+                    <Input
+                      id="order-delivery-time"
+                      className={styles.dateInput}
+                      required
+                      {...register('deliveryTime')}
+                      aria-describedby={
+                        errors.deliveryTime ? 'order-delivery-time-error' : undefined
+                      }
+                      aria-invalid={Boolean(errors.deliveryTime)}
+                      type="time"
+                    />
                   </label>
                   <FieldError
                     id="order-delivery-time-error"

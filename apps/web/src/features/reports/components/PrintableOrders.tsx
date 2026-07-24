@@ -19,6 +19,18 @@ type PrintableOrdersProps = {
   printUntilTime: string;
 };
 
+function PrintHeader({ description }: { description: string }) {
+  return (
+    <div className={styles.title}>
+      <div>
+        <strong>Order Manager</strong>
+        <span>Ordem de produção</span>
+      </div>
+      <small>{description}</small>
+    </div>
+  );
+}
+
 export function PrintableOrders({
   getResponsibleName,
   printAll,
@@ -35,16 +47,9 @@ export function PrintableOrders({
 }: PrintableOrdersProps) {
   return (
     <section className={styles.area} data-print-root aria-hidden="true">
-      <div className={styles.title}>
-        <div>
-          <strong>Order Manager</strong>
-          <span>Ordem de producao</span>
-        </div>
-        <small>{printDescription}</small>
-      </div>
-
       {printMode === 'summary' && printAll ? (
         <article className={styles.card}>
+          <PrintHeader description={printDescription} />
           <header className={styles.header}>
             <div className={styles.client}>
               <span>Resumo</span>
@@ -93,6 +98,7 @@ export function PrintableOrders({
       ) : (
         printOrders.map((order) => (
           <article className={styles.card} key={order.id}>
+            <PrintHeader description={printDescription} />
             <header className={styles.header}>
               <div className={styles.client}>
                 <span>Cliente</span>

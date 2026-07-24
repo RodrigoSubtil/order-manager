@@ -1,10 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 
+import { compareOrdersByDelivery } from '../../../shared/lib/contingencyStore';
 import { todayKey } from '../../../shared/lib/dateUtils';
 import type { Category, Order, OrderResponsible } from '../../../shared/lib/domain';
 import type { OrderListParams } from '../../../shared/lib/supabaseData';
 
 export type OrderFilterState = ReturnType<typeof useOrderFilterState>;
+
+export { compareOrdersByDelivery } from '../../../shared/lib/contingencyStore';
 
 export function useOrderFilterState() {
   const [search, setSearch] = useState('');
@@ -68,13 +71,7 @@ export function useOrderFilters(
   responsibles: OrderResponsible[],
   state: OrderFilterState,
 ) {
-  const sortedOrders = useMemo(
-    () =>
-      [...orders].sort((a, b) =>
-        `${a.deliveryDate} ${a.deliveryTime}`.localeCompare(`${b.deliveryDate} ${b.deliveryTime}`),
-      ),
-    [orders],
-  );
+  const sortedOrders = useMemo(() => [...orders].sort(compareOrdersByDelivery), [orders]);
 
   const responsibleNamesById = useMemo(
     () => new Map(responsibles.map((responsible) => [responsible.id, responsible.name])),

@@ -1,0 +1,7 @@
+.mark {
+  padding: 0 2px;
+  color: inherit;
+  background: #f5d98b;
+  border-radius: 3px;
+  box-decoration-break: clone;
+}

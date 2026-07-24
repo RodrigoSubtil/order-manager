@@ -58,6 +58,14 @@ Administradores autorizados podem excluir uma encomenda individual ou preparar e
 
 Para imprimir, escolha impressão na lista ou numa encomenda, selecione dia/intervalo e o formato detalhado ou resumo por produto. Defina a “Hora inicial” e a “Hora final” para considerar somente as encomendas dentro desse intervalo. Num período entre datas, a hora inicial aplica-se ao primeiro dia e a hora final ao último. O padrão `00:00–23:59` inclui o dia inteiro, e a quantidade apresentada no diálogo já respeita as duas horas. Confirme empresa, período e horários antes de entregar o documento.
 
+## Backup e modo de contingência
+
+Depois de uma sincronização válida, o painel conserva neste navegador uma cópia das encomendas ativas, produtos e responsáveis. Se o Supabase ficar indisponível ou devolver inesperadamente zero encomendas, aparece um aviso de **Modo de contingência** com a data da última sincronização.
+
+Neste modo é possível consultar, pesquisar, paginar e imprimir os dados guardados. Criar, editar e apagar ficam temporariamente bloqueados para impedir encomendas duplicadas ou alterações concorrentes. Assim que o Supabase voltar a responder com dados consistentes, o painel retoma a operação normal.
+
+O dono deve também abrir **Gerenciar > Cópia de segurança** e transferir regularmente o JSON organizado. Essa cópia contém dados pessoais de clientes e deve ser guardada num local privado, cifrado e fora do computador de uso diário. Consulte [free-backup.md](./free-backup.md) para a rotina e os limites.
+
 ## Acessibilidade e suporte
 
 Use `Tab` para avançar, `Shift+Tab` para voltar e `Esc` para fechar diálogos quando disponível. Para suporte, informe o ocorrido, horário aproximado, browser/dispositivo e `traceId` exibido pela aplicação — nunca passwords, cookies ou dados de clientes.
