@@ -34,7 +34,9 @@ type OrderFormModalProps = {
   onAddProduct: () => void;
   onClose: () => void;
   onRemoveProduct: (index: number) => void;
+  onReturnToOrders: () => Promise<void>;
   onSubmit: (event?: React.BaseSyntheticEvent) => Promise<void>;
+  savedOrderMessage: string;
   setIsResponsiblePickerOpen: Dispatch<SetStateAction<boolean>>;
   setOpenCategoryPickerId: Dispatch<SetStateAction<string | null>>;
   setOpenProductPickerId: Dispatch<SetStateAction<string | null>>;
@@ -56,7 +58,9 @@ export function OrderFormModal(props: OrderFormModalProps) {
     onAddProduct,
     onClose,
     onRemoveProduct,
+    onReturnToOrders,
     onSubmit,
+    savedOrderMessage,
     setIsResponsiblePickerOpen,
     setOpenCategoryPickerId,
     setOpenProductPickerId,
@@ -69,188 +73,229 @@ export function OrderFormModal(props: OrderFormModalProps) {
     setValue,
   } = methods;
   const responsibleError = errors.responsibleId?.message || errors.responsibleName?.message;
-  const submissionError = errors.root?.conflict?.message || errors.root?.api?.message;
+  const submissionError =
+    errors.root?.validation?.message || errors.root?.conflict?.message || errors.root?.api?.message;
+  const closeDialog = () => {
+    if (savedOrderMessage) void onReturnToOrders();
+    else onClose();
+  };
 
   return (
-    <Dialog className={styles.dialog} size="large" titleId="modal-title" onClose={onClose}>
+    <Dialog className={styles.dialog} size="large" titleId="modal-title" onClose={closeDialog}>
       <form noValidate onSubmit={onSubmit}>
         <header className={styles.header}>
           <div>
             <span data-eyebrow>{editingId ? 'Editar pedido' : 'Novo pedido'}</span>
             <h2 id="modal-title">{editingId ? 'Editar encomenda' : 'Adicionar encomenda'}</h2>
           </div>
-          <Button iconOnly variant="ghost" aria-label="Fechar" onClick={onClose}>
+          <Button iconOnly variant="ghost" aria-label="Fechar" onClick={closeDialog}>
             ×
           </Button>
         </header>
 
-        <div className={styles.body}>
-          {submissionError && <Alert tone="error">{submissionError}</Alert>}
-
-          <div className={styles.fieldGrid}>
-            <div data-form-field>
-              <label htmlFor="order-client-name">
-                Nome do cliente
-                <Input
-                  id="order-client-name"
-                  data-autofocus
-                  {...register('clientName')}
-                  aria-describedby={errors.clientName ? 'order-client-name-error' : undefined}
-                  aria-invalid={Boolean(errors.clientName)}
-                  placeholder="Ex.: Ana Silva"
-                />
-              </label>
-              <FieldError id="order-client-name-error" message={errors.clientName?.message} />
+        {savedOrderMessage ? (
+          <div className={styles.success} role="status" aria-live="polite">
+            <div className={styles.successIcon} aria-hidden="true">
+              ✓
             </div>
-            <div data-form-field>
-              <label htmlFor="order-phone">
-                Telefone
-                <Controller
-                  control={control}
-                  name="phone"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      id="order-phone"
-                      aria-describedby={errors.phone ? 'order-phone-error' : undefined}
-                      aria-invalid={Boolean(errors.phone)}
-                      inputMode="numeric"
-                      onChange={(event) => field.onChange(event.target.value.replace(/\D/g, ''))}
-                      placeholder="Ex.: 912000000"
-                    />
-                  )}
-                />
-              </label>
-              <FieldError id="order-phone-error" message={errors.phone?.message} />
-            </div>
-            <div data-form-field>
-              <label htmlFor="order-responsible">Responsável pela encomenda</label>
-              <Combobox
-                id="order-responsible"
-                isOpen={isResponsiblePickerOpen}
-                onOpenChange={setIsResponsiblePickerOpen}
-              >
-                <Controller
-                  control={control}
-                  name="responsibleName"
-                  render={({ field }) => (
-                    <ComboboxInput
-                      {...field}
-                      aria-describedby={responsibleError ? 'order-responsible-error' : undefined}
-                      aria-invalid={Boolean(responsibleError)}
-                      onChange={(event) => {
-                        const nextName = event.target.value;
-                        const matchingResponsible = responsibles.find(
-                          (responsible) =>
-                            responsible.name.toLowerCase() === nextName.trim().toLowerCase(),
-                        );
-                        field.onChange(nextName);
-                        setValue('responsibleId', matchingResponsible?.id ?? '', {
-                          shouldDirty: true,
-                          shouldValidate: isSubmitted,
-                        });
-                        setIsResponsiblePickerOpen(true);
-                      }}
-                      onFocus={() => setIsResponsiblePickerOpen(true)}
-                      placeholder="Digite ou escolha o responsável"
-                      autoComplete="off"
-                    />
-                  )}
-                />
-                <Input type="hidden" {...register('responsibleId')} />
-                <ComboboxTrigger aria-label="Mostrar responsáveis" />
-                <ComboboxList>
-                  {filteredResponsibles.map((responsible) => (
-                    <ComboboxOption
-                      key={responsible.id}
-                      aria-selected={methods.getValues('responsibleId') === responsible.id}
-                      onMouseDown={(event) => event.preventDefault()}
-                      onClick={() => {
-                        setValue('responsibleId', responsible.id, {
-                          shouldDirty: true,
-                          shouldValidate: true,
-                        });
-                        setValue('responsibleName', responsible.name, {
-                          shouldDirty: true,
-                          shouldValidate: true,
-                        });
-                        setIsResponsiblePickerOpen(false);
-                      }}
-                    >
-                      {responsible.name}
-                    </ComboboxOption>
-                  ))}
-                  {filteredResponsibles.length === 0 && (
-                    <ComboboxEmpty>Nenhum responsável encontrado.</ComboboxEmpty>
-                  )}
-                </ComboboxList>
-              </Combobox>
-              <FieldError id="order-responsible-error" message={responsibleError} />
-            </div>
-            <div data-form-field>
-              <label htmlFor="order-delivery-date">
-                Data de entrega
-                <Controller
-                  control={control}
-                  name="deliveryDate"
-                  render={({ field }) => (
-                    <DatePicker
-                      id="order-delivery-date"
-                      className={styles.dateInput}
-                      aria-describedby={
-                        errors.deliveryDate ? 'order-delivery-date-error' : undefined
-                      }
-                      aria-invalid={Boolean(errors.deliveryDate)}
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-              </label>
-              <FieldError id="order-delivery-date-error" message={errors.deliveryDate?.message} />
-            </div>
-            <div data-form-field>
-              <label htmlFor="order-delivery-time">
-                Hora
-                <div className={styles.dateControl}>
-                  <Input
-                    id="order-delivery-time"
-                    className={styles.dateInput}
-                    {...register('deliveryTime')}
-                    aria-describedby={errors.deliveryTime ? 'order-delivery-time-error' : undefined}
-                    aria-invalid={Boolean(errors.deliveryTime)}
-                    type="time"
-                  />
-                  <span className={`${styles.dateIcon} ${styles.time}`} aria-hidden="true" />
-                </div>
-              </label>
-              <FieldError id="order-delivery-time-error" message={errors.deliveryTime?.message} />
-            </div>
+            <h3>{savedOrderMessage}</h3>
+            <p>A encomenda foi gravada corretamente e os dados serão atualizados no painel.</p>
+            <Button variant="primary" onClick={() => void onReturnToOrders()}>
+              Voltar para as encomendas
+            </Button>
           </div>
+        ) : (
+          <>
+            <div className={styles.body}>
+              {submissionError && <Alert tone="error">{submissionError}</Alert>}
 
-          <ProductEditor
-            catalogProductsByCategory={catalogProductsByCategory}
-            itemFields={itemFields}
-            methods={methods}
-            openCategoryPickerId={openCategoryPickerId}
-            openProductPickerId={openProductPickerId}
-            openUnitPickerId={openUnitPickerId}
-            onAdd={onAddProduct}
-            onRemove={onRemoveProduct}
-            setOpenCategoryPickerId={setOpenCategoryPickerId}
-            setOpenProductPickerId={setOpenProductPickerId}
-            setOpenUnitPickerId={setOpenUnitPickerId}
-          />
-        </div>
+              <div className={styles.fieldGrid}>
+                <div data-form-field>
+                  <label htmlFor="order-client-name">
+                    Nome do cliente
+                    <Input
+                      id="order-client-name"
+                      data-autofocus
+                      required
+                      {...register('clientName')}
+                      aria-describedby={errors.clientName ? 'order-client-name-error' : undefined}
+                      aria-invalid={Boolean(errors.clientName)}
+                      placeholder="Ex.: Ana Silva"
+                    />
+                  </label>
+                  <FieldError id="order-client-name-error" message={errors.clientName?.message} />
+                </div>
+                <div data-form-field>
+                  <label htmlFor="order-phone">
+                    Telefone
+                    <Controller
+                      control={control}
+                      name="phone"
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          id="order-phone"
+                          required
+                          aria-describedby={errors.phone ? 'order-phone-error' : undefined}
+                          aria-invalid={Boolean(errors.phone)}
+                          inputMode="numeric"
+                          onChange={(event) =>
+                            field.onChange(event.target.value.replace(/\D/g, ''))
+                          }
+                          placeholder="Ex.: 912000000"
+                        />
+                      )}
+                    />
+                  </label>
+                  <FieldError id="order-phone-error" message={errors.phone?.message} />
+                </div>
+                <div data-form-field>
+                  <label htmlFor="order-responsible">Responsável pela encomenda</label>
+                  <Combobox
+                    id="order-responsible"
+                    isOpen={isResponsiblePickerOpen}
+                    onOpenChange={setIsResponsiblePickerOpen}
+                  >
+                    <Controller
+                      control={control}
+                      name="responsibleName"
+                      render={({ field }) => (
+                        <ComboboxInput
+                          {...field}
+                          required
+                          aria-describedby={
+                            responsibleError ? 'order-responsible-error' : undefined
+                          }
+                          aria-invalid={Boolean(responsibleError)}
+                          onChange={(event) => {
+                            const nextName = event.target.value;
+                            const matchingResponsible = responsibles.find(
+                              (responsible) =>
+                                responsible.name.toLowerCase() === nextName.trim().toLowerCase(),
+                            );
+                            field.onChange(nextName);
+                            setValue('responsibleId', matchingResponsible?.id ?? '', {
+                              shouldDirty: true,
+                              shouldValidate: isSubmitted,
+                            });
+                            setIsResponsiblePickerOpen(true);
+                          }}
+                          onFocus={() => setIsResponsiblePickerOpen(true)}
+                          placeholder="Digite ou escolha o responsável"
+                          autoComplete="off"
+                        />
+                      )}
+                    />
+                    <Input type="hidden" {...register('responsibleId')} />
+                    <ComboboxTrigger aria-label="Mostrar responsáveis" />
+                    <ComboboxList>
+                      {filteredResponsibles.map((responsible) => (
+                        <ComboboxOption
+                          key={responsible.id}
+                          aria-selected={methods.getValues('responsibleId') === responsible.id}
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => {
+                            setValue('responsibleId', responsible.id, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
+                            setValue('responsibleName', responsible.name, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
+                            setIsResponsiblePickerOpen(false);
+                          }}
+                        >
+                          {responsible.name}
+                        </ComboboxOption>
+                      ))}
+                      {filteredResponsibles.length === 0 && (
+                        <ComboboxEmpty>Nenhum responsável encontrado.</ComboboxEmpty>
+                      )}
+                    </ComboboxList>
+                  </Combobox>
+                  <FieldError id="order-responsible-error" message={responsibleError} />
+                </div>
+                <div data-form-field>
+                  <label htmlFor="order-delivery-date">
+                    Data de entrega
+                    <Controller
+                      control={control}
+                      name="deliveryDate"
+                      render={({ field }) => (
+                        <DatePicker
+                          id="order-delivery-date"
+                          className={styles.dateInput}
+                          required
+                          aria-describedby={
+                            errors.deliveryDate ? 'order-delivery-date-error' : undefined
+                          }
+                          aria-invalid={Boolean(errors.deliveryDate)}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+                  </label>
+                  <FieldError
+                    id="order-delivery-date-error"
+                    message={errors.deliveryDate?.message}
+                  />
+                </div>
+                <div data-form-field>
+                  <label htmlFor="order-delivery-time">
+                    Hora
+                    <div className={styles.dateControl}>
+                      <Input
+                        id="order-delivery-time"
+                        className={styles.dateInput}
+                        required
+                        {...register('deliveryTime')}
+                        aria-describedby={
+                          errors.deliveryTime ? 'order-delivery-time-error' : undefined
+                        }
+                        aria-invalid={Boolean(errors.deliveryTime)}
+                        type="time"
+                      />
+                      <span className={`${styles.dateIcon} ${styles.time}`} aria-hidden="true" />
+                    </div>
+                  </label>
+                  <FieldError
+                    id="order-delivery-time-error"
+                    message={errors.deliveryTime?.message}
+                  />
+                </div>
+              </div>
 
-        <footer className={styles.actions}>
-          <Button disabled={isSubmitting} onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button variant="primary" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'A guardar...' : editingId ? 'Guardar alterações' : 'Guardar encomenda'}
-          </Button>
-        </footer>
+              <ProductEditor
+                catalogProductsByCategory={catalogProductsByCategory}
+                itemFields={itemFields}
+                methods={methods}
+                openCategoryPickerId={openCategoryPickerId}
+                openProductPickerId={openProductPickerId}
+                openUnitPickerId={openUnitPickerId}
+                onAdd={onAddProduct}
+                onRemove={onRemoveProduct}
+                setOpenCategoryPickerId={setOpenCategoryPickerId}
+                setOpenProductPickerId={setOpenProductPickerId}
+                setOpenUnitPickerId={setOpenUnitPickerId}
+              />
+            </div>
+
+            <footer className={styles.actions}>
+              <Button disabled={isSubmitting} onClick={onClose}>
+                Cancelar
+              </Button>
+              <Button variant="primary" type="submit" disabled={isSubmitting}>
+                {isSubmitting
+                  ? 'A guardar...'
+                  : editingId
+                    ? 'Guardar alterações'
+                    : 'Guardar encomenda'}
+              </Button>
+            </footer>
+          </>
+        )}
       </form>
     </Dialog>
   );

@@ -39,10 +39,16 @@ export default function OrdersPage() {
   const data = useApiOrderData(filterState.queryParams, Boolean(session.authUser));
   const filters = useOrderFilters(data.orders, data.responsibles, filterState);
   const [appError, setAppError] = useState('');
+  const [appSuccess, setAppSuccess] = useState('');
   const orderForm = useOrderForm({
     catalogProducts: data.catalogProducts,
+    onReturnToOrders: (deliveryDate) => {
+      filterState.setDateFilter(deliveryDate);
+      filterState.setPage(1);
+    },
     responsibles: data.responsibles,
     setAppError,
+    setAppSuccess,
   });
   const print = usePrintOrders(filters.sortedOrders, filters.dateFilter, filters.categoryFilter);
   const removeMutation = useMutation({
@@ -102,6 +108,7 @@ export default function OrdersPage() {
 
   async function handleLogout() {
     setAppError('');
+    setAppSuccess('');
     try {
       await session.logout();
       filters.resetFilters();
@@ -115,20 +122,24 @@ export default function OrdersPage() {
   }
   async function confirmDeleteOrder() {
     if (!orderToDelete?.version) {
+      setAppSuccess('');
       setAppError('A versão da encomenda não está disponível. Recarregue os dados.');
       return;
     }
     setAppError('');
+    setAppSuccess('');
     try {
       await removeMutation.mutateAsync({ id: orderToDelete.id, version: orderToDelete.version });
       await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
       setDeleteOrderId(null);
+      setAppSuccess('Encomenda apagada com sucesso.');
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível apagar a encomenda.'));
     }
   }
   async function confirmDeletePreviousOrders() {
     setAppError('');
+    setAppSuccess('');
     const request = {
       ...(deletePreviousFrom ? { from: deletePreviousFrom } : {}),
       until: deletePreviousUntil,
@@ -143,13 +154,18 @@ export default function OrdersPage() {
         );
         return;
       }
-      await confirmBulkDeleteMutation.mutateAsync({
+      const result = await confirmBulkDeleteMutation.mutateAsync({
         from: request.from ?? '',
         until: request.until,
       });
       await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
       setBulkPreview(null);
       setIsDeletePreviousOpen(false);
+      setAppSuccess(
+        `${result.deleted} ${
+          result.deleted === 1 ? 'encomenda apagada' : 'encomendas apagadas'
+        } com sucesso.`,
+      );
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível excluir o período.'));
     }
@@ -190,6 +206,7 @@ export default function OrdersPage() {
           onLogoutRequest={() => setIsLogoutConfirmOpen(true)}
           onOpenSettings={() => navigate('/settings')}
         />
+        {appSuccess && <Alert tone="success">{appSuccess}</Alert>}
         {visibleError && <Alert tone="error">{visibleError}</Alert>}
         <OrderIndicators
           stats={filters.stats}
@@ -242,7 +259,9 @@ export default function OrdersPage() {
           onAddProduct={orderForm.addProductLine}
           onClose={orderForm.closeModal}
           onRemoveProduct={orderForm.removeProductLine}
+          onReturnToOrders={orderForm.returnToOrders}
           onSubmit={orderForm.saveOrder}
+          savedOrderMessage={orderForm.savedOrderMessage}
           setIsResponsiblePickerOpen={orderForm.setIsResponsiblePickerOpen}
           setOpenCategoryPickerId={orderForm.setOpenCategoryPickerId}
           setOpenProductPickerId={orderForm.setOpenProductPickerId}

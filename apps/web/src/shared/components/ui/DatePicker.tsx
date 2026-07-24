@@ -11,6 +11,7 @@ type DatePickerProps = {
   id?: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  required?: boolean;
   value: string;
   withClearAction?: boolean;
 };
@@ -72,6 +73,7 @@ export function DatePicker({
   id,
   onChange,
   placeholder = 'Selecionar data',
+  required = false,
   value,
   withClearAction = false,
 }: DatePickerProps) {
@@ -140,6 +142,7 @@ export function DatePicker({
         aria-haspopup="dialog"
         aria-invalid={ariaInvalid}
         aria-label={ariaLabel}
+        aria-required={required}
         className={styles.control}
         disabled={disabled}
         type="button"

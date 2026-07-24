@@ -5,10 +5,10 @@
 @media print {
   .area {
     display: block;
-    width: 68mm;
-    max-width: 68mm;
-    margin: 0 auto;
-    padding: 2mm 0 0;
+    width: 100%;
+    max-width: 74mm;
+    margin: 0;
+    padding: 0 0 3mm;
     color: #111111;
     font-family: Arial, 'Segoe UI', sans-serif;
     font-size: 10.5px;
@@ -19,7 +19,7 @@
     display: grid;
     gap: 4px;
     margin-bottom: 10px;
-    padding: 0 2mm 8px;
+    padding: 0 0 2mm;
     text-align: center;
     border-bottom: 1px dashed #111111;
   }
@@ -42,11 +42,11 @@
   }
 
   .card {
-    margin-bottom: 12px;
-    padding: 4mm 1mm 10px;
+    margin-bottom: 3mm;
+    padding: 3mm 0;
     overflow: visible;
     border-bottom: 1px dashed #111111;
-    break-inside: avoid;
+    break-inside: auto;
   }
 
   .header {

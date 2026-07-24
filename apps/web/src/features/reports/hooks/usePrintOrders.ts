@@ -68,8 +68,11 @@ export function usePrintOrders(
 
   useEffect(() => {
     if (!request || isPreparingPrint || printError || !report.data) return;
-    window.setTimeout(() => window.print(), 80);
-    setRequest(null);
+    const timer = window.setTimeout(() => {
+      window.print();
+      setRequest(null);
+    }, 120);
+    return () => window.clearTimeout(timer);
   }, [isPreparingPrint, printError, report.data, request]);
 
   function openPrintOptions() {

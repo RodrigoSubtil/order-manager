@@ -26,15 +26,17 @@ function validOrder(overrides: Partial<OrderFormValues> = {}): OrderFormValues {
 }
 
 describe('orderSchema', () => {
-  it('accepts an empty optional phone and time', () => {
-    expect(orderSchema.safeParse(validOrder({ phone: '', deliveryTime: '' })).success).toBe(true);
+  it('accepts empty observations', () => {
+    expect(orderSchema.safeParse(validOrder()).success).toBe(true);
   });
 
   it.each([
     ['clientName', { clientName: '' }],
+    ['phone', { phone: '' }],
     ['phone', { phone: '123' }],
     ['responsibleId', { responsibleId: '' }],
     ['deliveryDate', { deliveryDate: '2026-02-30' }],
+    ['deliveryTime', { deliveryTime: '' }],
     ['deliveryTime', { deliveryTime: '25:10' }],
   ] satisfies Array<[keyof OrderFormValues, Partial<OrderFormValues>]>)(
     'rejects an invalid %s',

@@ -131,6 +131,7 @@ export function ProductEditor({
                 >
                   <ComboboxInput
                     {...productRegistration}
+                    required
                     aria-describedby={
                       itemErrors?.product ? `order-item-${index}-product-error` : undefined
                     }
@@ -180,6 +181,7 @@ export function ProductEditor({
                   <Input
                     id={`order-item-${index}-quantity`}
                     {...register(`items.${index}.quantityAmount`)}
+                    required
                     aria-describedby={
                       itemErrors?.quantityAmount ? `order-item-${index}-quantity-error` : undefined
                     }
@@ -230,7 +232,7 @@ export function ProductEditor({
 
               <div className={styles.noteField} data-form-field>
                 <label htmlFor={`order-item-${index}-notes`}>
-                  Observação deste produto
+                  Observação deste produto (opcional)
                   <textarea
                     {...notesRegistration}
                     id={`order-item-${index}-notes`}

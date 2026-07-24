@@ -17,6 +17,7 @@ Num projeto Supabase novo, reveja e aplique no SQL Editor, por esta ordem:
 3. [autenticação por utilizador](../supabase/migrations/20260723_002_username_auth.sql);
 4. [acesso gerencial](../supabase/migrations/20260724_003_management_access.sql);
 5. [dados iniciais da Pastelaria Vénus](../supabase/migrations/20260724_004_venus_initial_data.sql), somente no projeto destinado a essa empresa.
+6. [campos obrigatórios da encomenda](../supabase/migrations/20260724_005_required_order_fields.sql).
 
 A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users` para `public.users`. Ela também normaliza os valores padrão de UUID e `updated_at`, para que um schema-alvo preparado anteriormente continue compatível. A segunda cria as operações que o frontend chama. Elas:
 
@@ -25,6 +26,8 @@ A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users
 - não aceita `tenant_id` do browser;
 - permite `OWNER` e `OPERATOR`, sem `ADMIN`;
 - concentra escritas sensíveis em RPCs PostgreSQL.
+
+A sexta migration impede também no PostgreSQL a gravação de encomendas sem telefone, responsável ou hora de entrega. Ela interrompe com erro antes de alterar o schema caso encontre registos antigos incompletos.
 
 Não aplique essas migrations em produção sem backup verificado e revisão manual.
 

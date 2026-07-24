@@ -15,3 +15,9 @@
 .info {
   color: var(--color-ink);
 }
+
+.success {
+  color: var(--color-success);
+  background: var(--color-success-soft);
+  border-color: color-mix(in srgb, var(--color-success) 35%, transparent);
+}

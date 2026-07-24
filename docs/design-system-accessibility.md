@@ -75,7 +75,7 @@ As combinações verificadas superam 4,5:1 para texto normal.
 - Desktop validado a 1280 × 720 sem overflow horizontal.
 - Celular validado a 390 × 844; painel e modal ficaram sem overflow horizontal.
 - O modal móvel mantém cabeçalho e ações acessíveis, com conteúdo interno rolável.
-- A impressão continua no navegador em `80mm`, com conteúdo útil limitado a `68mm`, margens de `4mm`, quebras protegidas em cartões/grupos/linhas e interface de ecrã oculta.
+- A impressão continua no navegador em rolo de `80mm`, com conteúdo útil limitado a `74mm`, margens de `3mm` em todos os lados, linhas de produto preservadas até à abertura do diálogo de impressão e interface de ecrã oculta.
 - A folha impressa está em `PrintableOrders.module.css`; `styles/print.css` contém apenas as regras globais da página térmica.
 
 Antes de implantação em cada modelo de impressora, faça uma prova física porque drivers podem adicionar margens ou escalas próprias.

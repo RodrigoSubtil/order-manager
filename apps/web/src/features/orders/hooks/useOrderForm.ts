@@ -22,11 +22,24 @@ import { orderSchema, type OrderFormValues } from '../schemas/orderSchema';
 
 type UseOrderFormOptions = {
   catalogProducts: CatalogProduct[];
+  onReturnToOrders: (deliveryDate: string) => void;
   responsibles: OrderResponsible[];
   setAppError: Dispatch<SetStateAction<string>>;
+  setAppSuccess: Dispatch<SetStateAction<string>>;
 };
 
-export function useOrderForm({ catalogProducts, responsibles, setAppError }: UseOrderFormOptions) {
+type SavedOrderConfirmation = {
+  deliveryDate: string;
+  message: string;
+};
+
+export function useOrderForm({
+  catalogProducts,
+  onReturnToOrders,
+  responsibles,
+  setAppError,
+  setAppSuccess,
+}: UseOrderFormOptions) {
   const queryClient = useQueryClient();
   const saveMutation = useMutation({
     mutationFn: ({
@@ -55,6 +68,8 @@ export function useOrderForm({ catalogProducts, responsibles, setAppError }: Use
   const [isResponsiblePickerOpen, setIsResponsiblePickerOpen] = useState(false);
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [savedOrderConfirmation, setSavedOrderConfirmation] =
+    useState<SavedOrderConfirmation | null>(null);
 
   const catalogProductsByCategory = useMemo(() => {
     const productMap = new Map<Category, CatalogProduct[]>();
@@ -88,6 +103,8 @@ export function useOrderForm({ catalogProducts, responsibles, setAppError }: Use
     methods.reset(createEmptyOrderFormValues());
     setEditingOrder(null);
     setAppError('');
+    setAppSuccess('');
+    setSavedOrderConfirmation(null);
     closePickers();
     setIsModalOpen(true);
   }
@@ -95,43 +112,78 @@ export function useOrderForm({ catalogProducts, responsibles, setAppError }: Use
     setIsModalOpen(false);
     methods.reset(createEmptyOrderFormValues());
     setEditingOrder(null);
+    setSavedOrderConfirmation(null);
     closePickers();
   }
   function editOrder(order: Order) {
     methods.reset(orderToFormValues(order));
     setEditingOrder(order);
     setAppError('');
+    setAppSuccess('');
+    setSavedOrderConfirmation(null);
     closePickers();
     setIsModalOpen(true);
   }
 
-  const saveOrder = methods.handleSubmit(async (values) => {
-    methods.clearErrors('root');
-    setAppError('');
-    try {
-      const form = formValuesToOrderForm(values);
-      if (editingOrder) {
-        if (!editingOrder.version)
-          throw new Error('A versão da encomenda não está disponível. Recarregue os dados.');
-        await saveMutation.mutateAsync({ form, current: editingOrder });
-      } else {
-        await saveMutation.mutateAsync({ form });
-      }
-      await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
-      closeModal();
-    } catch (error) {
-      const submissionError = getFormSubmissionError(
-        error,
-        'Não foi possível guardar a encomenda.',
-      );
-      if (submissionError.conflict)
+  const saveOrder = methods.handleSubmit(
+    async (values) => {
+      methods.clearErrors('root');
+      setAppError('');
+      setAppSuccess('');
+      try {
+        const form = formValuesToOrderForm(values);
+        if (editingOrder) {
+          if (!editingOrder.version)
+            throw new Error('A versão da encomenda não está disponível. Recarregue os dados.');
+          await saveMutation.mutateAsync({ form, current: editingOrder });
+        } else {
+          await saveMutation.mutateAsync({ form });
+        }
         await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
-      methods.setError(submissionError.conflict ? 'root.conflict' : 'root.api', {
-        message: submissionError.message,
+        setSavedOrderConfirmation({
+          deliveryDate: values.deliveryDate,
+          message: editingOrder
+            ? 'Encomenda atualizada com sucesso.'
+            : 'Encomenda criada com sucesso.',
+        });
+      } catch (error) {
+        const submissionError = getFormSubmissionError(
+          error,
+          'Não foi possível guardar a encomenda.',
+        );
+        if (submissionError.conflict)
+          await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
+        methods.setError(submissionError.conflict ? 'root.conflict' : 'root.api', {
+          message: submissionError.message,
+        });
+        setAppError(submissionError.message);
+      }
+    },
+    () => {
+      methods.setError('root.validation', {
+        message:
+          'Existem informações obrigatórias por preencher. Reveja os campos assinalados abaixo.',
       });
-      setAppError(submissionError.message);
+    },
+  );
+
+  async function returnToOrders() {
+    if (!savedOrderConfirmation) return;
+    const confirmation = savedOrderConfirmation;
+    onReturnToOrders(confirmation.deliveryDate);
+    try {
+      await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
+      setAppError('');
+      setAppSuccess(confirmation.message);
+    } catch {
+      setAppSuccess('');
+      setAppError(
+        'A encomenda foi gravada, mas não foi possível atualizar a lista. Atualize a página e tente novamente.',
+      );
+    } finally {
+      closeModal();
     }
-  });
+  }
 
   return {
     addProductLine,
@@ -150,7 +202,9 @@ export function useOrderForm({ catalogProducts, responsibles, setAppError }: Use
     openProductPickerId,
     openUnitPickerId,
     removeProductLine,
+    returnToOrders,
     saveOrder,
+    savedOrderMessage: savedOrderConfirmation?.message ?? '',
     setIsModalOpen,
     setIsResponsiblePickerOpen,
     setOpenCategoryPickerId,

@@ -35,17 +35,19 @@ Os schemas Zod do browser não são partilhados automaticamente com Prisma ou co
 ### Encomenda e itens
 
 - nome do cliente obrigatório, entre 2 e 160 caracteres;
-- telefone opcional, mas limitado a 9–15 dígitos quando preenchido;
+- telefone obrigatório, limitado a 9–15 dígitos;
 - responsável obrigatório e selecionado da lista disponível;
 - data obrigatória, no formato `YYYY-MM-DD`, com verificação de data real;
-- hora opcional, mas válida no formato `HH:mm` quando preenchida;
+- hora obrigatória e válida no formato `HH:mm`;
 - pelo menos um item;
 - produto obrigatório;
 - quantidade numérica maior que zero;
 - unidades permitidas: `UN`, `KG` e `G`;
 - observação limitada a 1.000 caracteres.
 
-O responsável permanece obrigatório porque essa era a regra efetiva do formulário anterior: uma encomenda só era guardada quando existia um `responsibleId` válido. Esta decisão preserva o comportamento atual; qualquer mudança para responsável opcional deve ser aprovada como alteração de regra de negócio.
+Cliente, telefone, responsável, data, hora, produto, quantidade, área e unidade são obrigatórios. Apenas a observação de cada produto permanece opcional. O formulário mostra a mensagem específica imediatamente abaixo de cada campo inválido e um resumo no topo; a base de dados também rejeita telefone, responsável ou hora ausentes.
+
+Depois de uma criação ou edição confirmada pelo Supabase, o modal mostra a confirmação antes de voltar ao painel. A ação “Voltar para as encomendas” atualiza a consulta e posiciona o filtro na data de entrega gravada. Exclusões individuais e em lote também mostram confirmação somente depois da resposta bem-sucedida.
 
 ## Fluxo de dados
 

@@ -43,7 +43,8 @@ export const orderSchema = z.object({
   phone: z
     .string()
     .trim()
-    .refine((value) => !value || /^\d{9,15}$/.test(value), {
+    .min(1, 'Indique o telefone.')
+    .refine((value) => /^\d{9,15}$/.test(value), {
       message: 'Use entre 9 e 15 dígitos no telefone.',
     }),
   responsibleId: z.string().trim().min(1, 'Escolha um responsável da lista.'),
@@ -56,7 +57,8 @@ export const orderSchema = z.object({
   deliveryTime: z
     .string()
     .trim()
-    .refine((value) => !value || /^([01]\d|2[0-3]):[0-5]\d$/.test(value), {
+    .min(1, 'Indique a hora de entrega.')
+    .refine((value) => /^([01]\d|2[0-3]):[0-5]\d$/.test(value), {
       message: 'Use uma hora válida no formato HH:mm.',
     }),
   items: z.array(orderItemSchema).min(1, 'Adicione pelo menos um produto.'),
