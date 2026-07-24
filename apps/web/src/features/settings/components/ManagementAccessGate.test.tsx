@@ -19,11 +19,11 @@ describe('ManagementAccessGate', () => {
       />,
     );
 
-    const password = screen.getByLabelText('Senha de gerenciamento');
+    const password = screen.getByLabelText('Senha');
     expect(password).toHaveAttribute('type', 'password');
 
     await user.type(password, 'senha-gerencial');
-    await user.click(screen.getByRole('button', { name: 'Entrar em Gerenciar' }));
+    await user.click(screen.getByRole('button', { name: 'Entrar' }));
 
     expect(onSubmit).toHaveBeenCalledWith('senha-gerencial');
   });

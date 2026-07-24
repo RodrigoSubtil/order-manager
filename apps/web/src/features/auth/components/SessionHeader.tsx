@@ -2,14 +2,12 @@ import { Button } from '../../../shared/components/ui';
 import styles from './SessionHeader.module.css';
 
 type SessionHeaderProps = {
-  companyDisplayName: string;
   userDisplayName: string;
   onLogoutRequest: () => void;
   onOpenSettings: () => void;
 };
 
 export function SessionHeader({
-  companyDisplayName,
   userDisplayName,
   onLogoutRequest,
   onOpenSettings,
@@ -22,7 +20,6 @@ export function SessionHeader({
       </div>
 
       <div className={styles.actions}>
-        <span className={styles.tenant}>Empresa: {companyDisplayName}</span>
         <Button className={styles.settings} variant="ghost" onClick={onOpenSettings}>
           Gerenciar
         </Button>

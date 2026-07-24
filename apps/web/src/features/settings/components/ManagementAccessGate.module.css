@@ -26,6 +26,10 @@
   gap: 8px;
 }
 
+.copy [data-eyebrow] {
+  justify-self: center;
+}
+
 .copy h1,
 .copy p {
   margin: 0;
@@ -52,7 +56,11 @@
 }
 
 .passwordField input {
-  padding-right: 48px;
+  height: auto;
+  padding: 14px 50px 14px 16px;
+  border-color: rgb(77 67 57 / 14%);
+  border-radius: var(--radius-lg);
+  font-weight: 800;
 }
 
 .visibility {

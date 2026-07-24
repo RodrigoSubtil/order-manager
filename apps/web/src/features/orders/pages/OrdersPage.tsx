@@ -186,7 +186,6 @@ export default function OrdersPage() {
     <>
       <main className={styles.shell} data-screen-only>
         <SessionHeader
-          companyDisplayName={companyDisplayName}
           userDisplayName={session.authUser.displayName}
           onLogoutRequest={() => setIsLogoutConfirmOpen(true)}
           onOpenSettings={() => navigate('/settings')}

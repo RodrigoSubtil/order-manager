@@ -55,7 +55,7 @@ export function ManagementAccessGate({
         onSubmit={handleSubmit((values) => onSubmit(values.password))}
         noValidate
       >
-        <label htmlFor="management-password">Senha de gerenciamento</label>
+        <label htmlFor="management-password">Senha</label>
         <div className={styles.passwordField}>
           <Input
             id="management-password"
@@ -95,7 +95,7 @@ export function ManagementAccessGate({
         <div className={styles.actions}>
           <Button onClick={onCancel}>Cancelar</Button>
           <Button variant="primary" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'A verificar...' : 'Entrar em Gerenciar'}
+            {isSubmitting ? 'A verificar...' : 'Entrar'}
           </Button>
         </div>
       </form>

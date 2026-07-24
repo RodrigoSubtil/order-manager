@@ -185,18 +185,18 @@ export default function SettingsPage() {
       <LoginPage
         isCheckingSession={session.isCheckingSession}
         sessionError={session.sessionError}
-        onLogin={session.login}
+        onLogin={async (values) => {
+          await session.login(values);
+          navigate('/', { replace: true });
+        }}
       />
     );
   }
-
-  const companyDisplayName = session.authUser.bakeryName ?? 'Empresa';
 
   if (managementStatus.isLoading) {
     return (
       <main className={styles.shell}>
         <SessionHeader
-          companyDisplayName={companyDisplayName}
           userDisplayName={session.authUser.displayName}
           onLogoutRequest={() => void session.logout()}
           onOpenSettings={() => undefined}
@@ -212,7 +212,6 @@ export default function SettingsPage() {
     return (
       <main className={styles.shell}>
         <SessionHeader
-          companyDisplayName={companyDisplayName}
           userDisplayName={session.authUser.displayName}
           onLogoutRequest={() => void session.logout()}
           onOpenSettings={() => undefined}
@@ -233,7 +232,6 @@ export default function SettingsPage() {
   return (
     <main className={styles.shell}>
       <SessionHeader
-        companyDisplayName={companyDisplayName}
         userDisplayName={session.authUser.displayName}
         onLogoutRequest={() => void session.logout()}
         onOpenSettings={() => undefined}

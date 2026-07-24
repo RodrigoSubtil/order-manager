@@ -28,15 +28,14 @@
   padding-bottom: 2px;
 }
 
-.tenant,
 .settings {
   min-height: 32px;
   color: var(--color-white);
   background: rgb(255 255 255 / 10%);
   border-color: rgb(255 255 255 / 18%);
+  border-radius: 999px;
 }
 
-.tenant:hover:not(:disabled),
 .settings:hover:not(:disabled) {
   background: rgb(255 255 255 / 18%);
   border-color: rgb(255 255 255 / 28%);
