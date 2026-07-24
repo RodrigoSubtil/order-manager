@@ -14,6 +14,7 @@ import {
   Dialog,
   FieldError,
   Input,
+  SuccessMessage,
 } from '../../../shared/components/ui';
 import type { CatalogProduct, Category, OrderResponsible } from '../../../shared/lib/domain';
 import { todayKey } from '../../../shared/lib/dateUtils';
@@ -93,16 +94,12 @@ export function OrderFormModal(props: OrderFormModalProps) {
         </header>
 
         {savedOrderMessage ? (
-          <div className={styles.success} role="status" aria-live="polite">
-            <div className={styles.successIcon} aria-hidden="true">
-              ✓
-            </div>
-            <h3>{savedOrderMessage}</h3>
-            <p>A encomenda foi gravada corretamente e os dados serão atualizados no painel.</p>
-            <Button variant="primary" onClick={() => void onReturnToOrders()}>
-              Voltar para as encomendas
-            </Button>
-          </div>
+          <SuccessMessage
+            actionLabel="Voltar para as encomendas"
+            description="A encomenda foi gravada corretamente e os dados serão atualizados no painel."
+            onAction={() => void onReturnToOrders()}
+            title={savedOrderMessage}
+          />
         ) : (
           <>
             <div className={styles.body}>

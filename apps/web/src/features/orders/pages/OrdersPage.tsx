@@ -15,6 +15,7 @@ import { getApiErrorMessage } from '../../../shared/lib/apiError';
 import type { Order } from '../../../shared/lib/domain';
 import { completeOrder, deleteOrder } from '../../../shared/lib/supabaseData';
 import { DeleteOrderDialog } from '../components/DeleteOrderDialog';
+import { OrderCompletionDialog } from '../components/OrderCompletionDialog';
 import { OrderFilters } from '../components/OrderFilters';
 import { OrderFormModal } from '../components/OrderFormModal';
 import { OrderIndicators } from '../components/OrderIndicators';
@@ -55,6 +56,7 @@ export default function OrdersPage() {
     mutationFn: ({ id, version }: { id: string; version: number }) => completeOrder(id, version),
   });
   const [deleteOrderId, setDeleteOrderId] = useState<string | null>(null);
+  const [completionMessage, setCompletionMessage] = useState('');
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
   const isSaving = removeMutation.isPending || completeMutation.isPending;
@@ -78,6 +80,7 @@ export default function OrdersPage() {
     orderForm.isModalOpen ||
       print.isPrintOptionsOpen ||
       Boolean(deleteOrderId) ||
+      Boolean(completionMessage) ||
       isLogoutConfirmOpen,
   );
 
@@ -101,6 +104,7 @@ export default function OrdersPage() {
       filters.resetFilters();
       orderForm.closeModal();
       setDeleteOrderId(null);
+      setCompletionMessage('');
       setIsLogoutConfirmOpen(false);
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível terminar sessão.'));
@@ -136,7 +140,7 @@ export default function OrdersPage() {
     try {
       await completeMutation.mutateAsync({ id: order.id, version: order.version });
       await refreshOrderData();
-      setAppSuccess(`Encomenda #${order.orderNumber ?? '-'} concluída com sucesso.`);
+      setCompletionMessage(`Encomenda #${order.orderNumber ?? '-'} concluída com sucesso.`);
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível concluir a encomenda.'));
     }
@@ -237,6 +241,15 @@ export default function OrdersPage() {
           order={orderToDelete}
           onCancel={() => setDeleteOrderId(null)}
           onConfirm={confirmDeleteOrder}
+        />
+      )}
+      {completionMessage && (
+        <OrderCompletionDialog
+          message={completionMessage}
+          onClose={() => {
+            setCompletionMessage('');
+            setAppSuccess(completionMessage);
+          }}
         />
       )}
       {isLogoutConfirmOpen && (

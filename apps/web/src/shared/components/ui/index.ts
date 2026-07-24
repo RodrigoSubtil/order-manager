@@ -16,3 +16,4 @@ export { FieldError } from './FieldError';
 export { Input } from './Input';
 export { Select } from './Select';
 export { Spinner } from './Spinner';
+export { SuccessMessage } from './SuccessMessage';

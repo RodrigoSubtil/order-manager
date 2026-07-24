@@ -30,49 +30,6 @@
   overflow-y: auto;
 }
 
-.success {
-  display: grid;
-  min-height: 360px;
-  align-content: center;
-  justify-items: center;
-  gap: 12px;
-  padding: clamp(28px, 7vw, 64px);
-  text-align: center;
-}
-
-.success h3,
-.success p {
-  margin: 0;
-}
-
-.success h3 {
-  color: var(--color-success);
-  font-size: clamp(1.35rem, 3vw, 1.8rem);
-}
-
-.success p {
-  max-width: 480px;
-  color: var(--color-muted);
-  line-height: 1.55;
-}
-
-.successIcon {
-  display: grid;
-  width: 64px;
-  height: 64px;
-  place-items: center;
-  color: var(--color-white);
-  background: var(--color-success);
-  border-radius: 50%;
-  font-size: 2rem;
-  font-weight: 900;
-}
-
-.success button {
-  min-width: 230px;
-  margin-top: 8px;
-}
-
 .fieldGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -123,16 +80,6 @@
   .body {
     gap: 14px;
     padding-bottom: 94px;
-  }
-
-  .success {
-    min-height: 320px;
-    padding: 28px 18px;
-  }
-
-  .success button {
-    width: 100%;
-    min-width: 0;
   }
 
   .fieldGrid {
