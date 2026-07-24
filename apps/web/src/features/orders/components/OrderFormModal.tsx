@@ -257,7 +257,6 @@ export function OrderFormModal(props: OrderFormModalProps) {
                         aria-invalid={Boolean(errors.deliveryTime)}
                         type="time"
                       />
-                      <span className={`${styles.dateIcon} ${styles.time}`} aria-hidden="true" />
                     </div>
                   </label>
                   <FieldError

@@ -88,24 +88,6 @@
   width: 100%;
 }
 
-.time::before {
-  content: '';
-  width: 15px;
-  height: 15px;
-  border: 2px solid currentcolor;
-  border-radius: 999px;
-}
-
-.time::after {
-  content: '';
-  position: absolute;
-  width: 5px;
-  height: 6px;
-  border-bottom: 2px solid currentcolor;
-  border-left: 2px solid currentcolor;
-  transform: translate(2px, -1px);
-}
-
 @media (max-width: 900px) {
   .fieldGrid {
     grid-template-columns: 1fr;
