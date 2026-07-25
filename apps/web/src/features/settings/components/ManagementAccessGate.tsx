@@ -45,7 +45,6 @@ export function ManagementAccessGate({
       <div className={styles.copy}>
         <span data-eyebrow>Área restrita</span>
         <h1>Gerenciar a pastelaria</h1>
-        <p>Introduza a senha exclusiva dos chefes para alterar produtos e responsáveis.</p>
       </div>
 
       {error && <Alert tone="error">{error}</Alert>}

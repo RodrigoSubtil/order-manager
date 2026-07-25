@@ -33,7 +33,7 @@ describe('OrderFilters', () => {
     const create = screen.getByRole('button', { name: 'Nova encomenda' });
     const print = screen.getByRole('button', { name: 'Imprimir todas' });
 
-    expect(area).toHaveValue('Todas as áreas');
+    expect(area).toHaveValue('Áreas');
     expect(area.compareDocumentPosition(today)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(today.compareDocumentPosition(allDates)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(allDates.compareDocumentPosition(date)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);

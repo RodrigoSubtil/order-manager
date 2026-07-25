@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   filterContingencyOrders,
@@ -115,5 +115,22 @@ describe('contingencyStore', () => {
     saveContingencySnapshot(emptySnapshot);
 
     expect(readContingencySnapshot('tenant-1')).toEqual(emptySnapshot);
+  });
+
+  it('does not fail the live flow when browser storage is full', () => {
+    const snapshot: ContingencySnapshot = {
+      version: 1,
+      tenantId: 'tenant-1',
+      savedAt: '2026-07-24T12:00:00Z',
+      orders,
+      catalogProducts: [],
+      responsibles: [],
+    };
+    const storageSpy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Quota exceeded', 'QuotaExceededError');
+    });
+
+    expect(saveContingencySnapshot(snapshot)).toBe(false);
+    storageSpy.mockRestore();
   });
 });

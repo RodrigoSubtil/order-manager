@@ -9,6 +9,7 @@ apps/api/src/generated/prisma
 .DS_Store
 *.local
 vite-*.log
+.preview-*.log
 .repo_git
 # Exports autorizados podem conter PII e nunca devem entrar no repositório.
 apps/api/prisma/legacy/private/

@@ -2,12 +2,22 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { LogoutConfirmDialog } from '../../auth/components/LogoutConfirmDialog';
 import { SessionHeader } from '../../auth/components/SessionHeader';
 import { useSession } from '../../auth/hooks/useSession';
 import { LoginPage } from '../../auth/pages/LoginPage';
+import { CatalogManager, type ProductDraft } from '../components/CatalogManager';
 import { ManagementAccessGate } from '../components/ManagementAccessGate';
-import { Alert, Button, Card, Input, Select, Spinner } from '../../../shared/components/ui';
-import type { Category } from '../../../shared/lib/domain';
+import { RecoveryPanel } from '../components/RecoveryPanel';
+import { ResponsiblesManager, type ResponsibleDraft } from '../components/ResponsiblesManager';
+import { SettingsDeleteDialog } from '../components/SettingsDeleteDialog';
+import { Alert, Button, Card, Spinner } from '../../../shared/components/ui';
+import { useModalBodyClass } from '../../../shared/hooks';
+import {
+  readRecoveryArchive,
+  recordRecoveryEvent,
+  saveRecoverySnapshot,
+} from '../../../shared/lib/recoveryArchive';
 import {
   deleteCatalogProduct,
   deleteResponsible,
@@ -20,24 +30,19 @@ import {
   saveCatalogProduct,
   saveResponsible,
   unlockManagementAccess,
-  type QuantityUnit,
+  type CatalogProductRecord,
+  type ResponsibleRecord,
 } from '../../../shared/lib/supabaseData';
 import { downloadBackup } from '../lib/downloadBackup';
 import styles from './SettingsPage.module.css';
 
-type ProductDraft = {
-  id?: string;
-  version?: number;
-  name: string;
-  category: Category;
-  unit: QuantityUnit;
-};
-type ResponsibleDraft = { id?: string; version?: number; name: string };
+type PendingDelete =
+  | { type: 'product'; item: CatalogProductRecord }
+  | { type: 'responsible'; item: ResponsibleRecord };
 
 const emptyProduct: ProductDraft = {
   name: '',
   category: 'Pastelaria',
-  unit: 'UN',
 };
 const emptyResponsible: ResponsibleDraft = { name: '' };
 
@@ -45,16 +50,18 @@ export default function SettingsPage() {
   const navigate = useNavigate();
   const session = useSession();
   const queryClient = useQueryClient();
+  const tenantId = session.authUser?.tenantId ?? '';
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [product, setProduct] = useState<ProductDraft>(emptyProduct);
   const [responsible, setResponsible] = useState<ResponsibleDraft>(emptyResponsible);
+  const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(null);
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
-  const canCheckManagement = Boolean(session.authUser);
   const managementStatus = useQuery({
     queryKey: ['supabase', 'management-access'],
     queryFn: getManagementAccessStatus,
-    enabled: canCheckManagement,
+    enabled: Boolean(session.authUser && session.isOwner),
     retry: false,
   });
   const canLoadData = Boolean(managementStatus.data?.unlocked);
@@ -70,6 +77,13 @@ export default function SettingsPage() {
     enabled: canLoadData,
     retry: false,
   });
+  const recoveryArchive = useQuery({
+    queryKey: ['recovery-archive', tenantId],
+    queryFn: () => readRecoveryArchive(tenantId),
+    enabled: canLoadData && Boolean(tenantId),
+    retry: false,
+  });
+
   const saveProductMutation = useMutation({ mutationFn: saveCatalogProduct });
   const deleteProductMutation = useMutation({
     mutationFn: ({ id, version }: { id: string; version: number }) =>
@@ -90,8 +104,7 @@ export default function SettingsPage() {
     saveProductMutation.isPending ||
     deleteProductMutation.isPending ||
     saveResponsibleMutation.isPending ||
-    deleteResponsibleMutation.isPending ||
-    backupMutation.isPending;
+    deleteResponsibleMutation.isPending;
   const isCheckingManagement = managementStatus.isLoading || unlockManagementMutation.isPending;
 
   useEffect(() => {
@@ -99,6 +112,7 @@ export default function SettingsPage() {
     const timer = window.setTimeout(() => setSuccess(''), 5_000);
     return () => window.clearTimeout(timer);
   }, [success]);
+  useModalBodyClass(Boolean(pendingDelete) || isLogoutConfirmOpen);
 
   async function submitManagementPassword(password: string) {
     setError('');
@@ -139,55 +153,111 @@ export default function SettingsPage() {
     ]);
   }
 
-  async function saveProduct() {
-    setError('');
+  async function recordManagementChange(input: Parameters<typeof recordRecoveryEvent>[1]) {
     try {
-      await saveProductMutation.mutateAsync({
+      const archive = await recordRecoveryEvent(tenantId, input);
+      queryClient.setQueryData(['recovery-archive', tenantId], archive);
+    } catch {
+      setError(
+        'A alteração foi guardada no Supabase, mas o arquivo de recuperação deste dispositivo não foi atualizado.',
+      );
+    }
+  }
+
+  async function persistProduct() {
+    setError('');
+    setSuccess('');
+    const before = product.id ? catalog.data?.find((item) => item.id === product.id) : undefined;
+    try {
+      const saved = await saveProductMutation.mutateAsync({
         id: product.id,
         version: product.version,
         name: product.name.trim(),
         category: product.category,
-        defaultUnit: product.unit,
+        defaultUnit: 'UN',
+      });
+      await recordManagementChange({
+        resource: 'catalog-product',
+        action: product.id ? 'updated' : 'created',
+        resourceId: saved.id,
+        ...(before ? { before } : {}),
+        after: saved,
       });
       setProduct(emptyProduct);
       await refreshSettings();
+      setSuccess(
+        product.id ? 'Produto atualizado com sucesso.' : 'Produto adicionado com sucesso.',
+      );
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Não foi possível guardar o produto.');
     }
   }
 
-  async function removeCatalogProduct(id: string, version: number) {
-    setError('');
-    try {
-      await deleteProductMutation.mutateAsync({ id, version });
-      await refreshSettings();
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Não foi possível apagar o produto.');
-    }
-  }
-
   async function persistResponsible() {
     setError('');
+    setSuccess('');
+    const before = responsible.id
+      ? responsibles.data?.find((item) => item.id === responsible.id)
+      : undefined;
     try {
-      await saveResponsibleMutation.mutateAsync({
+      const saved = await saveResponsibleMutation.mutateAsync({
         id: responsible.id,
         version: responsible.version,
         name: responsible.name.trim(),
       });
+      await recordManagementChange({
+        resource: 'responsible',
+        action: responsible.id ? 'updated' : 'created',
+        resourceId: saved.id,
+        ...(before ? { before } : {}),
+        after: saved,
+      });
       setResponsible(emptyResponsible);
       await refreshSettings();
+      setSuccess(
+        responsible.id
+          ? 'Responsável atualizado com sucesso.'
+          : 'Responsável adicionado com sucesso.',
+      );
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Não foi possível guardar o responsável.');
     }
   }
 
-  async function removeOrderResponsible(id: string, version: number) {
+  async function confirmDelete() {
+    if (!pendingDelete) return;
     setError('');
+    setSuccess('');
     try {
-      await deleteResponsibleMutation.mutateAsync({ id, version });
+      if (pendingDelete.type === 'product') {
+        await deleteProductMutation.mutateAsync({
+          id: pendingDelete.item.id,
+          version: pendingDelete.item.version,
+        });
+        await recordManagementChange({
+          resource: 'catalog-product',
+          action: 'deleted',
+          resourceId: pendingDelete.item.id,
+          before: pendingDelete.item,
+        });
+        setSuccess('Produto apagado com sucesso.');
+      } else {
+        await deleteResponsibleMutation.mutateAsync({
+          id: pendingDelete.item.id,
+          version: pendingDelete.item.version,
+        });
+        await recordManagementChange({
+          resource: 'responsible',
+          action: 'deleted',
+          resourceId: pendingDelete.item.id,
+          before: pendingDelete.item,
+        });
+        setSuccess('Responsável apagado com sucesso.');
+      }
+      setPendingDelete(null);
       await refreshSettings();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Não foi possível apagar o responsável.');
+      setError(cause instanceof Error ? cause.message : 'Não foi possível apagar este registo.');
     }
   }
 
@@ -195,13 +265,31 @@ export default function SettingsPage() {
     setError('');
     setSuccess('');
     try {
-      const backup = await backupMutation.mutateAsync();
-      downloadBackup(backup);
-      setSuccess(
-        'Backup transferido. Guarde o ficheiro num local privado e fora deste computador.',
-      );
+      const serverSnapshot = await backupMutation.mutateAsync();
+      let archive = recoveryArchive.data ?? null;
+      try {
+        archive = await saveRecoverySnapshot(tenantId, serverSnapshot);
+        queryClient.setQueryData(['recovery-archive', tenantId], archive);
+      } catch {
+        setError('O snapshot do Supabase foi transferido, mas não ficou guardado neste navegador.');
+      }
+      downloadBackup(serverSnapshot, archive);
+      setSuccess('Arquivo completo transferido. Guarde-o num local privado e noutro dispositivo.');
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Não foi possível criar o backup.');
+      setError(
+        cause instanceof Error ? cause.message : 'Não foi possível preparar o arquivo completo.',
+      );
+    }
+  }
+
+  async function handleLogout() {
+    setError('');
+    try {
+      await session.logout();
+      setIsLogoutConfirmOpen(false);
+      navigate('/', { replace: true });
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Não foi possível terminar a sessão.');
     }
   }
 
@@ -218,14 +306,35 @@ export default function SettingsPage() {
     );
   }
 
+  const header = (
+    <SessionHeader
+      canManage={false}
+      userDisplayName={session.authUser.displayName}
+      onLogoutRequest={() => setIsLogoutConfirmOpen(true)}
+      onOpenSettings={() => undefined}
+    />
+  );
+
+  if (!session.isOwner) {
+    return (
+      <main className={styles.shell}>
+        {header}
+        <Card as="section" className={styles.denied}>
+          <span data-eyebrow>Acesso protegido</span>
+          <h1>Área exclusiva do dono</h1>
+          <p>O seu acesso permite trabalhar com encomendas, mas não alterar configurações.</p>
+          <Button variant="primary" onClick={() => navigate('/')}>
+            Voltar às encomendas
+          </Button>
+        </Card>
+      </main>
+    );
+  }
+
   if (managementStatus.isLoading) {
     return (
       <main className={styles.shell}>
-        <SessionHeader
-          userDisplayName={session.authUser.displayName}
-          onLogoutRequest={() => void session.logout()}
-          onOpenSettings={() => undefined}
-        />
+        {header}
         <div className={styles.loading}>
           <Spinner label="A verificar acesso gerencial" />
         </div>
@@ -236,11 +345,7 @@ export default function SettingsPage() {
   if (!managementStatus.data?.unlocked) {
     return (
       <main className={styles.shell}>
-        <SessionHeader
-          userDisplayName={session.authUser.displayName}
-          onLogoutRequest={() => void session.logout()}
-          onOpenSettings={() => undefined}
-        />
+        {header}
         <ManagementAccessGate
           configured={managementStatus.data?.configured ?? false}
           error={
@@ -250,183 +355,101 @@ export default function SettingsPage() {
           onCancel={() => navigate('/')}
           onSubmit={submitManagementPassword}
         />
+        {isLogoutConfirmOpen && (
+          <LogoutConfirmDialog
+            companyDisplayName={session.authUser.bakeryName || 'Pastelaria'}
+            isSaving={false}
+            onCancel={() => setIsLogoutConfirmOpen(false)}
+            onConfirm={handleLogout}
+          />
+        )}
       </main>
     );
   }
 
+  const visibleError =
+    error ||
+    (catalog.error instanceof Error ? catalog.error.message : '') ||
+    (responsibles.error instanceof Error ? responsibles.error.message : '');
+  const catalogItems = catalog.data ?? [];
+  const responsibleItems = responsibles.data ?? [];
+
   return (
     <main className={styles.shell}>
-      <SessionHeader
-        userDisplayName={session.authUser.displayName}
-        onLogoutRequest={() => void session.logout()}
-        onOpenSettings={() => undefined}
-      />
-      <div className={styles.back}>
-        <Button onClick={() => void leaveSettings()}>Voltar às encomendas</Button>
-      </div>
+      {header}
       <header className={styles.heading}>
-        <span data-eyebrow>Gerenciar</span>
-        <h1>Catálogo e responsáveis</h1>
-        <p>Estas alterações aplicam-se à empresa associada à sua sessão.</p>
+        <div>
+          <span data-eyebrow>Configurações</span>
+          <h1>Organize o trabalho da pastelaria</h1>
+          <p>Atualize produtos, responsáveis e a cópia de recuperação num só lugar.</p>
+        </div>
+        <Button onClick={() => void leaveSettings()}>Voltar às encomendas</Button>
       </header>
+
       {success && <Alert tone="success">{success}</Alert>}
-      {error && <Alert tone="error">{error}</Alert>}
+      {visibleError && <Alert tone="error">{visibleError}</Alert>}
 
-      <section className={styles.grid}>
-        <Card as="section" className={`${styles.card} ${styles.backup}`}>
-          <div>
-            <span data-eyebrow>Proteção de dados</span>
-            <h2>Cópia de segurança</h2>
-          </div>
-          <p>
-            Transfira uma cópia dos dados da pastelaria e guarde-a num armazenamento privado fora
-            deste computador. O ficheiro contém dados pessoais de clientes e não deve ser enviado
-            por e-mail nem colocado numa pasta pública.
-          </p>
-          <div className={styles.inline}>
-            <small>
-              Recomendado: no fim de cada dia de trabalho e antes de alterações importantes.
-            </small>
-            <Button
-              variant="primary"
-              disabled={backupMutation.isPending}
-              onClick={() => void createBackup()}
-            >
-              {backupMutation.isPending ? 'A preparar backup...' : 'Transferir backup agora'}
-            </Button>
-          </div>
+      <section className={styles.overview} aria-label="Resumo da gestão">
+        <Card as="article" className={styles.overviewCard}>
+          <span>Produtos</span>
+          <strong>{catalogItems.length}</strong>
         </Card>
-
-        <Card as="section" className={styles.card}>
-          <h2>{product.id ? 'Editar produto' : 'Novo produto'}</h2>
-          <label>
-            Nome
-            <Input
-              value={product.name}
-              onChange={(event) => setProduct({ ...product, name: event.target.value })}
-            />
-          </label>
-          <label>
-            Categoria
-            <Select
-              value={product.category}
-              onChange={(event) =>
-                setProduct({ ...product, category: event.target.value as Category })
-              }
-            >
-              <option value="Pastelaria">Pastelaria</option>
-              <option value="Padaria">Padaria</option>
-              <option value="Salgados">Salgados</option>
-            </Select>
-          </label>
-          <label>
-            Unidade
-            <Select
-              value={product.unit}
-              onChange={(event) =>
-                setProduct({ ...product, unit: event.target.value as QuantityUnit })
-              }
-            >
-              <option value="UN">UN</option>
-              <option value="KG">KG</option>
-              <option value="G">G</option>
-            </Select>
-          </label>
-          <div className={styles.inline}>
-            <Button onClick={() => setProduct(emptyProduct)}>Limpar</Button>
-            <Button
-              variant="primary"
-              disabled={isSaving || !product.name.trim()}
-              onClick={() => void saveProduct()}
-            >
-              {isSaving ? 'A guardar...' : 'Guardar produto'}
-            </Button>
-          </div>
-          <div className={styles.items}>
-            {catalog.isLoading ? (
-              <Spinner label="A carregar catálogo" />
-            ) : (
-              catalog.data?.map((item) => (
-                <div key={item.id} className={styles.item}>
-                  <span>
-                    {item.name} · {item.category}
-                  </span>
-                  <div>
-                    <Button
-                      onClick={() =>
-                        setProduct({
-                          id: item.id,
-                          version: item.version,
-                          name: item.name,
-                          category: item.category,
-                          unit: item.defaultUnit,
-                        })
-                      }
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      variant="danger"
-                      disabled={isSaving}
-                      onClick={() => void removeCatalogProduct(item.id, item.version)}
-                    >
-                      Apagar
-                    </Button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+        <Card as="article" className={styles.overviewCard}>
+          <span>Responsáveis</span>
+          <strong>{responsibleItems.length}</strong>
         </Card>
-
-        <Card as="section" className={styles.card}>
-          <h2>{responsible.id ? 'Editar responsável' : 'Novo responsável'}</h2>
-          <label>
-            Nome
-            <Input
-              value={responsible.name}
-              onChange={(event) => setResponsible({ ...responsible, name: event.target.value })}
-            />
-          </label>
-          <div className={styles.inline}>
-            <Button onClick={() => setResponsible(emptyResponsible)}>Limpar</Button>
-            <Button
-              variant="primary"
-              disabled={isSaving || !responsible.name.trim()}
-              onClick={() => void persistResponsible()}
-            >
-              {isSaving ? 'A guardar...' : 'Guardar responsável'}
-            </Button>
-          </div>
-          <div className={styles.items}>
-            {responsibles.isLoading ? (
-              <Spinner label="A carregar responsáveis" />
-            ) : (
-              responsibles.data?.map((item) => (
-                <div key={item.id} className={styles.item}>
-                  <span>{item.name}</span>
-                  <div>
-                    <Button
-                      onClick={() =>
-                        setResponsible({ id: item.id, version: item.version, name: item.name })
-                      }
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      variant="danger"
-                      disabled={isSaving}
-                      onClick={() => void removeOrderResponsible(item.id, item.version)}
-                    >
-                      Apagar
-                    </Button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+        <Card as="article" className={styles.overviewCard}>
+          <span>Alterações guardadas</span>
+          <strong>{recoveryArchive.data?.events.length ?? 0}</strong>
         </Card>
       </section>
+
+      <section className={styles.grid}>
+        <CatalogManager
+          draft={product}
+          isLoading={catalog.isLoading}
+          isSaving={isSaving}
+          items={catalogItems}
+          onDelete={(item) => setPendingDelete({ type: 'product', item })}
+          onDraftChange={setProduct}
+          onReset={() => setProduct(emptyProduct)}
+          onSave={() => void persistProduct()}
+        />
+        <ResponsiblesManager
+          draft={responsible}
+          isLoading={responsibles.isLoading}
+          isSaving={isSaving}
+          items={responsibleItems}
+          onDelete={(item) => setPendingDelete({ type: 'responsible', item })}
+          onDraftChange={setResponsible}
+          onReset={() => setResponsible(emptyResponsible)}
+          onSave={() => void persistResponsible()}
+        />
+      </section>
+
+      <RecoveryPanel
+        archive={recoveryArchive.data ?? null}
+        isPreparing={backupMutation.isPending}
+        onDownload={() => void createBackup()}
+      />
+
+      {pendingDelete && (
+        <SettingsDeleteDialog
+          isSaving={isSaving}
+          itemName={pendingDelete.item.name}
+          itemType={pendingDelete.type === 'product' ? 'produto' : 'responsável'}
+          onCancel={() => setPendingDelete(null)}
+          onConfirm={() => void confirmDelete()}
+        />
+      )}
+      {isLogoutConfirmOpen && (
+        <LogoutConfirmDialog
+          companyDisplayName={session.authUser.bakeryName || 'Pastelaria'}
+          isSaving={false}
+          onCancel={() => setIsLogoutConfirmOpen(false)}
+          onConfirm={handleLogout}
+        />
+      )}
     </main>
   );
 }

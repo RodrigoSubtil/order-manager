@@ -70,6 +70,8 @@ export function usePrintOrders(
   const [isPrintOptionsOpen, setIsPrintOptionsOpen] = useState(false);
   const [request, setRequest] = useState<PrintRequest | null>(null);
   const optionsUntil = printRangeMode === 'day' ? printFrom : printUntil;
+  const optionsFromTime = printRangeMode === 'day' ? printFromTime : startOfDay;
+  const optionsUntilTime = printRangeMode === 'day' ? printUntilTime : endOfDay;
   const loadPrintOrders = (from: string, until: string) => {
     const params = {
       from,
@@ -95,8 +97,8 @@ export function usePrintOrders(
       Boolean(printFrom) &&
       Boolean(optionsUntil) &&
       optionsUntil >= printFrom &&
-      isValidTime(printFromTime) &&
-      isValidTime(printUntilTime),
+      isValidTime(optionsFromTime) &&
+      isValidTime(optionsUntilTime),
     retry: false,
     staleTime: 0,
   });
@@ -125,11 +127,11 @@ export function usePrintOrders(
       filterOrdersByDateTime(
         printOptionsReport.data ?? [],
         printFrom,
-        printFromTime,
+        optionsFromTime,
         optionsUntil,
-        printUntilTime,
+        optionsUntilTime,
       ).length,
-    [optionsUntil, printFrom, printFromTime, printOptionsReport.data, printUntilTime],
+    [optionsFromTime, optionsUntil, optionsUntilTime, printFrom, printOptionsReport.data],
   );
   const printProductSummary = useMemo<PrintProductSummary>(
     () => buildPrintProductSummary(printOrders),
@@ -140,7 +142,7 @@ export function usePrintOrders(
     const period =
       printRangeMode === 'day'
         ? `${formatDate(printFrom)} · ${printFromTime}–${printUntilTime}`
-        : `${formatDate(printFrom)} ${printFromTime} até ${formatDate(printUntil)} ${printUntilTime}`;
+        : `${formatDate(printFrom)} até ${formatDate(printUntil)}`;
     return printMode === 'summary'
       ? `Resumo de produção - ${period}`
       : `Encomendas detalhadas - ${period}`;
@@ -177,7 +179,7 @@ export function usePrintOrders(
     if (
       !printFrom ||
       !until ||
-      !isValidDateTimeRange(printFrom, printFromTime, until, printUntilTime) ||
+      !isValidDateTimeRange(printFrom, optionsFromTime, until, optionsUntilTime) ||
       !printOptionsOrderCount
     ) {
       return;
@@ -186,9 +188,9 @@ export function usePrintOrders(
     setIsPrintOptionsOpen(false);
     setRequest({
       from: printFrom,
-      fromTime: printFromTime,
+      fromTime: optionsFromTime,
       until,
-      untilTime: printUntilTime,
+      untilTime: optionsUntilTime,
       mode: printMode,
       orderId: null,
     });

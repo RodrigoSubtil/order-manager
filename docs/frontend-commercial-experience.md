@@ -1,5 +1,8 @@
 # Etapa 30 — Experiência comercial do frontend
 
+> Documento histórico de uma arquitetura anterior com API. Para a experiência atual com Supabase
+> direto, consulte [current-system.md](current-system.md) e [user-guide.md](user-guide.md).
+
 Atualizado em 23 de julho de 2026. Esta etapa liga as capacidades administrativas já existentes da API à interface sem enviar `tenant_id` pelo browser.
 
 ## O que ficou disponível

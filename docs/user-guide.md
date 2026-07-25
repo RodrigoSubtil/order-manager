@@ -1,73 +1,72 @@
 # Guia do utilizador
 
-## Para que serve
+Atualizado em 25 de julho de 2026.
 
-O Order Manager organiza encomendas da empresa ativa: consulta, criação, alteração, exclusão autorizada, filtros e impressão. Cada utilizador só vê os dados da empresa a que pertence.
+## Entrar
 
-## Entrar e sair
+1. informe o nome de utilizador e a senha;
+2. marque **Manter conectado** apenas num equipamento privado;
+3. selecione **Entrar**;
+4. use **Sair** ao terminar num equipamento partilhado.
 
-1. Abra o endereço fornecido pela empresa em navegador atualizado.
-2. Introduza o utilizador e a senha fornecidos pelo administrador e selecione **Entrar**.
-3. Se o dispositivo for pessoal e protegido, pode ativar **Manter conectado**. Não utilize esta opção num equipamento partilhado.
-4. Se a sessão expirar, entre novamente. Não partilhe a senha nem deixe o dispositivo aberto.
-5. Para terminar, use **Sair** e confirme. Isto limpa a sessão local.
+## Dashboard
 
-Se receber acesso negado, confirme com o administrador se a sua membership está ativa e se tem o papel correto.
+Os indicadores **Total**, **Hoje** e **Próximas** representam todas as encomendas ativas e não mudam
+por causa dos filtros. A lista permanece ordenada por data e hora de entrega.
 
-## Gerenciar produtos e responsáveis
+Filtros:
 
-O botão **Gerenciar** é reservado aos chefes:
+- **Todas as áreas**;
+- **Hoje**;
+- **Todas as datas**;
+- calendário, sem datas anteriores;
+- pesquisa por cliente, telefone, responsável ou produto.
 
-1. selecione **Gerenciar** no cabeçalho;
-2. introduza a senha gerencial;
-3. crie, edite ou apague produtos e responsáveis;
-4. selecione **Voltar às encomendas** ao terminar.
+O texto pesquisado é destacado nos cartões. O número de resultados corresponde aos filtros atuais.
 
-O desbloqueio é temporário e válido somente naquela sessão do navegador. Operadores que não possuam a senha continuam com acesso normal às encomendas, mas não conseguem alterar os dados administrativos.
+## Criar ou editar
 
-## Consultar e filtrar
+1. aperte o botão `+`;
+2. preencha cliente, telefone, responsável, data e hora;
+3. o responsável precisa ser escolhido da lista;
+4. informe área, produto, quantidade e unidade de cada item;
+5. use **Adicionar mais um produto** quando necessário;
+6. observações são o único campo opcional;
+7. guarde e espere a confirmação;
+8. selecione **Voltar às encomendas** para recarregar o dashboard.
 
-- Escolha uma data no calendário do Order Manager, **Hoje** ou **Todas as datas**. O mesmo calendário é usado ao criar ou editar uma encomenda, para manter a data consistente em computador e telemóvel.
-- Selecione a área: Todas, Pastelaria, Padaria ou Salgados.
-- Pesquise por cliente, telefone ou produto.
-- Consulte os indicadores e cartões resultantes. Os resultados pertencem somente à empresa ativa.
+Erros aparecem junto do respetivo campo e o primeiro inválido recebe foco. Uma edição concorrente
+pede que os dados sejam recarregados antes de tentar novamente.
 
-Não inclua dados sensíveis em capturas de ecrã enviadas ao suporte.
+## Concluir e apagar
 
-## Criar encomenda
+- **Concluir** pede confirmação, retira a encomenda ativa e conserva o registo por sete dias.
+- **Apagar** pede confirmação e informa que a ação não poderá ser anulada.
+- a mensagem de sucesso aparece somente depois da resposta confirmada.
 
-1. Selecione **Nova encomenda**.
-2. Informe cliente, telefone quando aplicável, responsável, data e hora.
-3. Adicione pelo menos um produto, com categoria, unidade (`UN`, `KG` ou `G`) e quantidade positiva.
-4. Corrija os campos assinalados e selecione **Guardar encomenda**.
+## Imprimir
 
-O sistema bloqueia o envio enquanto guarda. Uma encomenda só é criada quando dados principais e itens forem aceites juntos.
+Impressão individual usa o ícone do cartão. Impressão geral usa o ícone destacado nos filtros.
 
-## Editar e resolver conflito
+- **Um dia:** escolha Data, Hora inicial e Hora final.
+- **Período:** escolha Data inicial e Data final; os dias são considerados por inteiro.
+- **Detalhada:** uma ficha completa por encomenda.
+- **Qtd. total dos produtos:** soma produtos compatíveis por área e unidade.
 
-Ao guardar, o sistema verifica se outra pessoa alterou a encomenda. Se aparecer conflito:
+No diálogo do sistema, escolha bobina 80 mm, margens mínimas, escala 100%, sem cabeçalho/rodapé do
+navegador. Cada encomenda inclui o próprio cabeçalho. A altura acompanha o conteúdo; o driver da
+impressora, e não o site, decide o tamanho físico final.
 
-1. feche ou recarregue a encomenda;
-2. compare a versão atual com o que pretendia alterar;
-3. aplique novamente apenas as alterações necessárias;
-4. contacte o suporte se houver dúvida sobre qual informação é correta.
+## Gerenciar
 
-## Concluir, excluir e imprimir
+Somente o dono vê **Gerenciar**. Depois da segunda senha, ele pode pesquisar, criar, editar e apagar
+produtos e responsáveis e transferir o pacote de recuperação. A unidade não pertence ao catálogo;
+ela é definida na encomenda.
 
-Quando a produção estiver pronta, selecione **Concluir**. Depois da confirmação do Supabase, a encomenda sai do painel, permanece retida na base durante sete dias e é eliminada automaticamente pela rotina diária. **Apagar** continua reservado a correções de encomendas lançadas por engano.
+## Contingência e recuperação
 
-Para imprimir, escolha impressão na lista ou numa encomenda, selecione dia/intervalo e o formato detalhado ou resumo por produto. Defina a “Hora inicial” e a “Hora final” para considerar somente as encomendas dentro desse intervalo. Num período entre datas, a hora inicial aplica-se ao primeiro dia e a hora final ao último. O padrão `00:00–23:59` inclui o dia inteiro, e a quantidade apresentada no diálogo já respeita as duas horas. Confirme empresa, período e horários antes de entregar o documento.
+Se o Supabase estiver indisponível, o aviso de contingência permite consultar, pesquisar e imprimir
+a última cópia válida. Escritas ficam bloqueadas. Uma lista vazia normal não mostra esse aviso.
 
-## Backup e modo de contingência
-
-Depois de uma sincronização válida, o painel conserva neste navegador uma cópia das encomendas ativas, produtos e responsáveis. Se uma consulta ao Supabase falhar, aparece um aviso de **Modo de contingência** com a data da última sincronização. Uma empresa sem encomendas mostra apenas o estado vazio normal.
-
-Neste modo é possível consultar, pesquisar e imprimir os dados guardados. Criar, editar, concluir e apagar ficam temporariamente bloqueados para impedir encomendas duplicadas ou alterações concorrentes. Assim que o Supabase voltar a responder, o painel retoma a operação normal.
-
-O dono deve também abrir **Gerenciar > Cópia de segurança** e transferir regularmente o JSON organizado. Essa cópia contém dados pessoais de clientes e deve ser guardada num local privado, cifrado e fora do computador de uso diário. Consulte [free-backup.md](./free-backup.md) para a rotina e os limites.
-
-## Acessibilidade e suporte
-
-Use `Tab` para avançar, `Shift+Tab` para voltar e `Esc` para fechar diálogos quando disponível. Para suporte, informe o ocorrido, horário aproximado, browser/dispositivo e `traceId` exibido pela aplicação — nunca passwords, cookies ou dados de clientes.
-
-Consulte [support-and-service.md](./support-and-service.md) para os canais e tempos de atendimento contratados.
+O dono deve transferir o JSON no fim de cada dia com alterações e guardá-lo de forma privada noutro
+dispositivo. O arquivo automático local não substitui essa cópia.

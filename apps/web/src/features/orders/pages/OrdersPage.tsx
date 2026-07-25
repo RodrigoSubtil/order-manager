@@ -12,8 +12,9 @@ import { usePrintOrders } from '../../reports/hooks/usePrintOrders';
 import { Alert } from '../../../shared/components/ui';
 import { useModalBodyClass, useOutsidePointerDown } from '../../../shared/hooks';
 import { getApiErrorMessage } from '../../../shared/lib/apiError';
-import type { Order } from '../../../shared/lib/domain';
+import { recordRecoveryEvent } from '../../../shared/lib/recoveryArchive';
 import { completeOrder, deleteOrder } from '../../../shared/lib/supabaseData';
+import { CompleteOrderDialog } from '../components/CompleteOrderDialog';
 import { DeleteOrderDialog } from '../components/DeleteOrderDialog';
 import { OrderFilters } from '../components/OrderFilters';
 import { OrderFormModal } from '../components/OrderFormModal';
@@ -29,12 +30,9 @@ export default function OrdersPage() {
   const navigate = useNavigate();
   const session = useSession();
   const queryClient = useQueryClient();
+  const tenantId = session.authUser?.tenantId ?? '';
   const filterState = useOrderFilterState();
-  const data = useApiOrderData(
-    filterState.queryParams,
-    Boolean(session.authUser),
-    session.authUser?.tenantId ?? '',
-  );
+  const data = useApiOrderData(filterState.queryParams, Boolean(session.authUser), tenantId);
   const filters = useOrderFilters(data.orders, data.overviewOrders, data.responsibles, filterState);
   const [appError, setAppError] = useState('');
   const [appSuccess, setAppSuccess] = useState('');
@@ -42,6 +40,7 @@ export default function OrdersPage() {
     catalogProducts: data.catalogProducts,
     setAppError,
     setAppSuccess,
+    tenantId: session.authUser?.tenantId ?? '',
   });
   const print = usePrintOrders(
     filters.sortedOrders,
@@ -56,6 +55,7 @@ export default function OrdersPage() {
     mutationFn: ({ id, version }: { id: string; version: number }) => completeOrder(id, version),
   });
   const [deleteOrderId, setDeleteOrderId] = useState<string | null>(null);
+  const [completeOrderId, setCompleteOrderId] = useState<string | null>(null);
   const [completionMessage, setCompletionMessage] = useState('');
   const [deletionMessage, setDeletionMessage] = useState('');
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
@@ -81,6 +81,7 @@ export default function OrdersPage() {
     orderForm.isModalOpen ||
       print.isPrintOptionsOpen ||
       Boolean(deleteOrderId) ||
+      Boolean(completeOrderId) ||
       Boolean(completionMessage) ||
       Boolean(deletionMessage) ||
       isLogoutConfirmOpen,
@@ -89,6 +90,10 @@ export default function OrdersPage() {
   const orderToDelete = useMemo(
     () => data.orders.find((order) => order.id === deleteOrderId) ?? null,
     [data.orders, deleteOrderId],
+  );
+  const orderToComplete = useMemo(
+    () => data.orders.find((order) => order.id === completeOrderId) ?? null,
+    [completeOrderId, data.orders],
   );
 
   async function refreshOrderData() {
@@ -106,6 +111,7 @@ export default function OrdersPage() {
       filters.resetFilters();
       orderForm.closeModal();
       setDeleteOrderId(null);
+      setCompleteOrderId(null);
       setCompletionMessage('');
       setDeletionMessage('');
       setIsLogoutConfirmOpen(false);
@@ -124,6 +130,18 @@ export default function OrdersPage() {
     setAppSuccess('');
     try {
       await removeMutation.mutateAsync({ id: orderToDelete.id, version: orderToDelete.version });
+      try {
+        await recordRecoveryEvent(tenantId, {
+          resource: 'order',
+          action: 'deleted',
+          resourceId: orderToDelete.id,
+          before: orderToDelete,
+        });
+      } catch {
+        setAppError(
+          'A encomenda foi apagada, mas não foi possível atualizar o arquivo de recuperação deste dispositivo.',
+        );
+      }
       await refreshOrderData();
       setDeleteOrderId(null);
       setDeletionMessage(`Encomenda #${orderToDelete.orderNumber ?? '-'} apagada com sucesso.`);
@@ -132,8 +150,8 @@ export default function OrdersPage() {
     }
   }
 
-  async function handleCompleteOrder(order: Order) {
-    if (!order.version) {
+  async function confirmCompleteOrder() {
+    if (!orderToComplete?.version) {
       setAppSuccess('');
       setAppError('A versão da encomenda não está disponível. Recarregue os dados.');
       return;
@@ -141,9 +159,27 @@ export default function OrdersPage() {
     setAppError('');
     setAppSuccess('');
     try {
-      await completeMutation.mutateAsync({ id: order.id, version: order.version });
+      await completeMutation.mutateAsync({
+        id: orderToComplete.id,
+        version: orderToComplete.version,
+      });
+      try {
+        await recordRecoveryEvent(tenantId, {
+          resource: 'order',
+          action: 'completed',
+          resourceId: orderToComplete.id,
+          before: orderToComplete,
+        });
+      } catch {
+        setAppError(
+          'A encomenda foi concluída, mas não foi possível atualizar o arquivo de recuperação deste dispositivo.',
+        );
+      }
       await refreshOrderData();
-      setCompletionMessage(`Encomenda #${order.orderNumber ?? '-'} concluída com sucesso.`);
+      setCompleteOrderId(null);
+      setCompletionMessage(
+        `Encomenda #${orderToComplete.orderNumber ?? '-'} concluída com sucesso.`,
+      );
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível concluir a encomenda.'));
     }
@@ -166,6 +202,7 @@ export default function OrdersPage() {
     <>
       <main className={styles.shell} data-screen-only>
         <SessionHeader
+          canManage={session.isOwner}
           userDisplayName={session.authUser.displayName}
           onLogoutRequest={() => setIsLogoutConfirmOpen(true)}
           onOpenSettings={() => navigate('/settings')}
@@ -208,7 +245,7 @@ export default function OrdersPage() {
             orders={filters.filteredOrders}
             search={filters.search}
             getResponsibleName={filters.getResponsibleName}
-            onComplete={handleCompleteOrder}
+            onComplete={(order) => setCompleteOrderId(order.id)}
             onDelete={setDeleteOrderId}
             onEdit={orderForm.editOrder}
             onPrint={print.startPrint}
@@ -244,6 +281,14 @@ export default function OrdersPage() {
           order={orderToDelete}
           onCancel={() => setDeleteOrderId(null)}
           onConfirm={confirmDeleteOrder}
+        />
+      )}
+      {orderToComplete && (
+        <CompleteOrderDialog
+          isSaving={isSaving}
+          order={orderToComplete}
+          onCancel={() => setCompleteOrderId(null)}
+          onConfirm={confirmCompleteOrder}
         />
       )}
       {completionMessage && (

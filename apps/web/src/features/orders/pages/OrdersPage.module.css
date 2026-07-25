@@ -38,3 +38,9 @@
     padding: 12px;
   }
 }
+
+@media (max-width: 390px) {
+  .ordersPanel {
+    padding: 8px;
+  }
+}

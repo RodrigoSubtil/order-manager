@@ -21,6 +21,7 @@ Num projeto Supabase novo, reveja e aplique no SQL Editor, por esta ordem:
 7. [pesquisa e exportação de backup](../supabase/migrations/20260724_006_search_and_backup_export.sql).
 8. [proteção das funções](../supabase/migrations/20260724_007_function_security_hardening.sql).
 9. [conclusão e retenção de encomendas](../supabase/migrations/20260724_008_complete_orders_and_retention.sql).
+10. [nome visível do utilizador Vénus](../supabase/migrations/20260725_009_venus_username.sql).
 
 A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users` para `public.users`. Ela também normaliza os valores padrão de UUID e `updated_at`, para que um schema-alvo preparado anteriormente continue compatível. A segunda cria as operações que o frontend chama. Elas:
 
@@ -34,6 +35,10 @@ A sexta migration impede também no PostgreSQL a gravação de encomendas sem te
 
 A nona migration adiciona o fluxo **Concluir**, oculta as encomendas concluídas da listagem operacional e agenda no `pg_cron` a eliminação diária dos registos com mais de 7 dias. Encomendas ativas não são alteradas.
 
+A décima migration atualiza com segurança o nome visível do OWNER existente para
+`pastelaria_venus` e os metadados públicos do Auth. Ela não altera password nem a identidade técnica
+de e-mail usada internamente pelo Supabase.
+
 Para demonstração visual da Pastelaria Vénus, o seed opcional
 [`20260724_venus_showcase_orders.sql`](../supabase/seeds/20260724_venus_showcase_orders.sql)
 cria dez encomendas variadas sem substituir encomendas existentes. O script é
@@ -46,7 +51,7 @@ Não aplique essas migrations em produção sem backup verificado e revisão man
 
 ## Primeiro acesso
 
-O campo visível aceita um nome amigável com espaços e acentos. A aplicação normaliza esse nome para a identidade interna do Supabase. Por exemplo, `Pastelaria Vénus` corresponde internamente a `pastelaria-venus@users.order-manager.invalid`. Marque a conta como confirmada e defina a senha inicial. Esse identificador técnico nunca é mostrado como contacto.
+O utilizador visível da instalação atual é `pastelaria_venus`. Por compatibilidade com a conta já criada, a aplicação mapeia-o internamente para `pastelaria-venus@users.order-manager.invalid`. Marque a conta como confirmada e defina a senha inicial. Esse identificador técnico nunca é mostrado como contacto.
 
 Depois, execute este bloco no SQL Editor, substituindo o utilizador e o nome da pastelaria. Ele cria somente a empresa e a membership `OWNER`:
 

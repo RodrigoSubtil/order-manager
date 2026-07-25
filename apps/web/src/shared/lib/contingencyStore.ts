@@ -43,8 +43,13 @@ export function readContingencySnapshot(tenantId: string) {
 }
 
 export function saveContingencySnapshot(snapshot: ContingencySnapshot) {
-  if (typeof window === 'undefined') return;
-  window.localStorage.setItem(storageKey(snapshot.tenantId), JSON.stringify(snapshot));
+  if (typeof window === 'undefined') return false;
+  try {
+    window.localStorage.setItem(storageKey(snapshot.tenantId), JSON.stringify(snapshot));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function isSessionContext(value: unknown): value is SessionContext {

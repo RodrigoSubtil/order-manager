@@ -48,8 +48,8 @@ export function PrintOptionsDialog({
     /^([01]\d|2[0-3]):[0-5]\d$/.test(printUntilTime);
   const hasValidDateTimeRange =
     hasValidRange &&
-    hasValidTimes &&
-    `${printFrom}T${printFromTime}` <= `${finalDate}T${printUntilTime}`;
+    (printRangeMode === 'period' ||
+      (hasValidTimes && `${printFrom}T${printFromTime}` <= `${finalDate}T${printUntilTime}`));
 
   return (
     <Dialog className={styles.content} titleId="print-options-title" onClose={onCancel}>
@@ -81,9 +81,9 @@ export function PrintOptionsDialog({
             <span>De uma data até outra</span>
           </label>
         </div>
-        <div className={styles.dateGrid}>
+        <div className={printRangeMode === 'day' ? styles.singleDate : styles.dateGrid}>
           <label htmlFor="print-from">
-            Data inicial
+            {printRangeMode === 'day' ? 'Data' : 'Data inicial'}
             <Input
               id="print-from"
               type="date"
@@ -94,48 +94,51 @@ export function PrintOptionsDialog({
               }}
             />
           </label>
-          <label htmlFor="print-until">
-            Data final
-            <Input
-              id="print-until"
-              type="date"
-              value={printUntil}
-              min={printFrom}
-              disabled={printRangeMode === 'day'}
-              onChange={(event) => onUntilChange(event.target.value)}
-            />
-          </label>
+          {printRangeMode === 'period' && (
+            <label htmlFor="print-until">
+              Data final
+              <Input
+                id="print-until"
+                type="date"
+                value={printUntil}
+                min={printFrom}
+                onChange={(event) => onUntilChange(event.target.value)}
+              />
+            </label>
+          )}
         </div>
-        <div className={styles.timeGrid}>
-          <label htmlFor="print-from-time">
-            Hora inicial
-            <Input
-              id="print-from-time"
-              type="time"
-              value={printFromTime}
-              required
-              onChange={(event) => onFromTimeChange(event.target.value)}
-            />
-          </label>
-          <label htmlFor="print-until-time">
-            Hora final
-            <Input
-              id="print-until-time"
-              type="time"
-              value={printUntilTime}
-              required
-              onChange={(event) => onUntilTimeChange(event.target.value)}
-            />
-          </label>
-        </div>
-        <small className={styles.helper}>
-          {printRangeMode === 'day'
-            ? 'Serão consideradas apenas encomendas entre estes horários.'
-            : 'A hora inicial aplica-se ao primeiro dia e a hora final ao último dia.'}
-        </small>
+        {printRangeMode === 'day' && (
+          <>
+            <div className={styles.timeGrid}>
+              <label htmlFor="print-from-time">
+                Hora inicial
+                <Input
+                  id="print-from-time"
+                  type="time"
+                  value={printFromTime}
+                  required
+                  onChange={(event) => onFromTimeChange(event.target.value)}
+                />
+              </label>
+              <label htmlFor="print-until-time">
+                Hora final
+                <Input
+                  id="print-until-time"
+                  type="time"
+                  value={printUntilTime}
+                  required
+                  onChange={(event) => onUntilTimeChange(event.target.value)}
+                />
+              </label>
+            </div>
+            <small className={styles.helper}>
+              Serão consideradas apenas encomendas entre estes horários.
+            </small>
+          </>
+        )}
       </fieldset>
       <fieldset className={styles.section}>
-        <legend>Formato</legend>
+        <legend>Formato de impressão</legend>
         <div className={styles.radioGrid}>
           <label className={styles.radio}>
             <input
@@ -153,7 +156,7 @@ export function PrintOptionsDialog({
               checked={printMode === 'summary'}
               onChange={() => onModeChange('summary')}
             />
-            <span>Resumo por produto e secção</span>
+            <span>Qtd. total dos produtos</span>
           </label>
         </div>
       </fieldset>

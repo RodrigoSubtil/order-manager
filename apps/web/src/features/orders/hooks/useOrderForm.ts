@@ -9,7 +9,8 @@ import {
   type Category,
   type Order,
 } from '../../../shared/lib/domain';
-import { saveOrder as saveOrderInSupabase } from '../../../shared/lib/supabaseData';
+import { recordRecoveryEvent } from '../../../shared/lib/recoveryArchive';
+import { listAllOrders, saveOrder as saveOrderInSupabase } from '../../../shared/lib/supabaseData';
 import { getFormSubmissionError } from '../lib/formSubmissionError';
 import {
   createEmptyOrderFormValues,
@@ -23,6 +24,7 @@ type UseOrderFormOptions = {
   catalogProducts: CatalogProduct[];
   setAppError: Dispatch<SetStateAction<string>>;
   setAppSuccess: Dispatch<SetStateAction<string>>;
+  tenantId: string;
 };
 
 type SavedOrderConfirmation = {
@@ -30,7 +32,12 @@ type SavedOrderConfirmation = {
   message: string;
 };
 
-export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: UseOrderFormOptions) {
+export function useOrderForm({
+  catalogProducts,
+  setAppError,
+  setAppSuccess,
+  tenantId,
+}: UseOrderFormOptions) {
   const queryClient = useQueryClient();
   const saveMutation = useMutation({
     mutationFn: ({
@@ -116,12 +123,42 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
       setAppSuccess('');
       try {
         const form = formValuesToOrderForm(values);
+        let savedOrder: { id: string; version: number };
         if (editingOrder) {
           if (!editingOrder.version)
             throw new Error('A versão da encomenda não está disponível. Recarregue os dados.');
-          await saveMutation.mutateAsync({ form, current: editingOrder });
+          savedOrder = await saveMutation.mutateAsync({ form, current: editingOrder });
         } else {
-          await saveMutation.mutateAsync({ form });
+          savedOrder = await saveMutation.mutateAsync({ form });
+        }
+        let recoveryAfter: unknown = {
+          ...form,
+          id: savedOrder.id,
+          version: savedOrder.version,
+        };
+        try {
+          const persistedOrder = (await listAllOrders({})).find(
+            (order) => order.id === savedOrder.id,
+          );
+          if (persistedOrder) recoveryAfter = persistedOrder;
+        } catch {
+          // The mutation already succeeded; the form still provides a recoverable payload.
+        }
+        try {
+          await recordRecoveryEvent(tenantId, {
+            resource: 'order',
+            action: editingOrder ? 'updated' : 'created',
+            resourceId: savedOrder.id,
+            ...(editingOrder ? { before: editingOrder } : {}),
+            after: recoveryAfter,
+          });
+          await queryClient.invalidateQueries({
+            queryKey: ['recovery-archive', tenantId],
+          });
+        } catch {
+          setAppError(
+            'A encomenda foi gravada, mas não foi possível atualizar o arquivo de recuperação deste dispositivo.',
+          );
         }
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),

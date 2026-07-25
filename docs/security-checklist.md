@@ -1,23 +1,23 @@
 # Segurança — checklist verificável
 
-Atualizado em 24 de julho de 2026. Esta é a baseline da arquitetura atual do Order Manager: React/Vite no navegador, Supabase Auth e PostgreSQL acessados por RPCs controlados. O projeto não utiliza atualmente NestJS, Prisma, Docker ou uma API própria.
+Atualizado em 25 de julho de 2026. Esta é a baseline da arquitetura atual do Order Manager: React/Vite no navegador, Supabase Auth e PostgreSQL acessados por RPCs controlados. O projeto não utiliza atualmente NestJS, Prisma, Docker ou uma API própria.
 
 ## Evidências verificadas nesta release
 
-| Controlo               | Estado                   | Evidência                                                                                                                                                                                                                      |
-| ---------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Autenticação           | Verificado               | Login real com Supabase Auth e sessão persistente opcional; nenhuma password ou token entra no backup JSON.                                                                                                                    |
-| Isolamento por empresa | Implementado             | Todas as operações comerciais obtêm `tenant_id` da membership da sessão. O navegador não escolhe `tenant_id`.                                                                                                                  |
-| Papéis                 | Implementado             | Papéis atuais `OWNER` e `OPERATOR`; o acesso gerencial exige OWNER e uma segunda senha validada no servidor.                                                                                                                   |
-| Acesso gerencial       | Verificado               | Hash com bcrypt/`pgcrypto`, desbloqueio ligado ao `session_id`, validade de 15 minutos e bloqueio temporário após cinco tentativas.                                                                                            |
-| Tabelas                | Implementado             | RLS ativo e privilégios diretos revogados de `anon` e `authenticated`; os dados são acessados pelos RPCs autorizados.                                                                                                          |
-| Funções SQL            | Endurecido               | `20260724_007_function_security_hardening.sql` fixa `search_path`, revoga `PUBLIC`/`anon` e mantém uma allowlist mínima para `authenticated`; a migration `008` acrescenta somente o RPC autenticado de conclusão.             |
-| Security Advisor       | Verificado               | Em 24/07/2026, depois da migration `008`: **0 erros**. Os avisos restantes identificam RPCs `SECURITY DEFINER` intencionalmente executáveis por utilizadores autenticados; cada RPC valida sessão, membership, papel e tenant. |
-| Validação              | Verificado               | React Hook Form + Zod no navegador, validação dentro dos RPCs e constraints PostgreSQL.                                                                                                                                        |
-| Segredos no browser    | Verificado               | Somente URL e chave pública `anon` do Supabase. Não existe `service_role` no frontend.                                                                                                                                         |
-| Dependências           | Mitigado e documentado   | PostCSS atualizado para 8.5.18. O npm conta 2 alertas altos no React Router 7.18.1 pelo mesmo aviso RSC; este SPA não usa APIs RSC/SSR e a versão corrigida 8.3.0 ainda não está publicada no npm.                             |
-| Qualidade              | Verificado               | Prettier, ESLint, Stylelint, TypeScript, 70 testes automatizados e build de produção aprovados.                                                                                                                                |
-| Backup                 | Implementado com limites | Exportação JSON protegida por OWNER + desbloqueio gerencial; cache de contingência sem credenciais e em modo somente leitura.                                                                                                  |
+| Controlo               | Estado                    | Evidência                                                                                                                                                                                                                      |
+| ---------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Autenticação           | Verificado                | Login real com Supabase Auth e sessão persistente opcional; nenhuma password ou token entra no backup JSON.                                                                                                                    |
+| Isolamento por empresa | Implementado              | Todas as operações comerciais obtêm `tenant_id` da membership da sessão. O navegador não escolhe `tenant_id`.                                                                                                                  |
+| Papéis                 | Implementado              | Papéis atuais `OWNER` e `OPERATOR`; o acesso gerencial exige OWNER e uma segunda senha validada no servidor.                                                                                                                   |
+| Acesso gerencial       | Verificado                | Hash com bcrypt/`pgcrypto`, desbloqueio ligado ao `session_id`, validade de 15 minutos e bloqueio temporário após cinco tentativas.                                                                                            |
+| Tabelas                | Implementado              | RLS ativo e privilégios diretos revogados de `anon` e `authenticated`; os dados são acessados pelos RPCs autorizados.                                                                                                          |
+| Funções SQL            | Endurecido                | `20260724_007_function_security_hardening.sql` fixa `search_path`, revoga `PUBLIC`/`anon` e mantém uma allowlist mínima para `authenticated`; a migration `008` acrescenta somente o RPC autenticado de conclusão.             |
+| Security Advisor       | Verificado                | Em 24/07/2026, depois da migration `008`: **0 erros**. Os avisos restantes identificam RPCs `SECURITY DEFINER` intencionalmente executáveis por utilizadores autenticados; cada RPC valida sessão, membership, papel e tenant. |
+| Validação              | Verificado                | React Hook Form + Zod no navegador, validação dentro dos RPCs e constraints PostgreSQL.                                                                                                                                        |
+| Segredos no browser    | Verificado                | Somente URL e chave pública `anon` do Supabase. Não existe `service_role` no frontend.                                                                                                                                         |
+| Dependências           | Mitigado e documentado    | A auditoria de 25/07/2026 aponta `brace-expansion` apenas pela ferramenta ESLint e um aviso de React Router para modo RSC. A SPA não usa RSC, SSR, actions ou entrada dinâmica de rotas; não foi usado `audit fix --force`.    |
+| Qualidade              | Verificado no repositório | Prettier, ESLint, Stylelint, TypeScript, suite Vitest e build de produção fazem parte do gate obrigatório.                                                                                                                     |
+| Backup                 | Implementado com limites  | Snapshot somente leitura, journal IndexedDB automático e pacote JSON protegido por OWNER + desbloqueio gerencial.                                                                                                              |
 
 ## Por que permanecem avisos de `SECURITY DEFINER`
 
@@ -50,10 +50,12 @@ O workflow `.github/workflows/quality.yml` deve executar a mesma base no GitHub.
 ## Limites e riscos aceites para o piloto
 
 - O plano gratuito do Supabase não oferece a mesma recuperação automática/PITR dos planos pagos.
-- O JSON é uma cópia comercial para recuperação assistida; ainda não existe importação automática.
+- O JSON é uma cópia comercial para recuperação assistida; não existe importação automática.
 - O cache de contingência depende do perfil deste navegador e não substitui uma cópia externa.
+- O journal IndexedDB também depende do dispositivo; o OWNER deve transferir a cópia externa.
 - Gravação offline é bloqueada porque exigiria fila idempotente, sincronização e resolução de conflitos.
-- O alerta `GHSA-qwww-vcr4-c8h2` afeta somente APIs instáveis de React Server Components. O projeto usa React Router apenas no browser, sem RSC, SSR, actions ou server actions. Rever a atualização quando `react-router-dom@8.3.0` ou superior estiver efetivamente publicado.
+- O alerta atual do React Router afeta o processamento de actions em RSC. O projeto usa apenas `BrowserRouter`, `Routes`, `Route` e `Navigate`; rever uma versão corrigida assim que existir uma opção compatível.
+- O alerta de `brace-expansion` está no caminho do ESLint, não no bundle Vite. Atualizar o toolchain quando ESLint 10 for adotado e validado, sem usar atualização forçada no piloto.
 - Não foi realizado pentest independente. Antes de ampliar para várias empresas ou dados de maior risco, deve haver revisão externa proporcional, teste de restauração e revisão de acessos administrativos/MFA.
 
 Esta checklist não substitui aconselhamento jurídico sobre RGPD nem uma auditoria independente.

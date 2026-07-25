@@ -1,6 +1,6 @@
 # Autenticação por utilizador
 
-O Order Manager pede apenas **utilizador** e **senha**. O campo aceita um nome amigável com espaços e acentos, como `Pastelaria Vénus`. O frontend converte esse texto somente para o identificador técnico interno `pastelaria-venus`.
+O Order Manager pede apenas **utilizador** e **senha**. O utilizador operacional da instalação atual é `pastelaria_venus`. O frontend converte esse texto para o identificador técnico interno já existente `pastelaria-venus`, sem mostrar ou alterar o email reservado do Supabase Auth.
 
 ## Compatibilidade com Supabase Auth
 

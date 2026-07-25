@@ -1,35 +1,45 @@
 # Acesso operacional e gerencial
 
-## Modelo atual
+Atualizado em 25 de julho de 2026.
 
-A Pastelaria Vénus possui um acesso operacional ao dashboard. Depois do login:
+## Papéis
 
-- qualquer operador pode consultar, criar, editar, excluir e imprimir encomendas;
-- o botão **Gerenciar** está visível, mas não abre os dados administrativos diretamente;
-- catálogo e responsáveis só podem ser alterados depois da segunda senha;
-- a segunda senha não substitui o login e não cria uma sessão independente.
+- `OPERATOR`: consulta, cria, edita, conclui, apaga e imprime encomendas.
+- `OWNER`: possui as mesmas operações e vê o botão **Gerenciar**.
 
-## Proteção no Supabase
+Um operador que acesse `/settings` diretamente recebe uma tela de acesso negado e as consultas
+administrativas não são iniciadas.
 
-A proteção não depende apenas de esconder botões no React.
+## Segunda senha
 
-1. O frontend chama `web_unlock_management`.
-2. O PostgreSQL compara a senha com um hash `bcrypt`.
-3. O desbloqueio é associado ao `auth.uid()` e ao `session_id` do token atual.
-4. A autorização expira em 15 minutos.
-5. `web_save_catalog_product`, `web_delete_catalog_product`, `web_save_responsible` e `web_delete_responsible` chamam `web_require_management_access`.
-6. Sem desbloqueio válido, a operação é recusada mesmo que seja chamada manualmente pelo console do navegador.
+O OWNER ainda precisa confirmar a senha gerencial para alterar produtos e responsáveis:
 
-Após cinco tentativas incorretas, aquela sessão fica bloqueada por 15 minutos. Sair da área pelo botão **Voltar às encomendas** remove o desbloqueio imediatamente.
+1. o frontend chama `web_unlock_management`;
+2. PostgreSQL compara com hash `bcrypt`;
+3. o desbloqueio é ligado a `auth.uid()` e ao `session_id`;
+4. a validade é de 15 minutos;
+5. cinco erros bloqueiam novas tentativas por 15 minutos;
+6. sair da área revoga o desbloqueio;
+7. cada RPC administrativa valida OWNER e desbloqueio novamente.
+
+Esconder o botão no React é apenas experiência; a proteção efetiva fica no Supabase.
+
+## Área Gerenciar
+
+A página apresenta:
+
+- total e lista pesquisável de produtos;
+- filtro por área e edição de nome/categoria;
+- total e lista pesquisável de responsáveis;
+- criação, edição e exclusão com confirmação;
+- situação do arquivo local;
+- download do pacote de recuperação.
+
+O produto do catálogo não exige unidade. `UN`, `KG` ou `G` são escolhidos em cada item da
+encomenda.
 
 ## Segredos
 
-As senhas reais nunca devem aparecer em:
-
-- migrations;
-- documentação;
-- commits;
-- variáveis `VITE_*`;
-- logs ou mensagens de erro.
-
-O primeiro cadastro da senha gerencial ocorre por RPC autenticada e só funciona enquanto ainda não existir uma credencial para a empresa. Alterações posteriores devem ser feitas por um procedimento administrativo controlado.
+Passwords nunca entram em migrations, documentação, commits, logs ou variáveis `VITE_*`. O primeiro
+cadastro gerencial é feito por RPC autenticada e alterações posteriores exigem procedimento
+administrativo controlado.

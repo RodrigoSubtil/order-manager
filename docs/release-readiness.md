@@ -1,37 +1,50 @@
-# Checklist de entrega atual
+# Prontidão de entrega
 
-## Arquitetura em uso
+Atualizado em 25 de julho de 2026.
 
-O produto ativo é somente:
+## Produto atual
 
 ```text
-Vercel (React + Vite) -> Supabase Auth -> Supabase PostgreSQL (RLS + RPCs)
+Vercel (React + Vite) -> Supabase Auth -> RPCs PostgreSQL -> RLS
 ```
 
-Não existem API NestJS, Prisma, Docker, Compose, Render ou `service_role` no browser.
+## Validado no código
 
-## Validado no repositório
+- separação por funcionalidades e componentes;
+- `OWNER` e `OPERATOR`, com gestão exclusiva do OWNER;
+- `tenant_id` resolvido pela sessão no PostgreSQL;
+- login amigável por utilizador e persistência opcional;
+- validação obrigatória do formulário, exceto observações;
+- criação/edição transacional e conflito por `version`;
+- confirmação para concluir e apagar;
+- atualização da lista após mutações e ordenação por entrega;
+- filtros, pesquisa destacada e estado vazio;
+- impressão detalhada e resumo em layout de 80 mm;
+- journal automático local e export JSON;
+- RLS, grants restritos e RPCs endurecidas;
+- workflow GitHub com format, lint, tipos, testes e build.
 
-- formatação, lint e TypeScript;
-- 36 testes unitários/de componentes;
-- build de produção Vite;
-- login pelo Supabase Auth;
-- criação, edição, exclusão e paginação de encomendas por RPC;
-- catálogo e responsáveis por RPC para `OWNER`;
-- impressão carregando todas as páginas necessárias;
-- limpeza do cache ao iniciar ou terminar sessão;
-- `OWNER` e `OPERATOR` como os únicos papéis ativos.
+## Obrigatório antes do uso real
 
-## Antes de entregar o site real
+| Verificação                                                              | Estado esperado |
+| ------------------------------------------------------------------------ | --------------- |
+| migration `20260725_009_venus_username.sql` aplicada no Supabase correto | PASS            |
+| workflow do commit publicado                                             | PASS            |
+| login e logout no domínio Vercel                                         | PASS            |
+| criar, editar, concluir e apagar uma encomenda de teste                  | PASS            |
+| gestão de produto e responsável de teste                                 | PASS            |
+| download e leitura do JSON                                               | PASS            |
+| impressão física em bobina 80 mm, escala 100%                            | PASS            |
+| validação no Redmi A5                                                    | PASS            |
 
-1. No Supabase, use um projeto vazio ou um schema previamente limpo.
-2. Reveja e aplique `20260723_000_schema.sql` e depois `20260723_001_direct-web-rpcs.sql`.
-3. Crie o primeiro utilizador no Supabase Auth e execute o bloco de primeiro acesso em [supabase-setup.md](supabase-setup.md).
-4. No Vercel, configure `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` e `VITE_APP_URL`.
-5. Faça um teste manual com o `OWNER`: login, catálogo, responsável, nova encomenda, edição, impressão e logout.
+## Limites aceites para o piloto
 
-Esses passos alteram serviços externos e não foram executados automaticamente por este repositório.
+- sem PITR/backup gerido, a cópia externa continua manual;
+- o arquivo automático é local ao browser;
+- a impressão depende do driver configurado para 80 mm;
+- não existe gravação offline;
+- o bundle inicial pode ser dividido futuramente se medições no aparelho mostrarem necessidade;
+- não houve pentest independente.
 
-## Limitação conhecida
-
-O build gera um único JavaScript de aproximadamente 662 kB antes de gzip. Não impede o uso atual; a divisão de código pode ser feita depois caso a aplicação cresça.
+O site está apto a um piloto quando a suite local e toda a tabela acima estiverem PASS. “Build
+aprovado” sozinho não confirma o Supabase externo nem a impressora física.

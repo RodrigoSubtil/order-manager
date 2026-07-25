@@ -6,9 +6,9 @@
   .area {
     display: block;
     width: 100%;
-    max-width: 74mm;
+    max-width: 75mm;
     margin: 0;
-    padding: 0 0 3mm;
+    padding: 0;
     color: #111111;
     font-family: Arial, 'Segoe UI', sans-serif;
     font-size: 10.5px;
@@ -42,11 +42,19 @@
   }
 
   .card {
-    margin-bottom: 3mm;
-    padding: 3mm 0;
+    width: 100%;
+    margin: 0;
+    padding: 2.5mm 0;
     overflow: visible;
     border-bottom: 1px dashed #111111;
-    break-inside: auto;
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .card + .card {
+    margin-top: 2.5mm;
+    padding-top: 2.5mm;
+    border-top: 1px dashed #111111;
   }
 
   .header {
@@ -113,7 +121,8 @@
   }
 
   .group {
-    break-inside: avoid;
+    break-inside: avoid-page;
+    page-break-inside: avoid;
   }
 
   .card h3 {
@@ -145,7 +154,8 @@
   }
 
   .card tr {
-    break-inside: avoid;
+    break-inside: avoid-page;
+    page-break-inside: avoid;
   }
 
   .card thead {

@@ -54,7 +54,7 @@ export function OrderFilters({
             <ComboboxInput
               className={styles.categoryInput}
               aria-label="Filtrar por área"
-              value={categoryFilter === 'Todas' ? 'Todas as áreas' : categoryFilter}
+              value={categoryFilter === 'Todas' ? 'Áreas' : categoryFilter}
               readOnly
             />
             <ComboboxTrigger
@@ -72,7 +72,7 @@ export function OrderFilters({
                     onCategoryOpenChange(false);
                   }}
                 >
-                  {category === 'Todas' ? 'Todas as áreas' : category}
+                  {category}
                 </ComboboxOption>
               ))}
             </ComboboxList>
@@ -96,6 +96,7 @@ export function OrderFilters({
               className={styles.dateInput}
               aria-label="Filtrar por data"
               minDate={todayKey()}
+              placeholder="Data"
               value={dateFilter}
               onChange={onDateChange}
             />
@@ -143,7 +144,7 @@ export function OrderFilters({
             aria-label="Pesquisar encomendas"
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Pesquisar por cliente, telefone ou produto"
+            placeholder="Pesquisar encomendas"
           />
           <svg
             className={styles.searchIcon}

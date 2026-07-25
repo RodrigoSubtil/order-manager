@@ -1,4 +1,7 @@
 const internalAuthDomain = 'users.order-manager.invalid';
+const authIdentityAliases: Record<string, string> = {
+  pastelaria_venus: 'pastelaria-venus',
+};
 
 export function normalizeUsername(value: string) {
   return value
@@ -17,5 +20,7 @@ export function normalizeUsername(value: string) {
  * the username selected by the owner.
  */
 export function usernameToAuthIdentity(username: string) {
-  return `${normalizeUsername(username)}@${internalAuthDomain}`;
+  const normalizedUsername = normalizeUsername(username);
+  const internalUsername = authIdentityAliases[normalizedUsername] ?? normalizedUsername;
+  return `${internalUsername}@${internalAuthDomain}`;
 }

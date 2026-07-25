@@ -1,5 +1,8 @@
 # Formulários e validação do frontend
 
+> Documento histórico da etapa de migração. Para o comportamento atual, consulte
+> [current-system.md](current-system.md) e [user-guide.md](user-guide.md).
+
 Data: 17 de julho de 2026  
 Etapa: 17 — Formulários com React Hook Form e Zod
 

@@ -6,8 +6,19 @@ export function createBackupFileName(date = new Date()) {
   return `order-manager-backup-${backupTimestamp(date)}.json`;
 }
 
-export function downloadBackup(data: Record<string, unknown>, date = new Date()) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
+export function downloadBackup(
+  serverSnapshot: Record<string, unknown>,
+  localRecovery: unknown = null,
+  date = new Date(),
+) {
+  const recoveryPackage = {
+    format: 'order-manager-recovery-package',
+    formatVersion: 2,
+    generatedAt: date.toISOString(),
+    serverSnapshot,
+    localRecovery,
+  };
+  const blob = new Blob([JSON.stringify(recoveryPackage, null, 2)], {
     type: 'application/json;charset=utf-8',
   });
   const url = URL.createObjectURL(blob);

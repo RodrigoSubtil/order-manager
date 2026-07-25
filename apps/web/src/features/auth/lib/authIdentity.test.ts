@@ -13,5 +13,8 @@ describe('username authentication identity', () => {
     expect(usernameToAuthIdentity('Pastelaria Vénus')).toBe(
       'pastelaria-venus@users.order-manager.invalid',
     );
+    expect(usernameToAuthIdentity('pastelaria_venus')).toBe(
+      'pastelaria-venus@users.order-manager.invalid',
+    );
   });
 });

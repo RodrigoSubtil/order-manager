@@ -7,13 +7,8 @@
 
 .topRow {
   display: grid;
-  grid-template-columns:
-    minmax(150px, 250px)
-    minmax(160px, 250px)
-    minmax(95px, 200px)
-    minmax(130px, 200px)
-    minmax(100px, 1fr)
-    minmax(100px, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-areas: 'area today all-dates date create print';
   gap: 10px;
   align-items: center;
 }
@@ -25,7 +20,20 @@
 }
 
 .dateControl {
+  grid-area: date;
   min-width: 0;
+}
+
+.areaFilter {
+  grid-area: area;
+}
+
+.todayFilter {
+  grid-area: today;
+}
+
+.allDatesFilter {
+  grid-area: all-dates;
 }
 
 .dateInput {
@@ -36,11 +44,13 @@
   position: relative;
   height: 46px;
   justify-content: center;
-  padding: 0 42px;
+  padding: 0 38px 0 10px;
   font-size: 0.9rem;
   font-weight: 900;
   line-height: 1;
   text-align: center;
+  background: var(--color-white);
+  border-color: var(--color-line);
 }
 
 .dateInput > button span {
@@ -62,12 +72,14 @@
 
 .categoryInput {
   height: 46px;
-  padding-right: 42px;
-  padding-left: 42px;
+  padding-right: 38px;
+  padding-left: 10px;
   font-size: 0.9rem;
   font-weight: 900;
   line-height: 1;
   text-align: center;
+  background: var(--color-white);
+  border-color: var(--color-line);
 }
 
 .categoryTrigger {
@@ -80,6 +92,8 @@
   font-weight: 900;
   line-height: 1;
   text-align: center;
+  background: var(--color-white);
+  border-color: var(--color-line);
 }
 
 .search {
@@ -133,7 +147,10 @@
 }
 
 .print {
+  grid-area: print;
   color: var(--color-accent);
+  background: var(--color-cream);
+  border: 2px solid var(--color-accent-soft);
 }
 
 .printIcon {
@@ -143,6 +160,7 @@
 
 .create {
   position: relative;
+  grid-area: create;
 }
 
 .create span {
@@ -193,17 +211,19 @@
   display: inline-flex;
   min-width: 0;
   align-items: center;
-  padding: 4px 8px;
+  padding: 0;
   color: var(--color-muted);
-  background: var(--color-soft-white);
-  border: 1px solid var(--color-sand);
-  border-radius: 999px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   font-size: 0.86rem;
   white-space: nowrap;
 }
 
 .chip + .chip::before {
-  content: none;
+  content: '·';
+  margin-right: 6px;
+  color: var(--color-taupe);
 }
 
 .resultCount {
@@ -217,33 +237,9 @@
   .topRow {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas:
+      'print create'
       'area today'
-      'all-dates date'
-      'create print';
-  }
-
-  .areaFilter {
-    grid-area: area;
-  }
-
-  .todayFilter {
-    grid-area: today;
-  }
-
-  .allDatesFilter {
-    grid-area: all-dates;
-  }
-
-  .dateControl {
-    grid-area: date;
-  }
-
-  .create {
-    grid-area: create;
-  }
-
-  .print {
-    grid-area: print;
+      'all-dates date';
   }
 }
 
@@ -268,8 +264,8 @@
 
   .dateInput > button {
     height: 48px;
-    padding-right: 44px;
-    padding-left: 44px;
+    padding-right: 40px;
+    padding-left: 10px;
   }
 
   .dateInput > button svg {
@@ -306,8 +302,8 @@
 
   .chip {
     max-width: 58%;
-    padding: 3px 6px;
-    font-size: 0.76rem;
+    padding: 0;
+    font-size: 0.78rem;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -317,14 +313,6 @@
   }
 
   .resultCount {
-    font-size: 0.78rem;
-  }
-}
-
-@media (max-width: 380px) {
-  .categoryInput,
-  .filterButton,
-  .dateInput > button {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
   }
 }

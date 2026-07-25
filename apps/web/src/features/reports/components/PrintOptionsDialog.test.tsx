@@ -59,4 +59,30 @@ describe('PrintOptionsDialog', () => {
     );
     expect(screen.getByRole('button', { name: 'Imprimir' })).toBeDisabled();
   });
+
+  it('uses times only for a single day and hides them for a date period', () => {
+    const { rerender } = render(<PrintOptionsDialog {...buildProps()} />);
+
+    expect(screen.getByLabelText('Data')).toBeInTheDocument();
+    expect(screen.getByLabelText('Hora inicial')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Data final')).not.toBeInTheDocument();
+
+    rerender(
+      <PrintOptionsDialog
+        {...buildProps({
+          printRangeMode: 'period',
+          printUntil: '2026-07-26',
+          printFromTime: '',
+          printUntilTime: '',
+        })}
+      />,
+    );
+
+    expect(screen.getByLabelText('Data inicial')).toBeInTheDocument();
+    expect(screen.getByLabelText('Data final')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Hora inicial')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Imprimir' })).toBeEnabled();
+    expect(screen.getByText('Formato de impressão')).toBeInTheDocument();
+    expect(screen.getByText('Qtd. total dos produtos')).toBeInTheDocument();
+  });
 });

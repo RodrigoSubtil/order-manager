@@ -1,76 +1,63 @@
 # Runbook de produção
 
-## Estado e autoridade
+Atualizado em 25 de julho de 2026.
 
-Este runbook prepara uma operação comercial; **não autoriza deploy de produção por si só**. Não existe workflow automático de produção nesta cópia. Somente um responsável técnico de produção, um responsável de negócio e o controlador do cliente podem aprovar uma mudança que toque dados reais.
+## Antes de abrir a pastelaria
 
-Não executar produção enquanto alguma destas condições estiver pendente:
+1. confirmar internet e acesso ao site publicado;
+2. entrar com o utilizador operacional;
+3. confirmar que não existe aviso de contingência;
+4. verificar data/hora do dispositivo;
+5. confirmar papel 80 mm, escala 100% e impressora predefinida;
+6. transferir uma cópia JSON se houve alterações desde a última cópia externa.
 
-1. [staging-pilot.md](./staging-pilot.md) não estiver formalmente `APROVADO` para o mesmo SHA e migration.
-2. Backup verificável e teste de restore não estiverem registados.
-3. Rollback de aplicação, decisão de rollback de schema e responsáveis não estiverem confirmados.
-4. Houver P0 ou P1 aberto.
-5. Segurança, observabilidade, CORS, segredos, RLS e alertas não tiverem evidência.
-6. Contrato, retenção, subprocessadores e canal de suporte não estiverem definidos.
+## Release
 
-## Papéis operacionais
+1. validar `format:check`, lint, tipos, testes e build;
+2. confirmar que o GitHub Actions passou no SHA publicado;
+3. aplicar migrations necessárias no Supabase correto com backup prévio;
+4. publicar pelo branch `main`;
+5. executar o smoke test de [deployment.md](deployment.md);
+6. registar data, SHA, migration e resultado.
 
-| Papel                    | Responsabilidade                                                       |
-| ------------------------ | ---------------------------------------------------------------------- |
-| Gestor de release        | Mantém ticket, SHA, janela, aprovações e decisão final.                |
-| Operador de produção     | Executa passos aprovados, verifica health checks e preserva evidência. |
-| Responsável pelo banco   | Confirma backup, migration e estratégia de recuperação.                |
-| Responsável de segurança | Confirma segredos, CORS, RLS, acessos e incidentes.                    |
-| Responsável de negócio   | Aceita impacto comercial e aprova a promoção.                          |
-| Suporte                  | Comunica estado aprovado aos clientes e recebe incidentes.             |
+## Falha do site ou Supabase
 
-Em equipa pequena, uma pessoa pode acumular papéis, mas quem aprova o restore não deve ser a única pessoa a executá-lo.
+- se houver snapshot local, o aviso de contingência permite consultar, pesquisar e imprimir;
+- não tentar forçar criação, edição, conclusão ou exclusão enquanto o aviso estiver visível;
+- registar horário, ação, dispositivo e mensagem sem enviar password ou dados desnecessários;
+- verificar o estado do Vercel e Supabase;
+- preservar o arquivo local e a última cópia JSON;
+- depois da recuperação, recarregar e reconciliar as encomendas antes de voltar a escrever.
 
-## Preparação da release
+## Suspeita de perda
 
-1. Abrir ticket de mudança com objetivo, impacto, SHA/imagens imutáveis, alterações de schema, janela, responsáveis e comunicação.
-2. Confirmar format, lint, typecheck, testes, build, OpenAPI/Orval e análise de dependências aprovada.
-3. Associar a aprovação de staging e a matriz preenchida da Etapa 28.
-4. Confirmar schema e migration candidata. Mudança sem rollback compatível deve usar expansão/contração em releases separadas; nunca `prisma migrate reset`.
-5. Confirmar backup, RPO/RTO e ensaio de restore conforme [backup-and-restore.md](./backup-and-restore.md).
-6. Confirmar que segredos ficam no gestor de segredos e que `service_role` não é exposta ao browser, logs, tickets ou OpenAPI.
-7. Verificar CORS, HTTPS, cookies `Secure`, URLs Supabase e domínios de convite do ambiente correto.
+1. parar novas alterações;
+2. transferir o pacote JSON disponível no dispositivo;
+3. não importar manualmente diretamente no projeto em uso;
+4. comparar contagens e IDs entre Supabase, snapshot e journal;
+5. restaurar primeiro numa cópia isolada;
+6. aprovar a reconciliação antes de tocar nos dados reais.
 
-## Janela de promoção
+## Incidente de acesso
 
-1. Comunicar janela, impacto previsto e canal de suporte aos utilizadores afetados.
-2. Congelar mudanças concorrentes e confirmar backup recente/localizável.
-3. Implantar a imagem imutável aprovada; nunca uma tag mutável como `latest`.
-4. Executar migration somente se prevista no ticket, depois do backup e com observação de logs. Parar se o gate falhar.
-5. Fazer smoke test autenticado: `/health`, `/health/ready`, login, `/auth/me`, leitura autorizada e negação de acesso cruzado.
-6. Validar logs, métricas e alertas sem inserir PII na evidência.
-7. Registar hora, versão efetiva, resultado e decisão da janela.
+1. terminar sessões ativas;
+2. alterar a password pelo painel seguro do Supabase;
+3. rever utilizadores e memberships;
+4. verificar logs Auth e audit logs;
+5. rodar a senha gerencial por procedimento SQL controlado, se necessário;
+6. documentar impacto e notificar o responsável conforme RGPD.
 
-## Rollback
+## Rotina de cópias
 
-### Aplicação
+- JSON: no fim de cada dia com alterações, fora do dispositivo;
+- retenção: sete cópias diárias e quatro semanais;
+- teste: abrir e validar o formato do arquivo;
+- recuperação completa: preferir dump/backup gerido do Supabase quando disponível.
 
-1. Declarar falha no ticket e pausar o rollout.
-2. Reimplantar a última imagem imutável aprovada.
-3. Executar smoke test e confirmar leitura/escrita segura.
-4. Preservar `requestId`, `traceId`, versão e logs sanitizados.
+## Limites operacionais
 
-### Schema e dados
-
-Rollback de schema não é automático. Avaliar nesta ordem:
-
-1. migration compensatória testada em cópia isolada;
-2. correção compatível para a frente;
-3. restore para ambiente isolado, reconciliação e cutover aprovado.
-
-Nunca sobrescrever produção como primeira reação. Seguir [database-rollback.md](./database-rollback.md) e [incident-response.md](./incident-response.md).
-
-## Operação contínua
-
-- Diariamente: disponibilidade, erros 5xx, readiness e alertas.
-- Semanalmente: falhas de login, latência, integração e tickets P2/P3.
-- Mensalmente: acessos administrativos, backups/PITR, vulnerabilidades e capacidade.
-- Trimestralmente: ensaio de restore; também após mudanças relevantes em orders, auditoria ou retenção.
-- Atualizações passam por desenvolvimento, staging aprovado e este mesmo processo.
-
-O ticket só fecha com SHA final, checklist de staging, smoke test, referência de backup, decisões de risco, incidentes relacionados e aprovação de negócio.
+- IndexedDB não protege contra perda do equipamento;
+- CSS não substitui a configuração de bobina no driver;
+- o plano gratuito não oferece a mesma recuperação do PITR;
+- não há gravação offline;
+- a expansão para mais empresas exige teste formal de isolamento e processo de onboarding.

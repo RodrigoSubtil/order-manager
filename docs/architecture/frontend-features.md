@@ -1,63 +1,48 @@
-# Arquitetura do frontend por funcionalidades
+# Frontend por funcionalidades
 
-Data: 22 de julho de 2026  
-Estado: atualizado após a Etapa 22.
+Atualizado em 25 de julho de 2026.
 
-## Resultado
-
-`App.tsx` monta providers e router. A rota de encomendas orquestra componentes
-de apresentação, React Hook Form, estado visual e hooks remotos gerados pelo
-Orval. O navegador não conhece tabelas, RPCs, chaves ou clientes Supabase.
+## Estrutura
 
 ```text
 apps/web/src/
   app/
-    providers/             # QueryClient e políticas de cache
-    router/                # rotas React
+    providers/       QueryClient e providers
+    router/          navegação
   features/
-    auth/                  # sessão por /auth/* e contexto seguro de tenant
-    orders/                # página, formulário, filtros, mutations e mapeadores
-    reports/               # relatórios da API e impressão no browser
-    settings/              # reservado para UI administrativa futura
+    auth/            login, sessão e cabeçalho
+    orders/          dashboard, filtros, formulário e cartões
+    reports/         seleção e layout de impressão
+    settings/        catálogo, responsáveis e recuperação
   shared/
-    components/ui/         # componentes visuais reutilizáveis
-    hooks/                 # comportamentos genéricos de interface
-    lib/                   # tipos de apresentação, datas, quantidade e erros HTTP
-  mocks/                   # handlers MSW tipados pelo cliente gerado
-  scripts/                 # verificação da fronteira exclusiva /api/v1
+    components/ui/   Button, Input, Select, Dialog, Combobox, DatePicker etc.
+    hooks/           comportamentos reutilizáveis
+    lib/             domínio, datas, RPCs, contingência e recuperação
+  styles/            tokens, reset, global e print
 ```
 
-## Fluxo de dados atual
-
-```mermaid
-flowchart LR
-  UI["React features"] --> H["Hooks Orval + TanStack Query"]
-  H --> C["apiFetch com cookies e CSRF"]
-  C --> API["NestJS /api/v1"]
-  API --> A["Supabase Auth"]
-  API --> P["Prisma + PostgreSQL"]
-```
-
-O frontend nunca envia `tenant_id`. `/auth/me` devolve o contexto verificado;
-a troca de empresa usa uma membership opaca validada pelo servidor e elimina o
-cache anterior antes de consultar dados no novo contexto.
+`App.tsx` apenas monta providers e router. Páginas orquestram; componentes apresentam; hooks
+concentram estado e efeitos; `supabaseData.ts` é o único adaptador de dados remotos.
 
 ## Estado
 
-| Tipo de estado                                          | Local                                               |
-| ------------------------------------------------------- | --------------------------------------------------- |
-| Sessão, catálogo, responsáveis, encomendas e relatórios | TanStack Query por hooks Orval                      |
-| Campos de login e encomenda                             | React Hook Form + Zod                               |
-| Filtros visuais, dropdowns e modais                     | estado React local                                  |
-| Cache de tenant                                         | removido no logout e na troca autorizada de empresa |
+| Estado                                         | Ferramenta                |
+| ---------------------------------------------- | ------------------------- |
+| sessão, encomendas, catálogo e responsáveis    | TanStack Query + Supabase |
+| formulário de login e encomenda                | React Hook Form + Zod     |
+| modais, dropdowns, pesquisa e drafts da gestão | estado React local        |
+| contingência                                   | localStorage por tenant   |
+| arquivo de recuperação                         | IndexedDB por tenant      |
 
-Não há Redux ou Zustand. Não há SDK Supabase no workspace web. Tipos de request
-e response vêm de `@order-manager/api-client`; os tipos em `shared/lib/domain.ts`
-são apenas modelos de apresentação necessários ao visual existente.
+Não há Redux ou Zustand porque não existe estado global complexo que os justifique.
 
-## Proteção automatizada
+## Regras de interface
 
-`npm run check:api-boundary --workspace @order-manager/web` impede dependência
-da SDK Supabase, variáveis `VITE_SUPABASE_*`, chamadas diretas a `fetch` no
-código de produção e reintrodução dos adaptadores legados. `apiFetch` também
-recusa em runtime qualquer URL fora de `/api/v1`.
+- controles interativos têm pelo menos 44 px;
+- o layout alvo principal inclui 360 × 820 CSS pixels, equivalente aos 720 × 1640 píxeis físicos
+  do Redmi A5 numa escala 2×, com uma verificação adicional em 377 × 858;
+- filtros mantêm tipografia, borda e alinhamento consistentes;
+- erros ficam junto dos campos e o primeiro inválido recebe foco;
+- ações destrutivas e conclusão exigem confirmação;
+- mensagens de sucesso no dashboard desaparecem em cinco segundos;
+- CSS Modules mantém o estilo local; tokens evitam valores visuais divergentes.

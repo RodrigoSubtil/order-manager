@@ -42,7 +42,8 @@ apps/web/src/
 | `EmptyState` | loading, vazio e orientação de próximo passo                                           |
 | `FieldError` | erro associado ao campo por `aria-describedby`                                         |
 
-Os componentes aceitam propriedades HTML nativas. Isso mantém compatibilidade com React Hook Form, refs, atributos ARIA e cliente gerado da API.
+Os componentes aceitam propriedades HTML nativas. Isso mantém compatibilidade com React Hook Form,
+refs e atributos ARIA.
 
 ## Acessibilidade aplicada
 

@@ -60,14 +60,16 @@ export function PrintableOrders({
               </p>
             </div>
             <div className={styles.delivery}>
-              <span>Periodo</span>
+              <span>Período</span>
               <strong>
                 {printRangeMode === 'day'
                   ? formatDate(printFrom)
-                  : `${formatDate(printFrom)} ate ${formatDate(printUntil)}`}
+                  : `${formatDate(printFrom)} até ${formatDate(printUntil)}`}
               </strong>
               <small>
-                {printFromTime}–{printUntilTime} · Produtos agrupados
+                {printRangeMode === 'day'
+                  ? `${printFromTime}–${printUntilTime} · Produtos agrupados`
+                  : 'Dias completos · Produtos agrupados'}
               </small>
             </div>
           </header>
@@ -105,7 +107,7 @@ export function PrintableOrders({
                 <p>Pedido #{order.orderNumber ?? '-'}</p>
                 <h2>{order.clientName}</h2>
                 <p>Telefone: {order.phone || 'Sem telefone'}</p>
-                <p>Responsavel: {getResponsibleName(order)}</p>
+                <p>Responsável: {getResponsibleName(order)}</p>
               </div>
               <div className={styles.delivery}>
                 <span>Entrega</span>

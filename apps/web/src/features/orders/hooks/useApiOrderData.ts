@@ -7,6 +7,7 @@ import {
   saveContingencySnapshot,
   type ContingencySnapshot,
 } from '../../../shared/lib/contingencyStore';
+import { saveRecoveryOperationalSnapshot } from '../../../shared/lib/recoveryArchive';
 import {
   listAllOrders,
   listCatalogProducts,
@@ -53,6 +54,16 @@ export function useApiOrderData(params: OrderListParams, enabled: boolean, tenan
         responsibles,
       };
       saveContingencySnapshot(snapshot);
+      try {
+        await saveRecoveryOperationalSnapshot(tenantId, {
+          savedAt: snapshot.savedAt,
+          orders,
+          catalogProducts,
+          responsibles,
+        });
+      } catch {
+        // Recovery storage must never make live Supabase data appear unavailable.
+      }
       return snapshot;
     },
     enabled: enabled && Boolean(tenantId),

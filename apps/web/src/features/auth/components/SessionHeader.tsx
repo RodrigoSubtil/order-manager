@@ -2,12 +2,14 @@ import { Button } from '../../../shared/components/ui';
 import styles from './SessionHeader.module.css';
 
 type SessionHeaderProps = {
+  canManage?: boolean;
   userDisplayName: string;
   onLogoutRequest: () => void;
   onOpenSettings: () => void;
 };
 
 export function SessionHeader({
+  canManage = true,
   userDisplayName,
   onLogoutRequest,
   onOpenSettings,
@@ -20,9 +22,11 @@ export function SessionHeader({
       </div>
 
       <div className={styles.actions}>
-        <Button className={styles.settings} variant="ghost" onClick={onOpenSettings}>
-          Gerenciar
-        </Button>
+        {canManage && (
+          <Button className={styles.settings} variant="ghost" onClick={onOpenSettings}>
+            Gerenciar
+          </Button>
+        )}
         <div className={styles.session}>
           <span className={styles.userLabel} title={userDisplayName}>
             {userDisplayName}
