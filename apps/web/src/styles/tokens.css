@@ -34,6 +34,9 @@
   --transition-fast: 160ms ease;
   --content-min-width: 320px;
   --touch-target: 44px;
+  --field-icon-size: 20px;
+  --field-icon-slot-size: 34px;
+  --field-icon-inset: 4px;
   --z-dropdown: 20;
   --z-dialog: 100;
 }

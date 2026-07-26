@@ -62,7 +62,7 @@
 
 .dateInput > button svg {
   position: absolute;
-  right: 14px;
+  right: 11px;
 }
 
 .dateInput [role='dialog'] {
@@ -121,17 +121,6 @@
 
 .searchControl {
   position: relative;
-}
-
-.searchIcon {
-  position: absolute;
-  top: 50%;
-  right: 17px;
-  width: 20px;
-  height: 20px;
-  color: var(--color-taupe);
-  pointer-events: none;
-  transform: translateY(-50%);
 }
 
 .action {
@@ -203,10 +192,6 @@
   align-items: center;
 }
 
-.activeTitle {
-  color: var(--color-ink);
-}
-
 .chip {
   display: inline-flex;
   min-width: 0;
@@ -221,7 +206,7 @@
 }
 
 .chip + .chip::before {
-  content: '·';
+  content: '-';
   margin-right: 6px;
   color: var(--color-taupe);
 }
@@ -269,7 +254,7 @@
   }
 
   .dateInput > button svg {
-    right: 15px;
+    right: 11px;
   }
 
   .dateInput [role='dialog'] {
@@ -290,14 +275,6 @@
 
   .activeSummary {
     gap: 4px;
-  }
-
-  .activeTitle {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
   }
 
   .chip {

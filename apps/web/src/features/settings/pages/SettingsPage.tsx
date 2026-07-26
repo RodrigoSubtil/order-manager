@@ -10,7 +10,7 @@ import { CatalogManager, type ProductDraft } from '../components/CatalogManager'
 import { ManagementAccessGate } from '../components/ManagementAccessGate';
 import { ResponsiblesManager, type ResponsibleDraft } from '../components/ResponsiblesManager';
 import { SettingsDeleteDialog } from '../components/SettingsDeleteDialog';
-import { Alert, Button, Card, Spinner } from '../../../shared/components/ui';
+import { Alert, Card, Spinner } from '../../../shared/components/ui';
 import { useModalBodyClass } from '../../../shared/hooks';
 import {
   deleteCatalogProduct,
@@ -228,10 +228,11 @@ export default function SettingsPage() {
 
   const header = (
     <SessionHeader
-      canManage={false}
+      canManage
+      managementLabel="Encomendas"
       userDisplayName={session.authUser.displayName}
       onLogoutRequest={() => setIsLogoutConfirmOpen(true)}
-      onOpenSettings={() => undefined}
+      onOpenSettings={() => void leaveSettings()}
     />
   );
 
@@ -243,9 +244,6 @@ export default function SettingsPage() {
           <span data-eyebrow>Acesso protegido</span>
           <h1>Área exclusiva do dono</h1>
           <p>O seu acesso permite trabalhar com encomendas, mas não alterar configurações.</p>
-          <Button variant="primary" onClick={() => navigate('/')}>
-            Voltar às encomendas
-          </Button>
         </Card>
       </main>
     );
@@ -272,7 +270,6 @@ export default function SettingsPage() {
             error || (managementStatus.error instanceof Error ? managementStatus.error.message : '')
           }
           isSubmitting={isCheckingManagement}
-          onCancel={() => navigate('/')}
           onSubmit={submitManagementPassword}
         />
         {isLogoutConfirmOpen && (
@@ -299,7 +296,6 @@ export default function SettingsPage() {
       {header}
       <header className={styles.heading}>
         <h1>Gerenciamento</h1>
-        <Button onClick={() => void leaveSettings()}>Voltar às encomendas</Button>
       </header>
 
       {success && <Alert tone="success">{success}</Alert>}

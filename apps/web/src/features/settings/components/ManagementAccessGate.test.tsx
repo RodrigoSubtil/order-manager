@@ -9,15 +9,7 @@ describe('ManagementAccessGate', () => {
     const user = userEvent.setup();
     const onSubmit = vi.fn().mockResolvedValue(undefined);
 
-    render(
-      <ManagementAccessGate
-        configured
-        error=""
-        isSubmitting={false}
-        onCancel={vi.fn()}
-        onSubmit={onSubmit}
-      />,
-    );
+    render(<ManagementAccessGate configured error="" isSubmitting={false} onSubmit={onSubmit} />);
 
     const password = screen.getByLabelText('Senha');
     expect(password).toHaveAttribute('type', 'password');
@@ -30,13 +22,7 @@ describe('ManagementAccessGate', () => {
 
   it('explains the one-time initialization when no password exists', () => {
     render(
-      <ManagementAccessGate
-        configured={false}
-        error=""
-        isSubmitting={false}
-        onCancel={vi.fn()}
-        onSubmit={vi.fn()}
-      />,
+      <ManagementAccessGate configured={false} error="" isSubmitting={false} onSubmit={vi.fn()} />,
     );
 
     expect(

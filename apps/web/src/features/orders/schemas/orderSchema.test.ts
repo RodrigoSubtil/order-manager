@@ -111,7 +111,9 @@ describe('orderSchema', () => {
   it.each([
     ['product', ''],
     ['quantityAmount', '0'],
+    ['quantityAmount', '0.5'],
     ['quantityAmount', '-1'],
+    ['quantityAmount', '1001'],
   ] as const)('rejects an item with invalid %s', (field, value) => {
     const order = validOrder();
     const result = orderSchema.safeParse({

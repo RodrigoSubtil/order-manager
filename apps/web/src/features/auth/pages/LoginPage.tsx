@@ -2,7 +2,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
-import { Alert, Button, Card, FieldError, Input, Spinner } from '../../../shared/components/ui';
+import {
+  Alert,
+  Button,
+  Card,
+  FieldError,
+  Icon,
+  Input,
+  Spinner,
+} from '../../../shared/components/ui';
 import { loginSchema, type LoginFormValues } from '../schemas/loginSchema';
 import styles from './LoginPage.module.css';
 
@@ -100,16 +108,7 @@ export function LoginPage({ isCheckingSession, sessionError, onLogin }: LoginPag
                 aria-pressed={isPasswordVisible}
                 onClick={() => setIsPasswordVisible((isVisible) => !isVisible)}
               >
-                {isPasswordVisible ? (
-                  <svg aria-hidden="true" viewBox="0 0 24 24">
-                    <path d="m3 3 18 18M10.6 10.7a2 2 0 0 0 2.7 2.7M9.9 4.3A10.8 10.8 0 0 1 12 4c5.5 0 9 5.5 9 5.5a15.2 15.2 0 0 1-2.2 2.9M6.2 6.2C4.1 7.6 3 9.5 3 9.5S6.5 15 12 15c1 0 2-.2 2.8-.5" />
-                  </svg>
-                ) : (
-                  <svg aria-hidden="true" viewBox="0 0 24 24">
-                    <path d="M3 9.5S6.5 4 12 4s9 5.5 9 5.5S17.5 15 12 15 3 9.5 3 9.5Z" />
-                    <circle cx="12" cy="9.5" r="2.5" />
-                  </svg>
-                )}
+                <Icon name={isPasswordVisible ? 'eye-off' : 'eye'} />
               </button>
             </div>
             <FieldError id="login-password-error" message={errors.password?.message} />

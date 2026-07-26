@@ -1,5 +1,6 @@
 import { forwardRef, type SelectHTMLAttributes } from 'react';
 
+import { Icon } from './Icon';
 import styles from './Select.module.css';
 
 export type SelectProps = SelectHTMLAttributes<HTMLSelectElement>;
@@ -9,6 +10,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
   ref,
 ) {
   return (
-    <select ref={ref} className={[styles.select, className].filter(Boolean).join(' ')} {...props} />
+    <span className={styles.root}>
+      <select
+        ref={ref}
+        className={[styles.select, className].filter(Boolean).join(' ')}
+        {...props}
+      />
+      <Icon name="chevron-down" placement="field" />
+    </span>
   );
 });

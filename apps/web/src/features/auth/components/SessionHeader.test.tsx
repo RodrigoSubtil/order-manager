@@ -30,4 +30,19 @@ describe('SessionHeader permissions', () => {
 
     expect(screen.getByRole('button', { name: 'Gerenciar' })).toBeInTheDocument();
   });
+
+  it('supports using the management action as a return to orders', () => {
+    render(
+      <SessionHeader
+        canManage
+        managementLabel="Encomendas"
+        userDisplayName="Pastelaria Vénus"
+        onLogoutRequest={vi.fn()}
+        onOpenSettings={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: 'Encomendas' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Gerenciar' })).not.toBeInTheDocument();
+  });
 });

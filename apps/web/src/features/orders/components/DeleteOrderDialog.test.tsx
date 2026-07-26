@@ -34,8 +34,8 @@ describe('DeleteOrderDialog', () => {
       />,
     );
 
-    expect(screen.getByText('Pedido #21')).toBeInTheDocument();
-    expect(screen.queryByText('Duda')).not.toBeInTheDocument();
+    expect(screen.getByText('Cliente: Duda')).toBeInTheDocument();
+    expect(screen.queryByText('Pedido #21')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Apagar encomenda' }));
     expect(onConfirm).toHaveBeenCalledOnce();

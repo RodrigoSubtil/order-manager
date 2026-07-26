@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { Alert, Button, Card, FieldError, Input } from '../../../shared/components/ui';
+import { Alert, Button, Card, FieldError, Icon, Input } from '../../../shared/components/ui';
 import {
   managementAccessSchema,
   type ManagementAccessFormValues,
@@ -13,7 +13,6 @@ type ManagementAccessGateProps = {
   configured: boolean;
   error: string;
   isSubmitting: boolean;
-  onCancel: () => void;
   onSubmit: (password: string) => Promise<void>;
 };
 
@@ -21,7 +20,6 @@ export function ManagementAccessGate({
   configured,
   error,
   isSubmitting,
-  onCancel,
   onSubmit,
 }: ManagementAccessGateProps) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -71,16 +69,7 @@ export function ManagementAccessGate({
             aria-label={isPasswordVisible ? 'Ocultar senha' : 'Mostrar senha'}
             onClick={() => setIsPasswordVisible((visible) => !visible)}
           >
-            {isPasswordVisible ? (
-              <svg aria-hidden="true" viewBox="0 0 24 24">
-                <path d="M3 3l18 18M10.6 10.7a2 2 0 002.7 2.7M9.9 4.2A10.9 10.9 0 0112 4c5.5 0 9 5.5 9 5.5a15.8 15.8 0 01-2.2 2.8M6.2 6.2A16 16 0 003 9.5S6.5 15 12 15a10 10 0 003-.4" />
-              </svg>
-            ) : (
-              <svg aria-hidden="true" viewBox="0 0 24 24">
-                <path d="M3 12s3.5-5.5 9-5.5 9 5.5 9 5.5-3.5 5.5-9 5.5S3 12 3 12z" />
-                <circle cx="12" cy="12" r="2.5" />
-              </svg>
-            )}
+            <Icon name={isPasswordVisible ? 'eye-off' : 'eye'} />
           </button>
         </div>
         <FieldError id="management-password-error" message={errors.password?.message} />
@@ -92,7 +81,6 @@ export function ManagementAccessGate({
         )}
 
         <div className={styles.actions}>
-          <Button onClick={onCancel}>Cancelar</Button>
           <Button variant="primary" type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'A verificar...' : 'Entrar'}
           </Button>

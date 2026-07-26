@@ -9,6 +9,7 @@ import {
 } from 'react';
 
 import { Input } from './Input';
+import { Icon } from './Icon';
 import styles from './Combobox.module.css';
 
 type ComboboxContextValue = {
@@ -117,7 +118,7 @@ export function ComboboxTrigger({
         if (!event.defaultPrevented) context.onOpenChange(!context.isOpen);
       }}
     >
-      {children ?? <span aria-hidden="true" />}
+      {children ?? <Icon name="chevron-down" />}
     </button>
   );
 }

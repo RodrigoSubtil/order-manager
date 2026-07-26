@@ -26,12 +26,12 @@
 @media (max-width: 560px) {
   .backdrop {
     align-items: end;
-    padding: 8px;
+    padding: 12px;
   }
 
   .panel {
     width: 100%;
-    max-height: calc(100dvh - 16px);
-    border-radius: 12px 12px 8px 8px;
+    max-height: calc(100dvh - 24px);
+    border-radius: 14px;
   }
 }

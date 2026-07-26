@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 
+import { Icon } from './Icon';
 import styles from './TimePicker.module.css';
 
 type TimePickerProps = {
@@ -128,19 +129,22 @@ export function TimePicker({
 
   if (!isMobile) {
     return (
-      <input
-        id={controlId}
-        aria-describedby={ariaDescribedBy}
-        aria-invalid={ariaInvalid}
-        aria-label={ariaLabel}
-        className={[styles.nativeInput, className].filter(Boolean).join(' ')}
-        disabled={disabled}
-        min={minTime}
-        required={required}
-        type="time"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-      />
+      <div className={[styles.nativeRoot, className].filter(Boolean).join(' ')}>
+        <input
+          id={controlId}
+          aria-describedby={ariaDescribedBy}
+          aria-invalid={ariaInvalid}
+          aria-label={ariaLabel}
+          className={styles.nativeInput}
+          disabled={disabled}
+          min={minTime}
+          required={required}
+          type="time"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+        <Icon name="clock" placement="field" />
+      </div>
     );
   }
 
@@ -160,10 +164,7 @@ export function TimePicker({
         onClick={() => (isOpen ? setIsOpen(false) : openPicker())}
       >
         <span className={value ? styles.value : styles.placeholder}>{value || placeholder}</span>
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="8.5" />
-          <path d="M12 7v5l3.5 2" />
-        </svg>
+        <Icon name="clock" placement="field" />
       </button>
 
       {isOpen && (

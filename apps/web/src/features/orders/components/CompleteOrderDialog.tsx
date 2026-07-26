@@ -20,7 +20,7 @@ export function CompleteOrderDialog({
       <h2 id="complete-order-title">Concluir encomenda?</h2>
       <p>Confirme se o pedido já foi entregue ou finalizado.</p>
       <div className={styles.details}>
-        <span>Pedido #{order.orderNumber ?? '-'}</span>
+        <span>Cliente: {order.clientName}</span>
       </div>
       <div className={styles.actions}>
         <Button data-autofocus disabled={isSaving} onClick={onCancel}>

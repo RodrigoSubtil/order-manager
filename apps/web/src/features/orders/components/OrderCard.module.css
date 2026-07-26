@@ -1,6 +1,6 @@
 .card {
   display: grid;
-  grid-template-columns: 174px minmax(0, 1fr);
+  grid-template-columns: 1fr;
   min-height: 210px;
   overflow: hidden;
   border-color: var(--color-sand);
@@ -8,16 +8,15 @@
 }
 
 .dateStrip {
-  display: grid;
-  align-content: center;
+  display: flex;
   align-items: center;
-  justify-items: center;
+  justify-content: space-between;
   gap: 8px;
-  padding: 22px 18px;
+  padding: 13px 20px;
   color: var(--color-ink);
   text-align: center;
   background: linear-gradient(180deg, var(--color-cream), var(--color-soft-white));
-  border-right: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
 }
 
 .client > span {
@@ -32,7 +31,7 @@
 .dateStrip > strong,
 .dateStrip > small {
   display: flex;
-  width: 100%;
+  width: auto;
   min-height: 1.4rem;
   align-items: center;
   justify-content: center;
@@ -43,6 +42,14 @@
   letter-spacing: 0.03em;
   text-align: center;
   text-transform: uppercase;
+}
+
+.dateStrip > span {
+  justify-content: flex-start;
+}
+
+.dateStrip > small {
+  justify-content: flex-end;
 }
 
 .ticket {
@@ -221,28 +228,6 @@
 }
 
 @media (max-width: 900px) {
-  .card {
-    grid-template-columns: 1fr;
-  }
-
-  .dateStrip {
-    grid-template-columns: minmax(72px, 0.9fr) minmax(100px, 1.3fr) minmax(62px, 0.8fr);
-    gap: 8px;
-    align-items: center;
-    padding: 13px 16px;
-    border-right: 0;
-    border-bottom: 1px solid var(--color-line);
-  }
-
-  .dateStrip strong {
-    max-width: none;
-    text-align: center;
-  }
-
-  .dateStrip small {
-    text-align: center;
-  }
-
   .product {
     grid-template-columns: minmax(0, 1fr) minmax(110px, auto);
   }

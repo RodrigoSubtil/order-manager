@@ -28,8 +28,13 @@
 }
 
 .input[type='date'],
+.input[type='search'],
 .input[type='time'] {
   max-width: 100%;
+  appearance: none;
+}
+
+.input[type='search']::-webkit-search-cancel-button {
   appearance: none;
 }
 

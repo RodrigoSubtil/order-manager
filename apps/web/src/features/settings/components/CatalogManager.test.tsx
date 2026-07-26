@@ -37,6 +37,9 @@ describe('CatalogManager', () => {
       />,
     );
 
+    expect(screen.getByRole('heading', { name: 'Catálogo' })).toBeInTheDocument();
+    expect(screen.getByText('Adicionar novos produtos')).toBeInTheDocument();
+    expect(screen.queryByText('Produtos disponíveis')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('Unidade')).not.toBeInTheDocument();
     await user.type(screen.getByRole('searchbox', { name: 'Pesquisar produto' }), 'nata');
 

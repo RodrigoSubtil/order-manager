@@ -1,5 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
+import { Icon } from './Icon';
 import styles from './DatePicker.module.css';
 
 type DatePickerProps = {
@@ -164,9 +165,7 @@ export function DatePicker({
         <span className={value ? styles.value : styles.placeholder}>
           {formatSelectedDate(value) || placeholder}
         </span>
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <path d="M7 3v3M17 3v3M4.5 9.5h15M5.5 5h13a1 1 0 0 1 1 1v12.5a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" />
-        </svg>
+        <Icon name="calendar" placement="field" />
       </button>
 
       {isOpen && (

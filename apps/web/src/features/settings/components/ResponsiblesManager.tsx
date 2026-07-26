@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import { Button, Card, Input, Spinner } from '../../../shared/components/ui';
+import { Button, Card, Icon, Input, Spinner } from '../../../shared/components/ui';
 import type { ResponsibleRecord } from '../../../shared/lib/supabaseData';
 import styles from './ManagementPanel.module.css';
 
@@ -44,11 +44,9 @@ export function ResponsiblesManager({
     <Card as="section" className={styles.panel}>
       <header className={styles.panelHeader}>
         <div>
-          <span data-eyebrow>Equipa</span>
-          <h2>Responsáveis</h2>
-          <p>Mantenha apenas as pessoas que podem ficar responsáveis por uma encomenda.</p>
+          <h2>Equipa</h2>
+          <p>Adicionar novos responsáveis</p>
         </div>
-        <span className={styles.count}>{items.length}</span>
       </header>
 
       <form
@@ -81,13 +79,17 @@ export function ResponsiblesManager({
       <div className={`${styles.tools} ${styles.singleTool}`}>
         <label htmlFor="responsibles-search">
           Pesquisar responsável
-          <Input
-            id="responsibles-search"
-            type="search"
-            value={search}
-            placeholder="Escreva o nome"
-            onChange={(event) => setSearch(event.target.value)}
-          />
+          <span className={styles.iconInput}>
+            <Input
+              id="responsibles-search"
+              className={styles.inputWithIcon}
+              type="search"
+              value={search}
+              placeholder="Escreva o nome"
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <Icon name="search" placement="field" />
+          </span>
         </label>
       </div>
 

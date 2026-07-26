@@ -6,6 +6,7 @@ import {
   ComboboxOption,
   ComboboxTrigger,
   DatePicker,
+  Icon,
   Input,
 } from '../../../shared/components/ui';
 import { formatDate, todayKey } from '../../../shared/lib/dateUtils';
@@ -141,28 +142,16 @@ export function OrderFilters({
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Pesquisar encomendas"
           />
-          <svg
-            className={styles.searchIcon}
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeWidth="2"
-          >
-            <circle cx="11" cy="11" r="6.5" />
-            <path d="m16 16 4 4" />
-          </svg>
+          <Icon name="search" placement="field" />
         </div>
       </div>
 
       <div className={styles.active} aria-live="polite">
         <div className={styles.activeSummary}>
-          <span className={styles.activeTitle}>Filtros:</span>
+          <span className={styles.chip}>data: {dateFilter ? formatDate(dateFilter) : 'todas'}</span>
           <span className={styles.chip}>
-            Data: {dateFilter ? formatDate(dateFilter) : 'Todas as datas'}
+            área: {categoryFilter === 'Todas' ? 'todas' : categoryFilter}
           </span>
-          <span className={styles.chip}>Área: {categoryFilter}</span>
         </div>
         <strong className={styles.resultCount}>
           {resultCount} {resultCount === 1 ? 'resultado' : 'resultados'}

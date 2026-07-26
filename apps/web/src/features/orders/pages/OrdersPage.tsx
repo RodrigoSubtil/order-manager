@@ -64,6 +64,7 @@ export default function OrdersPage() {
   function closeDropdowns() {
     orderForm.setOpenProductPickerId(null);
     orderForm.setOpenCategoryPickerId(null);
+    orderForm.setOpenQuantityPickerId(null);
     orderForm.setOpenUnitPickerId(null);
     orderForm.setIsResponsiblePickerOpen(false);
     filters.setIsCategoryFilterOpen(false);
@@ -216,6 +217,7 @@ export default function OrdersPage() {
           methods={orderForm.methods}
           openCategoryPickerId={orderForm.openCategoryPickerId}
           openProductPickerId={orderForm.openProductPickerId}
+          openQuantityPickerId={orderForm.openQuantityPickerId}
           openUnitPickerId={orderForm.openUnitPickerId}
           responsibles={data.responsibles}
           onAddProduct={orderForm.addProductLine}
@@ -227,6 +229,7 @@ export default function OrdersPage() {
           setIsResponsiblePickerOpen={orderForm.setIsResponsiblePickerOpen}
           setOpenCategoryPickerId={orderForm.setOpenCategoryPickerId}
           setOpenProductPickerId={orderForm.setOpenProductPickerId}
+          setOpenQuantityPickerId={orderForm.setOpenQuantityPickerId}
           setOpenUnitPickerId={orderForm.setOpenUnitPickerId}
         />
       )}
@@ -248,7 +251,6 @@ export default function OrdersPage() {
       )}
       {completionMessage && (
         <OrderSuccessDialog
-          description="A encomenda foi concluída corretamente e retirada da lista de pedidos ativos."
           message={completionMessage}
           onClose={() => {
             setCompletionMessage('');
@@ -258,7 +260,6 @@ export default function OrdersPage() {
       )}
       {deletionMessage && (
         <OrderSuccessDialog
-          description="A encomenda foi apagada corretamente."
           message={deletionMessage}
           onClose={() => {
             setDeletionMessage('');

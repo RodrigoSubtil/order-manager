@@ -1,8 +1,9 @@
 .panel {
   display: grid;
   min-width: 0;
-  gap: 18px;
-  padding: 20px;
+  gap: 20px;
+  padding: 22px;
+  border-radius: var(--radius-lg);
 }
 
 .panelHeader,
@@ -22,34 +23,34 @@
   margin: 0;
 }
 
-.panelHeader p,
-.listHeader p {
-  margin-top: 4px;
-  color: var(--color-muted);
-  font-size: 0.88rem;
-  font-weight: 700;
-  line-height: 1.45;
+.panelHeader {
+  min-height: 68px;
+  align-items: flex-start;
+  padding: 0 2px 14px;
+  border-bottom: 1px solid var(--color-sand);
 }
 
-.count {
-  flex: 0 0 auto;
-  min-width: 42px;
-  padding: 6px 10px;
-  color: var(--color-accent);
-  text-align: center;
-  background: var(--color-cream);
-  border: 1px solid var(--color-sand);
-  border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 900;
+.panelHeader h2 {
+  color: var(--color-ink);
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.panelHeader p,
+.listHeader p {
+  margin-top: 6px;
+  color: var(--color-muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.45;
 }
 
 .form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(150px, 0.42fr) auto;
-  gap: 10px;
+  gap: 16px;
   align-items: end;
-  padding: 14px;
+  padding: 18px;
   background: var(--color-soft-white);
   border: 1px solid var(--color-sand);
   border-radius: var(--radius-lg);
@@ -61,7 +62,7 @@
 
 .formActions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
 .formActions button {
@@ -71,7 +72,21 @@
 .tools {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(150px, 0.34fr);
-  gap: 10px;
+  gap: 14px;
+}
+
+.form label,
+.tools label {
+  gap: 9px;
+}
+
+.iconInput {
+  position: relative;
+  display: block;
+}
+
+.inputWithIcon {
+  padding-right: 44px;
 }
 
 .singleTool {
@@ -82,7 +97,12 @@
   display: grid;
   min-width: 0;
   gap: 10px;
-  padding-top: 2px;
+  padding-top: 4px;
+}
+
+.listHeader h3 {
+  font-size: 1rem;
+  line-height: 1.25;
 }
 
 .list {
@@ -96,7 +116,7 @@
 
 .item {
   min-width: 0;
-  padding: 12px 14px;
+  padding: 14px 16px;
 }
 
 .item + .item {
@@ -138,10 +158,16 @@
     padding: 16px;
   }
 
+  .panelHeader {
+    min-height: 0;
+    padding-bottom: 12px;
+  }
+
   .form,
   .singleForm,
   .tools {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 
   .formActions {

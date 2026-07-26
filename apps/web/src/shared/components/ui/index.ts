@@ -13,6 +13,7 @@ export { Dialog } from './Dialog';
 export { DatePicker } from './DatePicker';
 export { EmptyState } from './EmptyState';
 export { FieldError } from './FieldError';
+export { Icon } from './Icon';
 export { Input } from './Input';
 export { Select } from './Select';
 export { Spinner } from './Spinner';

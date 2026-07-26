@@ -20,7 +20,7 @@ export function DeleteOrderDialog({
       <h2 id="delete-title">Apagar encomenda?</h2>
       <p>Esta ação não poderá ser anulada.</p>
       <div className={styles.details}>
-        <span>Pedido #{order.orderNumber ?? '-'}</span>
+        <span>Cliente: {order.clientName}</span>
       </div>
       <div className={styles.actions}>
         <Button data-autofocus disabled={isSaving} onClick={onCancel}>

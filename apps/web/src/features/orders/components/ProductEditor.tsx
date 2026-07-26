@@ -22,13 +22,17 @@ type ProductEditorProps = {
   methods: UseFormReturn<OrderFormValues>;
   openCategoryPickerId: string | null;
   openProductPickerId: string | null;
+  openQuantityPickerId: string | null;
   openUnitPickerId: string | null;
   onAdd: () => void;
   onRemove: (index: number) => void;
   setOpenCategoryPickerId: (itemId: string | null) => void;
   setOpenProductPickerId: (itemId: string | null) => void;
+  setOpenQuantityPickerId: (itemId: string | null) => void;
   setOpenUnitPickerId: (itemId: string | null) => void;
 };
+
+const quantityOptions = Array.from({ length: 1000 }, (_, index) => String(index + 1));
 
 export function ProductEditor({
   catalogProductsByCategory,
@@ -36,11 +40,13 @@ export function ProductEditor({
   methods,
   openCategoryPickerId,
   openProductPickerId,
+  openQuantityPickerId,
   openUnitPickerId,
   onAdd,
   onRemove,
   setOpenCategoryPickerId,
   setOpenProductPickerId,
+  setOpenQuantityPickerId,
   setOpenUnitPickerId,
 }: ProductEditorProps) {
   const {
@@ -176,19 +182,48 @@ export function ProductEditor({
               <div data-form-field>
                 <label htmlFor={`order-item-${index}-quantity`}>Quantidade</label>
                 <div className={styles.quantityGrid}>
-                  <Input
+                  <Combobox
                     id={`order-item-${index}-quantity`}
-                    {...register(`items.${index}.quantityAmount`)}
-                    required
-                    aria-describedby={
-                      itemErrors?.quantityAmount ? `order-item-${index}-quantity-error` : undefined
-                    }
-                    aria-invalid={Boolean(itemErrors?.quantityAmount)}
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="Qtd."
-                  />
+                    isOpen={openQuantityPickerId === itemId}
+                    onOpenChange={(open) => setOpenQuantityPickerId(open ? itemId : null)}
+                  >
+                    <ComboboxInput
+                      {...register(`items.${index}.quantityAmount`)}
+                      required
+                      aria-describedby={
+                        itemErrors?.quantityAmount
+                          ? `order-item-${index}-quantity-error`
+                          : undefined
+                      }
+                      aria-invalid={Boolean(itemErrors?.quantityAmount)}
+                      type="number"
+                      inputMode="decimal"
+                      min="1"
+                      max="1000"
+                      step="0.01"
+                      onFocus={() => setOpenQuantityPickerId(itemId)}
+                      placeholder="1 a 1000"
+                    />
+                    <ComboboxTrigger aria-label={`Mostrar quantidades do produto ${index + 1}`} />
+                    <ComboboxList className={styles.quantityList}>
+                      {quantityOptions.map((quantity) => (
+                        <ComboboxOption
+                          key={quantity}
+                          aria-selected={quantity === item.quantityAmount}
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => {
+                            setValue(`items.${index}.quantityAmount`, quantity, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
+                            setOpenQuantityPickerId(null);
+                          }}
+                        >
+                          {quantity}
+                        </ComboboxOption>
+                      ))}
+                    </ComboboxList>
+                  </Combobox>
                   <Combobox
                     id={`order-item-${index}-unit`}
                     isOpen={openUnitPickerId === itemId}
@@ -258,7 +293,7 @@ export function ProductEditor({
         );
       })}
 
-      <Button className={styles.addProduct} onClick={onAdd}>
+      <Button className={styles.addProduct} variant="primary" onClick={onAdd}>
         Adicionar mais um produto
       </Button>
     </section>

@@ -28,8 +28,11 @@ export const orderItemSchema = z.object({
     .min(1, 'Indique a quantidade.')
     .refine((value) => {
       const amount = Number(value.replace(',', '.'));
-      return Number.isFinite(amount) && amount > 0;
-    }, 'A quantidade deve ser maior que zero.'),
+      return Number.isFinite(amount) && amount >= 1;
+    }, 'A quantidade deve ser no mínimo 1.')
+    .refine((value) => Number(value.replace(',', '.')) <= 1000, {
+      message: 'A quantidade deve ser no máximo 1000.',
+    }),
   quantityUnit: z.enum(quantityUnits, { message: 'Escolha uma unidade válida.' }),
   notes: z.string().trim().max(1000, 'A observação é demasiado longa.'),
 });

@@ -9,15 +9,10 @@ describe('OrderSuccessDialog', () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
 
-    render(
-      <OrderSuccessDialog
-        description="A encomenda foi concluída corretamente."
-        message="Encomenda #12 concluída com sucesso."
-        onClose={onClose}
-      />,
-    );
+    render(<OrderSuccessDialog message="Encomenda #12 concluída com sucesso." onClose={onClose} />);
 
     expect(screen.getByRole('dialog')).toHaveAccessibleName('Encomenda #12 concluída com sucesso.');
+    expect(screen.queryByText('A encomenda foi concluída corretamente.')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Voltar para as encomendas' }));
 

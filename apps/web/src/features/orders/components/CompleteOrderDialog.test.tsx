@@ -34,7 +34,8 @@ describe('CompleteOrderDialog', () => {
       />,
     );
 
-    expect(screen.getByText('Pedido #9')).toBeInTheDocument();
+    expect(screen.getByText('Cliente: Ana')).toBeInTheDocument();
+    expect(screen.queryByText('Pedido #9')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Sim, concluir' }));
     expect(onConfirm).toHaveBeenCalledOnce();
     await user.click(screen.getByRole('button', { name: 'Não' }));

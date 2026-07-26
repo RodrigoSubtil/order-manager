@@ -12,6 +12,7 @@ import {
   DatePicker,
   Dialog,
   FieldError,
+  Icon,
   Input,
   SuccessMessage,
   TimePicker,
@@ -30,6 +31,7 @@ type OrderFormModalProps = {
   methods: UseFormReturn<OrderFormValues>;
   openCategoryPickerId: string | null;
   openProductPickerId: string | null;
+  openQuantityPickerId: string | null;
   openUnitPickerId: string | null;
   responsibles: OrderResponsible[];
   onAddProduct: () => void;
@@ -41,6 +43,7 @@ type OrderFormModalProps = {
   setIsResponsiblePickerOpen: (open: boolean) => void;
   setOpenCategoryPickerId: (itemId: string | null) => void;
   setOpenProductPickerId: (itemId: string | null) => void;
+  setOpenQuantityPickerId: (itemId: string | null) => void;
   setOpenUnitPickerId: (itemId: string | null) => void;
 };
 
@@ -53,6 +56,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
     methods,
     openCategoryPickerId,
     openProductPickerId,
+    openQuantityPickerId,
     openUnitPickerId,
     responsibles,
     onAddProduct,
@@ -64,6 +68,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
     setIsResponsiblePickerOpen,
     setOpenCategoryPickerId,
     setOpenProductPickerId,
+    setOpenQuantityPickerId,
     setOpenUnitPickerId,
   } = props;
   const {
@@ -83,7 +88,12 @@ export function OrderFormModal(props: OrderFormModalProps) {
   };
 
   return (
-    <Dialog className={styles.dialog} size="large" titleId="modal-title" onClose={closeDialog}>
+    <Dialog
+      className={styles.dialog}
+      size={savedOrderMessage ? 'small' : 'large'}
+      titleId="modal-title"
+      onClose={closeDialog}
+    >
       <form noValidate onSubmit={onSubmit}>
         {!savedOrderMessage && (
           <header className={styles.header}>
@@ -100,7 +110,6 @@ export function OrderFormModal(props: OrderFormModalProps) {
         {savedOrderMessage ? (
           <SuccessMessage
             actionLabel="Voltar para as encomendas"
-            description="A encomenda foi gravada corretamente e os dados serão atualizados no painel."
             onAction={() => void onReturnToOrders()}
             title={savedOrderMessage}
             titleId="modal-title"
@@ -132,10 +141,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                           aria-invalid={Boolean(errors.clientName)}
                           placeholder="Ex.: Ana Silva"
                         />
-                        <svg className={styles.fieldIcon} aria-hidden="true" viewBox="0 0 24 24">
-                          <circle cx="12" cy="8" r="3.5" />
-                          <path d="M5.5 19c.8-3.4 3-5.2 6.5-5.2s5.7 1.8 6.5 5.2" />
-                        </svg>
+                        <Icon name="user" placement="field" />
                       </span>
                     </label>
                     <FieldError id="order-client-name-error" message={errors.clientName?.message} />
@@ -161,13 +167,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                               }
                               placeholder="Ex.: 912000000"
                             />
-                            <svg
-                              className={styles.fieldIcon}
-                              aria-hidden="true"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M8.1 4.5 10 8.4 8.5 10a13 13 0 0 0 5.5 5.5l1.6-1.5 3.9 1.9-.5 3a2 2 0 0 1-2 1.6C9.5 19.8 4.2 14.5 3.5 7a2 2 0 0 1 1.6-2z" />
-                            </svg>
+                            <Icon name="phone" placement="field" />
                           </span>
                         )}
                       />
@@ -303,11 +303,13 @@ export function OrderFormModal(props: OrderFormModalProps) {
                 methods={methods}
                 openCategoryPickerId={openCategoryPickerId}
                 openProductPickerId={openProductPickerId}
+                openQuantityPickerId={openQuantityPickerId}
                 openUnitPickerId={openUnitPickerId}
                 onAdd={onAddProduct}
                 onRemove={onRemoveProduct}
                 setOpenCategoryPickerId={setOpenCategoryPickerId}
                 setOpenProductPickerId={setOpenProductPickerId}
+                setOpenQuantityPickerId={setOpenQuantityPickerId}
                 setOpenUnitPickerId={setOpenUnitPickerId}
               />
             </div>

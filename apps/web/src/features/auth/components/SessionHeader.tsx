@@ -3,6 +3,7 @@ import styles from './SessionHeader.module.css';
 
 type SessionHeaderProps = {
   canManage?: boolean;
+  managementLabel?: string;
   userDisplayName: string;
   onLogoutRequest: () => void;
   onOpenSettings: () => void;
@@ -10,6 +11,7 @@ type SessionHeaderProps = {
 
 export function SessionHeader({
   canManage = true,
+  managementLabel = 'Gerenciar',
   userDisplayName,
   onLogoutRequest,
   onOpenSettings,
@@ -24,7 +26,7 @@ export function SessionHeader({
       <div className={styles.actions}>
         {canManage && (
           <Button className={styles.settings} variant="ghost" onClick={onOpenSettings}>
-            Gerenciar
+            {managementLabel}
           </Button>
         )}
         <div className={styles.session}>

@@ -39,6 +39,8 @@ describe('OrderFilters', () => {
     expect(allDates.compareDocumentPosition(date)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(date.compareDocumentPosition(create)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(create.compareDocumentPosition(print)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(screen.getByText('data: todas')).toBeInTheDocument();
+    expect(screen.getByText('área: todas')).toBeInTheDocument();
     expect(screen.getByText('12 resultados')).toBeInTheDocument();
 
     await user.click(today);

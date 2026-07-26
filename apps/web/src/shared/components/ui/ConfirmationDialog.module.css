@@ -70,7 +70,8 @@
 
 @media (max-width: 560px) {
   .content {
-    padding: 18px;
+    gap: 14px;
+    padding: 20px 18px 18px;
   }
 
   .dateGrid {

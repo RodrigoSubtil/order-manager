@@ -30,7 +30,7 @@
 }
 
 .brand p {
-  color: var(--color-muted);
+  color: var(--color-accent);
 }
 
 .loading {
@@ -106,16 +106,6 @@
   border-color: var(--color-focus);
   box-shadow: 0 0 0 3px rgb(91 120 199 / 20%);
   outline: none;
-}
-
-.passwordVisibility svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentcolor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.8;
 }
 
 .submit {

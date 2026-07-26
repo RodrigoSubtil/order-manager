@@ -1,7 +1,7 @@
 .editor {
   display: grid;
-  gap: 14px;
-  padding: 16px;
+  gap: 18px;
+  padding: 18px;
   background: var(--color-white);
   border: 1px solid var(--color-sand);
   border-radius: var(--radius-md);
@@ -22,7 +22,7 @@
 
 .card {
   display: grid;
-  gap: 14px;
+  gap: 18px;
   min-width: 0;
   padding: 14px;
   background: var(--color-soft-white);
@@ -44,7 +44,7 @@
 .grid {
   display: grid;
   grid-template-columns: minmax(150px, 0.5fr) minmax(260px, 1.15fr) minmax(150px, 0.6fr);
-  gap: 12px;
+  gap: 16px;
   align-items: start;
   min-width: 0;
 }
@@ -63,8 +63,22 @@
 .quantityGrid {
   display: grid;
   grid-template-columns: minmax(90px, 0.8fr) minmax(110px, 1fr);
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
+}
+
+.quantityGrid input[type='number'] {
+  appearance: textfield;
+}
+
+.quantityGrid input[type='number']::-webkit-inner-spin-button,
+.quantityGrid input[type='number']::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+.quantityList {
+  max-height: 260px;
 }
 
 .unitInput {
@@ -72,9 +86,14 @@
 }
 
 .addProduct {
+  gap: 8px;
   justify-self: end;
   min-width: 240px;
-  margin-top: 2px;
+  min-height: 46px;
+  margin-top: 4px;
+  padding-inline: 18px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 22px rgb(77 67 57 / 16%);
 }
 
 @media (max-width: 900px) {
@@ -88,7 +107,8 @@
 
 @media (max-width: 560px) {
   .editor {
-    padding: 12px;
+    gap: 16px;
+    padding: 14px;
   }
 
   .title {
@@ -109,7 +129,7 @@
   }
 
   .grid {
-    gap: 12px;
+    gap: 14px;
   }
 
   .quantityGrid {

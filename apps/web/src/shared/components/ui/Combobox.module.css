@@ -19,24 +19,23 @@
   place-items: center;
   padding: 0;
   color: var(--color-accent);
-  background: var(--color-soft-white);
+  background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
 }
 
-.trigger span {
-  display: block;
-  width: 0;
-  height: 0;
-  border-top: 6px solid currentcolor;
-  border-right: 5px solid transparent;
-  border-left: 5px solid transparent;
-  transform: translateY(1px);
+.trigger:hover,
+.trigger:focus-visible {
+  background: var(--color-cream);
+  border-color: var(--color-sand);
+}
+
+.trigger svg {
   transition: transform var(--transition-fast);
 }
 
-.trigger[aria-expanded='true'] span {
-  transform: translateY(-1px) rotate(180deg);
+.trigger[aria-expanded='true'] svg {
+  transform: rotate(180deg);
 }
 
 .list {

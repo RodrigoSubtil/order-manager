@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import { Button, Card, Input, Select, Spinner } from '../../../shared/components/ui';
+import { Button, Card, Icon, Input, Select, Spinner } from '../../../shared/components/ui';
 import { categories, type Category } from '../../../shared/lib/domain';
 import type { CatalogProductRecord } from '../../../shared/lib/supabaseData';
 import styles from './ManagementPanel.module.css';
@@ -48,11 +48,9 @@ export function CatalogManager({
     <Card as="section" className={styles.panel}>
       <header className={styles.panelHeader}>
         <div>
-          <span data-eyebrow>Catálogo</span>
-          <h2>Produtos disponíveis</h2>
-          <p>Crie nomes reutilizáveis. A quantidade e a unidade são escolhidas na encomenda.</p>
+          <h2>Catálogo</h2>
+          <p>Adicionar novos produtos</p>
         </div>
-        <span className={styles.count}>{items.length}</span>
       </header>
 
       <form
@@ -101,13 +99,17 @@ export function CatalogManager({
       <div className={styles.tools}>
         <label htmlFor="catalog-search">
           Pesquisar produto
-          <Input
-            id="catalog-search"
-            type="search"
-            value={search}
-            placeholder="Escreva o nome"
-            onChange={(event) => setSearch(event.target.value)}
-          />
+          <span className={styles.iconInput}>
+            <Input
+              id="catalog-search"
+              className={styles.inputWithIcon}
+              type="search"
+              value={search}
+              placeholder="Escreva o nome"
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <Icon name="search" placement="field" />
+          </span>
         </label>
         <label htmlFor="catalog-category-filter">
           Filtrar por área

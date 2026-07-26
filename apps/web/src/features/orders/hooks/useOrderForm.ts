@@ -31,7 +31,9 @@ type SavedOrderConfirmation = {
 };
 
 type OpenOrderPicker =
-  { type: 'responsible' } | { type: 'category' | 'product' | 'unit'; itemId: string } | null;
+  | { type: 'responsible' }
+  | { type: 'category' | 'product' | 'quantity' | 'unit'; itemId: string }
+  | null;
 
 export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: UseOrderFormOptions) {
   const queryClient = useQueryClient();
@@ -71,6 +73,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
   const isResponsiblePickerOpen = openPicker?.type === 'responsible';
   const openCategoryPickerId = openPicker?.type === 'category' ? openPicker.itemId : null;
   const openProductPickerId = openPicker?.type === 'product' ? openPicker.itemId : null;
+  const openQuantityPickerId = openPicker?.type === 'quantity' ? openPicker.itemId : null;
   const openUnitPickerId = openPicker?.type === 'unit' ? openPicker.itemId : null;
 
   function setIsResponsiblePickerOpen(open: boolean) {
@@ -80,7 +83,10 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     });
   }
 
-  function setOpenItemPicker(type: 'category' | 'product' | 'unit', itemId: string | null) {
+  function setOpenItemPicker(
+    type: 'category' | 'product' | 'quantity' | 'unit',
+    itemId: string | null,
+  ) {
     setOpenPicker((current) => {
       if (itemId) return { type, itemId };
       return current?.type === type ? null : current;
@@ -89,6 +95,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
 
   const setOpenCategoryPickerId = (itemId: string | null) => setOpenItemPicker('category', itemId);
   const setOpenProductPickerId = (itemId: string | null) => setOpenItemPicker('product', itemId);
+  const setOpenQuantityPickerId = (itemId: string | null) => setOpenItemPicker('quantity', itemId);
   const setOpenUnitPickerId = (itemId: string | null) => setOpenItemPicker('unit', itemId);
 
   function closePickers() {
@@ -210,6 +217,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     openCategoryPickerId,
     openNewOrderModal,
     openProductPickerId,
+    openQuantityPickerId,
     openUnitPickerId,
     removeProductLine,
     returnToOrders,
@@ -219,6 +227,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     setIsResponsiblePickerOpen,
     setOpenCategoryPickerId,
     setOpenProductPickerId,
+    setOpenQuantityPickerId,
     setOpenUnitPickerId,
   };
 }

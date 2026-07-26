@@ -23,7 +23,7 @@
 
 .body {
   display: grid;
-  gap: 18px;
+  gap: 22px;
   min-height: 0;
   padding: 18px;
   overflow-x: hidden;
@@ -33,14 +33,14 @@
 .fieldGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 18px;
   min-width: 0;
 }
 
 .detailsSection {
   display: grid;
-  gap: 14px;
-  padding: 16px;
+  gap: 18px;
+  padding: 18px;
   background: var(--color-soft-white);
   border: 1px solid var(--color-sand);
   border-left: 4px solid var(--color-taupe);
@@ -71,22 +71,6 @@
 
 .inputWithIcon {
   padding-right: 44px;
-}
-
-.fieldIcon {
-  position: absolute;
-  top: 50%;
-  right: 13px;
-  width: 19px;
-  height: 19px;
-  color: var(--color-taupe);
-  pointer-events: none;
-  fill: none;
-  stroke: currentcolor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.7;
-  transform: translateY(-50%);
 }
 
 @media (max-width: 900px) {
@@ -122,17 +106,17 @@
   }
 
   .body {
-    gap: 14px;
+    gap: 18px;
     padding-bottom: 94px;
   }
 
   .fieldGrid {
-    gap: 12px;
+    gap: 16px;
   }
 
   .detailsSection {
-    gap: 12px;
-    padding: 12px;
+    gap: 16px;
+    padding: 14px;
   }
 
   .actions {
