@@ -49,12 +49,6 @@ npm run test
 npm run build
 ```
 
-## Recuperação
-
-Cada criação, edição, conclusão e exclusão alimenta um arquivo local IndexedDB. A área **Gerenciar**
-permite transferir um pacote JSON com snapshot do Supabase e histórico local. O site não usa esse
-arquivo como banco paralelo e não faz restauração automática.
-
 ## Publicação
 
 No Vercel, configure as mesmas variáveis `VITE_SUPABASE_*` com a URL e a chave pública do projeto Supabase. A configuração segura do banco, incluindo schema, RLS, RPCs e primeiro OWNER, está em [docs/supabase-setup.md](docs/supabase-setup.md).

@@ -1,15 +1,13 @@
 # Runbook de produção
 
-Atualizado em 25 de julho de 2026.
+Atualizado em 26 de julho de 2026.
 
 ## Antes de abrir a pastelaria
 
 1. confirmar internet e acesso ao site publicado;
 2. entrar com o utilizador operacional;
-3. confirmar que não existe aviso de contingência;
-4. verificar data/hora do dispositivo;
-5. confirmar papel 80 mm, escala 100% e impressora predefinida;
-6. transferir uma cópia JSON se houve alterações desde a última cópia externa.
+3. verificar data/hora do dispositivo;
+4. confirmar papel 80 mm, escala 100% e impressora predefinida;
 
 ## Release
 
@@ -22,19 +20,17 @@ Atualizado em 25 de julho de 2026.
 
 ## Falha do site ou Supabase
 
-- se houver snapshot local, o aviso de contingência permite consultar, pesquisar e imprimir;
-- não tentar forçar criação, edição, conclusão ou exclusão enquanto o aviso estiver visível;
+- não repetir uma escrita sem confirmar se a tentativa anterior foi concluída;
 - registar horário, ação, dispositivo e mensagem sem enviar password ou dados desnecessários;
 - verificar o estado do Vercel e Supabase;
-- preservar o arquivo local e a última cópia JSON;
 - depois da recuperação, recarregar e reconciliar as encomendas antes de voltar a escrever.
 
 ## Suspeita de perda
 
 1. parar novas alterações;
-2. transferir o pacote JSON disponível no dispositivo;
-3. não importar manualmente diretamente no projeto em uso;
-4. comparar contagens e IDs entre Supabase, snapshot e journal;
+2. não executar SQL de correção diretamente no projeto em uso;
+3. obter um backup ou dump autorizado do Supabase, quando disponível;
+4. comparar contagens e IDs com a última informação operacional conhecida;
 5. restaurar primeiro numa cópia isolada;
 6. aprovar a reconciliação antes de tocar nos dados reais.
 
@@ -47,16 +43,14 @@ Atualizado em 25 de julho de 2026.
 5. rodar a senha gerencial por procedimento SQL controlado, se necessário;
 6. documentar impacto e notificar o responsável conforme RGPD.
 
-## Rotina de cópias
+## Cópias e recuperação
 
-- JSON: no fim de cada dia com alterações, fora do dispositivo;
-- retenção: sete cópias diárias e quatro semanais;
-- teste: abrir e validar o formato do arquivo;
-- recuperação completa: preferir dump/backup gerido do Supabase quando disponível.
+- o produto não cria nem exporta backups JSON ou cópias locais de encomendas;
+- a recuperação completa depende de dump ou backup gerido do Supabase, quando disponível;
+- antes de qualquer migration relevante, deve existir uma cópia verificável e um ensaio isolado.
 
 ## Limites operacionais
 
-- IndexedDB não protege contra perda do equipamento;
 - CSS não substitui a configuração de bobina no driver;
 - o plano gratuito não oferece a mesma recuperação do PITR;
 - não há gravação offline;

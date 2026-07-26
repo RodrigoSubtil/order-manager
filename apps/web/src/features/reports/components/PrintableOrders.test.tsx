@@ -50,6 +50,10 @@ describe('PrintableOrders', () => {
     expect(screen.getByText('Caixa separada')).toBeInTheDocument();
     expect(screen.getByText('Ficha individual')).toBeInTheDocument();
     expect(screen.getByText('Ordem de produção')).toBeInTheDocument();
+    expect(screen.getByText('Pedido #27')).toBeInTheDocument();
+    expect(screen.getByText('Telefone: 912345678')).toBeInTheDocument();
+    expect(screen.getByText('Responsável: Maria Helena')).toBeInTheDocument();
+    expect(screen.getByText('10:30')).toBeInTheDocument();
   });
 
   it('repeats the production header for every order in a general print', () => {
@@ -72,5 +76,34 @@ describe('PrintableOrders', () => {
 
     expect(screen.getAllByText('Ordem de produção')).toHaveLength(2);
     expect(screen.getAllByText('Encomendas detalhadas')).toHaveLength(2);
+  });
+
+  it('mantém todos os produtos de uma encomenda longa no documento', () => {
+    const longProducts = Array.from({ length: 50 }, (_, index) => ({
+      ...order.products[0],
+      id: `item-${index + 1}`,
+      product: `Produto ${index + 1}`,
+    }));
+
+    render(
+      <PrintableOrders
+        getResponsibleName={(item) => item.responsibleName}
+        printAll={false}
+        printDescription="Ficha individual"
+        printFrom={order.deliveryDate}
+        printFromTime="00:00"
+        printMode="orders"
+        printOrderCount={1}
+        printOrders={[{ ...order, products: longProducts }]}
+        printProductSummary={[]}
+        printRangeMode="day"
+        printUntil={order.deliveryDate}
+        printUntilTime="23:59"
+      />,
+    );
+
+    expect(screen.getByText('Produto 1')).toBeInTheDocument();
+    expect(screen.getByText('Produto 50')).toBeInTheDocument();
+    expect(screen.getAllByRole('row', { hidden: true })).toHaveLength(51);
   });
 });

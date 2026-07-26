@@ -47,8 +47,8 @@
     padding: 2.5mm 0;
     overflow: visible;
     border-bottom: 1px dashed #111111;
-    break-inside: avoid-page;
-    page-break-inside: avoid;
+    break-inside: auto;
+    page-break-inside: auto;
   }
 
   .card + .card {
@@ -121,8 +121,8 @@
   }
 
   .group {
-    break-inside: avoid-page;
-    page-break-inside: avoid;
+    break-inside: auto;
+    page-break-inside: auto;
   }
 
   .card h3 {

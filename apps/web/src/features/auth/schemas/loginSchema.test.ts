@@ -3,22 +3,22 @@ import { describe, expect, it } from 'vitest';
 import { loginSchema } from './loginSchema';
 
 describe('loginSchema', () => {
-  it('accepts a friendly username with spaces and accents', () => {
+  it('accepts and normalizes a valid business username', () => {
     const result = loginSchema.safeParse({
-      username: '  Pastelaria Vénus  ',
+      username: '  Pastelaria_Venus  ',
       password: 'uma-senha',
     });
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.username).toBe('Pastelaria Vénus');
+      expect(result.data.username).toBe('pastelaria_venus');
     }
   });
 
   it('accepts an optional remember-me choice', () => {
     expect(
       loginSchema.safeParse({
-        username: 'operador',
+        username: 'padaria_central',
         password: 'uma-senha',
         rememberMe: true,
       }).success,
@@ -27,8 +27,10 @@ describe('loginSchema', () => {
 
   it.each([
     [{ username: '', password: 'segredo' }, 'username'],
-    [{ username: 'ç', password: 'segredo' }, 'username'],
-    [{ username: 'operador', password: '' }, 'password'],
+    [{ username: 'ab', password: 'segredo' }, 'username'],
+    [{ username: 'pastelaria venus', password: 'segredo' }, 'username'],
+    [{ username: 'pastelaria-venus', password: 'segredo' }, 'username'],
+    [{ username: 'padaria_central', password: '' }, 'password'],
   ])('rejects invalid login values %#', (values, expectedField) => {
     const result = loginSchema.safeParse(values);
 

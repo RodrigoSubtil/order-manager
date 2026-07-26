@@ -1,6 +1,6 @@
 # Guia do utilizador
 
-Atualizado em 25 de julho de 2026.
+Atualizado em 26 de julho de 2026.
 
 ## Entrar
 
@@ -38,6 +38,9 @@ O texto pesquisado é destacado nos cartões. O número de resultados correspond
 Erros aparecem junto do respetivo campo e o primeiro inválido recebe foco. Uma edição concorrente
 pede que os dados sejam recarregados antes de tentar novamente.
 
+Ao escolher hoje, a hora não pode ser anterior ao minuto atual. O seletor de hora mostra o mínimo
+permitido e o banco valida novamente antes de guardar.
+
 ## Concluir e apagar
 
 - **Concluir** pede confirmação, retira a encomenda ativa e conserva o registo por sete dias.
@@ -60,13 +63,10 @@ impressora, e não o site, decide o tamanho físico final.
 ## Gerenciar
 
 Somente o dono vê **Gerenciar**. Depois da segunda senha, ele pode pesquisar, criar, editar e apagar
-produtos e responsáveis e transferir o pacote de recuperação. A unidade não pertence ao catálogo;
-ela é definida na encomenda.
+produtos e responsáveis. A unidade não pertence ao catálogo; ela é definida na encomenda.
 
-## Contingência e recuperação
+## Falha de ligação
 
-Se o Supabase estiver indisponível, o aviso de contingência permite consultar, pesquisar e imprimir
-a última cópia válida. Escritas ficam bloqueadas. Uma lista vazia normal não mostra esse aviso.
-
-O dono deve transferir o JSON no fim de cada dia com alterações e guardá-lo de forma privada noutro
-dispositivo. O arquivo automático local não substitui essa cópia.
+Se o Supabase estiver indisponível, o site mostra um erro e não confirma a operação. Não repita uma
+criação ou alteração até verificar a ligação e atualizar a lista. O navegador não guarda uma cópia
+local das encomendas.

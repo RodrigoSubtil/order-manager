@@ -1,4 +1,3 @@
-import type { Dispatch, SetStateAction } from 'react';
 import { type FieldArrayWithId, type UseFormReturn, useWatch } from 'react-hook-form';
 
 import {
@@ -26,9 +25,9 @@ type ProductEditorProps = {
   openUnitPickerId: string | null;
   onAdd: () => void;
   onRemove: (index: number) => void;
-  setOpenCategoryPickerId: Dispatch<SetStateAction<string | null>>;
-  setOpenProductPickerId: Dispatch<SetStateAction<string | null>>;
-  setOpenUnitPickerId: Dispatch<SetStateAction<string | null>>;
+  setOpenCategoryPickerId: (itemId: string | null) => void;
+  setOpenProductPickerId: (itemId: string | null) => void;
+  setOpenUnitPickerId: (itemId: string | null) => void;
 };
 
 export function ProductEditor({

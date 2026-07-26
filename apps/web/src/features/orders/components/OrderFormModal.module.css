@@ -64,6 +64,31 @@
   width: 100%;
 }
 
+.iconInput {
+  position: relative;
+  display: block;
+}
+
+.inputWithIcon {
+  padding-right: 44px;
+}
+
+.fieldIcon {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  width: 19px;
+  height: 19px;
+  color: var(--color-taupe);
+  pointer-events: none;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+  transform: translateY(-50%);
+}
+
 @media (max-width: 900px) {
   .fieldGrid {
     grid-template-columns: 1fr;

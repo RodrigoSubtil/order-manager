@@ -1,6 +1,6 @@
 # Publicação no Vercel e Supabase
 
-Atualizado em 25 de julho de 2026.
+Atualizado em 26 de julho de 2026.
 
 ## Serviços atuais
 
@@ -19,7 +19,8 @@ O repositório contém `vercel.json`:
 - instalação com `npm ci`;
 - build do workspace `@order-manager/web`;
 - saída em `apps/web/dist`;
-- fallback de SPA para `index.html`.
+- fallback de SPA para `index.html`;
+- cabeçalhos CSP, proteção contra iframe, `nosniff`, política de referência e permissões restritas.
 
 Variáveis obrigatórias:
 
@@ -38,7 +39,6 @@ PostgreSQL ou export de clientes.
 3. confirme Auth URLs do domínio Vercel e de localhost quando necessário;
 4. confirme o OWNER, membership ativa e dados iniciais;
 5. execute o Security Advisor e reveja funções expostas;
-6. teste o export JSON antes de começar a operação real.
 
 Consulte [supabase-setup.md](supabase-setup.md).
 
@@ -65,9 +65,8 @@ automaticamente.
 5. concluir e apagar com confirmação;
 6. pesquisar e filtrar;
 7. desbloquear **Gerenciar**, alterar um registo de teste e desfazer;
-8. transferir o pacote JSON;
-9. imprimir uma encomenda e um resumo em bobina 80 mm;
-10. repetir o fluxo principal no Redmi A5.
+8. imprimir uma encomenda e um resumo em bobina 80 mm;
+9. repetir o fluxo principal no Redmi A5.
 
 Se o workflow ou o smoke test falhar, não considerar a release pronta mesmo que o Vercel tenha
 publicado.

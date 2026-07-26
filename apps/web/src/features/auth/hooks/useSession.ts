@@ -7,10 +7,6 @@ import {
   type SessionContext,
 } from '../../../shared/lib/supabaseData';
 import {
-  readCachedSessionContext,
-  saveCachedSessionContext,
-} from '../../../shared/lib/contingencyStore';
-import {
   assertSupabaseConfigured,
   setSessionPersistence,
   supabase,
@@ -19,9 +15,6 @@ import { usernameToAuthIdentity } from '../lib/authIdentity';
 import type { LoginFormValues } from '../schemas/loginSchema';
 
 type AuthUser = {
-  id: string;
-  tenantId: string;
-  username: string;
   displayName: string;
   bakeryName: string | null;
 };
@@ -53,33 +46,17 @@ export function useSession() {
       return;
     }
 
-    let nextContext: SessionContext | null;
-    let isUsingCachedContext = false;
-    try {
-      nextContext = await getSessionContext();
-      if (nextContext) saveCachedSessionContext(nextContext);
-    } catch (error) {
-      nextContext = readCachedSessionContext(data.session.user.id);
-      if (!nextContext) throw error;
-      isUsingCachedContext = true;
-    }
+    const nextContext = await getSessionContext();
     if (!nextContext) {
       throw new Error('A sua conta não tem acesso ativo a esta empresa. Contacte o dono.');
     }
 
     setContext(nextContext);
     setAuthUser({
-      id: data.session.user.id,
-      tenantId: nextContext.tenant.id,
-      username: nextContext.user.username,
       displayName: nextContext.user.displayName || displayNameFromSession(data.session),
       bakeryName: nextContext.tenant.name,
     });
-    setSessionError(
-      isUsingCachedContext
-        ? 'Não foi possível confirmar a sessão no Supabase. Está a ser usado o contexto local da última sessão válida.'
-        : '',
-    );
+    setSessionError('');
   }, []);
 
   useEffect(() => {

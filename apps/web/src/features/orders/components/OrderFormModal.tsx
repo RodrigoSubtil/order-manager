@@ -1,4 +1,3 @@
-import type { Dispatch, SetStateAction } from 'react';
 import { Controller, type FieldArrayWithId, type UseFormReturn } from 'react-hook-form';
 
 import {
@@ -15,9 +14,10 @@ import {
   FieldError,
   Input,
   SuccessMessage,
+  TimePicker,
 } from '../../../shared/components/ui';
 import type { CatalogProduct, Category, OrderResponsible } from '../../../shared/lib/domain';
-import { todayKey } from '../../../shared/lib/dateUtils';
+import { currentTimeKey, todayKey } from '../../../shared/lib/dateUtils';
 import type { OrderFormValues } from '../schemas/orderSchema';
 import { ProductEditor } from './ProductEditor';
 import styles from './OrderFormModal.module.css';
@@ -38,10 +38,10 @@ type OrderFormModalProps = {
   onReturnToOrders: () => Promise<void>;
   onSubmit: (event?: React.BaseSyntheticEvent) => Promise<void>;
   savedOrderMessage: string;
-  setIsResponsiblePickerOpen: Dispatch<SetStateAction<boolean>>;
-  setOpenCategoryPickerId: Dispatch<SetStateAction<string | null>>;
-  setOpenProductPickerId: Dispatch<SetStateAction<string | null>>;
-  setOpenUnitPickerId: Dispatch<SetStateAction<string | null>>;
+  setIsResponsiblePickerOpen: (open: boolean) => void;
+  setOpenCategoryPickerId: (itemId: string | null) => void;
+  setOpenProductPickerId: (itemId: string | null) => void;
+  setOpenUnitPickerId: (itemId: string | null) => void;
 };
 
 export function OrderFormModal(props: OrderFormModalProps) {
@@ -71,7 +71,9 @@ export function OrderFormModal(props: OrderFormModalProps) {
     formState: { errors, isSubmitting },
     register,
     setValue,
+    watch,
   } = methods;
+  const deliveryDate = watch('deliveryDate');
   const responsibleError = errors.responsibleId?.message || errors.responsibleName?.message;
   const submissionError =
     errors.root?.validation?.message || errors.root?.conflict?.message || errors.root?.api?.message;
@@ -117,15 +119,24 @@ export function OrderFormModal(props: OrderFormModalProps) {
                   <div data-form-field>
                     <label htmlFor="order-client-name">
                       Nome do cliente
-                      <Input
-                        id="order-client-name"
-                        data-autofocus
-                        required
-                        {...register('clientName')}
-                        aria-describedby={errors.clientName ? 'order-client-name-error' : undefined}
-                        aria-invalid={Boolean(errors.clientName)}
-                        placeholder="Ex.: Ana Silva"
-                      />
+                      <span className={styles.iconInput}>
+                        <Input
+                          id="order-client-name"
+                          className={styles.inputWithIcon}
+                          data-autofocus
+                          required
+                          {...register('clientName')}
+                          aria-describedby={
+                            errors.clientName ? 'order-client-name-error' : undefined
+                          }
+                          aria-invalid={Boolean(errors.clientName)}
+                          placeholder="Ex.: Ana Silva"
+                        />
+                        <svg className={styles.fieldIcon} aria-hidden="true" viewBox="0 0 24 24">
+                          <circle cx="12" cy="8" r="3.5" />
+                          <path d="M5.5 19c.8-3.4 3-5.2 6.5-5.2s5.7 1.8 6.5 5.2" />
+                        </svg>
+                      </span>
                     </label>
                     <FieldError id="order-client-name-error" message={errors.clientName?.message} />
                   </div>
@@ -136,18 +147,28 @@ export function OrderFormModal(props: OrderFormModalProps) {
                         control={control}
                         name="phone"
                         render={({ field }) => (
-                          <Input
-                            {...field}
-                            id="order-phone"
-                            required
-                            aria-describedby={errors.phone ? 'order-phone-error' : undefined}
-                            aria-invalid={Boolean(errors.phone)}
-                            inputMode="numeric"
-                            onChange={(event) =>
-                              field.onChange(event.target.value.replace(/\D/g, ''))
-                            }
-                            placeholder="Ex.: 912000000"
-                          />
+                          <span className={styles.iconInput}>
+                            <Input
+                              {...field}
+                              id="order-phone"
+                              className={styles.inputWithIcon}
+                              required
+                              aria-describedby={errors.phone ? 'order-phone-error' : undefined}
+                              aria-invalid={Boolean(errors.phone)}
+                              inputMode="numeric"
+                              onChange={(event) =>
+                                field.onChange(event.target.value.replace(/\D/g, ''))
+                              }
+                              placeholder="Ex.: 912000000"
+                            />
+                            <svg
+                              className={styles.fieldIcon}
+                              aria-hidden="true"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M8.1 4.5 10 8.4 8.5 10a13 13 0 0 0 5.5 5.5l1.6-1.5 3.9 1.9-.5 3a2 2 0 0 1-2 1.6C9.5 19.8 4.2 14.5 3.5 7a2 2 0 0 1 1.6-2z" />
+                            </svg>
+                          </span>
                         )}
                       />
                     </label>
@@ -249,20 +270,25 @@ export function OrderFormModal(props: OrderFormModalProps) {
                     />
                   </div>
                   <div data-form-field>
-                    <label htmlFor="order-delivery-time">
-                      Hora
-                      <Input
-                        id="order-delivery-time"
-                        className={styles.dateInput}
-                        required
-                        {...register('deliveryTime')}
-                        aria-describedby={
-                          errors.deliveryTime ? 'order-delivery-time-error' : undefined
-                        }
-                        aria-invalid={Boolean(errors.deliveryTime)}
-                        type="time"
-                      />
-                    </label>
+                    <label htmlFor="order-delivery-time">Hora</label>
+                    <Controller
+                      control={control}
+                      name="deliveryTime"
+                      render={({ field }) => (
+                        <TimePicker
+                          id="order-delivery-time"
+                          className={styles.dateInput}
+                          minTime={deliveryDate === todayKey() ? currentTimeKey() : undefined}
+                          required
+                          aria-describedby={
+                            errors.deliveryTime ? 'order-delivery-time-error' : undefined
+                          }
+                          aria-invalid={Boolean(errors.deliveryTime)}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
                     <FieldError
                       id="order-delivery-time-error"
                       message={errors.deliveryTime?.message}
@@ -291,11 +317,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                 Cancelar
               </Button>
               <Button variant="primary" type="submit" disabled={isSubmitting}>
-                {isSubmitting
-                  ? 'A guardar...'
-                  : editingId
-                    ? 'Guardar alterações'
-                    : 'Guardar encomenda'}
+                {isSubmitting ? 'A salvar...' : 'Salvar'}
               </Button>
             </footer>
           </>

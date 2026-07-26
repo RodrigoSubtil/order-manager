@@ -18,10 +18,12 @@ Num projeto Supabase novo, reveja e aplique no SQL Editor, por esta ordem:
 4. [acesso gerencial](../supabase/migrations/20260724_003_management_access.sql);
 5. [dados iniciais da Pastelaria Vénus](../supabase/migrations/20260724_004_venus_initial_data.sql), somente no projeto destinado a essa empresa.
 6. [campos obrigatórios da encomenda](../supabase/migrations/20260724_005_required_order_fields.sql).
-7. [pesquisa e exportação de backup](../supabase/migrations/20260724_006_search_and_backup_export.sql).
+7. [pesquisa e função histórica de exportação](../supabase/migrations/20260724_006_search_and_backup_export.sql).
 8. [proteção das funções](../supabase/migrations/20260724_007_function_security_hardening.sql).
 9. [conclusão e retenção de encomendas](../supabase/migrations/20260724_008_complete_orders_and_retention.sql).
 10. [nome visível do utilizador Vénus](../supabase/migrations/20260725_009_venus_username.sql).
+11. [remoção da exportação JSON descontinuada](../supabase/migrations/20260726_010_remove_json_backup.sql).
+12. [bloqueio de entregas no passado](../supabase/migrations/20260726_011_prevent_past_delivery.sql).
 
 A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users` para `public.users`. Ela também normaliza os valores padrão de UUID e `updated_at`, para que um schema-alvo preparado anteriormente continue compatível. A segunda cria as operações que o frontend chama. Elas:
 
@@ -39,6 +41,13 @@ A décima migration atualiza com segurança o nome visível do OWNER existente p
 `pastelaria_venus` e os metadados públicos do Auth. Ela não altera password nem a identidade técnica
 de e-mail usada internamente pelo Supabase.
 
+A décima primeira migration revoga e remove a função histórica de exportação JSON. O produto
+deixa de criar arquivos, snapshots comerciais ou históricos paralelos no navegador.
+
+A décima segunda migration impede no PostgreSQL a criação ou alteração de uma entrega para data ou
+hora anterior ao minuto atual em `Europe/Lisbon`. O navegador aplica a mesma regra para orientar o
+utilizador, mas o trigger é a proteção efetiva contra chamadas manuais.
+
 Para demonstração visual da Pastelaria Vénus, o seed opcional
 [`20260724_venus_showcase_orders.sql`](../supabase/seeds/20260724_venus_showcase_orders.sql)
 cria dez encomendas variadas sem substituir encomendas existentes. O script é
@@ -51,7 +60,10 @@ Não aplique essas migrations em produção sem backup verificado e revisão man
 
 ## Primeiro acesso
 
-O utilizador visível da instalação atual é `pastelaria_venus`. Por compatibilidade com a conta já criada, a aplicação mapeia-o internamente para `pastelaria-venus@users.order-manager.invalid`. Marque a conta como confirmada e defina a senha inicial. Esse identificador técnico nunca é mostrado como contacto.
+Escolha um utilizador público com letras, números e `_`. Crie no Supabase Auth a identidade técnica
+derivada descrita em [Autenticação por utilizador](username-authentication.md), marque a conta como
+confirmada e defina a senha inicial. O identificador técnico nunca é mostrado como contacto nem em
+mensagens de erro.
 
 Depois, execute este bloco no SQL Editor, substituindo o utilizador e o nome da pastelaria. Ele cria somente a empresa e a membership `OWNER`:
 
@@ -61,7 +73,7 @@ declare
   owner_id uuid;
   new_tenant_id uuid := gen_random_uuid();
 begin
-  select id into owner_id from public.users where username = 'dono';
+  select id into owner_id from public.users where username = 'minha_pastelaria';
   if owner_id is null then
     raise exception 'Crie primeiro o utilizador no Supabase Auth.';
   end if;

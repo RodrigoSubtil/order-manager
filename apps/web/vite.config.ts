@@ -12,7 +12,6 @@ export default defineConfig({
       'react-dom',
       'react/jsx-runtime',
       'react-dom/client',
-      'react-router-dom',
       '@supabase/supabase-js',
     ],
   },

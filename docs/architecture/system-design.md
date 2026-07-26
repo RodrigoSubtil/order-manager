@@ -1,6 +1,6 @@
 # System design atual
 
-Atualizado em 25 de julho de 2026.
+Atualizado em 26 de julho de 2026.
 
 ## Componentes
 
@@ -9,8 +9,6 @@ flowchart TB
   subgraph Device["Dispositivo da pastelaria"]
     UI["React UI"]
     Q["TanStack Query"]
-    IDB["IndexedDB: arquivo de recuperação"]
-    LS["localStorage: snapshot de contingência"]
   end
 
   subgraph Vercel
@@ -30,8 +28,6 @@ flowchart TB
   Q --> RPC
   RPC --> RLS
   RLS --> Tables
-  Q --> IDB
-  Q --> LS
 ```
 
 ## Consistência
@@ -46,9 +42,9 @@ flowchart TB
 
 ## Disponibilidade
 
-Uma falha de leitura pode ativar o snapshot local somente leitura. Uma resposta válida com zero
-encomendas é um estado normal. Escritas offline são bloqueadas porque sincronização sem fila
-idempotente poderia duplicar ou perder encomendas.
+Uma resposta válida com zero encomendas é um estado normal. Em falhas de leitura ou escrita, a
+interface mostra o erro e não apresenta dados locais como se fossem atuais. Não existe operação
+offline, pois sincronização sem fila idempotente poderia duplicar ou perder encomendas.
 
 ## Impressão
 
@@ -62,4 +58,4 @@ configurado no driver; a impressora deve usar bobina de 80 mm e escala 100%.
 - RLS está ativa e acesso direto às tabelas é revogado;
 - RPCs expostas validam `auth.uid()`, membership, role, tenant e desbloqueio quando necessário;
 - password, token e conteúdo integral de encomendas não são escritos em logs;
-- exports JSON contêm PII e devem ser cifrados e guardados fora do equipamento de operação.
+- o frontend não disponibiliza exportação JSON nem armazena um histórico paralelo de alterações.

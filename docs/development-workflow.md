@@ -1,6 +1,6 @@
 # Desenvolvimento local
 
-Atualizado em 25 de julho de 2026.
+Atualizado em 26 de julho de 2026.
 
 ## Requisitos
 
@@ -56,7 +56,7 @@ Antes de enviar alterações:
 npm run format:check
 npm run lint
 npm run typecheck
-npm run test
+npm run test:coverage
 npm run build
 ```
 

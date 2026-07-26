@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
+import { useAppNavigate } from '../../../app/router/navigation';
 import { LogoutConfirmDialog } from '../../auth/components/LogoutConfirmDialog';
 import { SessionHeader } from '../../auth/components/SessionHeader';
 import { useSession } from '../../auth/hooks/useSession';
@@ -12,7 +12,6 @@ import { usePrintOrders } from '../../reports/hooks/usePrintOrders';
 import { Alert } from '../../../shared/components/ui';
 import { useModalBodyClass, useOutsidePointerDown } from '../../../shared/hooks';
 import { getApiErrorMessage } from '../../../shared/lib/apiError';
-import { recordRecoveryEvent } from '../../../shared/lib/recoveryArchive';
 import { completeOrder, deleteOrder } from '../../../shared/lib/supabaseData';
 import { CompleteOrderDialog } from '../components/CompleteOrderDialog';
 import { DeleteOrderDialog } from '../components/DeleteOrderDialog';
@@ -27,12 +26,11 @@ import { useOrderForm } from '../hooks/useOrderForm';
 import styles from './OrdersPage.module.css';
 
 export default function OrdersPage() {
-  const navigate = useNavigate();
+  const navigate = useAppNavigate();
   const session = useSession();
   const queryClient = useQueryClient();
-  const tenantId = session.authUser?.tenantId ?? '';
   const filterState = useOrderFilterState();
-  const data = useApiOrderData(filterState.queryParams, Boolean(session.authUser), tenantId);
+  const data = useApiOrderData(filterState.queryParams, Boolean(session.authUser));
   const filters = useOrderFilters(data.orders, data.overviewOrders, data.responsibles, filterState);
   const [appError, setAppError] = useState('');
   const [appSuccess, setAppSuccess] = useState('');
@@ -40,14 +38,8 @@ export default function OrdersPage() {
     catalogProducts: data.catalogProducts,
     setAppError,
     setAppSuccess,
-    tenantId: session.authUser?.tenantId ?? '',
   });
-  const print = usePrintOrders(
-    filters.sortedOrders,
-    filters.dateFilter,
-    filters.categoryFilter,
-    data.contingencyOrders,
-  );
+  const print = usePrintOrders(filters.sortedOrders, filters.dateFilter, filters.categoryFilter);
   const removeMutation = useMutation({
     mutationFn: ({ id, version }: { id: string; version: number }) => deleteOrder(id, version),
   });
@@ -61,7 +53,7 @@ export default function OrdersPage() {
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
   const isSaving = removeMutation.isPending || completeMutation.isPending;
-  const canChangeOrders = Boolean(session.authUser) && !data.isContingencyMode;
+  const canChangeOrders = Boolean(session.authUser);
 
   useEffect(() => {
     if (!appSuccess) return;
@@ -99,7 +91,7 @@ export default function OrdersPage() {
   async function refreshOrderData() {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
-      queryClient.invalidateQueries({ queryKey: ['supabase', 'contingency-snapshot'] }),
+      queryClient.invalidateQueries({ queryKey: ['supabase', 'orders-overview'] }),
     ]);
   }
 
@@ -130,18 +122,6 @@ export default function OrdersPage() {
     setAppSuccess('');
     try {
       await removeMutation.mutateAsync({ id: orderToDelete.id, version: orderToDelete.version });
-      try {
-        await recordRecoveryEvent(tenantId, {
-          resource: 'order',
-          action: 'deleted',
-          resourceId: orderToDelete.id,
-          before: orderToDelete,
-        });
-      } catch {
-        setAppError(
-          'A encomenda foi apagada, mas não foi possível atualizar o arquivo de recuperação deste dispositivo.',
-        );
-      }
       await refreshOrderData();
       setDeleteOrderId(null);
       setDeletionMessage(`Encomenda #${orderToDelete.orderNumber ?? '-'} apagada com sucesso.`);
@@ -163,18 +143,6 @@ export default function OrdersPage() {
         id: orderToComplete.id,
         version: orderToComplete.version,
       });
-      try {
-        await recordRecoveryEvent(tenantId, {
-          resource: 'order',
-          action: 'completed',
-          resourceId: orderToComplete.id,
-          before: orderToComplete,
-        });
-      } catch {
-        setAppError(
-          'A encomenda foi concluída, mas não foi possível atualizar o arquivo de recuperação deste dispositivo.',
-        );
-      }
       await refreshOrderData();
       setCompleteOrderId(null);
       setCompletionMessage(
@@ -208,18 +176,6 @@ export default function OrdersPage() {
           onOpenSettings={() => navigate('/settings')}
         />
         {appSuccess && <Alert tone="success">{appSuccess}</Alert>}
-        {data.isContingencyMode && (
-          <Alert tone="info">
-            Modo de contingência: o Supabase está indisponível. Estão a ser mostrados os dados
-            guardados localmente em{' '}
-            {new Intl.DateTimeFormat('pt-PT', {
-              dateStyle: 'short',
-              timeStyle: 'short',
-            }).format(new Date(data.contingencySavedAt))}
-            . Pode consultar, pesquisar e imprimir normalmente. Criar, editar, concluir e apagar
-            ficam bloqueados até a ligação ser corrigida.
-          </Alert>
-        )}
         {visibleError && <Alert tone="error">{visibleError}</Alert>}
         <OrderIndicators stats={filters.stats} total={data.overviewOrders.length} />
         <section className={styles.ordersPanel} aria-label="Encomendas">
@@ -227,7 +183,6 @@ export default function OrdersPage() {
             categoryFilter={filters.categoryFilter}
             dateFilter={filters.dateFilter}
             isCategoryFilterOpen={filters.isCategoryFilterOpen}
-            isReadOnly={data.isContingencyMode}
             resultCount={data.resultTotal}
             search={filters.search}
             onCategoryChange={filters.setCategoryFilter}

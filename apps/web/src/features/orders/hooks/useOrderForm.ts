@@ -9,8 +9,7 @@ import {
   type Category,
   type Order,
 } from '../../../shared/lib/domain';
-import { recordRecoveryEvent } from '../../../shared/lib/recoveryArchive';
-import { listAllOrders, saveOrder as saveOrderInSupabase } from '../../../shared/lib/supabaseData';
+import { saveOrder as saveOrderInSupabase } from '../../../shared/lib/supabaseData';
 import { getFormSubmissionError } from '../lib/formSubmissionError';
 import {
   createEmptyOrderFormValues,
@@ -24,7 +23,6 @@ type UseOrderFormOptions = {
   catalogProducts: CatalogProduct[];
   setAppError: Dispatch<SetStateAction<string>>;
   setAppSuccess: Dispatch<SetStateAction<string>>;
-  tenantId: string;
 };
 
 type SavedOrderConfirmation = {
@@ -32,12 +30,10 @@ type SavedOrderConfirmation = {
   message: string;
 };
 
-export function useOrderForm({
-  catalogProducts,
-  setAppError,
-  setAppSuccess,
-  tenantId,
-}: UseOrderFormOptions) {
+type OpenOrderPicker =
+  { type: 'responsible' } | { type: 'category' | 'product' | 'unit'; itemId: string } | null;
+
+export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: UseOrderFormOptions) {
   const queryClient = useQueryClient();
   const saveMutation = useMutation({
     mutationFn: ({
@@ -59,10 +55,7 @@ export function useOrderForm({
     remove,
     replace,
   } = useFieldArray({ control: methods.control, keyName: 'fieldKey', name: 'items' });
-  const [openProductPickerId, setOpenProductPickerId] = useState<string | null>(null);
-  const [openCategoryPickerId, setOpenCategoryPickerId] = useState<string | null>(null);
-  const [openUnitPickerId, setOpenUnitPickerId] = useState<string | null>(null);
-  const [isResponsiblePickerOpen, setIsResponsiblePickerOpen] = useState(false);
+  const [openPicker, setOpenPicker] = useState<OpenOrderPicker>(null);
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [savedOrderConfirmation, setSavedOrderConfirmation] =
@@ -74,17 +67,39 @@ export function useOrderForm({
     catalogProducts.forEach((product) => productMap.get(product.category)?.push(product));
     return productMap;
   }, [catalogProducts]);
-  function closeProductPickers() {
-    setOpenProductPickerId(null);
-    setOpenCategoryPickerId(null);
-    setOpenUnitPickerId(null);
+
+  const isResponsiblePickerOpen = openPicker?.type === 'responsible';
+  const openCategoryPickerId = openPicker?.type === 'category' ? openPicker.itemId : null;
+  const openProductPickerId = openPicker?.type === 'product' ? openPicker.itemId : null;
+  const openUnitPickerId = openPicker?.type === 'unit' ? openPicker.itemId : null;
+
+  function setIsResponsiblePickerOpen(open: boolean) {
+    setOpenPicker((current) => {
+      if (open) return { type: 'responsible' };
+      return current?.type === 'responsible' ? null : current;
+    });
   }
+
+  function setOpenItemPicker(type: 'category' | 'product' | 'unit', itemId: string | null) {
+    setOpenPicker((current) => {
+      if (itemId) return { type, itemId };
+      return current?.type === type ? null : current;
+    });
+  }
+
+  const setOpenCategoryPickerId = (itemId: string | null) => setOpenItemPicker('category', itemId);
+  const setOpenProductPickerId = (itemId: string | null) => setOpenItemPicker('product', itemId);
+  const setOpenUnitPickerId = (itemId: string | null) => setOpenItemPicker('unit', itemId);
+
   function closePickers() {
-    closeProductPickers();
-    setIsResponsiblePickerOpen(false);
+    setOpenPicker(null);
   }
+
   function addProductLine() {
-    append(createEmptyOrderItem(methods.getValues('items').at(-1)?.category));
+    closePickers();
+    append(createEmptyOrderItem(methods.getValues('items').at(-1)?.category), {
+      shouldFocus: false,
+    });
   }
   function removeProductLine(index: number) {
     if (itemFields.length === 1) replace([createEmptyOrderItem()]);
@@ -123,46 +138,16 @@ export function useOrderForm({
       setAppSuccess('');
       try {
         const form = formValuesToOrderForm(values);
-        let savedOrder: { id: string; version: number };
         if (editingOrder) {
           if (!editingOrder.version)
             throw new Error('A versão da encomenda não está disponível. Recarregue os dados.');
-          savedOrder = await saveMutation.mutateAsync({ form, current: editingOrder });
+          await saveMutation.mutateAsync({ form, current: editingOrder });
         } else {
-          savedOrder = await saveMutation.mutateAsync({ form });
-        }
-        let recoveryAfter: unknown = {
-          ...form,
-          id: savedOrder.id,
-          version: savedOrder.version,
-        };
-        try {
-          const persistedOrder = (await listAllOrders({})).find(
-            (order) => order.id === savedOrder.id,
-          );
-          if (persistedOrder) recoveryAfter = persistedOrder;
-        } catch {
-          // The mutation already succeeded; the form still provides a recoverable payload.
-        }
-        try {
-          await recordRecoveryEvent(tenantId, {
-            resource: 'order',
-            action: editingOrder ? 'updated' : 'created',
-            resourceId: savedOrder.id,
-            ...(editingOrder ? { before: editingOrder } : {}),
-            after: recoveryAfter,
-          });
-          await queryClient.invalidateQueries({
-            queryKey: ['recovery-archive', tenantId],
-          });
-        } catch {
-          setAppError(
-            'A encomenda foi gravada, mas não foi possível atualizar o arquivo de recuperação deste dispositivo.',
-          );
+          await saveMutation.mutateAsync({ form });
         }
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
-          queryClient.invalidateQueries({ queryKey: ['supabase', 'contingency-snapshot'] }),
+          queryClient.invalidateQueries({ queryKey: ['supabase', 'orders-overview'] }),
         ]);
         setSavedOrderConfirmation({
           deliveryDate: values.deliveryDate,
@@ -197,7 +182,7 @@ export function useOrderForm({
     try {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
-        queryClient.invalidateQueries({ queryKey: ['supabase', 'contingency-snapshot'] }),
+        queryClient.invalidateQueries({ queryKey: ['supabase', 'orders-overview'] }),
       ]);
       setAppError('');
       setAppSuccess(confirmation.message);

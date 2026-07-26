@@ -1,6 +1,6 @@
 # Acesso operacional e gerencial
 
-Atualizado em 25 de julho de 2026.
+Atualizado em 26 de julho de 2026.
 
 ## Papéis
 
@@ -31,9 +31,7 @@ A página apresenta:
 - total e lista pesquisável de produtos;
 - filtro por área e edição de nome/categoria;
 - total e lista pesquisável de responsáveis;
-- criação, edição e exclusão com confirmação;
-- situação do arquivo local;
-- download do pacote de recuperação.
+- criação, edição e exclusão com confirmação.
 
 O produto do catálogo não exige unidade. `UN`, `KG` ou `G` são escolhidos em cada item da
 encomenda.

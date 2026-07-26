@@ -1,13 +1,20 @@
 import { useCallback, useMemo, useState } from 'react';
 
-import { compareOrdersByDelivery } from '../../../shared/lib/contingencyStore';
 import { todayKey } from '../../../shared/lib/dateUtils';
 import type { Category, Order, OrderResponsible } from '../../../shared/lib/domain';
 import type { OrderListParams } from '../../../shared/lib/supabaseData';
 
 export type OrderFilterState = ReturnType<typeof useOrderFilterState>;
 
-export { compareOrdersByDelivery } from '../../../shared/lib/contingencyStore';
+export function compareOrdersByDelivery(first: Order, second: Order) {
+  const dateTimeComparison = `${first.deliveryDate} ${first.deliveryTime}`.localeCompare(
+    `${second.deliveryDate} ${second.deliveryTime}`,
+  );
+  if (dateTimeComparison !== 0) return dateTimeComparison;
+  return (
+    (first.orderNumber ?? Number.MAX_SAFE_INTEGER) - (second.orderNumber ?? Number.MAX_SAFE_INTEGER)
+  );
+}
 
 export function getOrderStats(orders: Order[], today = todayKey()) {
   return orders.reduce(

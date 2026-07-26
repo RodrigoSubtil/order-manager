@@ -1,6 +1,6 @@
 # Frontend por funcionalidades
 
-Atualizado em 25 de julho de 2026.
+Atualizado em 26 de julho de 2026.
 
 ## Estrutura
 
@@ -8,16 +8,16 @@ Atualizado em 25 de julho de 2026.
 apps/web/src/
   app/
     providers/       QueryClient e providers
-    router/          navegação
+    router/          duas rotas com History API do navegador
   features/
     auth/            login, sessão e cabeçalho
     orders/          dashboard, filtros, formulário e cartões
     reports/         seleção e layout de impressão
-    settings/        catálogo, responsáveis e recuperação
+    settings/        catálogo e responsáveis
   shared/
     components/ui/   Button, Input, Select, Dialog, Combobox, DatePicker etc.
     hooks/           comportamentos reutilizáveis
-    lib/             domínio, datas, RPCs, contingência e recuperação
+    lib/             domínio, datas e RPCs
   styles/            tokens, reset, global e print
 ```
 
@@ -31,8 +31,6 @@ concentram estado e efeitos; `supabaseData.ts` é o único adaptador de dados re
 | sessão, encomendas, catálogo e responsáveis    | TanStack Query + Supabase |
 | formulário de login e encomenda                | React Hook Form + Zod     |
 | modais, dropdowns, pesquisa e drafts da gestão | estado React local        |
-| contingência                                   | localStorage por tenant   |
-| arquivo de recuperação                         | IndexedDB por tenant      |
 
 Não há Redux ou Zustand porque não existe estado global complexo que os justifique.
 

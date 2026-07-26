@@ -1,6 +1,6 @@
 # Arquitetura atual
 
-Atualizado em 25 de julho de 2026.
+Atualizado em 26 de julho de 2026.
 
 ## Decisão
 
@@ -15,7 +15,6 @@ flowchart LR
   W --> F["RPCs SECURITY DEFINER controladas"]
   F --> C["Validação de sessão, membership e role"]
   C --> D["PostgreSQL com RLS, constraints e version"]
-  W --> L["Contingência local e arquivo IndexedDB"]
   W --> P["Impressão do navegador em 80 mm"]
 ```
 
@@ -24,15 +23,14 @@ Prisma, Orval, Render ou Docker são históricos.
 
 ## Fronteiras
 
-| Camada                 | Responsabilidade                                            |
-| ---------------------- | ----------------------------------------------------------- |
-| componentes React      | apresentação, acessibilidade e estado visual                |
-| React Hook Form + Zod  | estado e validação amigável dos formulários                 |
-| TanStack Query         | leituras remotas, invalidação e atualização do dashboard    |
-| `supabaseData.ts`      | contrato único entre features e RPCs                        |
-| RPCs PostgreSQL        | autenticação efetiva, autorização, tenant e transações      |
-| constraints + RLS      | integridade e defesa adicional                              |
-| IndexedDB/localStorage | recuperação local e contingência, sem substituir o servidor |
+| Camada                | Responsabilidade                                         |
+| --------------------- | -------------------------------------------------------- |
+| componentes React     | apresentação, acessibilidade e estado visual             |
+| React Hook Form + Zod | estado e validação amigável dos formulários              |
+| TanStack Query        | leituras remotas, invalidação e atualização do dashboard |
+| `supabaseData.ts`     | contrato único entre features e RPCs                     |
+| RPCs PostgreSQL       | autenticação efetiva, autorização, tenant e transações   |
+| constraints + RLS     | integridade e defesa adicional                           |
 
 ## Autorização
 

@@ -8,6 +8,12 @@ export function yesterdayKey() {
   return date.toLocaleDateString('sv-SE');
 }
 
+export function currentTimeKey(date = new Date()) {
+  const hour = String(date.getHours()).padStart(2, '0');
+  const minute = String(date.getMinutes()).padStart(2, '0');
+  return `${hour}:${minute}`;
+}
+
 export function formatDate(date: string) {
   if (!date) return 'Sem data';
   return new Intl.DateTimeFormat('pt-PT', {

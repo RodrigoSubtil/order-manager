@@ -1,0 +1,217 @@
+.root {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.nativeInput,
+.control {
+  width: 100%;
+  height: 42px;
+  min-width: 0;
+  padding: 0 12px;
+  color: var(--color-ink);
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  outline: none;
+  font: inherit;
+  font-weight: 700;
+}
+
+.nativeInput:hover:not(:disabled),
+.control:hover:not(:disabled) {
+  border-color: var(--color-taupe);
+}
+
+.nativeInput:focus-visible,
+.control:focus-visible {
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px rgb(91 120 199 / 20%);
+}
+
+.nativeInput[aria-invalid='true'],
+.control[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.control {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.value,
+.placeholder {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.control svg {
+  flex: 0 0 auto;
+  width: 19px;
+  height: 19px;
+  color: var(--color-accent);
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.backdrop {
+  position: fixed;
+  z-index: calc(var(--z-dialog) + 3);
+  inset: 0;
+  display: grid;
+  padding: 12px;
+  place-items: center;
+  background: rgb(44 35 28 / 48%);
+  backdrop-filter: blur(2px);
+}
+
+.picker {
+  display: grid;
+  width: min(352px, 100%);
+  gap: 16px;
+  padding: 18px;
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-dialog);
+}
+
+.picker > strong {
+  color: var(--color-ink);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.wheelGroup {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr);
+  height: 220px;
+  align-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(var(--color-white), transparent 36%),
+    linear-gradient(transparent 64%, var(--color-white));
+  border-block: 1px solid var(--color-line);
+}
+
+.wheel {
+  z-index: 1;
+  height: 220px;
+  padding-block: 88px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior: contain;
+}
+
+.wheel::-webkit-scrollbar {
+  display: none;
+}
+
+.wheel button {
+  display: block;
+  width: 100%;
+  height: 44px;
+  padding: 0;
+  color: var(--color-muted);
+  background: transparent;
+  border: 0;
+  scroll-snap-align: center;
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.wheel button[aria-selected='true'] {
+  color: var(--color-ink);
+  font-size: 1.42rem;
+}
+
+.selectedWheelItem {
+  color: var(--color-ink);
+}
+
+.separator {
+  z-index: 2;
+  color: var(--color-accent);
+  font-size: 1.55rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.selectionBand {
+  position: absolute;
+  z-index: 0;
+  top: 88px;
+  right: 0;
+  left: 0;
+  height: 44px;
+  pointer-events: none;
+  background: var(--color-cream);
+  border-block: 1px solid var(--color-taupe);
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+.actions button {
+  min-height: 46px;
+  color: var(--color-ink);
+  background: var(--color-soft-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 800;
+}
+
+.actions button:last-child {
+  color: var(--color-white);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.actions button:focus-visible,
+.wheel button:focus-visible {
+  outline: 3px solid rgb(91 120 199 / 28%);
+  outline-offset: -3px;
+}
+
+@media (max-width: 560px) {
+  .control {
+    height: 48px;
+    font-size: 1rem;
+  }
+}

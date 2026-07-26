@@ -1,7 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { todayKey, yesterdayKey } from '../../../shared/lib/dateUtils';
+import { yesterdayKey } from '../../../shared/lib/dateUtils';
 import { orderSchema, type OrderFormValues } from './orderSchema';
+
+function tomorrowKey() {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  return date.toLocaleDateString('sv-SE');
+}
 
 function validOrder(overrides: Partial<OrderFormValues> = {}): OrderFormValues {
   return {
@@ -10,7 +16,7 @@ function validOrder(overrides: Partial<OrderFormValues> = {}): OrderFormValues {
     phone: '912345678',
     responsibleId: 'responsible-1',
     responsibleName: 'Maria',
-    deliveryDate: todayKey(),
+    deliveryDate: tomorrowKey(),
     deliveryTime: '10:30',
     items: [
       {
@@ -27,6 +33,8 @@ function validOrder(overrides: Partial<OrderFormValues> = {}): OrderFormValues {
 }
 
 describe('orderSchema', () => {
+  afterEach(() => vi.useRealTimers());
+
   it('accepts empty observations', () => {
     expect(orderSchema.safeParse(validOrder()).success).toBe(true);
   });
@@ -65,6 +73,39 @@ describe('orderSchema', () => {
     if (!result.success) {
       expect(result.error.issues.some((issue) => issue.path[0] === 'deliveryDate')).toBe(true);
     }
+  });
+
+  it('rejects a time before the current minute when delivery is today', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 6, 26, 14, 30));
+
+    const result = orderSchema.safeParse(
+      validOrder({ deliveryDate: '2026-07-26', deliveryTime: '14:29' }),
+    );
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues).toContainEqual(
+        expect.objectContaining({
+          message: 'A hora de entrega não pode ser anterior ao momento atual.',
+          path: ['deliveryTime'],
+        }),
+      );
+    }
+  });
+
+  it('accepts the current minute or a future time for today', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 6, 26, 14, 30));
+
+    expect(
+      orderSchema.safeParse(validOrder({ deliveryDate: '2026-07-26', deliveryTime: '14:30' }))
+        .success,
+    ).toBe(true);
+    expect(
+      orderSchema.safeParse(validOrder({ deliveryDate: '2026-07-26', deliveryTime: '18:00' }))
+        .success,
+    ).toBe(true);
   });
 
   it.each([

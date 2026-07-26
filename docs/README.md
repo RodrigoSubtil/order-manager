@@ -1,6 +1,6 @@
 # Documentação do Order Manager
 
-Atualizado em 25 de julho de 2026.
+Atualizado em 26 de julho de 2026.
 
 ## Fonte de verdade atual
 
@@ -11,7 +11,6 @@ Atualizado em 25 de julho de 2026.
 - [Publicação](deployment.md): Vercel, variáveis e validação pós-deploy.
 - [Guia do utilizador](user-guide.md): operação diária.
 - [Acesso gerencial](management-access.md): separação entre OWNER e OPERATOR.
-- [Backup gratuito](free-backup.md): arquivo local, JSON externo e recuperação.
 - [Checklist de segurança](security-checklist.md): controles e limites conhecidos.
 - [Prontidão de entrega](release-readiness.md): o que está validado e o que ainda exige ação humana.
 - [Runbook de produção](production-runbook.md): publicação, monitorização e incidente.

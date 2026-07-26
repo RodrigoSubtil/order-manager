@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { formatDate, todayKey } from '../../../shared/lib/dateUtils';
 import type { Category, Order } from '../../../shared/lib/domain';
-import { filterContingencyOrders } from '../../../shared/lib/contingencyStore';
 import {
   buildPrintProductSummary,
   type PrintProductSummary,
@@ -58,7 +57,6 @@ export function usePrintOrders(
   currentOrders: Order[],
   dateFilter: string,
   categoryFilter: Category | 'Todas',
-  contingencyOrders: Order[] | null = null,
 ) {
   const [printAll, setPrintAll] = useState(false);
   const [printMode, setPrintMode] = useState<PrintMode>('orders');
@@ -78,19 +76,10 @@ export function usePrintOrders(
       until,
       ...(categoryFilter !== 'Todas' ? { category: categoryFilter } : {}),
     };
-    return contingencyOrders
-      ? Promise.resolve(filterContingencyOrders(contingencyOrders, params))
-      : listAllOrders(params);
+    return listAllOrders(params);
   };
   const printOptionsReport = useQuery({
-    queryKey: [
-      'supabase',
-      'print-options-preview',
-      printFrom,
-      optionsUntil,
-      categoryFilter,
-      Boolean(contingencyOrders),
-    ],
+    queryKey: ['supabase', 'print-options-preview', printFrom, optionsUntil, categoryFilter],
     queryFn: () => loadPrintOrders(printFrom, optionsUntil),
     enabled:
       isPrintOptionsOpen &&
@@ -103,7 +92,7 @@ export function usePrintOrders(
     staleTime: 0,
   });
   const report = useQuery({
-    queryKey: ['supabase', 'print-report', request, categoryFilter, Boolean(contingencyOrders)],
+    queryKey: ['supabase', 'print-report', request, categoryFilter],
     queryFn: () => loadPrintOrders(request?.from ?? '', request?.until ?? ''),
     enabled: Boolean(request),
     retry: false,

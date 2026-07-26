@@ -206,10 +206,6 @@ export async function lockManagementAccess() {
   return rpc<void>('web_lock_management');
 }
 
-export async function exportTenantBackup() {
-  return rpc<Record<string, unknown>>('web_export_tenant_backup');
-}
-
 export async function listOrders(params: OrderListParams): Promise<PaginatedOrders> {
   const response = await rpc<{
     items: RawOrder[];

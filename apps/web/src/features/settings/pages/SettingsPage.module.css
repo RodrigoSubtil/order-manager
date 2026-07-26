@@ -10,7 +10,7 @@
 }
 
 .shell > * {
-  max-width: 1180px;
+  width: 100%;
   margin-inline: auto;
 }
 
@@ -46,28 +46,15 @@
 .heading {
   display: flex;
   gap: 18px;
-  align-items: end;
+  align-items: center;
   justify-content: space-between;
   padding: 4px 2px;
 }
 
-.heading h1,
-.heading p {
-  margin: 0;
-}
-
 .heading h1 {
+  margin: 0;
   font-size: clamp(1.65rem, 4vw, 2.35rem);
   line-height: 1.1;
-}
-
-.heading p {
-  max-width: 680px;
-  margin-top: 7px;
-  color: var(--color-muted);
-  font-size: 0.94rem;
-  font-weight: 700;
-  line-height: 1.45;
 }
 
 .heading > button {
@@ -76,7 +63,7 @@
 
 .overview {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 

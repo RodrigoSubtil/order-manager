@@ -1,27 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
+import { useAppNavigate } from '../../../app/router/navigation';
 import { LogoutConfirmDialog } from '../../auth/components/LogoutConfirmDialog';
 import { SessionHeader } from '../../auth/components/SessionHeader';
 import { useSession } from '../../auth/hooks/useSession';
 import { LoginPage } from '../../auth/pages/LoginPage';
 import { CatalogManager, type ProductDraft } from '../components/CatalogManager';
 import { ManagementAccessGate } from '../components/ManagementAccessGate';
-import { RecoveryPanel } from '../components/RecoveryPanel';
 import { ResponsiblesManager, type ResponsibleDraft } from '../components/ResponsiblesManager';
 import { SettingsDeleteDialog } from '../components/SettingsDeleteDialog';
 import { Alert, Button, Card, Spinner } from '../../../shared/components/ui';
 import { useModalBodyClass } from '../../../shared/hooks';
 import {
-  readRecoveryArchive,
-  recordRecoveryEvent,
-  saveRecoverySnapshot,
-} from '../../../shared/lib/recoveryArchive';
-import {
   deleteCatalogProduct,
   deleteResponsible,
-  exportTenantBackup,
   getManagementAccessStatus,
   initializeManagementPassword,
   listCatalogProducts,
@@ -33,7 +26,6 @@ import {
   type CatalogProductRecord,
   type ResponsibleRecord,
 } from '../../../shared/lib/supabaseData';
-import { downloadBackup } from '../lib/downloadBackup';
 import styles from './SettingsPage.module.css';
 
 type PendingDelete =
@@ -47,10 +39,9 @@ const emptyProduct: ProductDraft = {
 const emptyResponsible: ResponsibleDraft = { name: '' };
 
 export default function SettingsPage() {
-  const navigate = useNavigate();
+  const navigate = useAppNavigate();
   const session = useSession();
   const queryClient = useQueryClient();
-  const tenantId = session.authUser?.tenantId ?? '';
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [product, setProduct] = useState<ProductDraft>(emptyProduct);
@@ -77,13 +68,6 @@ export default function SettingsPage() {
     enabled: canLoadData,
     retry: false,
   });
-  const recoveryArchive = useQuery({
-    queryKey: ['recovery-archive', tenantId],
-    queryFn: () => readRecoveryArchive(tenantId),
-    enabled: canLoadData && Boolean(tenantId),
-    retry: false,
-  });
-
   const saveProductMutation = useMutation({ mutationFn: saveCatalogProduct });
   const deleteProductMutation = useMutation({
     mutationFn: ({ id, version }: { id: string; version: number }) =>
@@ -99,7 +83,6 @@ export default function SettingsPage() {
       initialize ? initializeManagementPassword(password) : unlockManagementAccess(password),
   });
   const lockManagementMutation = useMutation({ mutationFn: lockManagementAccess });
-  const backupMutation = useMutation({ mutationFn: exportTenantBackup });
   const isSaving =
     saveProductMutation.isPending ||
     deleteProductMutation.isPending ||
@@ -153,35 +136,16 @@ export default function SettingsPage() {
     ]);
   }
 
-  async function recordManagementChange(input: Parameters<typeof recordRecoveryEvent>[1]) {
-    try {
-      const archive = await recordRecoveryEvent(tenantId, input);
-      queryClient.setQueryData(['recovery-archive', tenantId], archive);
-    } catch {
-      setError(
-        'A alteração foi guardada no Supabase, mas o arquivo de recuperação deste dispositivo não foi atualizado.',
-      );
-    }
-  }
-
   async function persistProduct() {
     setError('');
     setSuccess('');
-    const before = product.id ? catalog.data?.find((item) => item.id === product.id) : undefined;
     try {
-      const saved = await saveProductMutation.mutateAsync({
+      await saveProductMutation.mutateAsync({
         id: product.id,
         version: product.version,
         name: product.name.trim(),
         category: product.category,
         defaultUnit: 'UN',
-      });
-      await recordManagementChange({
-        resource: 'catalog-product',
-        action: product.id ? 'updated' : 'created',
-        resourceId: saved.id,
-        ...(before ? { before } : {}),
-        after: saved,
       });
       setProduct(emptyProduct);
       await refreshSettings();
@@ -196,21 +160,11 @@ export default function SettingsPage() {
   async function persistResponsible() {
     setError('');
     setSuccess('');
-    const before = responsible.id
-      ? responsibles.data?.find((item) => item.id === responsible.id)
-      : undefined;
     try {
-      const saved = await saveResponsibleMutation.mutateAsync({
+      await saveResponsibleMutation.mutateAsync({
         id: responsible.id,
         version: responsible.version,
         name: responsible.name.trim(),
-      });
-      await recordManagementChange({
-        resource: 'responsible',
-        action: responsible.id ? 'updated' : 'created',
-        resourceId: saved.id,
-        ...(before ? { before } : {}),
-        after: saved,
       });
       setResponsible(emptyResponsible);
       await refreshSettings();
@@ -234,23 +188,11 @@ export default function SettingsPage() {
           id: pendingDelete.item.id,
           version: pendingDelete.item.version,
         });
-        await recordManagementChange({
-          resource: 'catalog-product',
-          action: 'deleted',
-          resourceId: pendingDelete.item.id,
-          before: pendingDelete.item,
-        });
         setSuccess('Produto apagado com sucesso.');
       } else {
         await deleteResponsibleMutation.mutateAsync({
           id: pendingDelete.item.id,
           version: pendingDelete.item.version,
-        });
-        await recordManagementChange({
-          resource: 'responsible',
-          action: 'deleted',
-          resourceId: pendingDelete.item.id,
-          before: pendingDelete.item,
         });
         setSuccess('Responsável apagado com sucesso.');
       }
@@ -258,27 +200,6 @@ export default function SettingsPage() {
       await refreshSettings();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Não foi possível apagar este registo.');
-    }
-  }
-
-  async function createBackup() {
-    setError('');
-    setSuccess('');
-    try {
-      const serverSnapshot = await backupMutation.mutateAsync();
-      let archive = recoveryArchive.data ?? null;
-      try {
-        archive = await saveRecoverySnapshot(tenantId, serverSnapshot);
-        queryClient.setQueryData(['recovery-archive', tenantId], archive);
-      } catch {
-        setError('O snapshot do Supabase foi transferido, mas não ficou guardado neste navegador.');
-      }
-      downloadBackup(serverSnapshot, archive);
-      setSuccess('Arquivo completo transferido. Guarde-o num local privado e noutro dispositivo.');
-    } catch (cause) {
-      setError(
-        cause instanceof Error ? cause.message : 'Não foi possível preparar o arquivo completo.',
-      );
     }
   }
 
@@ -378,18 +299,14 @@ export default function SettingsPage() {
     <main className={styles.shell}>
       {header}
       <header className={styles.heading}>
-        <div>
-          <span data-eyebrow>Configurações</span>
-          <h1>Organize o trabalho da pastelaria</h1>
-          <p>Atualize produtos, responsáveis e a cópia de recuperação num só lugar.</p>
-        </div>
+        <h1>Gerenciamento</h1>
         <Button onClick={() => void leaveSettings()}>Voltar às encomendas</Button>
       </header>
 
       {success && <Alert tone="success">{success}</Alert>}
       {visibleError && <Alert tone="error">{visibleError}</Alert>}
 
-      <section className={styles.overview} aria-label="Resumo da gestão">
+      <section className={styles.overview} aria-label="Resumo do gerenciamento">
         <Card as="article" className={styles.overviewCard}>
           <span>Produtos</span>
           <strong>{catalogItems.length}</strong>
@@ -397,10 +314,6 @@ export default function SettingsPage() {
         <Card as="article" className={styles.overviewCard}>
           <span>Responsáveis</span>
           <strong>{responsibleItems.length}</strong>
-        </Card>
-        <Card as="article" className={styles.overviewCard}>
-          <span>Alterações guardadas</span>
-          <strong>{recoveryArchive.data?.events.length ?? 0}</strong>
         </Card>
       </section>
 
@@ -426,12 +339,6 @@ export default function SettingsPage() {
           onSave={() => void persistResponsible()}
         />
       </section>
-
-      <RecoveryPanel
-        archive={recoveryArchive.data ?? null}
-        isPreparing={backupMutation.isPending}
-        onDownload={() => void createBackup()}
-      />
 
       {pendingDelete && (
         <SettingsDeleteDialog
