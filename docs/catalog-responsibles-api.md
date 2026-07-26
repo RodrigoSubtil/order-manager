@@ -13,13 +13,13 @@ Leitura é permitida a `OWNER`, `ADMIN` e `OPERATOR`. Criar, editar e apagar exi
 
 Base: `/api/v1/catalog/products`
 
-| Método   | Rota             | Papel                 | Descrição                                                                    |
-| -------- | ---------------- | --------------------- | ---------------------------------------------------------------------------- |
-| `GET`    | `/`              | qualquer membro ativo | Lista paginada. Filtros: `category`, `active`, `search`, `page`, `pageSize`. |
-| `GET`    | `/:id`           | qualquer membro ativo | Obtém produto do tenant atual.                                               |
-| `POST`   | `/`              | OWNER, ADMIN          | Cria produto com `category`, `name`, `defaultUnit`, `isActive` e `position`. |
-| `PATCH`  | `/:id`           | OWNER, ADMIN          | Atualiza campos e exige `version`.                                           |
-| `DELETE` | `/:id?version=n` | OWNER, ADMIN          | Soft delete; exige versão atual.                                             |
+| Método   | Rota             | Papel                 | Descrição                                                                                                        |
+| -------- | ---------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `GET`    | `/`              | qualquer membro ativo | Lista paginada. Filtros: `category`, `active`, `search`, `page`, `pageSize`.                                     |
+| `GET`    | `/:id`           | qualquer membro ativo | Obtém produto do tenant atual.                                                                                   |
+| `POST`   | `/`              | OWNER, ADMIN          | Cria produto com `category`, `name`, `isActive` e `position`. A unidade é definida somente no item da encomenda. |
+| `PATCH`  | `/:id`           | OWNER, ADMIN          | Atualiza campos e exige `version`.                                                                               |
+| `DELETE` | `/:id?version=n` | OWNER, ADMIN          | Soft delete; exige versão atual.                                                                                 |
 
 Categorias aceites: `PASTELARIA`, `PADARIA`, `SALGADOS`. Unidades: `UN`, `KG`, `G`.
 

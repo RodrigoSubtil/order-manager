@@ -24,6 +24,7 @@ Num projeto Supabase novo, reveja e aplique no SQL Editor, por esta ordem:
 10. [nome visível do utilizador Vénus](../supabase/migrations/20260725_009_venus_username.sql).
 11. [remoção da exportação JSON descontinuada](../supabase/migrations/20260726_010_remove_json_backup.sql).
 12. [bloqueio de entregas no passado](../supabase/migrations/20260726_011_prevent_past_delivery.sql).
+13. [catálogo sem unidade predefinida](../supabase/migrations/20260726_012_remove_catalog_default_unit.sql).
 
 A primeira cria tabelas, relações, RLS e sincronização segura de `auth.users` para `public.users`. Ela também normaliza os valores padrão de UUID e `updated_at`, para que um schema-alvo preparado anteriormente continue compatível. A segunda cria as operações que o frontend chama. Elas:
 
@@ -47,6 +48,9 @@ deixa de criar arquivos, snapshots comerciais ou históricos paralelos no navega
 A décima segunda migration impede no PostgreSQL a criação ou alteração de uma entrega para data ou
 hora anterior ao minuto atual em `Europe/Lisbon`. O navegador aplica a mesma regra para orientar o
 utilizador, mas o trigger é a proteção efetiva contra chamadas manuais.
+
+A décima terceira migration remove `default_unit` do catálogo. As unidades continuam obrigatórias
+nos itens das encomendas e são escolhidas no formulário no momento de cada pedido.
 
 Para demonstração visual da Pastelaria Vénus, o seed opcional
 [`20260724_venus_showcase_orders.sql`](../supabase/seeds/20260724_venus_showcase_orders.sql)

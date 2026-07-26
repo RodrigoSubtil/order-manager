@@ -10,14 +10,12 @@ const items: CatalogProductRecord[] = [
     id: 'product-1',
     name: 'Pastel de Nata',
     category: 'Pastelaria',
-    defaultUnit: 'UN',
     version: 1,
   },
   {
     id: 'product-2',
     name: 'Baguete',
     category: 'Padaria',
-    defaultUnit: 'UN',
     version: 1,
   },
 ];

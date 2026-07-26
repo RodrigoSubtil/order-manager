@@ -6,7 +6,13 @@ vi.mock('./supabase', () => ({
   supabase: { rpc },
 }));
 
-import { listAllOrders, SupabaseRpcError, unlockManagementAccess } from './supabaseData';
+import {
+  listAllOrders,
+  listCatalogProducts,
+  saveCatalogProduct,
+  SupabaseRpcError,
+  unlockManagementAccess,
+} from './supabaseData';
 
 function page(page: number, total: number, id: string) {
   return {
@@ -80,5 +86,57 @@ describe('Supabase data adapter', () => {
     await expect(unlockManagementAccess('incorreta')).rejects.toThrow(
       'Senha de gerenciamento incorreta.',
     );
+  });
+
+  it('keeps the product catalog independent from order-item units', async () => {
+    rpc.mockReset();
+    rpc.mockResolvedValueOnce({
+      data: [
+        {
+          id: 'product-1',
+          category: 'PADARIA',
+          name: 'Baguete',
+          version: 1,
+        },
+      ],
+      error: null,
+    });
+
+    const catalog = await listCatalogProducts();
+
+    expect(catalog).toEqual([
+      {
+        id: 'product-1',
+        category: 'Padaria',
+        name: 'Baguete',
+        version: 1,
+      },
+    ]);
+
+    rpc.mockResolvedValueOnce({
+      data: {
+        id: 'product-1',
+        category: 'PADARIA',
+        name: 'Baguete',
+        version: 2,
+      },
+      error: null,
+    });
+
+    await saveCatalogProduct({
+      id: 'product-1',
+      category: 'Padaria',
+      name: 'Baguete',
+      version: 1,
+    });
+
+    expect(rpc).toHaveBeenLastCalledWith('web_save_catalog_product', {
+      p_product: {
+        id: 'product-1',
+        version: 1,
+        category: 'PADARIA',
+        name: 'Baguete',
+      },
+    });
   });
 });

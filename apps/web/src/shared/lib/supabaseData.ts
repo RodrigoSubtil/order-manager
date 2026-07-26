@@ -26,7 +26,6 @@ export type SessionContext = {
 };
 
 export type CatalogProductRecord = CatalogProduct & {
-  defaultUnit: QuantityUnit;
   version: number;
 };
 
@@ -84,7 +83,6 @@ type RawCatalogProduct = {
   id: string;
   category: string;
   name: string;
-  defaultUnit: string;
   version: number;
 };
 
@@ -251,7 +249,6 @@ export async function listCatalogProducts(): Promise<CatalogProductRecord[]> {
     id: item.id,
     category: asCategory(item.category),
     name: item.name,
-    defaultUnit: asQuantityUnit(item.defaultUnit),
     version: item.version,
   }));
 }
@@ -297,7 +294,6 @@ export async function completeOrder(id: string, version: number) {
 
 export async function saveCatalogProduct(input: {
   category: Category;
-  defaultUnit: QuantityUnit;
   id?: string;
   name: string;
   version?: number;
@@ -307,7 +303,6 @@ export async function saveCatalogProduct(input: {
       id: input.id ?? null,
       version: input.version ?? null,
       category: input.category.toUpperCase(),
-      defaultUnit: input.defaultUnit,
       name: input.name,
     },
   });

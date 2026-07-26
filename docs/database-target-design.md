@@ -144,13 +144,12 @@ Catálogo específico da empresa no desenho inicial. Um catálogo global futuro 
 | ------------------ | ------------------ | -------------------------------- |
 | `id`, `tenant_id`  | `uuid`             | PK e escopo obrigatório.         |
 | `category`, `name` | `text`             | Obrigatórios.                    |
-| `default_unit`     | `text`             | Obrigatória, enum/check.         |
 | `is_active`        | `boolean`          | `true` por padrão.               |
 | `position`         | `integer`          | `0` por padrão, `>= 0`.          |
 | `version`          | `integer`          | Controlo otimista.               |
 | auditoria/exclusão | conforme convenção | Obrigatórios conforme aplicável. |
 
-Índices/constraints: unique (`tenant_id`, `id`); unique index parcial (`tenant_id`, `category`, `lower(name)`) `where deleted_at is null`; índice parcial (`tenant_id`, `category`, `position`, `name`) `where is_active and deleted_at is null`.
+Índices/constraints: unique (`tenant_id`, `id`); unique index parcial (`tenant_id`, `category`, `lower(name)`) `where deleted_at is null`; índice parcial (`tenant_id`, `category`, `position`, `name`) `where is_active and deleted_at is null`. O catálogo não define unidade: `UN`, `KG` ou `G` é escolhida em cada item da encomenda.
 
 ### `responsibles`
 

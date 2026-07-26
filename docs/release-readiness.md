@@ -18,6 +18,7 @@ Vercel (React + Vite) -> Supabase Auth -> RPCs PostgreSQL -> RLS
 - rodas de hora deslizáveis no telemóvel, campo nativo no computador e bloqueio de entregas
   anteriores ao momento atual;
 - criação/edição transacional e conflito por `version`;
+- catálogo sem unidade predefinida; `UN`, `KG` ou `G` é escolhida em cada item da encomenda;
 - confirmação para concluir e apagar;
 - atualização da lista após mutações e ordenação por entrega;
 - filtros, pesquisa destacada e estado vazio;
@@ -30,10 +31,13 @@ Vercel (React + Vite) -> Supabase Auth -> RPCs PostgreSQL -> RLS
 
 ## Evidências da release
 
-- `format:check`, ESLint, Stylelint, TypeScript, 94 testes, cobertura por risco e build: **PASS**;
+- `format:check`, ESLint, Stylelint, TypeScript, 95 testes, cobertura por risco e build: **PASS**;
 - migration `010`: RPC de exportação JSON removida no projeto Supabase;
 - migration `011`: função e trigger de bloqueio de entregas passadas instalados;
+- migration `012`: `default_unit` removida do catálogo e RPCs atualizadas;
 - consulta de verificação do Supabase: `true / true / true`;
+- preparação para entrega: `0` encomendas, `0` itens, próximo número `1`, `45` produtos preservados
+  e coluna antiga removida;
 - formulário e rodas de hora verificados no breakpoint móvel, sem rolagem horizontal;
 - impressão automatizada validada com cabeçalho por encomenda e encomenda longa de 50 produtos;
 - impressão física continua pendente do teste com a impressora e o driver de bobina usados na
@@ -41,15 +45,15 @@ Vercel (React + Vite) -> Supabase Auth -> RPCs PostgreSQL -> RLS
 
 ## Obrigatório antes do uso real
 
-| Verificação                                                                           | Estado esperado |
-| ------------------------------------------------------------------------------------- | --------------- |
-| migrations até `20260726_011_prevent_past_delivery.sql` aplicadas no Supabase correto | PASS            |
-| workflow do commit publicado                                                          | PASS            |
-| login e logout no domínio Vercel                                                      | PASS            |
-| criar, editar, concluir e apagar uma encomenda de teste                               | PASS            |
-| gestão de produto e responsável de teste                                              | PASS            |
-| impressão física em bobina 80 mm, escala 100%                                         | PASS            |
-| validação no Redmi A5                                                                 | PASS            |
+| Verificação                                                                         | Estado esperado |
+| ----------------------------------------------------------------------------------- | --------------- |
+| migrations até `20260726_012_remove_catalog_default_unit.sql` aplicadas no Supabase | PASS            |
+| workflow do commit publicado                                                        | PASS            |
+| login e logout no domínio Vercel                                                    | PASS            |
+| criar, editar, concluir e apagar uma encomenda de teste                             | PASS            |
+| gestão de produto e responsável de teste                                            | PASS            |
+| impressão física em bobina 80 mm, escala 100%                                       | PASS            |
+| validação no Redmi A5                                                               | PASS            |
 
 ## Limites aceites para o piloto
 

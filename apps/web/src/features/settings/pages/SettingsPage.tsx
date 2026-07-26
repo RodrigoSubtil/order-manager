@@ -145,7 +145,6 @@ export default function SettingsPage() {
         version: product.version,
         name: product.name.trim(),
         category: product.category,
-        defaultUnit: 'UN',
       });
       setProduct(emptyProduct);
       await refreshSettings();
