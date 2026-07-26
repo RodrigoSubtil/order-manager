@@ -46,7 +46,12 @@ export function PrintableOrders({
   printUntilTime,
 }: PrintableOrdersProps) {
   return (
-    <section className={styles.area} data-print-root aria-hidden="true">
+    <section
+      className={styles.area}
+      data-print-root
+      data-print-all={printAll ? 'true' : 'false'}
+      aria-hidden="true"
+    >
       {printMode === 'summary' && printAll ? (
         <article className={styles.card}>
           <PrintHeader description={printDescription} />

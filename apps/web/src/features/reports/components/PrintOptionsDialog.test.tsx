@@ -85,4 +85,15 @@ describe('PrintOptionsDialog', () => {
     expect(screen.getByText('Formato de impressão')).toBeInTheDocument();
     expect(screen.getByText('Qtd. total dos produtos')).toBeInTheDocument();
   });
+
+  it('uses the site calendar to choose the print date', () => {
+    renderDialog();
+
+    const dateControl = screen.getByLabelText('Data');
+    expect(dateControl).toHaveAttribute('aria-haspopup', 'dialog');
+
+    fireEvent.click(dateControl);
+
+    expect(screen.getByRole('dialog', { name: 'Escolher data' })).toBeInTheDocument();
+  });
 });

@@ -10,6 +10,7 @@
 .dateStrip {
   display: grid;
   align-content: center;
+  align-items: center;
   justify-items: center;
   gap: 8px;
   padding: 22px 18px;
@@ -19,7 +20,6 @@
   border-right: 1px solid var(--color-line);
 }
 
-.dateStrip span,
 .client > span {
   color: var(--color-muted);
   font-size: 0.76rem;
@@ -28,22 +28,21 @@
   text-transform: uppercase;
 }
 
-.dateStrip > span {
-  font-size: 1rem;
-  letter-spacing: 0.03em;
-}
-
-.dateStrip strong {
-  max-width: 130px;
-  font-size: 1rem;
-  font-weight: 900;
-  line-height: 1.12;
-}
-
-.dateStrip small {
+.dateStrip > span,
+.dateStrip > strong,
+.dateStrip > small {
+  display: flex;
+  width: 100%;
+  min-height: 1.4rem;
+  align-items: center;
+  justify-content: center;
   color: var(--color-muted);
   font-size: 1rem;
   font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: 0.03em;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .ticket {
@@ -108,26 +107,45 @@
   border-radius: var(--radius-md);
 }
 
+.productGroup {
+  display: grid;
+  min-width: 0;
+}
+
+.productGroup + .productGroup {
+  border-top: 1px solid var(--color-sand);
+}
+
+.category {
+  margin: 0;
+  padding: 9px 14px;
+  color: var(--color-muted);
+  background: var(--color-soft-white);
+  border-bottom: 1px solid var(--color-sand);
+  font-size: 0.74rem;
+  font-weight: 900;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.groupProducts {
+  display: grid;
+  min-width: 0;
+}
+
 .product {
   display: grid;
-  grid-template-columns: 96px minmax(0, 1fr) minmax(96px, auto);
+  grid-template-columns: minmax(0, 1fr) minmax(96px, auto);
   gap: 16px;
   align-items: center;
   min-width: 0;
   padding: 14px;
 }
 
-.product + .product {
+.groupProducts .product + .product {
   border-top: 1px dashed var(--color-line);
-}
-
-.category {
-  color: var(--color-muted);
-  font-size: 0.74rem;
-  font-weight: 900;
-  line-height: 1.25;
-  text-transform: uppercase;
-  overflow-wrap: anywhere;
 }
 
 .copy {
@@ -226,7 +244,7 @@
   }
 
   .product {
-    grid-template-columns: 104px minmax(0, 1fr) minmax(110px, auto);
+    grid-template-columns: minmax(0, 1fr) minmax(110px, auto);
   }
 }
 
@@ -265,21 +283,14 @@
 
   .product {
     grid-template-columns: minmax(0, 1fr) minmax(62px, auto);
-    grid-template-areas:
-      'category quantity'
-      'copy quantity';
     gap: 8px;
     align-items: start;
     padding: 12px 10px;
   }
 
   .category {
-    grid-area: category;
+    padding: 8px 10px;
     font-size: 0.7rem;
-  }
-
-  .copy {
-    grid-area: copy;
   }
 
   .copy strong {
@@ -291,7 +302,6 @@
   }
 
   .quantity {
-    grid-area: quantity;
     align-self: center;
     width: auto;
     max-width: 92px;

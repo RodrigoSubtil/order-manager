@@ -38,4 +38,49 @@ describe('OrderCard', () => {
 
     expect(onComplete).toHaveBeenCalledOnce();
   });
+
+  it('groups products by section even when equal sections were entered apart', () => {
+    const { container } = render(
+      <OrderCard
+        order={{
+          ...order,
+          products: [
+            {
+              id: 'product-1',
+              category: 'Pastelaria',
+              product: 'Bolo',
+              quantity: '1 un',
+              notes: '',
+            },
+            {
+              id: 'product-2',
+              category: 'Salgados',
+              product: 'Coxinha',
+              quantity: '20 un',
+              notes: '',
+            },
+            {
+              id: 'product-3',
+              category: 'Pastelaria',
+              product: 'Tarte',
+              quantity: '2 un',
+              notes: '',
+            },
+          ],
+        }}
+        search=""
+        responsibleName="Maria"
+        onPrint={vi.fn()}
+      />,
+    );
+
+    const groups = container.querySelectorAll('[data-product-category]');
+    expect(groups).toHaveLength(2);
+    expect(groups[0]).toHaveAttribute('data-product-category', 'Pastelaria');
+    expect(groups[0]).toHaveTextContent('Bolo');
+    expect(groups[0]).toHaveTextContent('Tarte');
+    expect(groups[1]).toHaveAttribute('data-product-category', 'Salgados');
+    expect(groups[1]).toHaveTextContent('Coxinha');
+    expect(screen.getAllByRole('heading', { name: 'Pastelaria' })).toHaveLength(1);
+  });
 });

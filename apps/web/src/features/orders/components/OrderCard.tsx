@@ -1,6 +1,7 @@
 import { Button, Card } from '../../../shared/components/ui';
 import { formatDate } from '../../../shared/lib/dateUtils';
 import type { Order } from '../../../shared/lib/domain';
+import { groupProducts } from '../../../shared/lib/productGrouping';
 import { SearchHighlight } from './SearchHighlight';
 import styles from './OrderCard.module.css';
 
@@ -50,24 +51,37 @@ export function OrderCard({
         </header>
 
         <div className={styles.products} aria-label="Produtos da encomenda">
-          {order.products.map((product) => (
-            <div className={styles.product} key={product.id}>
-              <span className={styles.category}>{product.category}</span>
-              <div className={styles.copy}>
-                <strong>
-                  <SearchHighlight query={search} text={product.product || 'Produto sem nome'} />
-                </strong>
-                {product.notes && (
-                  <small>
-                    <SearchHighlight query={search} text={product.notes} />
-                  </small>
-                )}
+          {groupProducts(order.products).map((group) => (
+            <section
+              className={styles.productGroup}
+              data-product-category={group.category}
+              key={group.category}
+            >
+              <h3 className={styles.category}>{group.category}</h3>
+              <div className={styles.groupProducts}>
+                {group.products.map((product) => (
+                  <div className={styles.product} key={product.id}>
+                    <div className={styles.copy}>
+                      <strong>
+                        <SearchHighlight
+                          query={search}
+                          text={product.product || 'Produto sem nome'}
+                        />
+                      </strong>
+                      {product.notes && (
+                        <small>
+                          <SearchHighlight query={search} text={product.notes} />
+                        </small>
+                      )}
+                    </div>
+                    <span className={styles.quantity}>
+                      <small>Qtd.</small>
+                      {product.quantity || 'Não indicada'}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <span className={styles.quantity}>
-                <small>Qtd.</small>
-                {product.quantity || 'Não indicada'}
-              </span>
-            </div>
+            </section>
           ))}
         </div>
 

@@ -1,4 +1,4 @@
-import { Alert, Button, Dialog, Input } from '../../../shared/components/ui';
+import { Alert, Button, DatePicker, Dialog, Input } from '../../../shared/components/ui';
 import type { PrintMode, PrintRangeMode } from '../hooks/usePrintOrders';
 import styles from './PrintOptionsDialog.module.css';
 
@@ -84,25 +84,23 @@ export function PrintOptionsDialog({
         <div className={printRangeMode === 'day' ? styles.singleDate : styles.dateGrid}>
           <label htmlFor="print-from">
             {printRangeMode === 'day' ? 'Data' : 'Data inicial'}
-            <Input
+            <DatePicker
               id="print-from"
-              type="date"
               value={printFrom}
-              onChange={(event) => {
-                onFromChange(event.target.value);
-                if (printRangeMode === 'day') onUntilChange(event.target.value);
+              onChange={(value) => {
+                onFromChange(value);
+                if (printRangeMode === 'day') onUntilChange(value);
               }}
             />
           </label>
           {printRangeMode === 'period' && (
             <label htmlFor="print-until">
               Data final
-              <Input
+              <DatePicker
                 id="print-until"
-                type="date"
                 value={printUntil}
-                min={printFrom}
-                onChange={(event) => onUntilChange(event.target.value)}
+                minDate={printFrom}
+                onChange={onUntilChange}
               />
             </label>
           )}
