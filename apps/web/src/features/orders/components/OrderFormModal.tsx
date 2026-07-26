@@ -89,7 +89,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
 
   return (
     <Dialog
-      className={styles.dialog}
+      className={savedOrderMessage ? undefined : styles.dialog}
       size={savedOrderMessage ? 'small' : 'large'}
       titleId="modal-title"
       onClose={closeDialog}

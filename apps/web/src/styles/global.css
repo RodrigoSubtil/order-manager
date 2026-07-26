@@ -80,6 +80,14 @@ textarea:focus-visible {
   outline: none;
 }
 
+@media (max-width: 560px), (hover: none) and (pointer: coarse) {
+  input:not([type='checkbox'], [type='radio']),
+  select,
+  textarea {
+    font-size: 1rem;
+  }
+}
+
 textarea[aria-invalid='true'] {
   border-color: var(--color-danger);
 }
