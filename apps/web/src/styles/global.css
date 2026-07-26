@@ -14,6 +14,7 @@ html {
 }
 
 body {
+  min-width: var(--content-min-width);
   min-height: 100vh;
   margin: 0;
 }

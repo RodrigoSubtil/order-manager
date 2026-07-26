@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+html {
+  min-width: var(--content-min-width);
+}
+
 body,
 h1,
 h2,
