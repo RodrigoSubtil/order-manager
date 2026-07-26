@@ -8,8 +8,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
-  min-width: var(--content-min-width);
   min-height: 100vh;
   margin: 0;
 }
