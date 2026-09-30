@@ -69,6 +69,8 @@ type RawOrder = {
   id: string;
   orderNumber: number | string;
   clientName: string;
+  customerId?: string | null;
+  customerVersion?: number | null;
   phone: string | null;
   responsibleId: string | null;
   responsibleName: string | null;
@@ -127,6 +129,9 @@ function asCategory(value: string): Category {
     case 'SALGADOS':
     case 'Salgados':
       return 'Salgados';
+    case 'ALMOÇO':
+    case 'Almoço':
+      return 'Almoço';
     default:
       return 'Pastelaria';
   }
@@ -138,7 +143,8 @@ function asQuantityUnit(value: string): QuantityUnit {
 }
 
 function quantityText(value: number | string, unit: string) {
-  return `${String(value)} ${asQuantityUnit(unit).toLowerCase()}`;
+  const amount = Number(value);
+  return `${Number.isFinite(amount) ? String(amount) : String(value)} ${asQuantityUnit(unit).toLowerCase()}`;
 }
 
 function productLineFromRaw(item: RawOrderItem): ProductLine {
@@ -156,6 +162,8 @@ function orderFromRaw(order: RawOrder): Order {
     id: order.id,
     orderNumber: Number(order.orderNumber),
     clientName: order.clientName,
+    customerId: order.customerId ?? null,
+    customerVersion: order.customerVersion ?? null,
     phone: order.phone ?? '',
     responsibleId: order.responsibleId ?? '',
     responsibleName: order.responsibleName ?? '',
@@ -270,13 +278,28 @@ function itemPayload(product: ProductLine, position: number) {
   };
 }
 
-export async function saveOrder(order: OrderForm, current?: Pick<Order, 'id' | 'version'>) {
-  return rpc<{ id: string; version: number }>('web_save_order', {
+export type CustomerSuggestion = { id: string; name: string; phone: string; version: number };
+
+export async function searchCustomers(query: string): Promise<CustomerSuggestion[]> {
+  return rpc<CustomerSuggestion[]>('web_search_customers', { p_query: query });
+}
+
+export async function saveOrder(
+  order: OrderForm,
+  requestId: string,
+  current?: Pick<Order, 'id' | 'version'>,
+) {
+  return rpc<{ id: string; version: number }>('web_save_order_with_responsible', {
     p_order: {
       ...(current ? { id: current.id, version: current.version } : {}),
       clientName: order.clientName,
+      customerId: order.customerId ?? null,
+      customerVersion: order.customerVersion ?? null,
+      updateCustomer: order.updateCustomer ?? false,
+      requestId,
       phone: order.phone || null,
       responsibleId: order.responsibleId || null,
+      responsibleName: order.responsibleName,
       deliveryDate: order.deliveryDate,
       deliveryTime: order.deliveryTime || null,
       items: order.products.map(itemPayload),

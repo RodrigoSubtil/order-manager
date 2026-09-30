@@ -4,23 +4,6 @@
   max-height: calc(100dvh - 36px);
 }
 
-.header,
-.actions {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px;
-}
-
-.header {
-  border-bottom: 1px solid var(--color-line);
-}
-
-.header h2 {
-  margin: 0;
-}
-
 .body {
   display: grid;
   gap: 22px;
@@ -53,7 +36,7 @@
 }
 
 .sectionTitle h3 {
-  margin: 2px 0 0;
+  margin: 0;
 }
 
 .actions {
@@ -62,6 +45,28 @@
 
 .dateInput {
   width: 100%;
+}
+
+.phoneGrid {
+  display: grid;
+  grid-template-columns: minmax(118px, 0.42fr) minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+}
+
+.phoneGrid > * {
+  min-width: 0;
+}
+
+.phoneGrid [role='combobox'] {
+  padding-right: 36px;
+  padding-left: 8px;
+  font-size: 0.88rem;
+}
+
+.phoneGrid [role='listbox'] {
+  width: min(280px, calc(100vw - 100px));
+  max-height: 240px;
 }
 
 .iconInput {
@@ -77,58 +82,34 @@
   .fieldGrid {
     grid-template-columns: 1fr;
   }
-
-  .dialog form {
-    max-height: calc(100dvh - 24px);
-  }
 }
 
 @media (max-width: 560px) {
   .dialog form {
-    max-height: calc(100dvh - 16px);
-  }
-
-  .header,
-  .body,
-  .actions {
-    padding: 12px;
-  }
-
-  .header {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: var(--color-white);
-  }
-
-  .header h2 {
-    font-size: 1.2rem;
+    max-height: calc(100dvh - 24px);
   }
 
   .body {
     gap: 18px;
-    padding-bottom: 94px;
+    padding: 12px;
   }
 
   .fieldGrid {
     gap: 16px;
   }
 
+  .phoneGrid {
+    grid-template-columns: minmax(110px, 0.72fr) minmax(0, 1.28fr);
+  }
+
   .detailsSection {
     gap: 16px;
     padding: 14px;
   }
+}
 
-  .actions {
-    position: sticky;
-    bottom: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: var(--color-white);
-    box-shadow: 0 -10px 24px rgb(77 67 57 / 8%);
-  }
-
-  .actions button {
-    width: 100%;
+@media (max-width: 340px) {
+  .phoneGrid {
+    grid-template-columns: 1fr;
   }
 }

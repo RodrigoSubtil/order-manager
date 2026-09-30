@@ -9,18 +9,18 @@ function buildProps(
 ): ComponentProps<typeof PrintOptionsDialog> {
   return {
     orderCount: 5,
+    printCategory: 'Todas',
     printFrom: '2026-07-24',
     printFromTime: '00:00',
     printMode: 'orders',
-    printRangeMode: 'day',
     printUntil: '2026-07-24',
     printUntilTime: '23:59',
     onCancel: vi.fn(),
+    onCategoryChange: vi.fn(),
     onConfirm: vi.fn(),
     onFromChange: vi.fn(),
     onFromTimeChange: vi.fn(),
     onModeChange: vi.fn(),
-    onRangeModeChange: vi.fn(),
     onUntilChange: vi.fn(),
     onUntilTimeChange: vi.fn(),
     ...overrides,
@@ -34,6 +34,14 @@ function renderDialog(overrides: Partial<ComponentProps<typeof PrintOptionsDialo
 }
 
 describe('PrintOptionsDialog', () => {
+  it('fecha pelo botão no cabeçalho', () => {
+    const props = renderDialog();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Fechar' }));
+
+    expect(props.onCancel).toHaveBeenCalledOnce();
+  });
+
   it('permite escolher as horas inicial e final da produção', () => {
     const props = renderDialog();
 
@@ -60,40 +68,61 @@ describe('PrintOptionsDialog', () => {
     expect(screen.getByRole('button', { name: 'Imprimir' })).toBeDisabled();
   });
 
-  it('uses times only for a single day and hides them for a date period', () => {
+  it('mostra sempre as duas datas e as horas, sem escolha de período', () => {
     const { rerender } = render(<PrintOptionsDialog {...buildProps()} />);
 
-    expect(screen.getByLabelText('Data')).toBeInTheDocument();
+    expect(screen.getByLabelText('Data inicial')).toBeInTheDocument();
+    expect(screen.getByLabelText('Data final')).toBeInTheDocument();
     expect(screen.getByLabelText('Hora inicial')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Data final')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Hora final')).toBeInTheDocument();
+    expect(screen.queryByText('Somente um dia')).not.toBeInTheDocument();
 
     rerender(
       <PrintOptionsDialog
         {...buildProps({
-          printRangeMode: 'period',
           printUntil: '2026-07-26',
-          printFromTime: '',
-          printUntilTime: '',
         })}
       />,
     );
 
     expect(screen.getByLabelText('Data inicial')).toBeInTheDocument();
     expect(screen.getByLabelText('Data final')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Hora inicial')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Hora inicial')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Imprimir' })).toBeEnabled();
     expect(screen.getByText('Formato de impressão')).toBeInTheDocument();
-    expect(screen.getByText('Qtd. total dos produtos')).toBeInTheDocument();
+    expect(screen.getByText('Encomendas detalhadas')).toBeInTheDocument();
+    expect(screen.getByText('Quantidade geral de produtos')).toBeInTheDocument();
+  });
+
+  it('bloqueia a impressão quando a data final precede a inicial', () => {
+    renderDialog({ printFrom: '2026-07-26', printUntil: '2026-07-24' });
+
+    expect(screen.getByRole('button', { name: 'Imprimir' })).toBeDisabled();
   });
 
   it('uses the site calendar to choose the print date', () => {
     renderDialog();
 
-    const dateControl = screen.getByLabelText('Data');
+    const dateControl = screen.getByLabelText('Data inicial');
     expect(dateControl).toHaveAttribute('aria-haspopup', 'dialog');
 
     fireEvent.click(dateControl);
 
     expect(screen.getByRole('dialog', { name: 'Escolher data' })).toBeInTheDocument();
+  });
+
+  it('permite escolher uma área no combobox do site, incluindo Almoço', () => {
+    const props = renderDialog();
+
+    fireEvent.click(screen.getByRole('combobox', { name: 'Áreas' }));
+
+    expect(screen.queryByText('Produtos a imprimir')).not.toBeInTheDocument();
+
+    expect(screen.getByRole('option', { name: 'Todas' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Pastelaria' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Padaria' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Salgados' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('option', { name: 'Almoço' }));
+    expect(props.onCategoryChange).toHaveBeenCalledWith('Almoço');
   });
 });

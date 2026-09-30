@@ -24,6 +24,22 @@ function DialogExample() {
   );
 }
 
+function ComboboxExample() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Combobox id="responsible" isOpen={open} onOpenChange={setOpen}>
+        <ComboboxInput aria-label="Responsável" value="" readOnly />
+        <ComboboxTrigger aria-label="Mostrar responsáveis" />
+        <ComboboxList>
+          <ComboboxOption>Maria</ComboboxOption>
+        </ComboboxList>
+      </Combobox>
+      <Button>Fora do seletor</Button>
+    </>
+  );
+}
+
 describe('accessible UI primitives', () => {
   it('moves focus into the dialog, closes with Escape and restores focus', async () => {
     const user = userEvent.setup();
@@ -74,5 +90,16 @@ describe('accessible UI primitives', () => {
     await user.keyboard('{Escape}');
     expect(onOpenChange).toHaveBeenLastCalledWith(false);
     expect(input).toHaveFocus();
+  });
+
+  it('closes an open combobox when the user clicks outside it', async () => {
+    const user = userEvent.setup();
+    render(<ComboboxExample />);
+
+    await user.click(screen.getByRole('button', { name: 'Mostrar responsáveis' }));
+    expect(screen.getByRole('listbox')).toBeVisible();
+
+    await user.click(screen.getByRole('button', { name: 'Fora do seletor' }));
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
 });

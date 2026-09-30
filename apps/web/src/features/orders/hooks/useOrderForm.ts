@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
+import { type Dispatch, type SetStateAction, useMemo, useRef, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 
 import {
@@ -41,11 +41,14 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     mutationFn: ({
       form,
       current,
+      requestId,
     }: {
       form: ReturnType<typeof formValuesToOrderForm>;
       current?: Order;
-    }) => saveOrderInSupabase(form, current),
+      requestId: string;
+    }) => saveOrderInSupabase(form, requestId, current),
   });
+  const pendingRequest = useRef<{ fingerprint: string; id: string } | null>(null);
   const methods = useForm<OrderFormValues>({
     defaultValues: createEmptyOrderFormValues(),
     resolver: zodResolver(orderSchema),
@@ -67,6 +70,8 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     const productMap = new Map<Category, CatalogProduct[]>();
     categories.forEach((category) => productMap.set(category, []));
     catalogProducts.forEach((product) => productMap.get(product.category)?.push(product));
+    const collator = new Intl.Collator('pt-PT', { sensitivity: 'base', numeric: true });
+    productMap.forEach((products) => products.sort((a, b) => collator.compare(a.name, b.name)));
     return productMap;
   }, [catalogProducts]);
 
@@ -103,6 +108,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
   }
 
   function addProductLine() {
+    if (itemFields.length >= 100) return;
     closePickers();
     append(createEmptyOrderItem(methods.getValues('items').at(-1)?.category), {
       shouldFocus: false,
@@ -113,6 +119,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     else remove(index);
   }
   function openNewOrderModal() {
+    pendingRequest.current = null;
     methods.reset(createEmptyOrderFormValues());
     setEditingOrder(null);
     setAppError('');
@@ -122,6 +129,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     setIsModalOpen(true);
   }
   function closeModal() {
+    pendingRequest.current = null;
     setIsModalOpen(false);
     methods.reset(createEmptyOrderFormValues());
     setEditingOrder(null);
@@ -129,6 +137,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     closePickers();
   }
   function editOrder(order: Order) {
+    pendingRequest.current = null;
     methods.reset(orderToFormValues(order));
     setEditingOrder(order);
     setAppError('');
@@ -145,16 +154,28 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
       setAppSuccess('');
       try {
         const form = formValuesToOrderForm(values);
+        const fingerprint = JSON.stringify({
+          form,
+          id: editingOrder?.id,
+          version: editingOrder?.version,
+        });
+        if (pendingRequest.current?.fingerprint !== fingerprint) {
+          pendingRequest.current = { fingerprint, id: crypto.randomUUID() };
+        }
+        const requestId = pendingRequest.current.id;
         if (editingOrder) {
           if (!editingOrder.version)
             throw new Error('A versão da encomenda não está disponível. Recarregue os dados.');
-          await saveMutation.mutateAsync({ form, current: editingOrder });
+          await saveMutation.mutateAsync({ form, current: editingOrder, requestId });
         } else {
-          await saveMutation.mutateAsync({ form });
+          await saveMutation.mutateAsync({ form, requestId });
         }
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
           queryClient.invalidateQueries({ queryKey: ['supabase', 'orders-overview'] }),
+          queryClient.invalidateQueries({ queryKey: ['supabase', 'catalog'] }),
+          queryClient.invalidateQueries({ queryKey: ['supabase', 'customers'] }),
+          queryClient.invalidateQueries({ queryKey: ['supabase', 'responsibles'] }),
         ]);
         setSavedOrderConfirmation({
           deliveryDate: values.deliveryDate,
@@ -168,7 +189,10 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
           'Não foi possível guardar a encomenda.',
         );
         if (submissionError.conflict)
-          await queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] });
+          await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
+            queryClient.invalidateQueries({ queryKey: ['supabase', 'customers'] }),
+          ]);
         methods.setError(submissionError.conflict ? 'root.conflict' : 'root.api', {
           message: submissionError.message,
         });

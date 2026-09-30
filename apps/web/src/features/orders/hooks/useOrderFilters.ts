@@ -5,6 +5,7 @@ import type { Category, Order, OrderResponsible } from '../../../shared/lib/doma
 import type { OrderListParams } from '../../../shared/lib/supabaseData';
 
 export type OrderFilterState = ReturnType<typeof useOrderFilterState>;
+export type DateFilterMode = 'all' | 'today' | 'custom';
 
 export function compareOrdersByDelivery(first: Order, second: Order) {
   const dateTimeComparison = `${first.deliveryDate} ${first.deliveryTime}`.localeCompare(
@@ -30,6 +31,9 @@ export function getOrderStats(orders: Order[], today = todayKey()) {
 export function useOrderFilterState() {
   const [search, setSearch] = useState('');
   const [dateFilter, setDateFilter] = useState(todayKey());
+  const [dateFilterMode, setDateFilterMode] = useState<DateFilterMode>('today');
+  const [customDate, setCustomDate] = useState(todayKey());
+  const [hasCustomDate, setHasCustomDate] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<'Todas' | Category>('Todas');
   const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(false);
 
@@ -48,8 +52,17 @@ export function useOrderFilterState() {
     setSearch(value);
   }, []);
   const changeDateFilter = useCallback((value: string) => {
+    setCustomDate(value);
+    setHasCustomDate(Boolean(value));
     setDateFilter(value);
   }, []);
+  const changeDateFilterMode = useCallback(
+    (mode: DateFilterMode) => {
+      setDateFilterMode(mode);
+      setDateFilter(mode === 'all' ? '' : mode === 'today' ? todayKey() : customDate);
+    },
+    [customDate],
+  );
   const changeCategoryFilter = useCallback((value: 'Todas' | Category) => {
     setCategoryFilter(value);
   }, []);
@@ -57,6 +70,9 @@ export function useOrderFilterState() {
   const resetFilters = useCallback(() => {
     setSearch('');
     setDateFilter(todayKey());
+    setDateFilterMode('today');
+    setCustomDate(todayKey());
+    setHasCustomDate(false);
     setCategoryFilter('Todas');
     setIsCategoryFilterOpen(false);
   }, []);
@@ -64,12 +80,15 @@ export function useOrderFilterState() {
   return {
     categoryFilter,
     dateFilter,
+    dateFilterMode,
+    hasCustomDate,
     isCategoryFilterOpen,
     queryParams,
     resetFilters,
     search,
     setCategoryFilter: changeCategoryFilter,
     setDateFilter: changeDateFilter,
+    setDateFilterMode: changeDateFilterMode,
     setIsCategoryFilterOpen,
     setSearch: changeSearch,
   };

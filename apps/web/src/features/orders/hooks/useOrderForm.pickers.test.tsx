@@ -66,4 +66,27 @@ describe('useOrderForm picker coordination', () => {
     expect(result.current.openUnitPickerId).toBeNull();
     expect(result.current.isResponsiblePickerOpen).toBe(false);
   });
+
+  it('sorts catalog options alphabetically in Portuguese within each area', () => {
+    const { result } = renderHook(
+      () =>
+        useOrderForm({
+          catalogProducts: [
+            { id: '3', category: 'Padaria', name: 'Zebra' },
+            { id: '1', category: 'Padaria', name: 'Água' },
+            { id: '2', category: 'Padaria', name: 'Bola' },
+            { id: '4', category: 'Pastelaria', name: 'Tarte' },
+          ],
+          setAppError: vi.fn(),
+          setAppSuccess: vi.fn(),
+        }),
+      { wrapper: createWrapper() },
+    );
+    expect(
+      result.current.catalogProductsByCategory.get('Padaria')?.map((item) => item.name),
+    ).toEqual(['Água', 'Bola', 'Zebra']);
+    expect(
+      result.current.catalogProductsByCategory.get('Pastelaria')?.map((item) => item.name),
+    ).toEqual(['Tarte']);
+  });
 });

@@ -1,4 +1,4 @@
-import { Button, Dialog } from '../../../shared/components/ui';
+import { Button, Dialog, DialogActions, DialogHeader } from '../../../shared/components/ui';
 import styles from '../../../shared/components/ui/ConfirmationDialog.module.css';
 
 type SettingsDeleteDialogProps = {
@@ -18,19 +18,25 @@ export function SettingsDeleteDialog({
 }: SettingsDeleteDialogProps) {
   return (
     <Dialog className={styles.content} titleId="settings-delete-title" onClose={onCancel}>
-      <h2 id="settings-delete-title">Apagar {itemType}?</h2>
-      <p>Esta ação não poderá ser anulada.</p>
-      <div className={styles.details}>
-        <span>{itemName}</span>
+      <DialogHeader
+        title={`Apagar ${itemType}?`}
+        titleId="settings-delete-title"
+        onClose={onCancel}
+      />
+      <div className={styles.body}>
+        <p>Esta ação não poderá ser anulada.</p>
+        <div className={styles.details}>
+          <span>{itemName}</span>
+        </div>
       </div>
-      <div className={styles.actions}>
+      <DialogActions>
         <Button data-autofocus disabled={isSaving} onClick={onCancel}>
           Cancelar
         </Button>
         <Button variant="danger" disabled={isSaving} onClick={onConfirm}>
           {isSaving ? 'A apagar...' : 'Apagar'}
         </Button>
-      </div>
+      </DialogActions>
     </Dialog>
   );
 }

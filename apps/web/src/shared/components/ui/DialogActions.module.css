@@ -1,0 +1,20 @@
+.actions {
+  display: grid;
+  flex: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px 18px;
+  background: var(--color-white);
+  border-top: 1px solid var(--color-line);
+}
+
+.actions button {
+  width: 100%;
+}
+
+@media (max-width: 560px) {
+  .actions {
+    padding: 12px 14px;
+    box-shadow: 0 -10px 24px rgb(77 67 57 / 8%);
+  }
+}

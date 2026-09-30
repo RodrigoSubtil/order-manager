@@ -4,12 +4,14 @@ import { formatQuantityTotal, isSummableQuantityUnit, parseQuantity } from './qu
 export type PrintProductSummary = Array<{
   category: Category;
   products: Array<{
+    id: string;
     category: Category;
     product: string;
     amount: number;
     unit: string;
     count: number;
     displayQuantity: string;
+    orderNumber: number | null;
   }>;
 }>;
 
@@ -26,12 +28,14 @@ export function buildPrintProductSummary(orders: Order[]): PrintProductSummary {
   const summary = new Map<
     string,
     {
+      id: string;
       category: Category;
       product: string;
       amount: number;
       unit: string;
       count: number;
       displayQuantity: string;
+      orderNumber: number | null;
     }
   >();
 
@@ -39,9 +43,10 @@ export function buildPrintProductSummary(orders: Order[]): PrintProductSummary {
     order.products.forEach((product) => {
       const { amount, unit, raw } = parseQuantity(product.quantity);
       const canSum = isSummableQuantityUnit(unit);
+      const normalizedName = product.product.trim().replace(/\s+/g, ' ').toLocaleLowerCase('pt-PT');
       const key = canSum
-        ? `${product.category}|${product.product}|${unit}`
-        : `${product.category}|${product.product}|${raw || product.quantity}`;
+        ? `${product.category}|${normalizedName}|${unit}`
+        : `${order.id}|${product.id}`;
       const current = summary.get(key);
 
       if (current) {
@@ -56,12 +61,14 @@ export function buildPrintProductSummary(orders: Order[]): PrintProductSummary {
       }
 
       summary.set(key, {
+        id: key,
         category: product.category,
         product: product.product || 'Produto sem nome',
         amount,
         unit,
         count: 1,
         displayQuantity: canSum ? formatQuantityTotal(amount, unit) : raw || product.quantity,
+        orderNumber: canSum ? null : order.orderNumber,
       });
     });
   });

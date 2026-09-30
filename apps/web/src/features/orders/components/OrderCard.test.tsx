@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -37,6 +37,63 @@ describe('OrderCard', () => {
     await user.click(screen.getByRole('button', { name: 'Concluir' }));
 
     expect(onComplete).toHaveBeenCalledOnce();
+  });
+
+  it('opens the order phone on WhatsApp between the complete and edit actions', async () => {
+    const user = userEvent.setup();
+    const open = vi.spyOn(window, 'open').mockReturnValue(null);
+
+    render(
+      <OrderCard
+        order={order}
+        search=""
+        responsibleName="Maria"
+        onComplete={vi.fn()}
+        onEdit={vi.fn()}
+        onPrint={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText(/Telefone:/)).toHaveTextContent('+351 912345678');
+
+    const actions = within(screen.getByLabelText('Ações da encomenda')).getAllByRole('button');
+
+    expect(actions.map((action) => action.getAttribute('aria-label'))).toEqual([
+      'Concluir',
+      'Abrir conversa no WhatsApp',
+      'Editar',
+      'Imprimir',
+    ]);
+
+    await user.click(screen.getByRole('button', { name: 'Abrir conversa no WhatsApp' }));
+
+    expect(open).toHaveBeenCalledWith(
+      'https://wa.me/351912345678',
+      '_blank',
+      'noopener,noreferrer',
+    );
+  });
+
+  it('preserves a phone number that already has an international prefix', async () => {
+    const user = userEvent.setup();
+    const open = vi.spyOn(window, 'open').mockReturnValue(null);
+
+    render(
+      <OrderCard
+        order={{ ...order, phone: '+55 (11) 99999-9999' }}
+        search=""
+        responsibleName="Maria"
+        onPrint={vi.fn()}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Abrir conversa no WhatsApp' }));
+
+    expect(open).toHaveBeenCalledWith(
+      'https://wa.me/5511999999999',
+      '_blank',
+      'noopener,noreferrer',
+    );
   });
 
   it('groups products by section even when equal sections were entered apart', () => {

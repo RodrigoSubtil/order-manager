@@ -17,7 +17,7 @@ Não há API NestJS, Prisma, Docker, Compose ou Render nesta versão. A chave us
 
 - `OPERATOR` cria, consulta, edita, conclui, exclui e imprime encomendas;
 - `OWNER` possui o mesmo acesso e pode abrir **Gerenciar**;
-- uma encomenda concluída sai do dashboard e é eliminada automaticamente do banco após 7 dias;
+- uma encomenda concluída ou apagada é removida do banco após confirmação, juntamente com os seus produtos;
 - alterações de catálogo e responsáveis exigem uma segunda senha no botão **Gerenciar**;
 - o Supabase exige internamente papel `OWNER` e um desbloqueio gerencial válido para essas alterações.
 

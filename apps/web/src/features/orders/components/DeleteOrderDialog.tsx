@@ -1,4 +1,4 @@
-import { Button, Dialog } from '../../../shared/components/ui';
+import { Button, Dialog, DialogActions, DialogHeader } from '../../../shared/components/ui';
 import type { Order } from '../../../shared/lib/domain';
 import styles from '../../../shared/components/ui/ConfirmationDialog.module.css';
 
@@ -17,12 +17,14 @@ export function DeleteOrderDialog({
 }: DeleteOrderDialogProps) {
   return (
     <Dialog className={styles.content} titleId="delete-title" onClose={onCancel}>
-      <h2 id="delete-title">Apagar encomenda?</h2>
-      <p>Esta ação não poderá ser anulada.</p>
-      <div className={styles.details}>
-        <span>Cliente: {order.clientName}</span>
+      <DialogHeader title="Apagar encomenda?" titleId="delete-title" onClose={onCancel} />
+      <div className={styles.body}>
+        <p>Confirma a exclusão permanente da encomenda?</p>
+        <div className={styles.details}>
+          <span>Cliente: {order.clientName}</span>
+        </div>
       </div>
-      <div className={styles.actions}>
+      <DialogActions>
         <Button data-autofocus disabled={isSaving} onClick={onCancel}>
           Cancelar
         </Button>
@@ -38,7 +40,7 @@ export function DeleteOrderDialog({
             <path d="M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6" />
           </svg>
         </Button>
-      </div>
+      </DialogActions>
     </Dialog>
   );
 }

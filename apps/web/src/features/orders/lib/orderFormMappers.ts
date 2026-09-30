@@ -5,6 +5,12 @@ import {
   getQuantityUnit,
   joinQuantity,
 } from '../../../shared/lib/quantityUtils';
+import {
+  defaultPhoneCountryCode,
+  joinInternationalPhone,
+  splitInternationalPhone,
+} from './phoneNumber';
+import { normalizeResponsibleName } from './responsibleName';
 import type { OrderFormValues, OrderItemFormValues, QuantityUnit } from '../schemas/orderSchema';
 
 function createId() {
@@ -31,6 +37,11 @@ export function createEmptyOrderFormValues(): OrderFormValues {
   return {
     orderNumber: null,
     clientName: '',
+    customerId: null,
+    customerVersion: null,
+    originalCustomerName: '',
+    originalCustomerPhone: '',
+    phoneCountryCode: defaultPhoneCountryCode,
     phone: '',
     responsibleId: '',
     responsibleName: '',
@@ -41,10 +52,18 @@ export function createEmptyOrderFormValues(): OrderFormValues {
 }
 
 export function orderToFormValues(order: Order): OrderFormValues {
+  const phone = splitInternationalPhone(order.phone);
   return {
     orderNumber: order.orderNumber,
     clientName: order.clientName,
-    phone: order.phone,
+    customerId: order.customerId ?? null,
+    customerVersion: order.customerVersion ?? null,
+    originalCustomerName: order.clientName,
+    originalCustomerPhone: order.phone,
+    originalDeliveryDate: order.deliveryDate,
+    originalDeliveryTime: order.deliveryTime,
+    phoneCountryCode: phone.countryCode,
+    phone: phone.nationalNumber,
     responsibleId: order.responsibleId,
     responsibleName: order.responsibleName,
     deliveryDate: order.deliveryDate,
@@ -61,12 +80,20 @@ export function orderToFormValues(order: Order): OrderFormValues {
 }
 
 export function formValuesToOrderForm(values: OrderFormValues): OrderForm {
+  const internationalPhone = joinInternationalPhone(values.phoneCountryCode, values.phone);
   return {
     orderNumber: values.orderNumber,
     clientName: values.clientName.trim(),
-    phone: values.phone.trim(),
+    customerId: values.customerId ?? null,
+    customerVersion: values.customerVersion ?? null,
+    updateCustomer: Boolean(
+      values.customerId &&
+      (values.clientName.trim() !== values.originalCustomerName ||
+        internationalPhone !== values.originalCustomerPhone),
+    ),
+    phone: internationalPhone,
     responsibleId: values.responsibleId,
-    responsibleName: values.responsibleName.trim(),
+    responsibleName: normalizeResponsibleName(values.responsibleName),
     deliveryDate: values.deliveryDate,
     deliveryTime: values.deliveryTime,
     products: values.items.map((item) => ({

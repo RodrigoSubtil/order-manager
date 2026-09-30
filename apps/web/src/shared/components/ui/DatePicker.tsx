@@ -7,13 +7,18 @@ type DatePickerProps = {
   'aria-describedby'?: string;
   'aria-invalid'?: boolean;
   'aria-label'?: string;
+  autoOpen?: boolean;
+  calendarInViewport?: boolean;
   className?: string;
   disabled?: boolean;
+  hideTrigger?: boolean;
   id?: string;
   minDate?: string;
   onChange: (value: string) => void;
+  onClose?: () => void;
   placeholder?: string;
   required?: boolean;
+  suffix?: string;
   value: string;
   withClearAction?: boolean;
 };
@@ -70,13 +75,18 @@ export function DatePicker({
   'aria-describedby': ariaDescribedBy,
   'aria-invalid': ariaInvalid,
   'aria-label': ariaLabel,
+  autoOpen = false,
+  calendarInViewport = false,
   className,
   disabled = false,
+  hideTrigger = false,
   id,
   minDate: minimumDateValue,
   onChange,
+  onClose,
   placeholder = 'Selecionar data',
   required = false,
+  suffix,
   value,
   withClearAction = false,
 }: DatePickerProps) {
@@ -85,7 +95,7 @@ export function DatePicker({
   const rootRef = useRef<HTMLDivElement>(null);
   const selectedDate = parseDate(value);
   const minimumDate = parseDate(minimumDateValue ?? '');
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(autoOpen);
   const [viewDate, setViewDate] = useState(() => selectedDate ?? new Date());
   const calendarDays = useMemo(() => getCalendarDays(viewDate), [viewDate]);
   const selectedDateKey = selectedDate ? toDateKey(selectedDate) : '';
@@ -111,11 +121,15 @@ export function DatePicker({
     function closeOnOutsidePointer(event: PointerEvent) {
       if (event.target instanceof Node && !rootRef.current?.contains(event.target)) {
         setIsOpen(false);
+        onClose?.();
       }
     }
 
     function closeOnEscape(event: KeyboardEvent) {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        onClose?.();
+      }
     }
 
     document.addEventListener('pointerdown', closeOnOutsidePointer);
@@ -124,7 +138,7 @@ export function DatePicker({
       document.removeEventListener('pointerdown', closeOnOutsidePointer);
       document.removeEventListener('keydown', closeOnEscape);
     };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   function changeMonth(offset: number) {
     setViewDate(
@@ -137,39 +151,50 @@ export function DatePicker({
     if (minimumDateKey && dateKey < minimumDateKey) return;
     onChange(dateKey);
     setIsOpen(false);
+    onClose?.();
   }
 
   function clearDate() {
     onChange('');
     setIsOpen(false);
+    onClose?.();
   }
 
   return (
     <div ref={rootRef} className={[styles.root, className].filter(Boolean).join(' ')}>
-      <button
-        id={controlId}
-        aria-describedby={ariaDescribedBy}
-        aria-expanded={isOpen}
-        aria-haspopup="dialog"
-        aria-invalid={ariaInvalid}
-        aria-label={ariaLabel}
-        aria-required={required}
-        className={styles.control}
-        disabled={disabled}
-        type="button"
-        onClick={() => {
-          if (!isOpen && selectedDate) setViewDate(selectedDate);
-          setIsOpen((open) => !open);
-        }}
-      >
-        <span className={value ? styles.value : styles.placeholder}>
-          {formatSelectedDate(value) || placeholder}
-        </span>
-        <Icon name="calendar" placement="field" />
-      </button>
+      {!hideTrigger && (
+        <button
+          id={controlId}
+          aria-describedby={ariaDescribedBy}
+          aria-expanded={isOpen}
+          aria-haspopup="dialog"
+          aria-invalid={ariaInvalid}
+          aria-label={ariaLabel}
+          aria-required={required}
+          className={styles.control}
+          disabled={disabled}
+          type="button"
+          onClick={() => {
+            if (!isOpen && selectedDate) setViewDate(selectedDate);
+            setIsOpen((open) => !open);
+          }}
+        >
+          <span className={value ? styles.value : styles.placeholder}>
+            {formatSelectedDate(value) || placeholder}
+            {value && suffix && <small className={styles.suffix}>{suffix}</small>}
+          </span>
+          <Icon name="calendar" placement="field" />
+        </button>
+      )}
 
       {isOpen && (
-        <div className={styles.calendar} role="dialog" aria-label="Escolher data">
+        <div
+          className={[styles.calendar, calendarInViewport && styles.calendarViewport]
+            .filter(Boolean)
+            .join(' ')}
+          role="dialog"
+          aria-label="Escolher data"
+        >
           <header className={styles.header}>
             <button
               type="button"

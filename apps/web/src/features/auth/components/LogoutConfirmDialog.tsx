@@ -1,5 +1,5 @@
-import { Button, Dialog } from '../../../shared/components/ui';
-import styles from './LogoutConfirmDialog.module.css';
+import { Button, Dialog, DialogActions, DialogHeader } from '../../../shared/components/ui';
+import styles from '../../../shared/components/ui/ConfirmationDialog.module.css';
 
 type LogoutConfirmDialogProps = {
   companyDisplayName: string;
@@ -16,20 +16,21 @@ export function LogoutConfirmDialog({
 }: LogoutConfirmDialogProps) {
   return (
     <Dialog className={styles.content} titleId="logout-title" onClose={onCancel}>
-      <span data-eyebrow>Confirmar saída</span>
-      <h2 id="logout-title">Deseja realmente sair?</h2>
-      <p>Ao sair, será necessário iniciar sessão novamente para voltar ao painel.</p>
-      <div className={styles.details}>
-        <span>Utilizador: {companyDisplayName}</span>
+      <DialogHeader title="Confirmar saída" titleId="logout-title" onClose={onCancel} />
+      <div className={styles.body}>
+        <p>Ao sair, será necessário iniciar sessão novamente para voltar ao painel.</p>
+        <div className={styles.details}>
+          <span>Utilizador: {companyDisplayName}</span>
+        </div>
       </div>
-      <div className={styles.actions}>
+      <DialogActions>
         <Button data-autofocus variant="secondary" disabled={isSaving} onClick={onCancel}>
           Cancelar
         </Button>
         <Button variant="danger" disabled={isSaving} onClick={onConfirm}>
           {isSaving ? 'A sair...' : 'Sair'}
         </Button>
-      </div>
+      </DialogActions>
     </Dialog>
   );
 }

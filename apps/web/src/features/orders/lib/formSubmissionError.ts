@@ -16,14 +16,16 @@ export function getFormSubmissionError(
 ): FormSubmissionError {
   const candidate = error as ErrorLike | null;
   const code = typeof candidate?.code === 'string' ? candidate.code : '';
+  const serverMessage = typeof candidate?.message === 'string' ? candidate.message : '';
   const status = Number(candidate?.status ?? candidate?.statusCode);
   const conflict = code === 'VERSION_CONFLICT' || code === '40001' || status === 409;
 
   if (conflict) {
     return {
       conflict: true,
-      message:
-        'Esta encomenda foi alterada por outro utilizador. Recarregámos os dados; reveja as alterações antes de tentar novamente.',
+      message: /cliente/i.test(serverMessage)
+        ? serverMessage
+        : 'Esta encomenda foi alterada por outro utilizador. Recarregámos os dados; reveja as alterações antes de tentar novamente.',
     };
   }
 

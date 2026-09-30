@@ -7,8 +7,8 @@
 
 .topRow {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-template-areas: 'area today all-dates date create print';
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-areas: 'area date-filter create print';
   gap: 10px;
   align-items: center;
 }
@@ -19,53 +19,24 @@
   height: 46px;
 }
 
-.dateControl {
-  grid-area: date;
-  min-width: 0;
+.dateFilter .dateControl {
+  position: absolute;
+  z-index: calc(var(--z-dropdown) + 1);
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 0;
+}
+
+.dateFilter {
+  grid-area: date-filter;
 }
 
 .areaFilter {
   grid-area: area;
 }
 
-.todayFilter {
-  grid-area: today;
-}
-
-.allDatesFilter {
-  grid-area: all-dates;
-}
-
-.dateInput {
-  height: 46px;
-}
-
-.dateInput > button {
-  position: relative;
-  height: 46px;
-  justify-content: center;
-  padding: 0 38px 0 10px;
-  font-size: 0.9rem;
-  font-weight: 900;
-  line-height: 1;
-  text-align: center;
-  background: var(--color-white);
-  border-color: var(--color-line);
-}
-
-.dateInput > button span {
-  width: 100%;
-  font-size: inherit;
-  font-weight: inherit;
-  text-align: center;
-}
-
-.dateInput > button svg {
-  position: absolute;
-  right: 11px;
-}
-
-.dateInput [role='dialog'] {
+.dateControl [role='dialog'] {
   right: 0;
   left: auto;
 }
@@ -82,18 +53,20 @@
   border-color: var(--color-line);
 }
 
-.categoryTrigger {
-  top: 6px;
-}
-
-.filterButton {
+.dateFilterInput {
   height: 46px;
+  padding-right: 38px;
+  padding-left: 10px;
   font-size: 0.9rem;
   font-weight: 900;
   line-height: 1;
   text-align: center;
   background: var(--color-white);
   border-color: var(--color-line);
+}
+
+.categoryTrigger {
+  top: 6px;
 }
 
 .search {
@@ -105,18 +78,6 @@
   line-height: 1;
   text-align: center;
   box-shadow: 0 10px 24px rgb(77 67 57 / 6%);
-}
-
-.search::placeholder {
-  color: var(--color-muted);
-  font-size: inherit;
-  font-weight: 600;
-  text-align: center;
-  opacity: 0.55;
-}
-
-.search:focus::placeholder {
-  color: transparent;
 }
 
 .searchControl {
@@ -223,41 +184,29 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas:
       'print create'
-      'area today'
-      'all-dates date';
+      'area date-filter';
   }
 }
 
 @media (max-width: 560px) {
   .topRow {
+    grid-template-areas:
+      'print create'
+      'area area'
+      'date-filter date-filter';
     gap: 8px;
   }
 
   .topRow > *,
-  .dateInput,
   .categoryInput,
-  .filterButton,
+  .dateFilterInput,
   .search,
   .action {
     height: 48px;
     border-radius: 10px;
   }
 
-  .dateInput {
-    text-align: center;
-  }
-
-  .dateInput > button {
-    height: 48px;
-    padding-right: 40px;
-    padding-left: 10px;
-  }
-
-  .dateInput > button svg {
-    right: 11px;
-  }
-
-  .dateInput [role='dialog'] {
+  .dateControl [role='dialog'] {
     position: fixed;
     top: 50%;
     right: auto;

@@ -92,7 +92,9 @@ export default function OrdersPage() {
   async function refreshOrderData() {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ['supabase', 'orders'] }),
-      queryClient.invalidateQueries({ queryKey: ['supabase', 'orders-overview'] }),
+      queryClient.invalidateQueries({
+        queryKey: ['supabase', 'orders-overview'],
+      }),
     ]);
   }
 
@@ -122,12 +124,22 @@ export default function OrdersPage() {
     setAppError('');
     setAppSuccess('');
     try {
-      await removeMutation.mutateAsync({ id: orderToDelete.id, version: orderToDelete.version });
-      await refreshOrderData();
-      setDeleteOrderId(null);
-      setDeletionMessage(`Encomenda #${orderToDelete.orderNumber ?? '-'} apagada com sucesso.`);
+      await removeMutation.mutateAsync({
+        id: orderToDelete.id,
+        version: orderToDelete.version,
+      });
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível apagar a encomenda.'));
+      return;
+    }
+    setDeleteOrderId(null);
+    setDeletionMessage(`Encomenda #${orderToDelete.orderNumber ?? '-'} apagada com sucesso.`);
+    try {
+      await refreshOrderData();
+    } catch {
+      setAppError(
+        'A encomenda foi apagada, mas não foi possível atualizar a lista. Atualize a página.',
+      );
     }
   }
 
@@ -144,13 +156,18 @@ export default function OrdersPage() {
         id: orderToComplete.id,
         version: orderToComplete.version,
       });
-      await refreshOrderData();
-      setCompleteOrderId(null);
-      setCompletionMessage(
-        `Encomenda #${orderToComplete.orderNumber ?? '-'} concluída com sucesso.`,
-      );
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível concluir a encomenda.'));
+      return;
+    }
+    setCompleteOrderId(null);
+    setCompletionMessage(`Encomenda #${orderToComplete.orderNumber ?? '-'} concluída com sucesso.`);
+    try {
+      await refreshOrderData();
+    } catch {
+      setAppError(
+        'A encomenda foi concluída, mas não foi possível atualizar a lista. Atualize a página.',
+      );
     }
   }
 
@@ -183,6 +200,8 @@ export default function OrdersPage() {
           <OrderFilters
             categoryFilter={filters.categoryFilter}
             dateFilter={filters.dateFilter}
+            dateFilterMode={filters.dateFilterMode}
+            hasCustomDate={filters.hasCustomDate}
             isCategoryFilterOpen={filters.isCategoryFilterOpen}
             resultCount={data.resultTotal}
             search={filters.search}
@@ -190,6 +209,7 @@ export default function OrdersPage() {
             onCategoryOpenChange={filters.setIsCategoryFilterOpen}
             onCreate={orderForm.openNewOrderModal}
             onDateChange={filters.setDateFilter}
+            onDateModeChange={filters.setDateFilterMode}
             onPrint={print.openPrintOptions}
             onSearchChange={filters.setSearch}
           />
@@ -221,6 +241,7 @@ export default function OrdersPage() {
           openUnitPickerId={orderForm.openUnitPickerId}
           responsibles={data.responsibles}
           onAddProduct={orderForm.addProductLine}
+          onCustomerPickerOpen={orderForm.closePickers}
           onClose={orderForm.closeModal}
           onRemoveProduct={orderForm.removeProductLine}
           onReturnToOrders={orderForm.returnToOrders}
@@ -280,18 +301,18 @@ export default function OrdersPage() {
           error={print.printOptionsError}
           isPreparing={print.isPreparingPrintOptions}
           orderCount={print.printOptionsOrderCount}
+          printCategory={print.printCategory}
           printFrom={print.printFrom}
           printFromTime={print.printFromTime}
           printMode={print.printMode}
-          printRangeMode={print.printRangeMode}
           printUntil={print.printUntil}
           printUntilTime={print.printUntilTime}
           onCancel={() => print.setIsPrintOptionsOpen(false)}
+          onCategoryChange={print.setPrintCategory}
           onConfirm={print.confirmPrintOptions}
           onFromChange={print.setPrintFrom}
           onFromTimeChange={print.setPrintFromTime}
           onModeChange={print.setPrintMode}
-          onRangeModeChange={print.setPrintRangeMode}
           onUntilChange={print.setPrintUntil}
           onUntilTimeChange={print.setPrintUntilTime}
         />

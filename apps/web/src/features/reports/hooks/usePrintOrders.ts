@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { formatDate, todayKey } from '../../../shared/lib/dateUtils';
 import type { Category, Order } from '../../../shared/lib/domain';
@@ -8,15 +8,18 @@ import {
   type PrintProductSummary,
 } from '../../../shared/lib/productGrouping';
 import { listAllOrders } from '../../../shared/lib/supabaseData';
+import { preparePrintFrame } from '../lib/preparePrintFrame';
 
 export type PrintMode = 'orders' | 'summary';
 export type PrintRangeMode = 'day' | 'period';
+export type PrintCategory = Category | 'Todas';
 
 type PrintRequest = {
   from: string;
   fromTime: string;
   until: string;
   untilTime: string;
+  category: PrintCategory;
   mode: PrintMode;
   orderId: string | null;
 };
@@ -53,6 +56,17 @@ export function filterOrdersByDateTime(
   });
 }
 
+export function filterOrdersByCategory(orders: Order[], category: PrintCategory) {
+  if (category === 'Todas') return orders;
+
+  return orders
+    .map((order) => ({
+      ...order,
+      products: order.products.filter((product) => product.category === category),
+    }))
+    .filter((order) => order.products.length > 0);
+}
+
 export function usePrintOrders(
   currentOrders: Order[],
   dateFilter: string,
@@ -60,40 +74,40 @@ export function usePrintOrders(
 ) {
   const [printAll, setPrintAll] = useState(false);
   const [printMode, setPrintMode] = useState<PrintMode>('orders');
-  const [printRangeMode, setPrintRangeMode] = useState<PrintRangeMode>('day');
+  const [printCategory, setPrintCategory] = useState<PrintCategory>(categoryFilter);
   const [printFrom, setPrintFrom] = useState(todayKey());
   const [printUntil, setPrintUntil] = useState(todayKey());
   const [printFromTime, setPrintFromTime] = useState(startOfDay);
   const [printUntilTime, setPrintUntilTime] = useState(endOfDay);
   const [isPrintOptionsOpen, setIsPrintOptionsOpen] = useState(false);
   const [request, setRequest] = useState<PrintRequest | null>(null);
-  const optionsUntil = printRangeMode === 'day' ? printFrom : printUntil;
-  const optionsFromTime = printRangeMode === 'day' ? printFromTime : startOfDay;
-  const optionsUntilTime = printRangeMode === 'day' ? printUntilTime : endOfDay;
-  const loadPrintOrders = (from: string, until: string) => {
+  const [printLayoutError, setPrintLayoutError] = useState('');
+  const startedRequest = useRef<PrintRequest | null>(null);
+  const cleanUpPrint = useRef<() => void>(() => {});
+  const activeFrame = useRef<HTMLIFrameElement | null>(null);
+  const printRangeMode: PrintRangeMode = printFrom === printUntil ? 'day' : 'period';
+  const loadPrintOrders = (from: string, until: string, category: PrintCategory) => {
     const params = {
       from,
       until,
-      ...(categoryFilter !== 'Todas' ? { category: categoryFilter } : {}),
+      ...(category !== 'Todas' ? { category } : {}),
     };
     return listAllOrders(params);
   };
   const printOptionsReport = useQuery({
-    queryKey: ['supabase', 'print-options-preview', printFrom, optionsUntil, categoryFilter],
-    queryFn: () => loadPrintOrders(printFrom, optionsUntil),
+    queryKey: ['supabase', 'print-options-preview', printFrom, printUntil, printCategory],
+    queryFn: () => loadPrintOrders(printFrom, printUntil, printCategory),
     enabled:
       isPrintOptionsOpen &&
       Boolean(printFrom) &&
-      Boolean(optionsUntil) &&
-      optionsUntil >= printFrom &&
-      isValidTime(optionsFromTime) &&
-      isValidTime(optionsUntilTime),
+      isValidDateTimeRange(printFrom, printFromTime, printUntil, printUntilTime),
     retry: false,
     staleTime: 0,
   });
   const report = useQuery({
-    queryKey: ['supabase', 'print-report', request, categoryFilter],
-    queryFn: () => loadPrintOrders(request?.from ?? '', request?.until ?? ''),
+    queryKey: ['supabase', 'print-report', request],
+    queryFn: () =>
+      loadPrintOrders(request?.from ?? '', request?.until ?? '', request?.category ?? 'Todas'),
     enabled: Boolean(request),
     retry: false,
     staleTime: 0,
@@ -101,26 +115,32 @@ export function usePrintOrders(
 
   const printOrders = useMemo(() => {
     const orders = request
-      ? filterOrdersByDateTime(
-          report.data ?? [],
-          request.from,
-          request.fromTime,
-          request.until,
-          request.untilTime,
+      ? filterOrdersByCategory(
+          filterOrdersByDateTime(
+            report.data ?? [],
+            request.from,
+            request.fromTime,
+            request.until,
+            request.untilTime,
+          ),
+          request.category,
         )
       : [];
     return request?.orderId ? orders.filter((order) => order.id === request.orderId) : orders;
   }, [report.data, request]);
   const printOptionsOrderCount = useMemo(
     () =>
-      filterOrdersByDateTime(
-        printOptionsReport.data ?? [],
-        printFrom,
-        optionsFromTime,
-        optionsUntil,
-        optionsUntilTime,
+      filterOrdersByCategory(
+        filterOrdersByDateTime(
+          printOptionsReport.data ?? [],
+          printFrom,
+          printFromTime,
+          printUntil,
+          printUntilTime,
+        ),
+        printCategory,
       ).length,
-    [optionsFromTime, optionsUntil, optionsUntilTime, printFrom, printOptionsReport.data],
+    [printCategory, printFrom, printFromTime, printOptionsReport.data, printUntil, printUntilTime],
   );
   const printProductSummary = useMemo<PrintProductSummary>(
     () => buildPrintProductSummary(printOrders),
@@ -131,31 +151,97 @@ export function usePrintOrders(
     const period =
       printRangeMode === 'day'
         ? `${formatDate(printFrom)} · ${printFromTime}–${printUntilTime}`
-        : `${formatDate(printFrom)} até ${formatDate(printUntil)}`;
+        : `${formatDate(printFrom)} ${printFromTime} até ${formatDate(printUntil)} ${printUntilTime}`;
+    const category = printCategory === 'Todas' ? 'Todas as áreas' : printCategory;
     return printMode === 'summary'
-      ? `Resumo de produção - ${period}`
-      : `Encomendas detalhadas - ${period}`;
-  }, [printAll, printFrom, printFromTime, printMode, printRangeMode, printUntil, printUntilTime]);
+      ? `Resumo de produção - ${period} · ${category}`
+      : `Encomendas detalhadas - ${period} · ${category}`;
+  }, [
+    printAll,
+    printCategory,
+    printFrom,
+    printFromTime,
+    printMode,
+    printRangeMode,
+    printUntil,
+    printUntilTime,
+  ]);
 
   const isPreparingPrint = Boolean(request) && report.isFetching;
   const isPreparingPrintOptions = isPrintOptionsOpen && printOptionsReport.isFetching;
-  const printError = report.error instanceof Error ? report.error.message : '';
+  const printError =
+    printLayoutError ||
+    (report.error instanceof Error
+      ? report.error.message
+      : request && !report.isFetching && report.data && printOrders.length === 0
+        ? 'Nenhuma encomenda encontrada para esta impressão. Atualize os filtros e tente novamente.'
+        : '');
   const printOptionsError =
     printOptionsReport.error instanceof Error ? printOptionsReport.error.message : '';
 
+  useEffect(
+    () => () => {
+      cleanUpPrint.current();
+      activeFrame.current?.remove();
+    },
+    [],
+  );
+
   useEffect(() => {
     if (!request || isPreparingPrint || printError || !report.data) return;
-    const timer = window.setTimeout(() => {
-      window.print();
+    if (startedRequest.current === request) return;
+    cleanUpPrint.current();
+    activeFrame.current?.remove();
+    activeFrame.current = null;
+    startedRequest.current = request;
+
+    let frame: HTMLIFrameElement | null = null;
+    let cancelled = false;
+    let finished = false;
+    const finishPrint = () => {
+      if (finished) return;
+      finished = true;
+      cleanUpPrint.current();
+      startedRequest.current = null;
       setRequest(null);
+    };
+    window.addEventListener('afterprint', finishPrint, { once: true });
+    const timer = window.setTimeout(async () => {
+      try {
+        const root = document.querySelector<HTMLElement>('[data-print-root]');
+        if (!root) throw new Error('Não foi possível preparar a impressão. Tente novamente.');
+        frame = await preparePrintFrame(root);
+        if (cancelled) {
+          frame.remove();
+          return;
+        }
+        activeFrame.current = frame;
+        const printWindow = frame.contentWindow;
+        if (!printWindow) throw new Error('Não foi possível abrir a prévia de impressão.');
+        printWindow.addEventListener('afterprint', finishPrint, { once: true });
+        printWindow.focus();
+        printWindow.print();
+      } catch (error) {
+        frame?.remove();
+        setPrintLayoutError(
+          error instanceof Error ? error.message : 'Falha ao preparar a impressão.',
+        );
+        finishPrint();
+      }
     }, 120);
-    return () => window.clearTimeout(timer);
+    cleanUpPrint.current = () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      window.removeEventListener('afterprint', finishPrint);
+      frame?.contentWindow?.removeEventListener('afterprint', finishPrint);
+    };
   }, [isPreparingPrint, printError, report.data, request]);
 
   function openPrintOptions() {
-    const initialDate = dateFilter || todayKey();
+    setPrintLayoutError('');
+    const initialDate = todayKey();
     setPrintMode('orders');
-    setPrintRangeMode('day');
+    setPrintCategory(categoryFilter);
     setPrintFrom(initialDate);
     setPrintUntil(initialDate);
     setPrintFromTime(startOfDay);
@@ -164,30 +250,33 @@ export function usePrintOrders(
     setIsPrintOptionsOpen(true);
   }
   function confirmPrintOptions() {
-    const until = printRangeMode === 'day' ? printFrom : printUntil;
     if (
       !printFrom ||
-      !until ||
-      !isValidDateTimeRange(printFrom, optionsFromTime, until, optionsUntilTime) ||
+      !printUntil ||
+      !isValidDateTimeRange(printFrom, printFromTime, printUntil, printUntilTime) ||
       !printOptionsOrderCount
     ) {
       return;
     }
     setPrintAll(true);
+    setPrintLayoutError('');
     setIsPrintOptionsOpen(false);
     setRequest({
       from: printFrom,
-      fromTime: optionsFromTime,
-      until,
-      untilTime: optionsUntilTime,
+      fromTime: printFromTime,
+      until: printUntil,
+      untilTime: printUntilTime,
+      category: printCategory,
       mode: printMode,
       orderId: null,
     });
   }
   function startPrint(orderId?: string) {
+    setPrintLayoutError('');
     const order = currentOrders.find((item) => item.id === orderId);
     const date = order?.deliveryDate ?? (dateFilter || todayKey());
     setPrintMode('orders');
+    setPrintCategory('Todas');
     setPrintAll(!orderId);
     setPrintFrom(date);
     setPrintUntil(date);
@@ -198,6 +287,7 @@ export function usePrintOrders(
       fromTime: startOfDay,
       until: date,
       untilTime: endOfDay,
+      category: 'Todas',
       mode: 'orders',
       orderId: orderId ?? null,
     });
@@ -210,6 +300,7 @@ export function usePrintOrders(
     isPrintOptionsOpen,
     openPrintOptions,
     printAll,
+    printCategory,
     printDescription,
     printError,
     printFrom,
@@ -224,10 +315,10 @@ export function usePrintOrders(
     printUntil,
     printUntilTime,
     setIsPrintOptionsOpen,
+    setPrintCategory,
     setPrintFrom,
     setPrintFromTime,
     setPrintMode,
-    setPrintRangeMode,
     setPrintUntil,
     setPrintUntilTime,
     startPrint,

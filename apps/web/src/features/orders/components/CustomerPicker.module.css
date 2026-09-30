@@ -1,0 +1,10 @@
+.suggestionName,
+.suggestionPhone {
+  display: block;
+}
+
+.suggestionPhone {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+}

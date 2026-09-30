@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Controller, type FieldArrayWithId, type UseFormReturn } from 'react-hook-form';
 
 import {
@@ -11,6 +12,8 @@ import {
   ComboboxTrigger,
   DatePicker,
   Dialog,
+  DialogActions,
+  DialogHeader,
   FieldError,
   Icon,
   Input,
@@ -19,7 +22,10 @@ import {
 } from '../../../shared/components/ui';
 import type { CatalogProduct, Category, OrderResponsible } from '../../../shared/lib/domain';
 import { currentTimeKey, todayKey } from '../../../shared/lib/dateUtils';
+import { phoneCountries } from '../lib/phoneNumber';
+import { normalizeResponsibleName } from '../lib/responsibleName';
 import type { OrderFormValues } from '../schemas/orderSchema';
+import { CustomerPicker } from './CustomerPicker';
 import { ProductEditor } from './ProductEditor';
 import styles from './OrderFormModal.module.css';
 
@@ -35,6 +41,7 @@ type OrderFormModalProps = {
   openUnitPickerId: string | null;
   responsibles: OrderResponsible[];
   onAddProduct: () => void;
+  onCustomerPickerOpen: () => void;
   onClose: () => void;
   onRemoveProduct: (index: number) => void;
   onReturnToOrders: () => Promise<void>;
@@ -48,6 +55,12 @@ type OrderFormModalProps = {
 };
 
 export function OrderFormModal(props: OrderFormModalProps) {
+  const [businessNow, setBusinessNow] = useState(() => new Date());
+  const [isPhoneCountryOpen, setIsPhoneCountryOpen] = useState(false);
+  useEffect(() => {
+    const timer = window.setInterval(() => setBusinessNow(new Date()), 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
   const {
     catalogProductsByCategory,
     editingId,
@@ -60,6 +73,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
     openUnitPickerId,
     responsibles,
     onAddProduct,
+    onCustomerPickerOpen,
     onClose,
     onRemoveProduct,
     onReturnToOrders,
@@ -79,6 +93,13 @@ export function OrderFormModal(props: OrderFormModalProps) {
     watch,
   } = methods;
   const deliveryDate = watch('deliveryDate');
+  const responsibleName = watch('responsibleName');
+  const responsibleQuery = responsibleName.trim().toLocaleLowerCase('pt-PT');
+  const visibleResponsibles = responsibles.filter((responsible) =>
+    responsible.name.toLocaleLowerCase('pt-PT').includes(responsibleQuery),
+  );
+  const phoneCountryCode = watch('phoneCountryCode');
+  const phoneCountry = phoneCountries.find((country) => country.code === phoneCountryCode);
   const responsibleError = errors.responsibleId?.message || errors.responsibleName?.message;
   const submissionError =
     errors.root?.validation?.message || errors.root?.conflict?.message || errors.root?.api?.message;
@@ -96,15 +117,11 @@ export function OrderFormModal(props: OrderFormModalProps) {
     >
       <form noValidate onSubmit={onSubmit}>
         {!savedOrderMessage && (
-          <header className={styles.header}>
-            <div>
-              <span data-eyebrow>{editingId ? 'Editar pedido' : 'Novo pedido'}</span>
-              <h2 id="modal-title">{editingId ? 'Editar encomenda' : 'Adicionar encomenda'}</h2>
-            </div>
-            <Button iconOnly variant="ghost" aria-label="Fechar" onClick={closeDialog}>
-              ×
-            </Button>
-          </header>
+          <DialogHeader
+            title={editingId ? 'Editar pedido' : 'Novo pedido'}
+            titleId="modal-title"
+            onClose={closeDialog}
+          />
         )}
 
         {savedOrderMessage ? (
@@ -121,34 +138,147 @@ export function OrderFormModal(props: OrderFormModalProps) {
 
               <section className={styles.detailsSection} aria-labelledby="order-details-title">
                 <div className={styles.sectionTitle}>
-                  <span data-eyebrow>Encomenda</span>
-                  <h3 id="order-details-title">Dados da encomenda</h3>
+                  <h3 id="order-details-title" data-eyebrow>
+                    Encomenda
+                  </h3>
                 </div>
                 <div className={styles.fieldGrid}>
                   <div data-form-field>
-                    <label htmlFor="order-client-name">
-                      Nome do cliente
-                      <span className={styles.iconInput}>
-                        <Input
-                          id="order-client-name"
-                          className={styles.inputWithIcon}
-                          data-autofocus
-                          required
-                          {...register('clientName')}
-                          aria-describedby={
-                            errors.clientName ? 'order-client-name-error' : undefined
-                          }
-                          aria-invalid={Boolean(errors.clientName)}
-                          placeholder="Ex.: Ana Silva"
-                        />
-                        <Icon name="user" placement="field" />
-                      </span>
-                    </label>
-                    <FieldError id="order-client-name-error" message={errors.clientName?.message} />
+                    <label htmlFor="order-responsible">Responsável pela encomenda</label>
+                    <Combobox
+                      id="order-responsible"
+                      isOpen={isResponsiblePickerOpen}
+                      onOpenChange={setIsResponsiblePickerOpen}
+                    >
+                      <Controller
+                        control={control}
+                        name="responsibleName"
+                        render={({ field }) => (
+                          <ComboboxInput
+                            data-autofocus
+                            name={field.name}
+                            ref={field.ref}
+                            value={field.value}
+                            required
+                            aria-describedby={
+                              responsibleError ? 'order-responsible-error' : undefined
+                            }
+                            aria-invalid={Boolean(responsibleError)}
+                            onChange={(event) => {
+                              field.onChange(event.target.value);
+                              setValue('responsibleId', '', { shouldDirty: true });
+                              setIsResponsiblePickerOpen(true);
+                            }}
+                            onBlur={(event) => {
+                              field.onBlur();
+                              if (methods.getValues('responsibleId')) return;
+                              const normalized = normalizeResponsibleName(event.target.value);
+                              if (normalized !== event.target.value) {
+                                setValue('responsibleName', normalized, { shouldDirty: true });
+                              }
+                            }}
+                            onKeyDown={(event) => {
+                              if (event.key === 'Enter' && isResponsiblePickerOpen) {
+                                event.preventDefault();
+                                setIsResponsiblePickerOpen(false);
+                              }
+                            }}
+                            placeholder="Digite ou escolha o responsável"
+                            autoComplete="off"
+                          />
+                        )}
+                      />
+                      <Input type="hidden" {...register('responsibleId')} />
+                      <ComboboxTrigger aria-label="Mostrar responsáveis" />
+                      <ComboboxList>
+                        {visibleResponsibles.map((responsible) => (
+                          <ComboboxOption
+                            key={responsible.id}
+                            aria-selected={methods.getValues('responsibleId') === responsible.id}
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => {
+                              setValue('responsibleId', responsible.id, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                              });
+                              setValue('responsibleName', responsible.name, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                              });
+                              setIsResponsiblePickerOpen(false);
+                            }}
+                          >
+                            {responsible.name}
+                          </ComboboxOption>
+                        ))}
+                        {visibleResponsibles.length === 0 && (
+                          <ComboboxEmpty>
+                            {responsibleQuery
+                              ? 'Novo responsável será criado ao guardar.'
+                              : 'Nenhum responsável cadastrado.'}
+                          </ComboboxEmpty>
+                        )}
+                      </ComboboxList>
+                    </Combobox>
+                    <FieldError id="order-responsible-error" message={responsibleError} />
                   </div>
+                  <CustomerPicker methods={methods} onOpen={onCustomerPickerOpen} />
                   <div data-form-field>
-                    <label htmlFor="order-phone">
-                      Telefone
+                    <label htmlFor="order-phone">Telefone</label>
+                    <div className={styles.phoneGrid}>
+                      <Combobox
+                        id="order-phone-country"
+                        isOpen={isPhoneCountryOpen}
+                        onOpenChange={setIsPhoneCountryOpen}
+                      >
+                        <ComboboxInput
+                          aria-label="País e prefixo do telefone"
+                          aria-describedby={
+                            errors.phoneCountryCode ? 'order-phone-country-error' : undefined
+                          }
+                          aria-invalid={Boolean(errors.phoneCountryCode)}
+                          value={
+                            phoneCountry
+                              ? `${phoneCountry.country} +${phoneCountry.code}`
+                              : phoneCountryCode
+                                ? `Outro +${phoneCountryCode}`
+                                : 'Outro prefixo'
+                          }
+                          readOnly
+                        />
+                        <ComboboxTrigger aria-label="Escolher país do telefone" />
+                        <ComboboxList>
+                          {phoneCountries.map((country) => (
+                            <ComboboxOption
+                              key={country.country}
+                              aria-selected={country.code === phoneCountryCode}
+                              onMouseDown={(event) => event.preventDefault()}
+                              onClick={() => {
+                                setValue('phoneCountryCode', country.code, {
+                                  shouldDirty: true,
+                                  shouldValidate: true,
+                                });
+                                setIsPhoneCountryOpen(false);
+                              }}
+                            >
+                              {country.name} (+{country.code})
+                            </ComboboxOption>
+                          ))}
+                          <ComboboxOption
+                            aria-selected={!phoneCountry}
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => {
+                              setValue('phoneCountryCode', '', {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                              });
+                              setIsPhoneCountryOpen(false);
+                            }}
+                          >
+                            Outro prefixo
+                          </ComboboxOption>
+                        </ComboboxList>
+                      </Combobox>
                       <Controller
                         control={control}
                         name="phone"
@@ -171,78 +301,27 @@ export function OrderFormModal(props: OrderFormModalProps) {
                           </span>
                         )}
                       />
-                    </label>
-                    <FieldError id="order-phone-error" message={errors.phone?.message} />
-                  </div>
-                  <div data-form-field>
-                    <label htmlFor="order-responsible">Responsável pela encomenda</label>
-                    <Combobox
-                      id="order-responsible"
-                      isOpen={isResponsiblePickerOpen}
-                      onOpenChange={setIsResponsiblePickerOpen}
-                    >
-                      <Controller
-                        control={control}
-                        name="responsibleName"
-                        render={({ field }) => (
-                          <ComboboxInput
-                            name={field.name}
-                            ref={field.ref}
-                            value={field.value}
-                            required
-                            readOnly
-                            inputMode="none"
-                            aria-describedby={
-                              responsibleError ? 'order-responsible-error' : undefined
-                            }
-                            aria-invalid={Boolean(responsibleError)}
-                            onBlur={field.onBlur}
-                            onFocus={() => setIsResponsiblePickerOpen(true)}
-                            onKeyDown={(event) => {
-                              if (
-                                event.key.length === 1 ||
-                                event.key === 'Backspace' ||
-                                event.key === 'Delete'
-                              ) {
-                                event.preventDefault();
-                              }
-                            }}
-                            onPaste={(event) => event.preventDefault()}
-                            onDrop={(event) => event.preventDefault()}
-                            placeholder="Escolha o responsável"
-                            autoComplete="off"
-                          />
-                        )}
+                    </div>
+                    {!phoneCountry && (
+                      <Input
+                        aria-label="Prefixo internacional"
+                        inputMode="numeric"
+                        maxLength={3}
+                        placeholder="Prefixo: ex. 972"
+                        value={phoneCountryCode}
+                        onChange={(event) =>
+                          setValue('phoneCountryCode', event.target.value.replace(/\D/g, ''), {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                          })
+                        }
                       />
-                      <Input type="hidden" {...register('responsibleId')} />
-                      <ComboboxTrigger aria-label="Mostrar responsáveis" />
-                      <ComboboxList>
-                        {responsibles.map((responsible) => (
-                          <ComboboxOption
-                            key={responsible.id}
-                            aria-selected={methods.getValues('responsibleId') === responsible.id}
-                            onMouseDown={(event) => event.preventDefault()}
-                            onClick={() => {
-                              setValue('responsibleId', responsible.id, {
-                                shouldDirty: true,
-                                shouldValidate: true,
-                              });
-                              setValue('responsibleName', responsible.name, {
-                                shouldDirty: true,
-                                shouldValidate: true,
-                              });
-                              setIsResponsiblePickerOpen(false);
-                            }}
-                          >
-                            {responsible.name}
-                          </ComboboxOption>
-                        ))}
-                        {responsibles.length === 0 && (
-                          <ComboboxEmpty>Nenhum responsável encontrado.</ComboboxEmpty>
-                        )}
-                      </ComboboxList>
-                    </Combobox>
-                    <FieldError id="order-responsible-error" message={responsibleError} />
+                    )}
+                    <FieldError
+                      id="order-phone-country-error"
+                      message={errors.phoneCountryCode?.message}
+                    />
+                    <FieldError id="order-phone-error" message={errors.phone?.message} />
                   </div>
                   <div data-form-field>
                     <label htmlFor="order-delivery-date">Data de entrega</label>
@@ -253,7 +332,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                         <DatePicker
                           id="order-delivery-date"
                           className={styles.dateInput}
-                          minDate={todayKey()}
+                          minDate={todayKey(businessNow)}
                           required
                           aria-describedby={
                             errors.deliveryDate ? 'order-delivery-date-error' : undefined
@@ -278,7 +357,14 @@ export function OrderFormModal(props: OrderFormModalProps) {
                         <TimePicker
                           id="order-delivery-time"
                           className={styles.dateInput}
-                          minTime={deliveryDate === todayKey() ? currentTimeKey() : undefined}
+                          minTime={
+                            deliveryDate === todayKey(businessNow)
+                              ? currentTimeKey(businessNow) > '08:00'
+                                ? currentTimeKey(businessNow)
+                                : '08:00'
+                              : '08:00'
+                          }
+                          maxTime="21:00"
                           required
                           aria-describedby={
                             errors.deliveryTime ? 'order-delivery-time-error' : undefined
@@ -314,14 +400,14 @@ export function OrderFormModal(props: OrderFormModalProps) {
               />
             </div>
 
-            <footer className={styles.actions}>
+            <DialogActions>
               <Button disabled={isSubmitting} onClick={onClose}>
                 Cancelar
               </Button>
               <Button variant="primary" type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'A salvar...' : 'Salvar'}
               </Button>
-            </footer>
+            </DialogActions>
           </>
         )}
       </form>

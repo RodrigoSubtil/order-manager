@@ -60,10 +60,9 @@ export function ProductEditor({
   return (
     <section className={styles.editor} aria-labelledby="product-editor-title">
       <div className={styles.title}>
-        <div>
-          <span data-eyebrow>Produtos</span>
-          <h3 id="product-editor-title">Produtos separados por área</h3>
-        </div>
+        <h3 id="product-editor-title" data-eyebrow>
+          Produtos
+        </h3>
       </div>
 
       <FieldError id="order-items-error" message={errors.items?.root?.message} />
@@ -144,7 +143,6 @@ export function ProductEditor({
                       void productRegistration.onChange(event);
                       setOpenProductPickerId(itemId);
                     }}
-                    onFocus={() => setOpenProductPickerId(itemId)}
                     placeholder="Digite ou escolha o produto"
                     autoComplete="off"
                   />
@@ -201,7 +199,6 @@ export function ProductEditor({
                       min="1"
                       max="1000"
                       step="0.01"
-                      onFocus={() => setOpenQuantityPickerId(itemId)}
                       placeholder="1 a 1000"
                     />
                     <ComboboxTrigger aria-label={`Mostrar quantidades do produto ${index + 1}`} />
@@ -293,7 +290,12 @@ export function ProductEditor({
         );
       })}
 
-      <Button className={styles.addProduct} variant="primary" onClick={onAdd}>
+      <Button
+        className={styles.addProduct}
+        variant="primary"
+        disabled={itemFields.length >= 100}
+        onClick={onAdd}
+      >
         Adicionar mais um produto
       </Button>
     </section>

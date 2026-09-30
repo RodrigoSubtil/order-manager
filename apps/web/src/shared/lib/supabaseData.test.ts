@@ -9,6 +9,8 @@ vi.mock('./supabase', () => ({
 import {
   listAllOrders,
   listCatalogProducts,
+  saveOrder,
+  searchCustomers,
   saveCatalogProduct,
   SupabaseRpcError,
   unlockManagementAccess,
@@ -41,6 +43,40 @@ function page(page: number, total: number, id: string) {
 }
 
 describe('Supabase data adapter', () => {
+  it('passes the selected customer and retry key to the server, and searches remotely', async () => {
+    rpc.mockReset();
+    rpc.mockResolvedValueOnce({
+      data: [{ id: 'customer-1', name: 'Ana', phone: '912345678', version: 1 }],
+      error: null,
+    });
+    expect(await searchCustomers('An')).toEqual([
+      { id: 'customer-1', name: 'Ana', phone: '912345678', version: 1 },
+    ]);
+    expect(rpc).toHaveBeenCalledWith('web_search_customers', { p_query: 'An' });
+
+    rpc.mockResolvedValueOnce({ data: { id: 'order-1', version: 1 }, error: null });
+    await saveOrder(
+      {
+        orderNumber: null,
+        customerId: 'customer-1',
+        clientName: 'Ana',
+        phone: '912345678',
+        responsibleId: 'responsible-1',
+        responsibleName: 'Maria',
+        deliveryDate: '2026-09-20',
+        deliveryTime: '08:00',
+        products: [],
+      },
+      'retry-1',
+    );
+    expect(rpc).toHaveBeenCalledWith('web_save_order_with_responsible', {
+      p_order: expect.objectContaining({
+        customerId: 'customer-1',
+        responsibleName: 'Maria',
+        requestId: 'retry-1',
+      }),
+    });
+  });
   it('loads every database page before printing', async () => {
     rpc.mockReset();
     rpc.mockResolvedValueOnce(page(1, 201, 'one'));
@@ -56,6 +92,61 @@ describe('Supabase data adapter', () => {
       'web_list_orders',
       expect.objectContaining({ p_page: 1, p_page_size: 100 }),
     );
+  });
+
+  it('preserva itens e observações do banco e apresenta quantidades numéricas sem zeros finais', async () => {
+    rpc.mockReset();
+    const response = page(1, 1, 'order-1');
+    rpc.mockResolvedValueOnce({
+      ...response,
+      data: {
+        ...response.data,
+        items: [
+          {
+            ...response.data.items[0],
+            items: [
+              {
+                id: 'item-1',
+                category: 'PASTELARIA',
+                productName: 'Bolo de chocolate',
+                quantityValue: '1.500',
+                quantityUnit: 'KG',
+                notes: 'Decoração azul',
+                position: 0,
+              },
+              {
+                id: 'item-2',
+                category: 'PASTELARIA',
+                productName: 'Bola de Berlim',
+                quantityValue: '50.000',
+                quantityUnit: 'UN',
+                notes: null,
+                position: 1,
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    const orders = await listAllOrders({ from: '2026-07-23', until: '2026-07-23' });
+
+    expect(orders[0].products).toEqual([
+      {
+        id: 'item-1',
+        category: 'Pastelaria',
+        product: 'Bolo de chocolate',
+        quantity: '1.5 kg',
+        notes: 'Decoração azul',
+      },
+      {
+        id: 'item-2',
+        category: 'Pastelaria',
+        product: 'Bola de Berlim',
+        quantity: '50 un',
+        notes: '',
+      },
+    ]);
   });
 
   it('preserves an optimistic-lock conflict from PostgreSQL', async () => {

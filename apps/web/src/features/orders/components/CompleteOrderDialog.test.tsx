@@ -35,8 +35,11 @@ describe('CompleteOrderDialog', () => {
     );
 
     expect(screen.getByText('Cliente: Ana')).toBeInTheDocument();
+    expect(screen.getByText('Confirma a conclusão da encomenda?')).toBeInTheDocument();
     expect(screen.queryByText('Pedido #9')).not.toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Sim, concluir' }));
+    const confirm = screen.getByRole('button', { name: 'Concluir encomenda' });
+    expect(confirm.querySelector('svg path')).toHaveAttribute('d', 'm5 12 4 4L19 6');
+    await user.click(confirm);
     expect(onConfirm).toHaveBeenCalledOnce();
     await user.click(screen.getByRole('button', { name: 'Não' }));
     expect(onCancel).toHaveBeenCalledOnce();

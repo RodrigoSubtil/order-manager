@@ -35,6 +35,7 @@ describe('DeleteOrderDialog', () => {
     );
 
     expect(screen.getByText('Cliente: Duda')).toBeInTheDocument();
+    expect(screen.getByText('Confirma a exclusão permanente da encomenda?')).toBeInTheDocument();
     expect(screen.queryByText('Pedido #21')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Apagar encomenda' }));

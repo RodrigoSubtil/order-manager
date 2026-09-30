@@ -1,5 +1,6 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
+import { Button } from './Button';
 import { Icon } from './Icon';
 import styles from './TimePicker.module.css';
 
@@ -11,6 +12,7 @@ type TimePickerProps = {
   disabled?: boolean;
   id?: string;
   minTime?: string;
+  maxTime?: string;
   onChange: (value: string) => void;
   placeholder?: string;
   required?: boolean;
@@ -20,12 +22,29 @@ type TimePickerProps = {
 type WheelKind = 'hour' | 'minute';
 
 const hours = Array.from({ length: 24 }, (_, index) => String(index).padStart(2, '0'));
-const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'));
+const minutes = ['00', '30'];
 const wheelItemHeight = 44;
 
 function parseTime(value: string) {
   const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(value);
   return match ? { hour: match[1], minute: match[2] } : null;
+}
+
+function nextHalfHour(value: string) {
+  const parsed = parseTime(value);
+  if (!parsed) return undefined;
+  const hour = Number(parsed.hour);
+  const minute = Number(parsed.minute);
+  if (minute === 0 || minute === 30) return value;
+  const nextMinutes = minute < 30 ? hour * 60 + 30 : (hour + 1) * 60;
+  return `${String(Math.floor(nextMinutes / 60)).padStart(2, '0')}:${String(nextMinutes % 60).padStart(2, '0')}`;
+}
+
+function getAvailableMinutes(hour: string, minTime?: string, maxTime?: string) {
+  return minutes.filter((minute) => {
+    const time = `${hour}:${minute}`;
+    return (!minTime || time >= minTime) && (!maxTime || time <= maxTime);
+  });
 }
 
 function useMobileTimePicker() {
@@ -54,6 +73,7 @@ export function TimePicker({
   disabled = false,
   id,
   minTime,
+  maxTime,
   onChange,
   placeholder = 'Selecionar hora',
   required = false,
@@ -69,7 +89,18 @@ export function TimePicker({
   const [draftHour, setDraftHour] = useState('08');
   const [draftMinute, setDraftMinute] = useState('00');
   const draftTime = `${draftHour}:${draftMinute}`;
-  const isBeforeMinimum = Boolean(minTime && draftTime < minTime);
+  const firstAvailableTime = nextHalfHour(minTime ?? '');
+  const availableHours = useMemo(
+    () => hours.filter((hour) => getAvailableMinutes(hour, firstAvailableTime, maxTime).length > 0),
+    [firstAvailableTime, maxTime],
+  );
+  const visibleMinutes = useMemo(
+    () => getAvailableMinutes(draftHour, firstAvailableTime, maxTime),
+    [draftHour, firstAvailableTime, maxTime],
+  );
+  const hasAvailableTime = availableHours.length > 0;
+  const isBeforeMinimum = Boolean(firstAvailableTime && draftTime < firstAvailableTime);
+  const isAfterMaximum = Boolean(maxTime && draftTime > maxTime);
 
   useEffect(
     () => () => {
@@ -92,38 +123,58 @@ export function TimePicker({
   useEffect(() => {
     if (!isOpen) return;
 
-    const hourIndex = hours.indexOf(draftHour);
-    const minuteIndex = minutes.indexOf(draftMinute);
+    const hourIndex = availableHours.indexOf(draftHour);
+    const minuteIndex = visibleMinutes.indexOf(draftMinute);
     if (hourWheelRef.current) hourWheelRef.current.scrollTop = hourIndex * wheelItemHeight;
     if (minuteWheelRef.current) minuteWheelRef.current.scrollTop = minuteIndex * wheelItemHeight;
-  }, [draftHour, draftMinute, isOpen]);
+  }, [availableHours, draftHour, draftMinute, isOpen, visibleMinutes]);
 
   function openPicker() {
-    const selectedTime = parseTime(value);
-    const minimumTime = parseTime(minTime ?? '');
-    setDraftHour(selectedTime?.hour ?? minimumTime?.hour ?? '08');
-    setDraftMinute(selectedTime?.minute ?? minimumTime?.minute ?? '00');
+    const roundedValue = nextHalfHour(value);
+    const initialTime =
+      roundedValue &&
+      (!firstAvailableTime || roundedValue >= firstAvailableTime) &&
+      (!maxTime || roundedValue <= maxTime)
+        ? roundedValue
+        : availableHours.length
+          ? `${availableHours[0]}:${getAvailableMinutes(availableHours[0], firstAvailableTime, maxTime)[0]}`
+          : '08:00';
+    const parsedTime = parseTime(initialTime);
+    setDraftHour(parsedTime?.hour ?? '08');
+    setDraftMinute(parsedTime?.minute ?? '00');
     setIsOpen(true);
   }
 
   function updateFromScroll(kind: WheelKind, element: HTMLDivElement) {
-    const values = kind === 'hour' ? hours : minutes;
+    const values = kind === 'hour' ? availableHours : visibleMinutes;
     const index = Math.max(
       0,
       Math.min(values.length - 1, Math.round(element.scrollTop / wheelItemHeight)),
     );
     clearTimeout(scrollTimers.current[kind]);
     scrollTimers.current[kind] = setTimeout(() => {
-      if (kind === 'hour') setDraftHour(values[index]);
-      else setDraftMinute(values[index]);
+      if (kind === 'hour') {
+        setDraftHour(values[index]);
+        setDraftMinute((currentMinute) =>
+          getAvailableMinutes(values[index], firstAvailableTime, maxTime).includes(currentMinute)
+            ? currentMinute
+            : getAvailableMinutes(values[index], firstAvailableTime, maxTime)[0],
+        );
+      } else setDraftMinute(values[index]);
     }, 80);
   }
 
   function selectWheelValue(kind: WheelKind, selectedValue: string) {
-    const values = kind === 'hour' ? hours : minutes;
+    const values = kind === 'hour' ? availableHours : visibleMinutes;
     const wheel = kind === 'hour' ? hourWheelRef.current : minuteWheelRef.current;
-    if (kind === 'hour') setDraftHour(selectedValue);
-    else setDraftMinute(selectedValue);
+    if (kind === 'hour') {
+      setDraftHour(selectedValue);
+      setDraftMinute((currentMinute) =>
+        getAvailableMinutes(selectedValue, firstAvailableTime, maxTime).includes(currentMinute)
+          ? currentMinute
+          : getAvailableMinutes(selectedValue, firstAvailableTime, maxTime)[0],
+      );
+    } else setDraftMinute(selectedValue);
     if (wheel) wheel.scrollTop = values.indexOf(selectedValue) * wheelItemHeight;
   }
 
@@ -137,7 +188,9 @@ export function TimePicker({
           aria-label={ariaLabel}
           className={styles.nativeInput}
           disabled={disabled}
-          min={minTime}
+          min={firstAvailableTime}
+          max={maxTime}
+          step={1800}
           required={required}
           type="time"
           value={value}
@@ -178,76 +231,85 @@ export function TimePicker({
           >
             <strong>Deslize para escolher a hora</strong>
 
-            <div className={styles.wheelGroup}>
-              <div
-                ref={hourWheelRef}
-                className={styles.wheel}
-                role="listbox"
-                aria-label="Horas"
-                onScroll={(event) => updateFromScroll('hour', event.currentTarget)}
-              >
-                {hours.map((hour) => (
-                  <button
-                    key={hour}
-                    className={draftHour === hour ? styles.selectedWheelItem : undefined}
-                    role="option"
-                    aria-selected={draftHour === hour}
-                    type="button"
-                    onClick={() => selectWheelValue('hour', hour)}
-                  >
-                    {hour}
-                  </button>
-                ))}
+            {hasAvailableTime ? (
+              <div className={styles.wheelGroup}>
+                <div
+                  ref={hourWheelRef}
+                  className={styles.wheel}
+                  role="listbox"
+                  aria-label="Horas"
+                  onScroll={(event) => updateFromScroll('hour', event.currentTarget)}
+                >
+                  {availableHours.map((hour) => (
+                    <button
+                      key={hour}
+                      className={draftHour === hour ? styles.selectedWheelItem : undefined}
+                      role="option"
+                      aria-selected={draftHour === hour}
+                      type="button"
+                      onClick={() => selectWheelValue('hour', hour)}
+                    >
+                      {hour}
+                    </button>
+                  ))}
+                </div>
+
+                <span className={styles.separator} aria-hidden="true">
+                  :
+                </span>
+
+                <div
+                  ref={minuteWheelRef}
+                  className={styles.wheel}
+                  role="listbox"
+                  aria-label="Minutos"
+                  onScroll={(event) => updateFromScroll('minute', event.currentTarget)}
+                >
+                  {visibleMinutes.map((minute) => (
+                    <button
+                      key={minute}
+                      className={draftMinute === minute ? styles.selectedWheelItem : undefined}
+                      role="option"
+                      aria-selected={draftMinute === minute}
+                      type="button"
+                      onClick={() => selectWheelValue('minute', minute)}
+                    >
+                      {minute}
+                    </button>
+                  ))}
+                </div>
+                <div className={styles.selectionBand} aria-hidden="true" />
               </div>
-
-              <span className={styles.separator} aria-hidden="true">
-                :
-              </span>
-
-              <div
-                ref={minuteWheelRef}
-                className={styles.wheel}
-                role="listbox"
-                aria-label="Minutos"
-                onScroll={(event) => updateFromScroll('minute', event.currentTarget)}
-              >
-                {minutes.map((minute) => (
-                  <button
-                    key={minute}
-                    className={draftMinute === minute ? styles.selectedWheelItem : undefined}
-                    role="option"
-                    aria-selected={draftMinute === minute}
-                    type="button"
-                    onClick={() => selectWheelValue('minute', minute)}
-                  >
-                    {minute}
-                  </button>
-                ))}
-              </div>
-              <div className={styles.selectionBand} aria-hidden="true" />
-            </div>
-
-            {isBeforeMinimum && (
+            ) : (
               <span className={styles.error} role="alert">
-                Para hoje, escolha {minTime} ou uma hora posterior.
+                Não há horários disponíveis para esta data. Escolha outra data.
+              </span>
+            )}
+
+            {hasAvailableTime && isBeforeMinimum && (
+              <span className={styles.error} role="alert">
+                Para hoje, escolha {firstAvailableTime} ou uma hora posterior.
+              </span>
+            )}
+            {hasAvailableTime && isAfterMaximum && (
+              <span className={styles.error} role="alert">
+                Escolha {maxTime} ou uma hora anterior.
               </span>
             )}
 
             <footer className={styles.actions}>
-              <button type="button" onClick={() => setIsOpen(false)}>
-                Cancelar
-              </button>
-              <button
-                type="button"
-                disabled={isBeforeMinimum}
+              <Button onClick={() => setIsOpen(false)}>Cancelar</Button>
+              <Button
+                variant="primary"
+                disabled={!hasAvailableTime || isBeforeMinimum || isAfterMaximum}
                 onClick={() => {
-                  if (isBeforeMinimum) return;
+                  if (isBeforeMinimum || isAfterMaximum) return;
                   onChange(draftTime);
                   setIsOpen(false);
                 }}
               >
                 Confirmar
-              </button>
+              </Button>
             </footer>
           </div>
         </div>

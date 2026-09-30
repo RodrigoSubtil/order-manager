@@ -37,4 +37,48 @@ describe('orderFormMappers', () => {
 
     expect(formValuesToOrderForm(values).products[0]?.quantity).toBe('1.5 kg');
   });
+
+  it('sends a typed responsible with capitalized initials and no selected id', () => {
+    const values = orderToFormValues(order);
+    values.responsibleId = '';
+    values.responsibleName = '  mARia   da  sILVA ';
+
+    expect(formValuesToOrderForm(values)).toMatchObject({
+      responsibleId: '',
+      responsibleName: 'Maria Da Silva',
+    });
+  });
+
+  it('updates a selected customer only when its details were edited', () => {
+    const values = orderToFormValues({
+      ...order,
+      customerId: '00000000-0000-4000-8000-000000000001',
+      customerVersion: 3,
+      phone: '351912345678',
+    });
+    expect(formValuesToOrderForm(values).updateCustomer).toBe(false);
+    values.phone = '913000000';
+    expect(formValuesToOrderForm(values)).toMatchObject({
+      customerId: '00000000-0000-4000-8000-000000000001',
+      customerVersion: 3,
+      updateCustomer: true,
+      phone: '351913000000',
+    });
+  });
+
+  it('normalizes a selected legacy Portuguese customer on save', () => {
+    const values = orderToFormValues({
+      ...order,
+      customerId: '00000000-0000-4000-8000-000000000001',
+      customerVersion: 3,
+      phone: '912345678',
+    });
+
+    expect(values.phoneCountryCode).toBe('351');
+    expect(values.phone).toBe('912345678');
+    expect(formValuesToOrderForm(values)).toMatchObject({
+      phone: '351912345678',
+      updateCustomer: true,
+    });
+  });
 });

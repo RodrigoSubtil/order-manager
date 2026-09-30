@@ -1,4 +1,4 @@
-import { Button, Dialog } from '../../../shared/components/ui';
+import { Button, Dialog, DialogActions, DialogHeader } from '../../../shared/components/ui';
 import type { Order } from '../../../shared/lib/domain';
 import styles from '../../../shared/components/ui/ConfirmationDialog.module.css';
 
@@ -17,19 +17,30 @@ export function CompleteOrderDialog({
 }: CompleteOrderDialogProps) {
   return (
     <Dialog className={styles.content} titleId="complete-order-title" onClose={onCancel}>
-      <h2 id="complete-order-title">Concluir encomenda?</h2>
-      <p>Confirme se o pedido já foi entregue ou finalizado.</p>
-      <div className={styles.details}>
-        <span>Cliente: {order.clientName}</span>
+      <DialogHeader title="Concluir encomenda?" titleId="complete-order-title" onClose={onCancel} />
+      <div className={styles.body}>
+        <p>Confirma a conclusão da encomenda?</p>
+        <div className={styles.details}>
+          <span>Cliente: {order.clientName}</span>
+        </div>
       </div>
-      <div className={styles.actions}>
+      <DialogActions>
         <Button data-autofocus disabled={isSaving} onClick={onCancel}>
           Não
         </Button>
-        <Button variant="primary" disabled={isSaving} onClick={onConfirm}>
-          {isSaving ? 'A concluir...' : 'Sim, concluir'}
+        <Button
+          className={styles.completeButton}
+          variant="primary"
+          aria-label={isSaving ? 'A concluir encomenda' : 'Concluir encomenda'}
+          title={isSaving ? 'A concluir encomenda' : 'Concluir encomenda'}
+          disabled={isSaving}
+          onClick={onConfirm}
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="m5 12 4 4L19 6" />
+          </svg>
         </Button>
-      </div>
+      </DialogActions>
     </Dialog>
   );
 }

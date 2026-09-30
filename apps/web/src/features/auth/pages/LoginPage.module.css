@@ -59,12 +59,6 @@
   font-weight: 800;
 }
 
-.input::placeholder {
-  color: var(--color-muted);
-  font-weight: 800;
-  opacity: 1;
-}
-
 .passwordInput {
   position: relative;
 }

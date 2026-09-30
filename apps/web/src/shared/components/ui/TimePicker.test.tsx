@@ -37,9 +37,44 @@ describe('TimePicker', () => {
     const input = screen.getByLabelText('Hora');
     expect(input).toHaveAttribute('type', 'time');
     expect(input).toHaveAttribute('min', '09:00');
+    expect(input).toHaveAttribute('step', '1800');
 
     fireEvent.change(input, { target: { value: '11:45' } });
     expect(onChange).toHaveBeenCalledWith('11:45');
+  });
+
+  it('mostra apenas minutos 00 e 30 e arredonda o primeiro horário disponível', () => {
+    setMobileViewport(true);
+    render(<TimePicker minTime="10:11" maxTime="21:00" value="" onChange={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar hora' }));
+    const minuteOptions = within(screen.getByRole('listbox', { name: 'Minutos' })).getAllByRole(
+      'option',
+    );
+    expect(minuteOptions.map((option) => option.textContent)).toEqual(['30']);
+    expect(minuteOptions[0]).toHaveAttribute('aria-selected', 'true');
+    expect(
+      within(screen.getByRole('listbox', { name: 'Horas' })).getByRole('option', { name: '10' }),
+    ).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('mostra apenas horas entre 08 e 21 e só 21:00 no fim do expediente', () => {
+    setMobileViewport(true);
+    render(<TimePicker minTime="08:00" maxTime="21:00" value="" onChange={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar hora' }));
+    const hourOptions = within(screen.getByRole('listbox', { name: 'Horas' })).getAllByRole(
+      'option',
+    );
+    expect(hourOptions.map((option) => option.textContent)).toEqual(
+      Array.from({ length: 14 }, (_, index) => String(index + 8).padStart(2, '0')),
+    );
+
+    fireEvent.click(within(screen.getByRole('listbox', { name: 'Horas' })).getByText('21'));
+    expect(
+      within(screen.getByRole('listbox', { name: 'Minutos' })).getAllByRole('option'),
+    ).toHaveLength(1);
+    expect(within(screen.getByRole('listbox', { name: 'Minutos' })).getByText('00')).toBeVisible();
   });
 
   it('escolhe a hora pelas rodas deslizáveis no telemóvel', () => {
@@ -98,18 +133,27 @@ describe('TimePicker', () => {
     expect(screen.getAllByRole('dialog', { name: 'Escolher hora' })).toHaveLength(1);
   });
 
-  it('não confirma uma hora anterior ao mínimo informado', () => {
+  it('avança uma seleção antiga para o primeiro horário válido', () => {
     setMobileViewport(true);
     const onChange = vi.fn();
     render(<TimePicker minTime="14:30" value="13:00" onChange={onChange} />);
 
     fireEvent.click(screen.getByRole('button', { name: '13:00' }));
-
-    expect(screen.getByRole('alert')).toHaveTextContent(
-      'Para hoje, escolha 14:30 ou uma hora posterior.',
+    expect(within(screen.getByRole('listbox', { name: 'Horas' })).getByText('14')).toHaveAttribute(
+      'aria-selected',
+      'true',
     );
+    fireEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
+    expect(onChange).toHaveBeenCalledWith('14:30');
+  });
+
+  it('informa quando o dia já não tem horários disponíveis', () => {
+    setMobileViewport(true);
+    render(<TimePicker minTime="21:15" maxTime="21:00" value="" onChange={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar hora' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Não há horários disponíveis');
     expect(screen.getByRole('button', { name: 'Confirmar' })).toBeDisabled();
-    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('cancela ou fecha a roda com Escape sem alterar o valor', () => {

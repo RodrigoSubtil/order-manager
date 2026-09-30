@@ -1,6 +1,7 @@
 import { formatDate } from '../../../shared/lib/dateUtils';
 import type { Order } from '../../../shared/lib/domain';
 import { groupProducts, type PrintProductSummary } from '../../../shared/lib/productGrouping';
+import { formatInternationalPhone } from '../../orders/lib/phoneNumber';
 import type { PrintMode, PrintRangeMode } from '../hooks/usePrintOrders';
 import styles from './PrintableOrders.module.css';
 
@@ -53,7 +54,7 @@ export function PrintableOrders({
       aria-hidden="true"
     >
       {printMode === 'summary' && printAll ? (
-        <article className={styles.card}>
+        <article className={styles.card} data-print-card>
           <PrintHeader description={printDescription} />
           <header className={styles.header}>
             <div className={styles.client}>
@@ -72,9 +73,7 @@ export function PrintableOrders({
                   : `${formatDate(printFrom)} até ${formatDate(printUntil)}`}
               </strong>
               <small>
-                {printRangeMode === 'day'
-                  ? `${printFromTime}–${printUntilTime} · Produtos agrupados`
-                  : 'Dias completos · Produtos agrupados'}
+                {printFromTime}–{printUntilTime} · Produtos agrupados
               </small>
             </div>
           </header>
@@ -91,8 +90,13 @@ export function PrintableOrders({
                   </thead>
                   <tbody>
                     {group.products.map((product) => (
-                      <tr key={`${product.category}-${product.product}-${product.unit}`}>
-                        <td>{product.product}</td>
+                      <tr key={product.id}>
+                        <td>
+                          {product.product}
+                          {product.orderNumber !== null && (
+                            <small> · Pedido #{product.orderNumber}</small>
+                          )}
+                        </td>
                         <td>{product.displayQuantity}</td>
                       </tr>
                     ))}
@@ -104,14 +108,16 @@ export function PrintableOrders({
         </article>
       ) : (
         printOrders.map((order) => (
-          <article className={styles.card} key={order.id}>
+          <article className={styles.card} data-print-card key={order.id}>
             <PrintHeader description={printDescription} />
             <header className={styles.header}>
               <div className={styles.client}>
                 <span>Cliente</span>
                 <p>Pedido #{order.orderNumber ?? '-'}</p>
                 <h2>{order.clientName}</h2>
-                <p>Telefone: {order.phone || 'Sem telefone'}</p>
+                <p>
+                  Telefone: {order.phone ? formatInternationalPhone(order.phone) : 'Sem telefone'}
+                </p>
                 <p>Responsável: {getResponsibleName(order)}</p>
               </div>
               <div className={styles.delivery}>

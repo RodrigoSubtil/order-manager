@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import {
   Button,
   Combobox,
@@ -9,13 +11,16 @@ import {
   Icon,
   Input,
 } from '../../../shared/components/ui';
-import { formatDate, todayKey } from '../../../shared/lib/dateUtils';
+import { formatDate } from '../../../shared/lib/dateUtils';
 import { categories, type Category } from '../../../shared/lib/domain';
+import type { DateFilterMode } from '../hooks/useOrderFilters';
 import styles from './OrderFilters.module.css';
 
 type OrderFiltersProps = {
   categoryFilter: 'Todas' | Category;
   dateFilter: string;
+  dateFilterMode: DateFilterMode;
+  hasCustomDate: boolean;
   isCategoryFilterOpen: boolean;
   resultCount: number;
   search: string;
@@ -23,6 +28,7 @@ type OrderFiltersProps = {
   onCategoryOpenChange: (open: boolean) => void;
   onCreate: () => void;
   onDateChange: (date: string) => void;
+  onDateModeChange: (mode: DateFilterMode) => void;
   onPrint: () => void;
   onSearchChange: (search: string) => void;
 };
@@ -30,6 +36,8 @@ type OrderFiltersProps = {
 export function OrderFilters({
   categoryFilter,
   dateFilter,
+  dateFilterMode,
+  hasCustomDate,
   isCategoryFilterOpen,
   resultCount,
   search,
@@ -37,9 +45,25 @@ export function OrderFilters({
   onCategoryOpenChange,
   onCreate,
   onDateChange,
+  onDateModeChange,
   onPrint,
   onSearchChange,
 }: OrderFiltersProps) {
+  const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const selectedDateLabel = dateFilter
+    ? new Intl.DateTimeFormat('pt-PT', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      }).format(new Date(`${dateFilter}T12:00:00`))
+    : 'Definir data';
+  const dateOptions: Array<{ mode: DateFilterMode; label: string }> = [
+    { mode: 'all', label: 'Todas as datas' },
+    { mode: 'today', label: 'Hoje' },
+    { mode: 'custom', label: 'Definir data' },
+  ];
+
   return (
     <>
       <div className={styles.toolbar}>
@@ -53,7 +77,7 @@ export function OrderFilters({
             <ComboboxInput
               className={styles.categoryInput}
               aria-label="Filtrar por área"
-              value={categoryFilter === 'Todas' ? 'Áreas' : categoryFilter}
+              value={categoryFilter === 'Todas' ? 'Todas as áreas' : categoryFilter}
               readOnly
             />
             <ComboboxTrigger
@@ -71,35 +95,61 @@ export function OrderFilters({
                     onCategoryOpenChange(false);
                   }}
                 >
-                  {category}
+                  {category === 'Todas' ? 'Todas as áreas' : category}
                 </ComboboxOption>
               ))}
             </ComboboxList>
           </Combobox>
 
-          <Button
-            className={`${styles.filterButton} ${styles.todayFilter}`}
-            onClick={() => onDateChange(todayKey())}
+          <Combobox
+            className={styles.dateFilter}
+            id="date-filter"
+            isOpen={isDateFilterOpen}
+            onOpenChange={setIsDateFilterOpen}
           >
-            Hoje
-          </Button>
-          <Button
-            className={`${styles.filterButton} ${styles.allDatesFilter}`}
-            onClick={() => onDateChange('')}
-          >
-            Todas as datas
-          </Button>
-
-          <div className={styles.dateControl}>
-            <DatePicker
-              className={styles.dateInput}
+            <ComboboxInput
+              className={styles.dateFilterInput}
               aria-label="Filtrar por data"
-              minDate={todayKey()}
-              placeholder="Data"
-              value={dateFilter}
-              onChange={onDateChange}
+              value={
+                dateFilterMode === 'custom' && hasCustomDate
+                  ? selectedDateLabel
+                  : (dateOptions.find((option) => option.mode === dateFilterMode)?.label ?? 'Hoje')
+              }
+              readOnly
+              onClick={() => setShowCalendar(false)}
             />
-          </div>
+            <ComboboxTrigger
+              aria-label="Mostrar opções de data"
+              onClick={() => setShowCalendar(false)}
+            />
+            <ComboboxList>
+              {dateOptions.map(({ mode, label }) => (
+                <ComboboxOption
+                  key={mode}
+                  aria-selected={mode === dateFilterMode}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    onDateModeChange(mode);
+                    setIsDateFilterOpen(false);
+                    setShowCalendar(mode === 'custom');
+                  }}
+                >
+                  {label}
+                </ComboboxOption>
+              ))}
+            </ComboboxList>
+            {showCalendar && dateFilterMode === 'custom' && (
+              <DatePicker
+                autoOpen
+                hideTrigger
+                className={styles.dateControl}
+                aria-label="Escolher data do filtro"
+                value={dateFilter}
+                onChange={onDateChange}
+                onClose={() => setShowCalendar(false)}
+              />
+            )}
+          </Combobox>
 
           <Button
             className={`${styles.action} ${styles.create}`}

@@ -1,7 +1,9 @@
 import {
   createContext,
   forwardRef,
+  useEffect,
   useContext,
+  useRef,
   type ButtonHTMLAttributes,
   type HTMLAttributes,
   type InputHTMLAttributes,
@@ -44,6 +46,23 @@ export function Combobox({
   ...props
 }: ComboboxProps) {
   const listId = `${id}-listbox`;
+  const root = useRef<HTMLDivElement>(null);
+  const onOpenChangeRef = useRef(onOpenChange);
+
+  useEffect(() => {
+    onOpenChangeRef.current = onOpenChange;
+  }, [onOpenChange]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const closeOutside = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) onOpenChangeRef.current(false);
+    };
+
+    document.addEventListener('pointerdown', closeOutside);
+    return () => document.removeEventListener('pointerdown', closeOutside);
+  }, [isOpen]);
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     onKeyDown?.(event);
@@ -66,6 +85,7 @@ export function Combobox({
     <ComboboxContext.Provider value={{ inputId: id, isOpen, listId, onOpenChange }}>
       <div
         {...props}
+        ref={root}
         data-combobox
         className={[styles.root, className].filter(Boolean).join(' ')}
         onKeyDown={handleKeyDown}

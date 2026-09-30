@@ -35,7 +35,7 @@ export function isSummableQuantityUnit(unit: string) {
 }
 
 export function formatQuantityTotal(amount: number, unit: string) {
-  return `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 2 }).format(amount)} ${unit}`;
+  return `${new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 3 }).format(amount)} ${unit}`;
 }
 
 export function getQuantityAmount(quantity: string) {

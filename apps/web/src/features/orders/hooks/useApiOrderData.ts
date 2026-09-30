@@ -7,12 +7,15 @@ import {
   type OrderListParams,
 } from '../../../shared/lib/supabaseData';
 
+const ordersRefreshInterval = 30_000;
+
 export function useApiOrderData(params: OrderListParams, enabled: boolean) {
   const ordersQuery = useQuery({
     queryKey: ['supabase', 'orders', params],
     queryFn: () => listAllOrders(params),
     enabled,
     placeholderData: (previous) => previous,
+    refetchInterval: ordersRefreshInterval,
     retry: false,
   });
   const catalogQuery = useQuery({
@@ -34,6 +37,7 @@ export function useApiOrderData(params: OrderListParams, enabled: boolean) {
     queryFn: () => listAllOrders({}),
     enabled,
     staleTime: 60_000,
+    refetchInterval: ordersRefreshInterval,
     retry: false,
   });
 

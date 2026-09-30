@@ -1,41 +1,50 @@
-@page order-ticket {
-  size: 80mm 120mm;
-  margin: 0;
-}
-
-@page production-report {
+@page {
   size: 80mm 297mm;
   margin: 0;
 }
 
+[data-print-frame] {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  width: 80mm;
+  height: 1px;
+  border: 0;
+}
+
+html[data-print-document],
+html[data-print-document] body {
+  width: 80mm !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  background: #ffffff !important;
+}
+
+html[data-print-document] [data-print-root] {
+  position: static !important;
+  left: auto !important;
+  width: 77mm !important;
+  margin: 0 auto !important;
+  visibility: visible !important;
+}
+
 @media print {
-  [data-print-root][data-print-all='false'] {
-    page: order-ticket;
-  }
-
-  [data-print-root][data-print-all='true'] {
-    page: production-report;
-  }
-
   html,
   body {
     width: 80mm;
     max-width: 80mm;
     min-width: 0;
+    min-height: 0 !important;
+    height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
-    background: #ffffff;
+    background: #ffffff !important;
   }
 
   #root {
-    width: 80mm;
-    max-width: 80mm;
-    margin: 0 !important;
-    padding: 1.5mm !important;
-    box-sizing: border-box;
-  }
-
-  [data-screen-only] {
     display: none !important;
   }
 

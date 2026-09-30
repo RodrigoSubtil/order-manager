@@ -19,4 +19,13 @@ describe('getFormSubmissionError', () => {
       message: 'Serviço indisponível.',
     });
   });
+
+  it('shows a customer version conflict without blaming the order', () => {
+    expect(
+      getFormSubmissionError(
+        { code: '40001', message: 'Este cliente foi alterado por outro utilizador.' },
+        'Falha.',
+      ),
+    ).toEqual({ conflict: true, message: 'Este cliente foi alterado por outro utilizador.' });
+  });
 });

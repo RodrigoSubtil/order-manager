@@ -1,4 +1,4 @@
-import styles from './FieldError.module.css';
+import { FormMessage } from './FormMessage';
 
 type FieldErrorProps = {
   id: string;
@@ -8,8 +8,8 @@ type FieldErrorProps = {
 export function FieldError({ id, message }: FieldErrorProps) {
   if (!message) return null;
   return (
-    <span className={styles.error} id={id} role="alert">
+    <FormMessage id={id} role="alert" tone="error">
       {message}
-    </span>
+    </FormMessage>
   );
 }

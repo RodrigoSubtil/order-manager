@@ -34,7 +34,8 @@ export function Dialog({
     const panel = panelRef.current;
     const preferredFocus = panel?.querySelector<HTMLElement>('[data-autofocus]');
     const firstFocus = panel?.querySelector<HTMLElement>(focusableSelector);
-    (preferredFocus ?? firstFocus ?? panel)?.focus();
+    (preferredFocus ?? firstFocus ?? panel)?.focus({ preventScroll: true });
+    if (panel) panel.scrollTop = 0;
 
     return () => previousFocus?.focus();
   }, []);

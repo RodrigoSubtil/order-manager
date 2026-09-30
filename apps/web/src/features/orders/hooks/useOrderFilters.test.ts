@@ -1,7 +1,9 @@
+import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
+import { todayKey } from '../../../shared/lib/dateUtils';
 import type { Order } from '../../../shared/lib/domain';
-import { compareOrdersByDelivery, getOrderStats } from './useOrderFilters';
+import { compareOrdersByDelivery, getOrderStats, useOrderFilterState } from './useOrderFilters';
 
 function order(overrides: Partial<Order>): Order {
   return {
@@ -50,5 +52,30 @@ describe('getOrderStats', () => {
       today: 1,
       upcoming: 2,
     });
+  });
+});
+
+describe('useOrderFilterState', () => {
+  it('switches among all, today and a previously selected custom date', () => {
+    const { result } = renderHook(() => useOrderFilterState());
+    expect(result.current.dateFilterMode).toBe('today');
+    expect(result.current.dateFilter).toBe(todayKey());
+
+    act(() => result.current.setDateFilterMode('custom'));
+    act(() => result.current.setDateFilter('2026-01-15'));
+    expect(result.current.queryParams).toMatchObject({
+      from: '2026-01-15',
+      until: '2026-01-15',
+    });
+
+    act(() => result.current.setDateFilterMode('all'));
+    expect(result.current.dateFilter).toBe('');
+    expect(result.current.queryParams.from).toBeUndefined();
+
+    act(() => result.current.setDateFilterMode('custom'));
+    expect(result.current.dateFilter).toBe('2026-01-15');
+
+    act(() => result.current.setDateFilterMode('today'));
+    expect(result.current.dateFilter).toBe(todayKey());
   });
 });

@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import type { Order } from '../../../shared/lib/domain';
+import { buildPrintProductSummary } from '../../../shared/lib/productGrouping';
 import { PrintableOrders } from './PrintableOrders';
 
 const order: Order = {
@@ -51,7 +52,7 @@ describe('PrintableOrders', () => {
     expect(screen.getByText('Ficha individual')).toBeInTheDocument();
     expect(screen.getByText('Ordem de produção')).toBeInTheDocument();
     expect(screen.getByText('Pedido #27')).toBeInTheDocument();
-    expect(screen.getByText('Telefone: 912345678')).toBeInTheDocument();
+    expect(screen.getByText('Telefone: +351 912345678')).toBeInTheDocument();
     expect(screen.getByText('Responsável: Maria Helena')).toBeInTheDocument();
     expect(screen.getByText('10:30')).toBeInTheDocument();
   });
@@ -76,6 +77,36 @@ describe('PrintableOrders', () => {
 
     expect(screen.getAllByText('Ordem de produção')).toHaveLength(2);
     expect(screen.getAllByText('Encomendas detalhadas')).toHaveLength(2);
+  });
+
+  it('identifica cada bolo por pedido no resumo, sem juntar pesos iguais', () => {
+    const firstOrder = {
+      ...order,
+      products: [{ ...order.products[0], product: 'Bolo de chocolate', quantity: '1 kg' }],
+    };
+    const secondOrder = { ...firstOrder, id: 'order-2', orderNumber: 28 };
+
+    render(
+      <PrintableOrders
+        getResponsibleName={(item) => item.responsibleName}
+        printAll
+        printDescription="Resumo de produção"
+        printFrom={order.deliveryDate}
+        printFromTime="00:00"
+        printMode="summary"
+        printOrderCount={2}
+        printOrders={[firstOrder, secondOrder]}
+        printProductSummary={buildPrintProductSummary([firstOrder, secondOrder])}
+        printRangeMode="day"
+        printUntil={order.deliveryDate}
+        printUntilTime="23:59"
+      />,
+    );
+
+    expect(screen.getAllByText('Bolo de chocolate')).toHaveLength(2);
+    expect(screen.getByText(/Pedido #27/)).toBeInTheDocument();
+    expect(screen.getByText(/Pedido #28/)).toBeInTheDocument();
+    expect(screen.getAllByText('1 kg')).toHaveLength(2);
   });
 
   it('mantém todos os produtos de uma encomenda longa no documento', () => {

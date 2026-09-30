@@ -1,4 +1,4 @@
-export type Category = 'Pastelaria' | 'Padaria' | 'Salgados';
+export type Category = 'Pastelaria' | 'Padaria' | 'Salgados' | 'Almoço';
 
 export type ProductLine = {
   id: string;
@@ -23,6 +23,8 @@ export type Order = {
   id: string;
   orderNumber: number | null;
   clientName: string;
+  customerId?: string | null;
+  customerVersion?: number | null;
   phone: string;
   responsibleId: string;
   responsibleName: string;
@@ -34,9 +36,9 @@ export type Order = {
   version?: number;
 };
 
-export type OrderForm = Omit<Order, 'id' | 'createdAt'>;
+export type OrderForm = Omit<Order, 'id' | 'createdAt'> & { updateCustomer?: boolean };
 
-export const categories: Category[] = ['Pastelaria', 'Padaria', 'Salgados'];
+export const categories: Category[] = ['Pastelaria', 'Padaria', 'Salgados', 'Almoço'];
 
 export function toCategory(value: string): Category {
   return categories.includes(value as Category) ? (value as Category) : 'Pastelaria';

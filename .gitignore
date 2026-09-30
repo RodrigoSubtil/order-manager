@@ -14,3 +14,6 @@ vite-*.log
 # Exports autorizados podem conter PII e nunca devem entrar no repositório.
 apps/api/prisma/legacy/private/
 *.authorized-legacy-export.json
+
+.vercel
+.env*

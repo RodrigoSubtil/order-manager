@@ -223,6 +223,13 @@
   stroke-width: 2;
 }
 
+.actionButton .whatsAppIcon {
+  width: 22px;
+  height: 22px;
+  fill: currentcolor;
+  stroke: none;
+}
+
 .deleteAction {
   color: var(--color-danger);
 }
