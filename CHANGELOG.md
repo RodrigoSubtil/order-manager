@@ -14,4 +14,4 @@ Nenhuma alteração registada.
 - Impressão individual, detalhada e resumo de produtos em talões de 80 mm com altura ajustada ao conteúdo.
 - Dados no Supabase Auth e PostgreSQL via RPCs e RLS; sem armazenamento local de encomendas.
 
-O estado publicado desta versão precisa ser confirmado no domínio e no dispositivo de uso. A documentação atual começa em [docs/README.md](docs/README.md).
+A versão 1.0.0 foi confirmada no painel de [order-manager-rs.vercel.app](https://order-manager-rs.vercel.app/) em 04/10/2026. A validação do fluxo completo e da impressora física está descrita em [docs/operations/release.md](docs/operations/release.md). A documentação atual começa em [docs/README.md](docs/README.md).

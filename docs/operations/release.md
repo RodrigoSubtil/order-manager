@@ -1,6 +1,6 @@
 # Release e operação · v1.0.0
 
-O número de versão do site vem de [`apps/web/package.json`](../../apps/web/package.json), aparece abaixo de **Entrar** no login e no canto superior direito do cabeçalho e deve aumentar apenas quando uma nova versão for preparada. Atualize também este registo. A versão 1.0.0 é a primeira versão destinada ao uso oficial; **o código local não comprova que ela está publicada**.
+O número de versão do site vem de [`apps/web/package.json`](../../apps/web/package.json), aparece abaixo de **Entrar** no login e no canto superior direito do cabeçalho e deve aumentar apenas quando uma nova versão for preparada. Atualize também este registo. A versão 1.0.0 é a primeira versão destinada ao uso oficial.
 
 ## Preparação da release
 
@@ -24,8 +24,8 @@ Rollback de frontend: promova um deployment anterior conhecido e valide-o. Rollb
 
 ## Registo de versões
 
-| Versão | Estado                           | Mudanças principais                                                           | Evidência ainda necessária                                    |
-| ------ | -------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| 1.0.0  | Preparada nesta árvore de código | Seletores, telefones por país, impressão de 80 mm, encomendas e gestão atuais | Confirmar deploy, banco real, dispositivo e impressora física |
+### 1.0.0 · 04/10/2026
 
-Ao publicar uma versão, substitua o estado pela data, commit/deployment e resultado dos testes reais. Não infira essas informações apenas do `package.json`.
+O código `01cc891` foi publicado no Vercel com os seletores, telefones por país e impressão de 80 mm. O [painel publicado](https://order-manager-rs.vercel.app/) mostrou `v1.0.0` numa sessão autenticada. O fluxo completo de gravação, os dados reais do banco e a impressora física não foram validados nesta publicação.
+
+Nas próximas versões, registe data, commit/deployment e resultado dos testes reais. Não infira essas informações apenas do `package.json`.
