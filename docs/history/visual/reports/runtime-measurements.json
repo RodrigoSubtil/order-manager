@@ -1,0 +1,298 @@
+{
+  "auditDate": "2026-09-25",
+  "environment": {
+    "url": "http://localhost:5173/",
+    "authenticated": true,
+    "visibleOrders": 0,
+    "dataMutations": 0,
+    "browserEngine": "in-app Chromium"
+  },
+  "responsiveMatrix": [
+    {
+      "name": "desktop-wide",
+      "requested": { "width": 1440, "height": 900 },
+      "actual": { "width": 1440, "height": 900 },
+      "document": {
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "scrollHeight": 900,
+        "horizontalOverflow": false
+      },
+      "summaryWidths": [460, 460, 460],
+      "tinyTargets": [
+        { "label": "Gerenciar", "width": 88, "height": 32 },
+        { "label": "Sair", "width": 32, "height": 30 },
+        { "label": "Mostrar áreas do filtro", "width": 34, "height": 34 }
+      ],
+      "smallText": [],
+      "clippedElements": 0,
+      "offViewportElements": 0
+    },
+    {
+      "name": "desktop",
+      "requested": { "width": 1024, "height": 768 },
+      "actual": { "width": 1024, "height": 768 },
+      "document": {
+        "clientWidth": 1009,
+        "scrollWidth": 1009,
+        "scrollHeight": 836,
+        "horizontalOverflow": false
+      },
+      "summaryWidths": [316, 316, 316],
+      "tinyTargets": [
+        { "label": "Gerenciar", "width": 88, "height": 32 },
+        { "label": "Sair", "width": 32, "height": 30 },
+        { "label": "Mostrar áreas do filtro", "width": 34, "height": 34 }
+      ],
+      "smallText": [],
+      "clippedElements": 0,
+      "offViewportElements": 0
+    },
+    {
+      "name": "tablet",
+      "requested": { "width": 768, "height": 900 },
+      "actual": { "width": 768, "height": 900 },
+      "document": {
+        "clientWidth": 753,
+        "scrollWidth": 753,
+        "scrollHeight": 949,
+        "horizontalOverflow": false
+      },
+      "summaryWidths": [235, 235, 235],
+      "tinyTargets": [
+        { "label": "Gerenciar", "width": 88, "height": 32 },
+        { "label": "Sair", "width": 32, "height": 30 },
+        { "label": "Mostrar áreas do filtro", "width": 34, "height": 34 }
+      ],
+      "smallText": [],
+      "clippedElements": 0,
+      "offViewportElements": 0
+    },
+    {
+      "name": "mobile-390",
+      "requested": { "width": 390, "height": 844 },
+      "actual": { "width": 390, "height": 844 },
+      "document": {
+        "clientWidth": 375,
+        "scrollWidth": 375,
+        "scrollHeight": 878,
+        "horizontalOverflow": false
+      },
+      "summaryWidths": [116, 116, 116],
+      "tinyTargets": [
+        { "label": "Gerenciar", "width": 88, "height": 32 },
+        { "label": "Sair", "width": 32, "height": 30 },
+        { "label": "Mostrar áreas do filtro", "width": 36, "height": 36 }
+      ],
+      "smallText": [
+        { "label": "Total", "fontSize": "10.9312px" },
+        { "label": "Hoje", "fontSize": "10.9312px" },
+        { "label": "Próximas", "fontSize": "10.9312px" }
+      ],
+      "clippedElements": 0,
+      "offViewportElements": 0
+    },
+    {
+      "name": "mobile-360",
+      "requested": { "width": 360, "height": 800 },
+      "actual": { "width": 360, "height": 800 },
+      "document": {
+        "clientWidth": 345,
+        "scrollWidth": 345,
+        "scrollHeight": 870,
+        "horizontalOverflow": false
+      },
+      "summaryWidths": [106, 106, 106],
+      "tinyTargets": [
+        { "label": "Gerenciar", "width": 88, "height": 32 },
+        { "label": "Sair", "width": 32, "height": 30 },
+        { "label": "Mostrar áreas do filtro", "width": 36, "height": 36 }
+      ],
+      "smallText": [
+        { "label": "Total", "fontSize": "10.08px" },
+        { "label": "Hoje", "fontSize": "10.08px" },
+        { "label": "Próximas", "fontSize": "10.08px" }
+      ],
+      "clippedElements": 0,
+      "offViewportElements": 0
+    },
+    {
+      "name": "minimum-320",
+      "requested": { "width": 320, "height": 700 },
+      "actual": { "width": 320, "height": 700 },
+      "document": {
+        "clientWidth": 305,
+        "scrollWidth": 320,
+        "scrollHeight": 900,
+        "horizontalOverflow": true
+      },
+      "summaryWidths": [97, 97, 97],
+      "tinyTargets": [
+        { "label": "Gerenciar", "width": 88, "height": 32 },
+        { "label": "Sair", "width": 32, "height": 30 },
+        { "label": "Mostrar áreas do filtro", "width": 36, "height": 36 }
+      ],
+      "smallText": [
+        { "label": "Total", "fontSize": "9.28px" },
+        { "label": "Hoje", "fontSize": "9.28px" },
+        { "label": "Próximas", "fontSize": "9.28px" }
+      ],
+      "clippedElements": 0,
+      "offViewportElements": 0
+    },
+    {
+      "name": "landscape",
+      "requested": { "width": 844, "height": 390 },
+      "actual": { "width": 844, "height": 390 },
+      "document": {
+        "clientWidth": 829,
+        "scrollWidth": 829,
+        "scrollHeight": 949,
+        "horizontalOverflow": false
+      },
+      "summaryWidths": [260, 260, 260],
+      "tinyTargets": [
+        { "label": "Gerenciar", "width": 88, "height": 32 },
+        { "label": "Sair", "width": 32, "height": 30 },
+        { "label": "Mostrar áreas do filtro", "width": 34, "height": 34 }
+      ],
+      "smallText": [],
+      "clippedElements": 0,
+      "offViewportElements": 0
+    },
+    {
+      "name": "short-mobile",
+      "requested": { "width": 390, "height": 500 },
+      "actual": { "width": 390, "height": 500 },
+      "document": {
+        "clientWidth": 375,
+        "scrollWidth": 375,
+        "scrollHeight": 878,
+        "horizontalOverflow": false
+      },
+      "summaryWidths": [116, 116, 116],
+      "tinyTargets": [
+        { "label": "Gerenciar", "width": 88, "height": 32 },
+        { "label": "Sair", "width": 32, "height": 30 },
+        { "label": "Mostrar áreas do filtro", "width": 36, "height": 36 }
+      ],
+      "smallText": [
+        { "label": "Total", "fontSize": "10.9312px" },
+        { "label": "Hoje", "fontSize": "10.9312px" },
+        { "label": "Próximas", "fontSize": "10.9312px" }
+      ],
+      "clippedElements": 0,
+      "offViewportElements": 0
+    }
+  ],
+  "modals": [
+    {
+      "type": "order",
+      "viewport": { "width": 390, "height": 844 },
+      "dialog": { "width": 366, "height": 820 },
+      "headerHeight": 57,
+      "body": { "clientHeight": 702, "scrollHeight": 1206, "scrollTop": 0 },
+      "footerHeight": 69,
+      "startsAtTop": true,
+      "buttonsVisible": true,
+      "horizontalOverflow": false,
+      "escapeClosed": true,
+      "closeButtonClosed": true,
+      "focusRestoredTo": "Nova encomenda",
+      "focusTrapVerified": true,
+      "tinyTargets": [
+        { "label": "Fechar", "width": 36, "height": 36 },
+        { "label": "Mostrar clientes", "width": 36, "height": 36 },
+        { "label": "Mostrar responsáveis", "width": 36, "height": 36 },
+        { "label": "Remover", "width": 100, "height": 34 },
+        { "label": "Mostrar áreas do produto 1", "width": 36, "height": 36 },
+        { "label": "Mostrar produtos do item 1", "width": 36, "height": 36 },
+        { "label": "Mostrar quantidades do produto 1", "width": 36, "height": 36 },
+        { "label": "Mostrar unidades do produto 1", "width": 36, "height": 36 }
+      ]
+    },
+    {
+      "type": "order",
+      "viewport": { "width": 320, "height": 700 },
+      "dialog": { "width": 296, "height": 676 },
+      "headerHeight": 57,
+      "body": { "clientHeight": 558, "scrollHeight": 1225, "scrollTop": 0 },
+      "footerHeight": 69,
+      "startsAtTop": true,
+      "buttonsVisible": true,
+      "horizontalOverflow": false,
+      "escapeClosed": true,
+      "closeButtonClosed": true,
+      "focusRestoredTo": "Nova encomenda"
+    },
+    {
+      "type": "print",
+      "viewport": { "width": 390, "height": 844 },
+      "dialog": { "width": 366, "height": 820 },
+      "headerHeight": 57,
+      "body": { "clientHeight": 693, "scrollHeight": 729, "scrollTop": 0 },
+      "footerHeight": 69,
+      "startsAtTop": true,
+      "buttonsVisible": true,
+      "horizontalOverflow": false,
+      "escapeClosed": true,
+      "closeButtonClosed": true,
+      "focusRestoredTo": "Imprimir todas",
+      "tinyTargets": [
+        { "label": "Fechar", "width": 36, "height": 36 },
+        { "label": "Radio option", "width": 18, "height": 18, "note": "Visible label is the larger click target" }
+      ]
+    },
+    {
+      "type": "print",
+      "viewport": { "width": 320, "height": 700 },
+      "dialog": { "width": 296, "height": 676 },
+      "headerHeight": 57,
+      "body": { "clientHeight": 548, "scrollHeight": 729, "scrollTop": 0 },
+      "footerHeight": 70,
+      "startsAtTop": true,
+      "buttonsVisible": true,
+      "horizontalOverflow": false,
+      "escapeClosed": true,
+      "closeButtonClosed": true,
+      "focusRestoredTo": "Imprimir todas"
+    }
+  ],
+  "pickerInteractions": {
+    "customerEmptyTriggerOpened": false,
+    "customerOneLetterExpanded": true,
+    "customerOneLetterOptionCountForSanitizedQuery": 0,
+    "customerClosedOnOutsideInteraction": true,
+    "responsibleOpened": true,
+    "responsibleClosedOnOutsideInteraction": true,
+    "productOpened": true,
+    "productClosedOnOutsideInteraction": true,
+    "calendarOpened": true,
+    "calendarExposedDialogSemantics": true,
+    "timePickerOpened": "observed but detailed option tree omitted from evidence"
+  },
+  "managementGate": {
+    "viewport": { "width": 390, "height": 844 },
+    "horizontalOverflow": false,
+    "headings": [
+      { "text": "Painel de encomendas", "level": 1, "fontSize": "28.8px" },
+      { "text": "Gerenciar a pastelaria", "level": 1, "fontSize": "24.8px" }
+    ],
+    "controls": [
+      { "label": "Encomendas", "width": 106, "height": 32 },
+      { "label": "Sair", "width": 32, "height": 30 },
+      { "label": "Senha", "width": 337, "height": 48 },
+      { "label": "Mostrar senha", "width": 34, "height": 34 },
+      { "label": "Entrar", "width": 337, "height": 44 }
+    ],
+    "authenticatedManagementContentInspected": false,
+    "reason": "Management password was not requested or bypassed"
+  },
+  "unsupportedOrNotVerified": {
+    "browserZoom": "The in-app browser viewport capability does not expose browser zoom. Static reflow and width reduction were measured instead.",
+    "physicalPrinter": "Requires the bakery thermal printer and driver.",
+    "loginRuntime": "The existing authenticated session was preserved; no logout was performed.",
+    "populatedOrderCards": "The visible order count was zero.",
+    "managementContent": "The access gate was measured, but no password was supplied."
+  }
+}

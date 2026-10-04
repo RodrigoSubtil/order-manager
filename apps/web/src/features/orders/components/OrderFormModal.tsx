@@ -23,6 +23,7 @@ import {
 import type { CatalogProduct, Category, OrderResponsible } from '../../../shared/lib/domain';
 import { currentTimeKey, todayKey } from '../../../shared/lib/dateUtils';
 import { phoneCountries } from '../lib/phoneNumber';
+import { PhoneInput } from './PhoneInput';
 import { normalizeResponsibleName } from '../lib/responsibleName';
 import type { OrderFormValues } from '../schemas/orderSchema';
 import { CustomerPicker } from './CustomerPicker';
@@ -284,18 +285,23 @@ export function OrderFormModal(props: OrderFormModalProps) {
                         name="phone"
                         render={({ field }) => (
                           <span className={styles.iconInput}>
-                            <Input
-                              {...field}
+                            <PhoneInput
                               id="order-phone"
+                              name={field.name}
+                              ref={field.ref}
+                              onBlur={field.onBlur}
+                              countryCode={phoneCountryCode}
+                              value={field.value}
+                              onValueChange={field.onChange}
                               className={styles.inputWithIcon}
                               required
                               aria-describedby={errors.phone ? 'order-phone-error' : undefined}
                               aria-invalid={Boolean(errors.phone)}
-                              inputMode="numeric"
-                              onChange={(event) =>
-                                field.onChange(event.target.value.replace(/\D/g, ''))
+                              placeholder={
+                                phoneCountryCode === '351'
+                                  ? 'Ex.: 912 000 000'
+                                  : 'Número de telefone'
                               }
-                              placeholder="Ex.: 912000000"
                             />
                             <Icon name="phone" placement="field" />
                           </span>

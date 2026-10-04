@@ -1,0 +1,9 @@
+Audit date: 2026-09-25
+Command: node scripts/audit-frontend-styles.mjs
+Run 1: exit 0
+Run 2: exit 0
+Run 1 SHA-256: 742c2ce43504d62d55b9e015e30e021f47fbfd2ce3e13decd333f8dae7e3d1b9
+Run 2 SHA-256: 742c2ce43504d62d55b9e015e30e021f47fbfd2ce3e13decd333f8dae7e3d1b9
+Stable output: yes
+JSON parse: valid
+Application source digest: cd70aeef9c092b28d3f5ace078464c42105534f128d6b121744c30d388675d97

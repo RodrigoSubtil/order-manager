@@ -60,12 +60,17 @@ describe('CustomerPicker', () => {
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     expect(screen.queryByText(/Digite pelo menos/)).not.toBeInTheDocument();
 
+    await user.click(input);
+    expect(screen.getByRole('listbox')).toHaveTextContent('Escreva o nome para procurar clientes.');
+    await user.click(input);
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+
     await user.type(input, 'A');
 
     await waitFor(() => expect(searchCustomers).toHaveBeenCalledWith('A'));
     expect(
       await screen.findByRole('option', {
-        name: 'Ana Silva, telefone +351 912345678',
+        name: 'Ana Silva, telefone +351 912 345 678',
       }),
     ).toBeVisible();
   });
@@ -82,12 +87,14 @@ describe('CustomerPicker', () => {
     await waitFor(() => expect(searchCustomers).toHaveBeenCalledWith('An'));
     await user.click(
       await screen.findByRole('option', {
-        name: /Ana Silva, telefone \+351 933333333/,
+        name: /Ana Silva, telefone \+351 933 333 333/,
       }),
     );
     expect(screen.getByTestId('phone')).toHaveTextContent('933333333');
     expect(screen.getByTestId('phone-country-code')).toHaveTextContent('351');
     expect(screen.getByTestId('customer-id')).toHaveTextContent('2');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: 'Nome do cliente' })).not.toHaveFocus();
     expect(
       screen.getByText('Cliente selecionado. Alterar nome ou telefone atualiza este cadastro.'),
     ).toBeVisible();
@@ -104,7 +111,7 @@ describe('CustomerPicker', () => {
     const input = screen.getByRole('combobox', { name: 'Nome do cliente' });
     await user.type(input, 'Be');
     await screen.findByRole('option', {
-      name: 'Beatriz, telefone +351 911111111',
+      name: 'Beatriz, telefone +351 911 111 111',
     });
     input.focus();
     await user.keyboard('{ArrowDown}{Enter}');
@@ -122,7 +129,7 @@ describe('CustomerPicker', () => {
     await user.type(screen.getByRole('combobox', { name: 'Nome do cliente' }), 'Br');
     await user.click(
       await screen.findByRole('option', {
-        name: 'Bruna, telefone +55 11999999999',
+        name: 'Bruna, telefone +55 11 99999 9999',
       }),
     );
 

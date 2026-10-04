@@ -102,4 +102,23 @@ describe('accessible UI primitives', () => {
     await user.click(screen.getByRole('button', { name: 'Fora do seletor' }));
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
+
+  it('toggles from the field or arrow and blurs after choosing an option', async () => {
+    const user = userEvent.setup();
+    render(<ComboboxExample />);
+    const input = screen.getByRole('combobox', { name: 'Responsável' });
+    const arrow = screen.getByRole('button', { name: 'Mostrar responsáveis' });
+
+    await user.click(input);
+    expect(screen.getByRole('listbox')).toBeVisible();
+    await user.click(input);
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    expect(input).not.toHaveFocus();
+
+    await user.click(arrow);
+    expect(screen.getByRole('listbox')).toBeVisible();
+    await user.click(screen.getByRole('option', { name: 'Maria' }));
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    expect(input).not.toHaveFocus();
+  });
 });

@@ -7,3 +7,4 @@ dist
 *.log
 package-lock.json
 apps/web/public/mockServiceWorker.js
+docs/history/visual/reports/*.json

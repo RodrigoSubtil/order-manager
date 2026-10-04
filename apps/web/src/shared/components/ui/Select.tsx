@@ -6,7 +6,7 @@ import styles from './Select.module.css';
 export type SelectProps = SelectHTMLAttributes<HTMLSelectElement>;
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
-  { className, ...props },
+  { className, onChange, ...props },
   ref,
 ) {
   return (
@@ -15,6 +15,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         ref={ref}
         className={[styles.select, className].filter(Boolean).join(' ')}
         {...props}
+        onChange={(event) => {
+          onChange?.(event);
+          event.currentTarget.blur();
+        }}
       />
       <Icon name="chevron-down" placement="field" />
     </span>

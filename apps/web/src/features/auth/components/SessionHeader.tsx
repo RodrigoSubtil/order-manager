@@ -1,4 +1,5 @@
 import { Button } from '../../../shared/components/ui';
+import { appVersion } from '../../../shared/lib/appVersion';
 import styles from './SessionHeader.module.css';
 
 type SessionHeaderProps = {
@@ -22,6 +23,8 @@ export function SessionHeader({
         <span data-eyebrow>Order Manager</span>
         <h1>Painel de encomendas</h1>
       </div>
+
+      <span className={styles.version}>{appVersion}</span>
 
       <div className={styles.actions}>
         {canManage && (

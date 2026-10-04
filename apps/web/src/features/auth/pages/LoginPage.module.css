@@ -23,6 +23,14 @@
   text-align: center;
 }
 
+.version {
+  align-self: center;
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
 .brand h1 {
   margin: 8px 0;
   color: var(--color-ink);

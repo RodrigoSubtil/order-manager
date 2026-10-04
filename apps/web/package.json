@@ -1,7 +1,7 @@
 {
   "name": "@order-manager/web",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --configLoader runner",
@@ -20,6 +20,7 @@
     "@sentry/react": "^10.67.0",
     "@supabase/supabase-js": "^2.110.8",
     "@tanstack/react-query": "^5.101.2",
+    "libphonenumber-js": "^1.13.14",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.81.0",

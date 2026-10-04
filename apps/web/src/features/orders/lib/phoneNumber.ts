@@ -1,3 +1,5 @@
+import { AsYouType } from 'libphonenumber-js';
+
 // Country calling codes are based on the ITU national numbering plan list.
 // Countries sharing a calling code are grouped because the database stores the
 // complete international number, not an independent country identifier.
@@ -72,6 +74,32 @@ export function splitInternationalPhone(phone: string) {
 
 export function formatInternationalPhone(phone: string) {
   if (!phone) return '';
-  const { countryCode, nationalNumber, recognized } = splitInternationalPhone(phone);
-  return recognized ? `+${countryCode} ${nationalNumber}` : `+${countryCode}${nationalNumber}`;
+  const { countryCode, nationalNumber } = splitInternationalPhone(phone);
+  const fullNumber = joinInternationalPhone(countryCode, nationalNumber);
+  const formatted = new AsYouType().input(`+${fullNumber}`);
+
+  // Formatting must never hide or change a digit from an existing customer record.
+  return digitsOnly(formatted) === fullNumber ? formatted : `+${countryCode} ${nationalNumber}`;
+}
+
+export function formatNationalPhone(countryCode: string, nationalNumber: string) {
+  const digits = digitsOnly(nationalNumber);
+  if (!digits || !countryCode) return digits;
+
+  const country = phoneCountries.find((item) => item.code === countryCode);
+  if (country) {
+    const region = country.country === 'US/CA' ? 'US' : country.country;
+    const nationalFormatted = new AsYouType(region).input(digits);
+    if (nationalFormatted !== digits && digitsOnly(nationalFormatted) === digits) {
+      return nationalFormatted;
+    }
+  }
+
+  const prefix = `+${digitsOnly(countryCode)}`;
+  const formatted = new AsYouType().input(`${prefix}${digits}`);
+  const nationalFormatted = formatted.startsWith(prefix)
+    ? formatted.slice(prefix.length).trimStart()
+    : digits;
+
+  return digitsOnly(nationalFormatted) === digits ? nationalFormatted : digits;
 }

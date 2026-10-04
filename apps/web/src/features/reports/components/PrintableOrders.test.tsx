@@ -52,7 +52,7 @@ describe('PrintableOrders', () => {
     expect(screen.getByText('Ficha individual')).toBeInTheDocument();
     expect(screen.getByText('Ordem de produção')).toBeInTheDocument();
     expect(screen.getByText('Pedido #27')).toBeInTheDocument();
-    expect(screen.getByText('Telefone: +351 912345678')).toBeInTheDocument();
+    expect(screen.getByText('Telefone: +351 912 345 678')).toBeInTheDocument();
     expect(screen.getByText('Responsável: Maria Helena')).toBeInTheDocument();
     expect(screen.getByText('10:30')).toBeInTheDocument();
   });

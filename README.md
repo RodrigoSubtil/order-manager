@@ -1,47 +1,26 @@
 # Order Manager
 
-Aplicação React para gerir encomendas da Pastelaria Vénus, publicada no Vercel e ligada diretamente
-ao Supabase.
-
-## Arquitetura atual
+Aplicação da Pastelaria Vénus para criar, acompanhar e imprimir encomendas. A versão do produto nesta árvore de código é **1.0.0**; a versão publicada deve ser confirmada no cabeçalho do próprio site.
 
 ```text
-Browser (React + Vite)
-  -> Supabase Auth
-  -> Supabase PostgreSQL + RLS + RPCs
+React + Vite (Vercel) → Supabase Auth → RPCs PostgreSQL → tabelas com RLS
 ```
 
-Não há API NestJS, Prisma, Docker, Compose ou Render nesta versão. A chave usada no browser é somente a chave pública do Supabase; nunca coloque `service_role`, `DATABASE_URL` ou passwords em variáveis `VITE_*`.
+Não há API NestJS, Prisma ou Docker em uso. O navegador recebe apenas a URL e a chave pública do Supabase; `service_role`, credenciais e `DATABASE_URL` nunca entram em variáveis `VITE_*`.
 
-## Papéis
+## Começar
 
-- `OPERATOR` cria, consulta, edita, conclui, exclui e imprime encomendas;
-- `OWNER` possui o mesmo acesso e pode abrir **Gerenciar**;
-- uma encomenda concluída ou apagada é removida do banco após confirmação, juntamente com os seus produtos;
-- alterações de catálogo e responsáveis exigem uma segunda senha no botão **Gerenciar**;
-- o Supabase exige internamente papel `OWNER` e um desbloqueio gerencial válido para essas alterações.
+Requer Node.js 22 e acesso autorizado a um projeto Supabase de desenvolvimento.
 
-O tenant é resolvido pelo Supabase através da sessão e membership ativa. O frontend não envia `tenant_id`.
-
-## Desenvolvimento
-
-```bash
-npm install
-copy apps\web\.env.example apps\web\.env
+```powershell
+npm ci
+Copy-Item apps\web\.env.example apps\web\.env
 npm run dev
 ```
 
-Defina em `apps/web/.env`:
+Configure `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` em `apps/web/.env`. O endereço local é `http://localhost:5173`.
 
-```dotenv
-VITE_SUPABASE_URL=https://seu-projeto.supabase.co
-VITE_SUPABASE_ANON_KEY=sua-chave-publica
-VITE_APP_URL=http://localhost:5173
-```
-
-## Qualidade
-
-```bash
+```powershell
 npm run format:check
 npm run lint
 npm run typecheck
@@ -49,9 +28,4 @@ npm run test
 npm run build
 ```
 
-## Publicação
-
-No Vercel, configure as mesmas variáveis `VITE_SUPABASE_*` com a URL e a chave pública do projeto Supabase. A configuração segura do banco, incluindo schema, RLS, RPCs e primeiro OWNER, está em [docs/supabase-setup.md](docs/supabase-setup.md).
-
-A documentação ativa começa em [docs/README.md](docs/README.md). Documentos de etapas antigas com
-NestJS, Prisma, Docker ou Render são apenas históricos.
+A documentação para utilizadores, operadores e manutenção começa em [docs/README.md](docs/README.md). Quem alterar o projeto deve ler também [AGENTS.md](AGENTS.md).

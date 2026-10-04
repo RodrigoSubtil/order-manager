@@ -1,0 +1,5081 @@
+{
+  "colors": {
+    "directApproximate": [
+      {
+        "count": 52,
+        "value": "white"
+      },
+      {
+        "count": 20,
+        "value": "transparent"
+      },
+      {
+        "count": 13,
+        "value": "#111111"
+      },
+      {
+        "count": 7,
+        "value": "rgb(91 120 199 / 20%)"
+      },
+      {
+        "count": 5,
+        "value": "#ffffff"
+      },
+      {
+        "count": 5,
+        "value": "rgb(255 255 255 / 18%)"
+      },
+      {
+        "count": 5,
+        "value": "rgb(77 67 57 / 8%)"
+      },
+      {
+        "count": 4,
+        "value": "currentcolor"
+      },
+      {
+        "count": 3,
+        "value": "rgb(77 67 57 / 14%)"
+      },
+      {
+        "count": 2,
+        "value": "rgb(187 165 142 / 13%)"
+      },
+      {
+        "count": 2,
+        "value": "rgb(255 255 255 / 10%)"
+      },
+      {
+        "count": 2,
+        "value": "rgb(255 255 255 / 90%)"
+      },
+      {
+        "count": 1,
+        "value": "#f5d98b"
+      },
+      {
+        "count": 1,
+        "value": "#f6f9f8"
+      },
+      {
+        "count": 1,
+        "value": "color-mix(in srgb, var(--color-accent)"
+      },
+      {
+        "count": 1,
+        "value": "color-mix(in srgb, var(--color-success)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(118 95 75 / 16%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(118 95 75 / 96%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(118 95 75 / 98%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(139 63 50 / 35%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(187 165 142 / 20%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(239 235 229 / 82%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(247 245 242 / 64%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(255 255 255 / 12%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(255 255 255 / 28%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(255 255 255 / 75%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(255 255 255 / 94%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(44 35 28 / 48%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(77 67 57 / 10%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(77 67 57 / 15%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(77 67 57 / 16%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(77 67 57 / 18%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(77 67 57 / 56%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(77 67 57 / 6%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(87 68 53 / 96%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(91 120 199 / 28%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(97 78 62 / 94%)"
+      }
+    ],
+    "tokenDefinitions": [
+      {
+        "count": 1,
+        "value": "#35634a"
+      },
+      {
+        "count": 1,
+        "value": "#4d4339"
+      },
+      {
+        "count": 1,
+        "value": "#5b78c7"
+      },
+      {
+        "count": 1,
+        "value": "#6b5c4d"
+      },
+      {
+        "count": 1,
+        "value": "#765f4b"
+      },
+      {
+        "count": 1,
+        "value": "#8b3f32"
+      },
+      {
+        "count": 1,
+        "value": "#a29487"
+      },
+      {
+        "count": 1,
+        "value": "#a58e74"
+      },
+      {
+        "count": 1,
+        "value": "#bba58e"
+      },
+      {
+        "count": 1,
+        "value": "#d8c8b7"
+      },
+      {
+        "count": 1,
+        "value": "#e7d9cc"
+      },
+      {
+        "count": 1,
+        "value": "#eeefe9"
+      },
+      {
+        "count": 1,
+        "value": "#f2faf5"
+      },
+      {
+        "count": 1,
+        "value": "#f4ede3"
+      },
+      {
+        "count": 1,
+        "value": "#fbfaf7"
+      },
+      {
+        "count": 1,
+        "value": "#fff7f5"
+      },
+      {
+        "count": 1,
+        "value": "#ffffff"
+      },
+      {
+        "count": 1,
+        "value": "rgb(0 0 0 / 28%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(77 67 57 / 8%)"
+      },
+      {
+        "count": 1,
+        "value": "rgb(77 67 57 / 9%)"
+      }
+    ]
+  },
+  "components": [
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/styles/index.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/App.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/app/providers/AppProviders.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/app/router/AppRouter.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/ConfirmationDialog.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/auth/components/LogoutConfirmDialog.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 2,
+      "cssImports": [
+        "apps/web/src/features/auth/components/SessionHeader.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/auth/components/SessionHeader.tsx",
+      "inlineSvgCount": 1
+    },
+    {
+      "ariaAttributeCount": 9,
+      "cssImports": [
+        "apps/web/src/features/auth/pages/LoginPage.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/auth/pages/LoginPage.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/ConfirmationDialog.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/CompleteOrderDialog.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 5,
+      "cssImports": [
+        "apps/web/src/features/orders/components/CustomerPicker.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/CustomerPicker.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 2,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/ConfirmationDialog.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/DeleteOrderDialog.tsx",
+      "inlineSvgCount": 1
+    },
+    {
+      "ariaAttributeCount": 13,
+      "cssImports": [
+        "apps/web/src/features/orders/components/OrderCard.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/OrderCard.tsx",
+      "inlineSvgCount": 5
+    },
+    {
+      "ariaAttributeCount": 10,
+      "cssImports": [
+        "apps/web/src/features/orders/components/OrderFilters.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/OrderFilters.tsx",
+      "inlineSvgCount": 1
+    },
+    {
+      "ariaAttributeCount": 11,
+      "cssImports": [
+        "apps/web/src/features/orders/components/OrderFormModal.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/OrderFormModal.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 1,
+      "cssImports": [
+        "apps/web/src/features/orders/components/OrderIndicators.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/OrderIndicators.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 2,
+      "cssImports": [
+        "apps/web/src/features/orders/components/OrderList.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/OrderList.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/OrderSuccessDialog.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 16,
+      "cssImports": [
+        "apps/web/src/features/orders/components/ProductEditor.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/ProductEditor.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/features/orders/components/SearchHighlight.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/SearchHighlight.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 1,
+      "cssImports": [
+        "apps/web/src/features/orders/pages/OrdersPage.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/pages/OrdersPage.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 1,
+      "cssImports": [
+        "apps/web/src/features/reports/components/PrintableOrders.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/reports/components/PrintableOrders.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 2,
+      "cssImports": [
+        "apps/web/src/features/reports/components/PrintOptionsDialog.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/reports/components/PrintOptionsDialog.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 1,
+      "cssImports": [
+        "apps/web/src/features/settings/components/ManagementPanel.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/settings/components/CatalogManager.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 4,
+      "cssImports": [
+        "apps/web/src/features/settings/components/ManagementAccessGate.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/settings/components/ManagementAccessGate.tsx",
+      "inlineSvgCount": 1
+    },
+    {
+      "ariaAttributeCount": 1,
+      "cssImports": [
+        "apps/web/src/features/settings/components/ManagementPanel.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/settings/components/ResponsiblesManager.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/ConfirmationDialog.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/settings/components/SettingsDeleteDialog.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 1,
+      "cssImports": [
+        "apps/web/src/features/settings/pages/SettingsPage.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/settings/pages/SettingsPage.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/main.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/Alert.module.css"
+      ],
+      "explicitRoleCount": 1,
+      "file": "apps/web/src/shared/components/ui/Alert.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/Button.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/shared/components/ui/Button.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/Card.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/shared/components/ui/Card.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 6,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/Combobox.module.css"
+      ],
+      "explicitRoleCount": 5,
+      "file": "apps/web/src/shared/components/ui/Combobox.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 12,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/DatePicker.module.css"
+      ],
+      "explicitRoleCount": 1,
+      "file": "apps/web/src/shared/components/ui/DatePicker.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 2,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/Dialog.module.css"
+      ],
+      "explicitRoleCount": 1,
+      "file": "apps/web/src/shared/components/ui/Dialog.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/DialogActions.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/shared/components/ui/DialogActions.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 1,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/DialogHeader.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/shared/components/ui/DialogHeader.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/EmptyState.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/shared/components/ui/EmptyState.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [],
+      "explicitRoleCount": 1,
+      "file": "apps/web/src/shared/components/ui/FieldError.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/FormMessage.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/shared/components/ui/FormMessage.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 1,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/Icon.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/shared/components/ui/Icon.tsx",
+      "inlineSvgCount": 1
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/Input.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/shared/components/ui/Input.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 0,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/Select.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/shared/components/ui/Select.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 1,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/Spinner.module.css"
+      ],
+      "explicitRoleCount": 1,
+      "file": "apps/web/src/shared/components/ui/Spinner.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 2,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/SuccessMessage.module.css"
+      ],
+      "explicitRoleCount": 1,
+      "file": "apps/web/src/shared/components/ui/SuccessMessage.tsx",
+      "inlineSvgCount": 0
+    },
+    {
+      "ariaAttributeCount": 17,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/TimePicker.module.css"
+      ],
+      "explicitRoleCount": 8,
+      "file": "apps/web/src/shared/components/ui/TimePicker.tsx",
+      "inlineSvgCount": 0
+    }
+  ],
+  "contexts": {
+    "declarations": {
+      "print": 120,
+      "screen": 1599
+    }
+  },
+  "customProperties": {
+    "definitions": {
+      "--color-accent": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 6,
+          "value": "#765f4b"
+        }
+      ],
+      "--color-accent-soft": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 7,
+          "value": "#a58e74"
+        }
+      ],
+      "--color-cream": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 3,
+          "value": "#f4ede3"
+        }
+      ],
+      "--color-danger": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 14,
+          "value": "#8b3f32"
+        }
+      ],
+      "--color-danger-soft": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 15,
+          "value": "#fff7f5"
+        }
+      ],
+      "--color-focus": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 18,
+          "value": "#5b78c7"
+        }
+      ],
+      "--color-ink": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 10,
+          "value": "#4d4339"
+        }
+      ],
+      "--color-line": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 13,
+          "value": "#d8c8b7"
+        }
+      ],
+      "--color-muted": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 11,
+          "value": "#6b5c4d"
+        }
+      ],
+      "--color-placeholder": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 12,
+          "value": "#a29487"
+        }
+      ],
+      "--color-sand": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 4,
+          "value": "#e7d9cc"
+        }
+      ],
+      "--color-soft-white": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 9,
+          "value": "#fbfaf7"
+        }
+      ],
+      "--color-stone": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 2,
+          "value": "#eeefe9"
+        }
+      ],
+      "--color-success": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 16,
+          "value": "#35634a"
+        }
+      ],
+      "--color-success-soft": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 17,
+          "value": "#f2faf5"
+        }
+      ],
+      "--color-taupe": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 5,
+          "value": "#bba58e"
+        }
+      ],
+      "--color-white": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 8,
+          "value": "#ffffff"
+        }
+      ],
+      "--content-min-width": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 36,
+          "value": "320px"
+        }
+      ],
+      "--field-icon-inset": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 40,
+          "value": "4px"
+        }
+      ],
+      "--field-icon-size": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 38,
+          "value": "20px"
+        }
+      ],
+      "--field-icon-slot-size": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 39,
+          "value": "34px"
+        }
+      ],
+      "--font-sans": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 33,
+          "value": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        }
+      ],
+      "--radius-lg": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 24,
+          "value": "14px"
+        }
+      ],
+      "--radius-md": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 23,
+          "value": "8px"
+        }
+      ],
+      "--radius-sm": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 22,
+          "value": "6px"
+        }
+      ],
+      "--radius-xl": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 25,
+          "value": "24px"
+        }
+      ],
+      "--shadow-card": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 19,
+          "value": "0 14px 34px rgb(77 67 57 / 9%)"
+        }
+      ],
+      "--shadow-dialog": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 21,
+          "value": "0 24px 90px rgb(0 0 0 / 28%)"
+        }
+      ],
+      "--shadow-panel": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 20,
+          "value": "0 16px 34px rgb(77 67 57 / 8%)"
+        }
+      ],
+      "--space-1": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 26,
+          "value": "4px"
+        }
+      ],
+      "--space-2": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 27,
+          "value": "8px"
+        }
+      ],
+      "--space-3": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 28,
+          "value": "12px"
+        }
+      ],
+      "--space-4": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 29,
+          "value": "16px"
+        }
+      ],
+      "--space-5": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 30,
+          "value": "18px"
+        }
+      ],
+      "--space-6": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 31,
+          "value": "24px"
+        }
+      ],
+      "--space-7": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 32,
+          "value": "32px"
+        }
+      ],
+      "--touch-target": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 37,
+          "value": "44px"
+        }
+      ],
+      "--transition-fast": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 35,
+          "value": "160ms ease"
+        }
+      ],
+      "--z-dialog": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 42,
+          "value": "100"
+        }
+      ],
+      "--z-dropdown": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/tokens.css",
+          "line": 41,
+          "value": "20"
+        }
+      ]
+    },
+    "undefined": [],
+    "unused": [
+      "--field-icon-inset",
+      "--field-icon-slot-size",
+      "--space-2",
+      "--space-3",
+      "--space-4",
+      "--space-5",
+      "--space-6",
+      "--space-7"
+    ],
+    "usages": {
+      "--color-accent": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/SessionHeader.module.css",
+          "line": 8,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 33,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 151,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 160,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 161,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 72,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 128,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 204,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderIndicators.module.css",
+          "line": 30,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 68,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 75,
+          "property": "accent-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+          "line": 14,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+          "line": 15,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+          "line": 70,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+          "line": 80,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/pages/SettingsPage.module.css",
+          "line": 84,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 19,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 32,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 33,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 21,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 103,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 174,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 175,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 191,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DialogHeader.module.css",
+          "line": 14,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Icon.module.css",
+          "line": 12,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Spinner.module.css",
+          "line": 6,
+          "property": "border-top-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 155,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 25,
+          "property": "color"
+        }
+      ],
+      "--color-accent-soft": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 130,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 167,
+          "property": "border-color"
+        }
+      ],
+      "--color-cream": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/SessionHeader.module.css",
+          "line": 7,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/SessionHeader.module.css",
+          "line": 20,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 7,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 18,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 129,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 29,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 71,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 115,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 149,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 169,
+          "property": "background"
+        }
+      ],
+      "--color-danger": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 234,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Alert.module.css",
+          "line": 12,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 48,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 49,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 35,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 198,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/FieldError.module.css",
+          "line": 2,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/FormMessage.module.css",
+          "line": 15,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Input.module.css",
+          "line": 21,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 36,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 174,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 93,
+          "property": "border-color"
+        }
+      ],
+      "--color-danger-soft": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Alert.module.css",
+          "line": 13,
+          "property": "background"
+        }
+      ],
+      "--color-focus": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 100,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 155,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 30,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Input.module.css",
+          "line": 15,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Select.module.css",
+          "line": 22,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 30,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 18,
+          "property": "outline"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 79,
+          "property": "border-color"
+        }
+      ],
+      "--color-ink": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/LogoutConfirmDialog.module.css",
+          "line": 8,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 28,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 93,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 99,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 177,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 16,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 26,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 60,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 34,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Alert.module.css",
+          "line": 18,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 7,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 37,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 41,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Card.module.css",
+          "line": 2,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 60,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+          "line": 20,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 17,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 80,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 138,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/EmptyState.module.css",
+          "line": 16,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Input.module.css",
+          "line": 6,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Select.module.css",
+          "line": 12,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 14,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 97,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 145,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 150,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 2,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 44,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 62,
+          "property": "color"
+        }
+      ],
+      "--color-line": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/LogoutConfirmDialog.module.css",
+          "line": 24,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 95,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 19,
+          "property": "border-bottom"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 155,
+          "property": "border-top"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 5,
+          "property": "border-bottom"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 53,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 82,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 96,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFormModal.module.css",
+          "line": 43,
+          "property": "border-top"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/ProductEditor.module.css",
+          "line": 29,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/pages/OrdersPage.module.css",
+          "line": 19,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 62,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 86,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 113,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 123,
+          "property": "border-top"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Alert.module.css",
+          "line": 4,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 9,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Card.module.css",
+          "line": 4,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 52,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+          "line": 29,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+          "line": 48,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 20,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 65,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 184,
+          "property": "border-top"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Dialog.module.css",
+          "line": 16,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DialogActions.module.css",
+          "line": 8,
+          "property": "border-top"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DialogHeader.module.css",
+          "line": 9,
+          "property": "border-bottom"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Input.module.css",
+          "line": 8,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Select.module.css",
+          "line": 14,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 16,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 91,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 112,
+          "property": "border-block"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 64,
+          "property": "border"
+        }
+      ],
+      "--color-muted": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/LogoutConfirmDialog.module.css",
+          "line": 13,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/LogoutConfirmDialog.module.css",
+          "line": 22,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 80,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/CustomerPicker.module.css",
+          "line": 7,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 23,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 38,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 95,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 102,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 129,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 171,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 190,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 170,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 188,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderIndicators.module.css",
+          "line": 15,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 84,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 42,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 139,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 150,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/pages/SettingsPage.module.css",
+          "line": 37,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/pages/SettingsPage.module.css",
+          "line": 77,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 53,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 77,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+          "line": 15,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+          "line": 34,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 127,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/EmptyState.module.css",
+          "line": 8,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/FormMessage.module.css",
+          "line": 11,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 135,
+          "property": "color"
+        }
+      ],
+      "--color-placeholder": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 53,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 57,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 73,
+          "property": "color"
+        }
+      ],
+      "--color-sand": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 6,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 91,
+          "property": "border-bottom"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 113,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 123,
+          "property": "border-top"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 131,
+          "property": "border-bottom"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 200,
+          "property": "border-top"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFormModal.module.css",
+          "line": 28,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFormModal.module.css",
+          "line": 35,
+          "property": "border-bottom"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderList.module.css",
+          "line": 10,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/ProductEditor.module.css",
+          "line": 6,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/ProductEditor.module.css",
+          "line": 16,
+          "property": "border-bottom"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 30,
+          "property": "border-bottom"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 55,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 30,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 150,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Spinner.module.css",
+          "line": 5,
+          "property": "border"
+        }
+      ],
+      "--color-soft-white": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/LogoutConfirmDialog.module.css",
+          "line": 23,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 94,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 18,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 130,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 199,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFormModal.module.css",
+          "line": 27,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/ProductEditor.module.css",
+          "line": 28,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 61,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 85,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 54,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 112,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 54,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+          "line": 28,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+          "line": 47,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 104,
+          "property": "background"
+        }
+      ],
+      "--color-stone": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderList.module.css",
+          "line": 8,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/pages/OrdersPage.module.css",
+          "line": 8,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/pages/SettingsPage.module.css",
+          "line": 7,
+          "property": "background"
+        }
+      ],
+      "--color-success": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Alert.module.css",
+          "line": 22,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Alert.module.css",
+          "line": 24,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/FormMessage.module.css",
+          "line": 20,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/SuccessMessage.module.css",
+          "line": 12,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/SuccessMessage.module.css",
+          "line": 22,
+          "property": "background"
+        }
+      ],
+      "--color-success-soft": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Alert.module.css",
+          "line": 23,
+          "property": "background"
+        }
+      ],
+      "--color-taupe": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 141,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 199,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFormModal.module.css",
+          "line": 29,
+          "property": "border-left"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderList.module.css",
+          "line": 11,
+          "property": "border-top"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 43,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 26,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 162,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/EmptyState.module.css",
+          "line": 11,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 25,
+          "property": "border-color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 170,
+          "property": "border-block"
+        }
+      ],
+      "--color-white": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/SessionHeader.module.css",
+          "line": 33,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/SessionHeader.module.css",
+          "line": 81,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 7,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 140,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 171,
+          "property": "border"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 112,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 52,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 81,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 95,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderIndicators.module.css",
+          "line": 29,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderIndicators.module.css",
+          "line": 37,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/ProductEditor.module.css",
+          "line": 5,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/pages/OrdersPage.module.css",
+          "line": 8,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/pages/SettingsPage.module.css",
+          "line": 7,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Alert.module.css",
+          "line": 3,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 8,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 31,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 42,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 47,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Card.module.css",
+          "line": 3,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 51,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 19,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 64,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 173,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Dialog.module.css",
+          "line": 15,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DialogActions.module.css",
+          "line": 7,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DialogHeader.module.css",
+          "line": 8,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/EmptyState.module.css",
+          "line": 10,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Input.module.css",
+          "line": 7,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Select.module.css",
+          "line": 13,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/SuccessMessage.module.css",
+          "line": 21,
+          "property": "color"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 15,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 90,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 109,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 109,
+          "property": "background"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 63,
+          "property": "background"
+        }
+      ],
+      "--content-min-width": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 12,
+          "property": "min-width"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/reset.css",
+          "line": 8,
+          "property": "min-width"
+        }
+      ],
+      "--field-icon-size": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Icon.module.css",
+          "line": 3,
+          "property": "width"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Icon.module.css",
+          "line": 4,
+          "property": "height"
+        }
+      ],
+      "--font-sans": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 4,
+          "property": "font-family"
+        }
+      ],
+      "--radius-lg": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 58,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 7,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 102,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+          "line": 120,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/ProductEditor.module.css",
+          "line": 95,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+          "line": 57,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 6,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 56,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+          "line": 114,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 66,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 92,
+          "property": "border-radius"
+        }
+      ],
+      "--radius-md": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/LogoutConfirmDialog.module.css",
+          "line": 25,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/components/SessionHeader.module.css",
+          "line": 10,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 83,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+          "line": 114,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderFormModal.module.css",
+          "line": 30,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/OrderList.module.css",
+          "line": 12,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/ProductEditor.module.css",
+          "line": 7,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/components/ProductEditor.module.css",
+          "line": 30,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/pages/OrdersPage.module.css",
+          "line": 20,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 63,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+          "line": 87,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+          "line": 73,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Alert.module.css",
+          "line": 5,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 10,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Card.module.css",
+          "line": 5,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 53,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+          "line": 30,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+          "line": 49,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 21,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Dialog.module.css",
+          "line": 17,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/EmptyState.module.css",
+          "line": 12,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Input.module.css",
+          "line": 9,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Select.module.css",
+          "line": 15,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 17,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/styles/global.css",
+          "line": 65,
+          "property": "border-radius"
+        }
+      ],
+      "--radius-sm": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 142,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 24,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 64,
+          "property": "border-radius"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 92,
+          "property": "border-radius"
+        }
+      ],
+      "--radius-xl": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 17,
+          "property": "border-radius"
+        }
+      ],
+      "--shadow-card": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Card.module.css",
+          "line": 6,
+          "property": "box-shadow"
+        }
+      ],
+      "--shadow-dialog": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 67,
+          "property": "box-shadow"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Dialog.module.css",
+          "line": 18,
+          "property": "box-shadow"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 93,
+          "property": "box-shadow"
+        }
+      ],
+      "--shadow-panel": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/orders/pages/OrdersPage.module.css",
+          "line": 21,
+          "property": "box-shadow"
+        }
+      ],
+      "--space-1": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 114,
+          "property": "padding"
+        }
+      ],
+      "--touch-target": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 65,
+          "property": "min-height"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 96,
+          "property": "min-height"
+        }
+      ],
+      "--transition-fast": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 86,
+          "property": "transition"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 86,
+          "property": "transition"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 86,
+          "property": "transition"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 144,
+          "property": "transition"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 144,
+          "property": "transition"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+          "line": 144,
+          "property": "transition"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 12,
+          "property": "transition"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 12,
+          "property": "transition"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Button.module.css",
+          "line": 12,
+          "property": "transition"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 34,
+          "property": "transition"
+        }
+      ],
+      "--z-dialog": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Dialog.module.css",
+          "line": 4,
+          "property": "z-index"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+          "line": 76,
+          "property": "z-index"
+        }
+      ],
+      "--z-dropdown": [
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+          "line": 43,
+          "property": "z-index"
+        },
+        {
+          "context": "screen",
+          "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+          "line": 59,
+          "property": "z-index"
+        }
+      ]
+    }
+  },
+  "files": [
+    {
+      "bytes": 633,
+      "declarations": 23,
+      "importedByCode": false,
+      "kind": "module",
+      "lines": 43,
+      "path": "apps/web/src/features/auth/components/LogoutConfirmDialog.module.css",
+      "rules": 6
+    },
+    {
+      "bytes": 2220,
+      "declarations": 71,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 121,
+      "path": "apps/web/src/features/auth/components/SessionHeader.module.css",
+      "rules": 15
+    },
+    {
+      "bytes": 3480,
+      "declarations": 105,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 193,
+      "path": "apps/web/src/features/auth/pages/LoginPage.module.css",
+      "rules": 26
+    },
+    {
+      "bytes": 149,
+      "declarations": 4,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 11,
+      "path": "apps/web/src/features/orders/components/CustomerPicker.module.css",
+      "rules": 2
+    },
+    {
+      "bytes": 5172,
+      "declarations": 173,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 320,
+      "path": "apps/web/src/features/orders/components/OrderCard.module.css",
+      "rules": 47
+    },
+    {
+      "bytes": 4419,
+      "declarations": 148,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 284,
+      "path": "apps/web/src/features/orders/components/OrderFilters.module.css",
+      "rules": 41
+    },
+    {
+      "bytes": 1258,
+      "declarations": 36,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 88,
+      "path": "apps/web/src/features/orders/components/OrderFormModal.module.css",
+      "rules": 16
+    },
+    {
+      "bytes": 1155,
+      "declarations": 32,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 71,
+      "path": "apps/web/src/features/orders/components/OrderIndicators.module.css",
+      "rules": 11
+    },
+    {
+      "bytes": 594,
+      "declarations": 18,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 33,
+      "path": "apps/web/src/features/orders/components/OrderList.module.css",
+      "rules": 4
+    },
+    {
+      "bytes": 2155,
+      "declarations": 65,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 143,
+      "path": "apps/web/src/features/orders/components/ProductEditor.module.css",
+      "rules": 24
+    },
+    {
+      "bytes": 122,
+      "declarations": 5,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 8,
+      "path": "apps/web/src/features/orders/components/SearchHighlight.module.css",
+      "rules": 1
+    },
+    {
+      "bytes": 854,
+      "declarations": 21,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 47,
+      "path": "apps/web/src/features/orders/pages/OrdersPage.module.css",
+      "rules": 6
+    },
+    {
+      "bytes": 3012,
+      "declarations": 100,
+      "importedByCode": true,
+      "kind": "print",
+      "lines": 184,
+      "path": "apps/web/src/features/reports/components/PrintableOrders.module.css",
+      "rules": 25
+    },
+    {
+      "bytes": 1696,
+      "declarations": 49,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 108,
+      "path": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+      "rules": 17
+    },
+    {
+      "bytes": 1513,
+      "declarations": 51,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 99,
+      "path": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+      "rules": 15
+    },
+    {
+      "bytes": 3138,
+      "declarations": 93,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 221,
+      "path": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+      "rules": 38
+    },
+    {
+      "bytes": 2165,
+      "declarations": 69,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 145,
+      "path": "apps/web/src/features/settings/pages/SettingsPage.module.css",
+      "rules": 23
+    },
+    {
+      "bytes": 522,
+      "declarations": 14,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 26,
+      "path": "apps/web/src/shared/components/ui/Alert.module.css",
+      "rules": 4
+    },
+    {
+      "bytes": 1228,
+      "declarations": 30,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 68,
+      "path": "apps/web/src/shared/components/ui/Button.module.css",
+      "rules": 11
+    },
+    {
+      "bytes": 179,
+      "declarations": 5,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 8,
+      "path": "apps/web/src/shared/components/ui/Card.module.css",
+      "rules": 1
+    },
+    {
+      "bytes": 1658,
+      "declarations": 56,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 100,
+      "path": "apps/web/src/shared/components/ui/Combobox.module.css",
+      "rules": 13
+    },
+    {
+      "bytes": 1093,
+      "declarations": 36,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 71,
+      "path": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+      "rules": 11
+    },
+    {
+      "bytes": 3956,
+      "declarations": 123,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 224,
+      "path": "apps/web/src/shared/components/ui/DatePicker.module.css",
+      "rules": 28
+    },
+    {
+      "bytes": 646,
+      "declarations": 21,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 38,
+      "path": "apps/web/src/shared/components/ui/Dialog.module.css",
+      "rules": 5
+    },
+    {
+      "bytes": 365,
+      "declarations": 10,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 21,
+      "path": "apps/web/src/shared/components/ui/DialogActions.module.css",
+      "rules": 3
+    },
+    {
+      "bytes": 510,
+      "declarations": 18,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 32,
+      "path": "apps/web/src/shared/components/ui/DialogHeader.module.css",
+      "rules": 4
+    },
+    {
+      "bytes": 343,
+      "declarations": 12,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 18,
+      "path": "apps/web/src/shared/components/ui/EmptyState.module.css",
+      "rules": 2
+    },
+    {
+      "bytes": 82,
+      "declarations": 3,
+      "importedByCode": false,
+      "kind": "module",
+      "lines": 6,
+      "path": "apps/web/src/shared/components/ui/FieldError.module.css",
+      "rules": 1
+    },
+    {
+      "bytes": 295,
+      "declarations": 11,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 23,
+      "path": "apps/web/src/shared/components/ui/FormMessage.module.css",
+      "rules": 4
+    },
+    {
+      "bytes": 259,
+      "declarations": 10,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 16,
+      "path": "apps/web/src/shared/components/ui/Icon.module.css",
+      "rules": 2
+    },
+    {
+      "bytes": 985,
+      "declarations": 22,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 52,
+      "path": "apps/web/src/shared/components/ui/Input.module.css",
+      "rules": 8
+    },
+    {
+      "bytes": 557,
+      "declarations": 19,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 33,
+      "path": "apps/web/src/shared/components/ui/Select.module.css",
+      "rules": 4
+    },
+    {
+      "bytes": 369,
+      "declarations": 9,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 22,
+      "path": "apps/web/src/shared/components/ui/Spinner.module.css",
+      "rules": 3
+    },
+    {
+      "bytes": 660,
+      "declarations": 24,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 44,
+      "path": "apps/web/src/shared/components/ui/SuccessMessage.module.css",
+      "rules": 6
+    },
+    {
+      "bytes": 3501,
+      "declarations": 114,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 202,
+      "path": "apps/web/src/shared/components/ui/TimePicker.module.css",
+      "rules": 26
+    },
+    {
+      "bytes": 1665,
+      "declarations": 51,
+      "importedByCode": false,
+      "kind": "global",
+      "lines": 99,
+      "path": "apps/web/src/styles/global.css",
+      "rules": 14
+    },
+    {
+      "bytes": 114,
+      "declarations": 0,
+      "importedByCode": true,
+      "kind": "global",
+      "lines": 5,
+      "path": "apps/web/src/styles/index.css",
+      "rules": 0
+    },
+    {
+      "bytes": 722,
+      "declarations": 20,
+      "importedByCode": false,
+      "kind": "print",
+      "lines": 47,
+      "path": "apps/web/src/styles/print.css",
+      "rules": 6
+    },
+    {
+      "bytes": 320,
+      "declarations": 8,
+      "importedByCode": false,
+      "kind": "global",
+      "lines": 39,
+      "path": "apps/web/src/styles/reset.css",
+      "rules": 7
+    },
+    {
+      "bytes": 1166,
+      "declarations": 40,
+      "importedByCode": false,
+      "kind": "global",
+      "lines": 44,
+      "path": "apps/web/src/styles/tokens.css",
+      "rules": 1
+    }
+  ],
+  "iconRules": [
+    {
+      "dimensions": {
+        "height": "15px",
+        "width": "15px"
+      },
+      "file": "apps/web/src/features/auth/components/SessionHeader.module.css",
+      "line": 93,
+      "selector": ".icon"
+    },
+    {
+      "dimensions": {
+        "height": "20px",
+        "width": "20px"
+      },
+      "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+      "line": 216,
+      "selector": ".actionButton svg"
+    },
+    {
+      "dimensions": {
+        "height": "22px",
+        "width": "22px"
+      },
+      "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+      "line": 226,
+      "selector": ".actionButton .whatsAppIcon"
+    },
+    {
+      "dimensions": {
+        "height": "48px"
+      },
+      "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+      "line": 99,
+      "selector": ".search"
+    },
+    {
+      "dimensions": {
+        "height": "25px",
+        "width": "25px"
+      },
+      "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+      "line": 133,
+      "selector": ".printIcon"
+    },
+    {
+      "dimensions": {
+        "height": "48px"
+      },
+      "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+      "line": 224,
+      "selector": ".topRow > *,\n  .dateInput,\n  .categoryInput,\n  .filterButton,\n  .search,\n  .action"
+    },
+    {
+      "dimensions": {
+        "height": "54px",
+        "width": "54px"
+      },
+      "file": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+      "line": 8,
+      "selector": ".lockIcon"
+    },
+    {
+      "dimensions": {
+        "height": "26px",
+        "width": "26px"
+      },
+      "file": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+      "line": 19,
+      "selector": ".lockIcon svg"
+    },
+    {
+      "dimensions": {
+        "width": "40px"
+      },
+      "file": "apps/web/src/shared/components/ui/Button.module.css",
+      "line": 57,
+      "selector": ".icon"
+    },
+    {
+      "dimensions": {
+        "height": "20px",
+        "width": "20px"
+      },
+      "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+      "line": 52,
+      "selector": ".deleteButton svg"
+    },
+    {
+      "dimensions": {
+        "width": "min(336px, calc(100vw - 32px))"
+      },
+      "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+      "line": 57,
+      "selector": ".calendar"
+    },
+    {
+      "dimensions": {
+        "max-height": "calc(100dvh - 24px)",
+        "width": "min(352px, calc(100vw - 24px))"
+      },
+      "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+      "line": 207,
+      "selector": ".calendar"
+    },
+    {
+      "dimensions": {
+        "min-height": "36px",
+        "width": "36px"
+      },
+      "file": "apps/web/src/shared/components/ui/DialogHeader.module.css",
+      "line": 20,
+      "selector": ".header .close"
+    },
+    {
+      "dimensions": {
+        "height": "var(--field-icon-size)",
+        "width": "var(--field-icon-size)"
+      },
+      "file": "apps/web/src/shared/components/ui/Icon.module.css",
+      "line": 1,
+      "selector": ".icon"
+    },
+    {
+      "dimensions": {
+        "max-width": "100%"
+      },
+      "file": "apps/web/src/shared/components/ui/Input.module.css",
+      "line": 24,
+      "selector": ".input[type='date'],\n.input[type='search'],\n.input[type='time']"
+    },
+    {
+      "dimensions": {
+        "height": "64px",
+        "width": "64px"
+      },
+      "file": "apps/web/src/shared/components/ui/SuccessMessage.module.css",
+      "line": 16,
+      "selector": ".icon"
+    },
+    {
+      "dimensions": {
+        "height": "100%",
+        "width": "42px"
+      },
+      "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+      "line": 65,
+      "selector": ".nativeInput::-webkit-calendar-picker-indicator"
+    },
+    {
+      "dimensions": {
+        "max-width": "100%"
+      },
+      "file": "apps/web/src/styles/reset.css",
+      "line": 34,
+      "selector": "img,\nsvg"
+    }
+  ],
+  "inlineSvgComponents": [
+    {
+      "ariaAttributeCount": 2,
+      "cssImports": [
+        "apps/web/src/features/auth/components/SessionHeader.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/auth/components/SessionHeader.tsx",
+      "inlineSvgCount": 1
+    },
+    {
+      "ariaAttributeCount": 2,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/ConfirmationDialog.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/DeleteOrderDialog.tsx",
+      "inlineSvgCount": 1
+    },
+    {
+      "ariaAttributeCount": 13,
+      "cssImports": [
+        "apps/web/src/features/orders/components/OrderCard.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/OrderCard.tsx",
+      "inlineSvgCount": 5
+    },
+    {
+      "ariaAttributeCount": 10,
+      "cssImports": [
+        "apps/web/src/features/orders/components/OrderFilters.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/orders/components/OrderFilters.tsx",
+      "inlineSvgCount": 1
+    },
+    {
+      "ariaAttributeCount": 4,
+      "cssImports": [
+        "apps/web/src/features/settings/components/ManagementAccessGate.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/features/settings/components/ManagementAccessGate.tsx",
+      "inlineSvgCount": 1
+    },
+    {
+      "ariaAttributeCount": 1,
+      "cssImports": [
+        "apps/web/src/shared/components/ui/Icon.module.css"
+      ],
+      "explicitRoleCount": 0,
+      "file": "apps/web/src/shared/components/ui/Icon.tsx",
+      "inlineSvgCount": 1
+    }
+  ],
+  "keyframes": [
+    {
+      "file": "apps/web/src/shared/components/ui/Spinner.module.css",
+      "line": 11,
+      "name": "spin"
+    }
+  ],
+  "largestFilesByLines": [
+    {
+      "bytes": 5172,
+      "declarations": 173,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 320,
+      "path": "apps/web/src/features/orders/components/OrderCard.module.css",
+      "rules": 47
+    },
+    {
+      "bytes": 4419,
+      "declarations": 148,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 284,
+      "path": "apps/web/src/features/orders/components/OrderFilters.module.css",
+      "rules": 41
+    },
+    {
+      "bytes": 3956,
+      "declarations": 123,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 224,
+      "path": "apps/web/src/shared/components/ui/DatePicker.module.css",
+      "rules": 28
+    },
+    {
+      "bytes": 3138,
+      "declarations": 93,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 221,
+      "path": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+      "rules": 38
+    },
+    {
+      "bytes": 3501,
+      "declarations": 114,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 202,
+      "path": "apps/web/src/shared/components/ui/TimePicker.module.css",
+      "rules": 26
+    },
+    {
+      "bytes": 3480,
+      "declarations": 105,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 193,
+      "path": "apps/web/src/features/auth/pages/LoginPage.module.css",
+      "rules": 26
+    },
+    {
+      "bytes": 3012,
+      "declarations": 100,
+      "importedByCode": true,
+      "kind": "print",
+      "lines": 184,
+      "path": "apps/web/src/features/reports/components/PrintableOrders.module.css",
+      "rules": 25
+    },
+    {
+      "bytes": 2165,
+      "declarations": 69,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 145,
+      "path": "apps/web/src/features/settings/pages/SettingsPage.module.css",
+      "rules": 23
+    },
+    {
+      "bytes": 2155,
+      "declarations": 65,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 143,
+      "path": "apps/web/src/features/orders/components/ProductEditor.module.css",
+      "rules": 24
+    },
+    {
+      "bytes": 2220,
+      "declarations": 71,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 121,
+      "path": "apps/web/src/features/auth/components/SessionHeader.module.css",
+      "rules": 15
+    },
+    {
+      "bytes": 1696,
+      "declarations": 49,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 108,
+      "path": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+      "rules": 17
+    },
+    {
+      "bytes": 1658,
+      "declarations": 56,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 100,
+      "path": "apps/web/src/shared/components/ui/Combobox.module.css",
+      "rules": 13
+    },
+    {
+      "bytes": 1513,
+      "declarations": 51,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 99,
+      "path": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+      "rules": 15
+    },
+    {
+      "bytes": 1665,
+      "declarations": 51,
+      "importedByCode": false,
+      "kind": "global",
+      "lines": 99,
+      "path": "apps/web/src/styles/global.css",
+      "rules": 14
+    },
+    {
+      "bytes": 1258,
+      "declarations": 36,
+      "importedByCode": true,
+      "kind": "module",
+      "lines": 88,
+      "path": "apps/web/src/features/orders/components/OrderFormModal.module.css",
+      "rules": 16
+    }
+  ],
+  "properties": {
+    "animation": [
+      {
+        "count": 1,
+        "value": "spin 700ms linear infinite"
+      }
+    ],
+    "border-radius": [
+      {
+        "count": 25,
+        "value": "var(--radius-md)"
+      },
+      {
+        "count": 11,
+        "value": "var(--radius-lg)"
+      },
+      {
+        "count": 4,
+        "value": "999px"
+      },
+      {
+        "count": 4,
+        "value": "var(--radius-sm)"
+      },
+      {
+        "count": 3,
+        "value": "50%"
+      },
+      {
+        "count": 2,
+        "value": "0"
+      },
+      {
+        "count": 1,
+        "value": "10px"
+      },
+      {
+        "count": 1,
+        "value": "14px"
+      },
+      {
+        "count": 1,
+        "value": "3px"
+      },
+      {
+        "count": 1,
+        "value": "var(--radius-xl)"
+      }
+    ],
+    "box-shadow": [
+      {
+        "count": 7,
+        "value": "0 0 0 3px rgb(91 120 199 / 20%)"
+      },
+      {
+        "count": 3,
+        "value": "var(--shadow-dialog)"
+      },
+      {
+        "count": 1,
+        "value": "0 -10px 24px rgb(77 67 57 / 8%)"
+      },
+      {
+        "count": 1,
+        "value": "0 0 0 2px rgb(118 95 75 / 16%)"
+      },
+      {
+        "count": 1,
+        "value": "0 10px 22px rgb(77 67 57 / 16%)"
+      },
+      {
+        "count": 1,
+        "value": "0 10px 24px rgb(77 67 57 / 6%)"
+      },
+      {
+        "count": 1,
+        "value": "0 10px 24px rgb(77 67 57 / 8%)"
+      },
+      {
+        "count": 1,
+        "value": "0 14px 30px rgb(77 67 57 / 15%)"
+      },
+      {
+        "count": 1,
+        "value": "0 18px 40px rgb(77 67 57 / 18%)"
+      },
+      {
+        "count": 1,
+        "value": "0 1px 2px rgb(77 67 57 / 8%)"
+      },
+      {
+        "count": 1,
+        "value": "0 24px 70px rgb(77 67 57 / 14%)"
+      },
+      {
+        "count": 1,
+        "value": "0 8px 20px rgb(77 67 57 / 8%)"
+      },
+      {
+        "count": 1,
+        "value": "inset 0 1px 0 rgb(255 255 255 / 75%)"
+      },
+      {
+        "count": 1,
+        "value": "var(--shadow-card)"
+      },
+      {
+        "count": 1,
+        "value": "var(--shadow-panel)"
+      }
+    ],
+    "column-gap": [],
+    "font-family": [
+      {
+        "count": 1,
+        "value": "Arial, 'Segoe UI', sans-serif"
+      },
+      {
+        "count": 1,
+        "value": "var(--font-sans)"
+      }
+    ],
+    "font-size": [
+      {
+        "count": 11,
+        "value": "1rem"
+      },
+      {
+        "count": 8,
+        "value": "0.9rem"
+      },
+      {
+        "count": 7,
+        "value": "0.78rem"
+      },
+      {
+        "count": 7,
+        "value": "0.82rem"
+      },
+      {
+        "count": 6,
+        "value": "0.86rem"
+      },
+      {
+        "count": 5,
+        "value": "0.8rem"
+      },
+      {
+        "count": 3,
+        "value": "0.92rem"
+      },
+      {
+        "count": 3,
+        "value": "1.35rem"
+      },
+      {
+        "count": 3,
+        "value": "2rem"
+      },
+      {
+        "count": 2,
+        "value": "0.74rem"
+      },
+      {
+        "count": 2,
+        "value": "0.76rem"
+      },
+      {
+        "count": 2,
+        "value": "0.7rem"
+      },
+      {
+        "count": 2,
+        "value": "0.84rem"
+      },
+      {
+        "count": 2,
+        "value": "0.96rem"
+      },
+      {
+        "count": 2,
+        "value": "1.15rem"
+      },
+      {
+        "count": 2,
+        "value": "1.45rem"
+      },
+      {
+        "count": 2,
+        "value": "1.55rem"
+      },
+      {
+        "count": 2,
+        "value": "10px"
+      },
+      {
+        "count": 2,
+        "value": "8px"
+      },
+      {
+        "count": 2,
+        "value": "9px"
+      },
+      {
+        "count": 1,
+        "value": "0"
+      },
+      {
+        "count": 1,
+        "value": "0.68rem"
+      },
+      {
+        "count": 1,
+        "value": "0.95rem"
+      },
+      {
+        "count": 1,
+        "value": "0.98rem"
+      },
+      {
+        "count": 1,
+        "value": "1.02rem"
+      },
+      {
+        "count": 1,
+        "value": "1.05rem"
+      },
+      {
+        "count": 1,
+        "value": "1.3rem"
+      },
+      {
+        "count": 1,
+        "value": "1.42rem"
+      },
+      {
+        "count": 1,
+        "value": "1.6rem"
+      },
+      {
+        "count": 1,
+        "value": "1.75rem"
+      },
+      {
+        "count": 1,
+        "value": "1.8rem"
+      },
+      {
+        "count": 1,
+        "value": "10.5px"
+      },
+      {
+        "count": 1,
+        "value": "11px"
+      },
+      {
+        "count": 1,
+        "value": "13.5px"
+      },
+      {
+        "count": 1,
+        "value": "15px"
+      },
+      {
+        "count": 1,
+        "value": "9.5px"
+      },
+      {
+        "count": 1,
+        "value": "clamp(0.58rem, 2.7vw, 0.7rem)"
+      },
+      {
+        "count": 1,
+        "value": "clamp(0.58rem, 2.8vw, 0.7rem)"
+      },
+      {
+        "count": 1,
+        "value": "clamp(1.35rem, 3vw, 1.8rem)"
+      },
+      {
+        "count": 1,
+        "value": "clamp(1.35rem, 7vw, 1.7rem)"
+      },
+      {
+        "count": 1,
+        "value": "clamp(1.55rem, 4vw, 2rem)"
+      },
+      {
+        "count": 1,
+        "value": "clamp(1.65rem, 4vw, 2.35rem)"
+      },
+      {
+        "count": 1,
+        "value": "clamp(1.7rem, 4vw, 2.7rem)"
+      },
+      {
+        "count": 1,
+        "value": "inherit"
+      }
+    ],
+    "font-weight": [
+      {
+        "count": 28,
+        "value": "800"
+      },
+      {
+        "count": 16,
+        "value": "900"
+      },
+      {
+        "count": 12,
+        "value": "700"
+      },
+      {
+        "count": 4,
+        "value": "600"
+      },
+      {
+        "count": 1,
+        "value": "500"
+      },
+      {
+        "count": 1,
+        "value": "inherit"
+      }
+    ],
+    "gap": [
+      {
+        "count": 19,
+        "value": "10px"
+      },
+      {
+        "count": 14,
+        "value": "16px"
+      },
+      {
+        "count": 14,
+        "value": "8px"
+      },
+      {
+        "count": 13,
+        "value": "12px"
+      },
+      {
+        "count": 9,
+        "value": "18px"
+      },
+      {
+        "count": 6,
+        "value": "14px"
+      },
+      {
+        "count": 5,
+        "value": "6px"
+      },
+      {
+        "count": 4,
+        "value": "4px"
+      },
+      {
+        "count": 3,
+        "value": "7px"
+      },
+      {
+        "count": 3,
+        "value": "9px"
+      },
+      {
+        "count": 2,
+        "value": "3px"
+      },
+      {
+        "count": 2,
+        "value": "5px"
+      },
+      {
+        "count": 1,
+        "value": "0"
+      },
+      {
+        "count": 1,
+        "value": "20px"
+      },
+      {
+        "count": 1,
+        "value": "22px"
+      },
+      {
+        "count": 1,
+        "value": "2px"
+      },
+      {
+        "count": 1,
+        "value": "6px 14px"
+      }
+    ],
+    "height": [
+      {
+        "count": 7,
+        "value": "48px"
+      },
+      {
+        "count": 6,
+        "value": "46px"
+      },
+      {
+        "count": 5,
+        "value": "42px"
+      },
+      {
+        "count": 3,
+        "value": "20px"
+      },
+      {
+        "count": 3,
+        "value": "36px"
+      },
+      {
+        "count": 2,
+        "value": "220px"
+      },
+      {
+        "count": 2,
+        "value": "34px"
+      },
+      {
+        "count": 2,
+        "value": "44px"
+      },
+      {
+        "count": 1,
+        "value": "100%"
+      },
+      {
+        "count": 1,
+        "value": "10px"
+      },
+      {
+        "count": 1,
+        "value": "15px"
+      },
+      {
+        "count": 1,
+        "value": "18px"
+      },
+      {
+        "count": 1,
+        "value": "1px"
+      },
+      {
+        "count": 1,
+        "value": "22px"
+      },
+      {
+        "count": 1,
+        "value": "24px"
+      },
+      {
+        "count": 1,
+        "value": "25px"
+      },
+      {
+        "count": 1,
+        "value": "26px"
+      },
+      {
+        "count": 1,
+        "value": "30px"
+      },
+      {
+        "count": 1,
+        "value": "38px"
+      },
+      {
+        "count": 1,
+        "value": "4px"
+      },
+      {
+        "count": 1,
+        "value": "54px"
+      },
+      {
+        "count": 1,
+        "value": "64px"
+      },
+      {
+        "count": 1,
+        "value": "auto"
+      },
+      {
+        "count": 1,
+        "value": "var(--field-icon-size)"
+      }
+    ],
+    "letter-spacing": [
+      {
+        "count": 5,
+        "value": "0.04em"
+      },
+      {
+        "count": 2,
+        "value": "0.06em"
+      },
+      {
+        "count": 1,
+        "value": "0.03em"
+      },
+      {
+        "count": 1,
+        "value": "0.05em"
+      },
+      {
+        "count": 1,
+        "value": "0.08em"
+      }
+    ],
+    "line-height": [
+      {
+        "count": 10,
+        "value": "1"
+      },
+      {
+        "count": 3,
+        "value": "1.2"
+      },
+      {
+        "count": 3,
+        "value": "1.25"
+      },
+      {
+        "count": 3,
+        "value": "1.35"
+      },
+      {
+        "count": 3,
+        "value": "1.45"
+      },
+      {
+        "count": 2,
+        "value": "1.12"
+      },
+      {
+        "count": 2,
+        "value": "1.4"
+      },
+      {
+        "count": 1,
+        "value": "1.05"
+      },
+      {
+        "count": 1,
+        "value": "1.1"
+      },
+      {
+        "count": 1,
+        "value": "1.32"
+      },
+      {
+        "count": 1,
+        "value": "1.5"
+      }
+    ],
+    "margin": [
+      {
+        "count": 22,
+        "value": "0"
+      },
+      {
+        "count": 1,
+        "value": "0 10px 10px"
+      },
+      {
+        "count": 1,
+        "value": "0 20px 16px"
+      },
+      {
+        "count": 1,
+        "value": "0 auto 16px"
+      },
+      {
+        "count": 1,
+        "value": "8px 0"
+      },
+      {
+        "count": 1,
+        "value": "clamp(18px, 5vh, 52px) auto"
+      }
+    ],
+    "max-height": [
+      {
+        "count": 4,
+        "value": "calc(100dvh - 24px)"
+      },
+      {
+        "count": 3,
+        "value": "calc(100dvh - 36px)"
+      },
+      {
+        "count": 2,
+        "value": "260px"
+      },
+      {
+        "count": 1,
+        "value": "220px"
+      },
+      {
+        "count": 1,
+        "value": "540px"
+      },
+      {
+        "count": 1,
+        "value": "calc(100dvh - 16px)"
+      },
+      {
+        "count": 1,
+        "value": "none"
+      }
+    ],
+    "max-width": [
+      {
+        "count": 2,
+        "value": "100%"
+      },
+      {
+        "count": 2,
+        "value": "80mm"
+      },
+      {
+        "count": 1,
+        "value": "190px"
+      },
+      {
+        "count": 1,
+        "value": "280px"
+      },
+      {
+        "count": 1,
+        "value": "42%"
+      },
+      {
+        "count": 1,
+        "value": "420px"
+      },
+      {
+        "count": 1,
+        "value": "560px"
+      },
+      {
+        "count": 1,
+        "value": "58%"
+      },
+      {
+        "count": 1,
+        "value": "77mm"
+      },
+      {
+        "count": 1,
+        "value": "92px"
+      },
+      {
+        "count": 1,
+        "value": "min(340px, 100%)"
+      }
+    ],
+    "min-height": [
+      {
+        "count": 6,
+        "value": "0"
+      },
+      {
+        "count": 4,
+        "value": "100vh"
+      },
+      {
+        "count": 3,
+        "value": "34px"
+      },
+      {
+        "count": 2,
+        "value": "30px"
+      },
+      {
+        "count": 2,
+        "value": "32px"
+      },
+      {
+        "count": 2,
+        "value": "36px"
+      },
+      {
+        "count": 2,
+        "value": "44px"
+      },
+      {
+        "count": 2,
+        "value": "46px"
+      },
+      {
+        "count": 2,
+        "value": "78px"
+      },
+      {
+        "count": 2,
+        "value": "var(--touch-target)"
+      },
+      {
+        "count": 1,
+        "value": "1.4rem"
+      },
+      {
+        "count": 1,
+        "value": "116px"
+      },
+      {
+        "count": 1,
+        "value": "140px"
+      },
+      {
+        "count": 1,
+        "value": "210px"
+      },
+      {
+        "count": 1,
+        "value": "260px"
+      },
+      {
+        "count": 1,
+        "value": "300px"
+      },
+      {
+        "count": 1,
+        "value": "38px"
+      },
+      {
+        "count": 1,
+        "value": "40px"
+      },
+      {
+        "count": 1,
+        "value": "48px"
+      },
+      {
+        "count": 1,
+        "value": "68px"
+      },
+      {
+        "count": 1,
+        "value": "76px"
+      },
+      {
+        "count": 1,
+        "value": "96px"
+      }
+    ],
+    "min-width": [
+      {
+        "count": 35,
+        "value": "0"
+      },
+      {
+        "count": 2,
+        "value": "var(--content-min-width)"
+      },
+      {
+        "count": 1,
+        "value": "230px"
+      },
+      {
+        "count": 1,
+        "value": "240px"
+      },
+      {
+        "count": 1,
+        "value": "44px"
+      },
+      {
+        "count": 1,
+        "value": "auto"
+      }
+    ],
+    "padding": [
+      {
+        "count": 17,
+        "value": "0"
+      },
+      {
+        "count": 12,
+        "value": "18px"
+      },
+      {
+        "count": 10,
+        "value": "12px"
+      },
+      {
+        "count": 7,
+        "value": "10px"
+      },
+      {
+        "count": 6,
+        "value": "14px"
+      },
+      {
+        "count": 5,
+        "value": "16px"
+      },
+      {
+        "count": 3,
+        "value": "14px 16px"
+      },
+      {
+        "count": 3,
+        "value": "24px"
+      },
+      {
+        "count": 3,
+        "value": "8px"
+      },
+      {
+        "count": 2,
+        "value": "0 10px"
+      },
+      {
+        "count": 2,
+        "value": "0 44px 0 12px"
+      },
+      {
+        "count": 2,
+        "value": "10px 6px"
+      },
+      {
+        "count": 2,
+        "value": "12px 14px"
+      },
+      {
+        "count": 2,
+        "value": "12px 18px"
+      },
+      {
+        "count": 2,
+        "value": "22px"
+      },
+      {
+        "count": 2,
+        "value": "8px 10px"
+      },
+      {
+        "count": 1,
+        "value": "0 0 2mm"
+      },
+      {
+        "count": 1,
+        "value": "0 12px"
+      },
+      {
+        "count": 1,
+        "value": "0 14px"
+      },
+      {
+        "count": 1,
+        "value": "0 2px"
+      },
+      {
+        "count": 1,
+        "value": "0 2px 14px"
+      },
+      {
+        "count": 1,
+        "value": "0 36px 0 12px"
+      },
+      {
+        "count": 1,
+        "value": "0 38px 0 10px"
+      },
+      {
+        "count": 1,
+        "value": "0 48px 0 16px"
+      },
+      {
+        "count": 1,
+        "value": "1.5mm"
+      },
+      {
+        "count": 1,
+        "value": "10px 0 0"
+      },
+      {
+        "count": 1,
+        "value": "10px 12px"
+      },
+      {
+        "count": 1,
+        "value": "10px 14px"
+      },
+      {
+        "count": 1,
+        "value": "12px 10px"
+      },
+      {
+        "count": 1,
+        "value": "12px 20px 16px"
+      },
+      {
+        "count": 1,
+        "value": "13px 12px"
+      },
+      {
+        "count": 1,
+        "value": "13px 20px"
+      },
+      {
+        "count": 1,
+        "value": "14px 13px"
+      },
+      {
+        "count": 1,
+        "value": "14px 50px 14px 16px"
+      },
+      {
+        "count": 1,
+        "value": "16px 14px"
+      },
+      {
+        "count": 1,
+        "value": "16px 18px"
+      },
+      {
+        "count": 1,
+        "value": "18px 20px 16px"
+      },
+      {
+        "count": 1,
+        "value": "2.5mm 0"
+      },
+      {
+        "count": 1,
+        "value": "20px"
+      },
+      {
+        "count": 1,
+        "value": "22px 18px"
+      },
+      {
+        "count": 1,
+        "value": "24px 16px"
+      },
+      {
+        "count": 1,
+        "value": "26px"
+      },
+      {
+        "count": 1,
+        "value": "26px 18px 18px"
+      },
+      {
+        "count": 1,
+        "value": "2px 4px"
+      },
+      {
+        "count": 1,
+        "value": "32px"
+      },
+      {
+        "count": 1,
+        "value": "32px 28px"
+      },
+      {
+        "count": 1,
+        "value": "4px 2px"
+      },
+      {
+        "count": 1,
+        "value": "5px 0"
+      },
+      {
+        "count": 1,
+        "value": "5px 3px"
+      },
+      {
+        "count": 1,
+        "value": "6px"
+      },
+      {
+        "count": 1,
+        "value": "6px 7px"
+      },
+      {
+        "count": 1,
+        "value": "9px 14px"
+      },
+      {
+        "count": 1,
+        "value": "clamp(22px, 5vw, 34px)"
+      },
+      {
+        "count": 1,
+        "value": "var(--space-1) 0"
+      }
+    ],
+    "row-gap": [],
+    "transition": [
+      {
+        "count": 1,
+        "value": "background-color var(--transition-fast),\n    border-color var(--transition-fast),\n    box-shadow var(--transition-fast)"
+      },
+      {
+        "count": 1,
+        "value": "background-color var(--transition-fast),\n    border-color var(--transition-fast),\n    transform var(--transition-fast)"
+      },
+      {
+        "count": 1,
+        "value": "color var(--transition-fast),\n    background-color var(--transition-fast),\n    border-color var(--transition-fast)"
+      },
+      {
+        "count": 1,
+        "value": "transform var(--transition-fast)"
+      }
+    ],
+    "width": [
+      {
+        "count": 29,
+        "value": "100%"
+      },
+      {
+        "count": 4,
+        "value": "36px"
+      },
+      {
+        "count": 3,
+        "value": "20px"
+      },
+      {
+        "count": 3,
+        "value": "auto"
+      },
+      {
+        "count": 2,
+        "value": "18px"
+      },
+      {
+        "count": 2,
+        "value": "34px"
+      },
+      {
+        "count": 2,
+        "value": "80mm"
+      },
+      {
+        "count": 1,
+        "value": "15px"
+      },
+      {
+        "count": 1,
+        "value": "1px"
+      },
+      {
+        "count": 1,
+        "value": "22px"
+      },
+      {
+        "count": 1,
+        "value": "24%"
+      },
+      {
+        "count": 1,
+        "value": "24px"
+      },
+      {
+        "count": 1,
+        "value": "25px"
+      },
+      {
+        "count": 1,
+        "value": "26px"
+      },
+      {
+        "count": 1,
+        "value": "32%"
+      },
+      {
+        "count": 1,
+        "value": "32px"
+      },
+      {
+        "count": 1,
+        "value": "40px"
+      },
+      {
+        "count": 1,
+        "value": "42px"
+      },
+      {
+        "count": 1,
+        "value": "44px"
+      },
+      {
+        "count": 1,
+        "value": "46px"
+      },
+      {
+        "count": 1,
+        "value": "54px"
+      },
+      {
+        "count": 1,
+        "value": "5px"
+      },
+      {
+        "count": 1,
+        "value": "64px"
+      },
+      {
+        "count": 1,
+        "value": "min(1040px, 100%)"
+      },
+      {
+        "count": 1,
+        "value": "min(336px, calc(100vw - 32px))"
+      },
+      {
+        "count": 1,
+        "value": "min(352px, 100%)"
+      },
+      {
+        "count": 1,
+        "value": "min(352px, calc(100vw - 24px))"
+      },
+      {
+        "count": 1,
+        "value": "min(440px, 100%)"
+      },
+      {
+        "count": 1,
+        "value": "min(560px, 100%)"
+      },
+      {
+        "count": 1,
+        "value": "min(620px, 100%)"
+      },
+      {
+        "count": 1,
+        "value": "var(--field-icon-size)"
+      }
+    ],
+    "z-index": [
+      {
+        "count": 1,
+        "value": "0"
+      },
+      {
+        "count": 1,
+        "value": "1"
+      },
+      {
+        "count": 1,
+        "value": "2"
+      },
+      {
+        "count": 1,
+        "value": "calc(var(--z-dialog) + 3)"
+      },
+      {
+        "count": 1,
+        "value": "calc(var(--z-dropdown) + 1)"
+      },
+      {
+        "count": 1,
+        "value": "var(--z-dialog)"
+      },
+      {
+        "count": 1,
+        "value": "var(--z-dropdown)"
+      }
+    ]
+  },
+  "responsive": {
+    "breakpoints": [
+      {
+        "count": 24,
+        "value": "max-width: 560px"
+      },
+      {
+        "count": 8,
+        "value": "max-width: 900px"
+      },
+      {
+        "count": 2,
+        "value": "max-width: 390px"
+      },
+      {
+        "count": 1,
+        "value": "max-width: 520px"
+      },
+      {
+        "count": 1,
+        "value": "max-width: 760px"
+      }
+    ],
+    "forcedColorsRuleCount": 0,
+    "mediaQueries": [
+      {
+        "file": "apps/web/src/features/auth/components/LogoutConfirmDialog.module.css",
+        "line": 38,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/auth/components/SessionHeader.module.css",
+        "line": 98,
+        "query": "(max-width: 900px)"
+      },
+      {
+        "file": "apps/web/src/features/auth/components/SessionHeader.module.css",
+        "line": 116,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/auth/pages/LoginPage.module.css",
+        "line": 184,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+        "line": 237,
+        "query": "(max-width: 900px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/OrderCard.module.css",
+        "line": 243,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+        "line": 209,
+        "query": "(max-width: 900px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/OrderFilters.module.css",
+        "line": 219,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/OrderFormModal.module.css",
+        "line": 59,
+        "query": "(max-width: 900px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/OrderFormModal.module.css",
+        "line": 69,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/OrderIndicators.module.css",
+        "line": 40,
+        "query": "(max-width: 900px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/OrderIndicators.module.css",
+        "line": 46,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/OrderList.module.css",
+        "line": 26,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/ProductEditor.module.css",
+        "line": 99,
+        "query": "(max-width: 900px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/components/ProductEditor.module.css",
+        "line": 108,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/pages/OrdersPage.module.css",
+        "line": 24,
+        "query": "(max-width: 900px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/pages/OrdersPage.module.css",
+        "line": 31,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/orders/pages/OrdersPage.module.css",
+        "line": 42,
+        "query": "(max-width: 390px)"
+      },
+      {
+        "file": "apps/web/src/features/reports/components/PrintableOrders.module.css",
+        "line": 5,
+        "query": "print"
+      },
+      {
+        "file": "apps/web/src/features/reports/components/PrintOptionsDialog.module.css",
+        "line": 92,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/features/settings/components/ManagementAccessGate.module.css",
+        "line": 93,
+        "query": "(max-width: 520px)"
+      },
+      {
+        "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+        "line": 155,
+        "query": "(max-width: 760px)"
+      },
+      {
+        "file": "apps/web/src/features/settings/components/ManagementPanel.module.css",
+        "line": 197,
+        "query": "(max-width: 390px)"
+      },
+      {
+        "file": "apps/web/src/features/settings/pages/SettingsPage.module.css",
+        "line": 96,
+        "query": "(max-width: 900px)"
+      },
+      {
+        "file": "apps/web/src/features/settings/pages/SettingsPage.module.css",
+        "line": 107,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/Button.module.css",
+        "line": 63,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/Combobox.module.css",
+        "line": 82,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/ConfirmationDialog.module.css",
+        "line": 62,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/DatePicker.module.css",
+        "line": 201,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/Dialog.module.css",
+        "line": 26,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/DialogActions.module.css",
+        "line": 15,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/DialogHeader.module.css",
+        "line": 27,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/Input.module.css",
+        "line": 46,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/Select.module.css",
+        "line": 27,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/Spinner.module.css",
+        "line": 17,
+        "query": "(prefers-reduced-motion: reduce)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/SuccessMessage.module.css",
+        "line": 33,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/shared/components/ui/TimePicker.module.css",
+        "line": 196,
+        "query": "(max-width: 560px)"
+      },
+      {
+        "file": "apps/web/src/styles/global.css",
+        "line": 84,
+        "query": "(max-width: 560px), (hover: none) and (pointer: coarse)"
+      },
+      {
+        "file": "apps/web/src/styles/print.css",
+        "line": 11,
+        "query": "print"
+      }
+    ],
+    "reducedMotionRuleCount": 1
+  },
+  "schemaVersion": 1,
+  "scope": {
+    "excluded": [
+      "node_modules",
+      "dist",
+      "build",
+      "generated dependencies"
+    ],
+    "notes": [
+      "Counts describe source files only.",
+      "Direct-color and icon-rule detection is approximate and intended for audit prioritization.",
+      "Runtime behavior is intentionally outside this static inventory."
+    ],
+    "repositoryRoot": ".",
+    "sourceRoot": "apps/web/src"
+  },
+  "states": {
+    "active": 1,
+    "disabled": 13,
+    "error": 9,
+    "focus": 15,
+    "hover": 14,
+    "loading": 6,
+    "success": 2
+  },
+  "summary": {
+    "componentFiles": 43,
+    "componentsWithInlineSvg": 6,
+    "cssFiles": 40,
+    "cssModules": 35,
+    "customPropertiesDefined": 40,
+    "customPropertiesUsed": 32,
+    "globalCssFiles": 4,
+    "mixedCssFiles": 0,
+    "printCssFiles": 2,
+    "sourceDigestSha256": "cd70aeef9c092b28d3f5ace078464c42105534f128d6b121744c30d388675d97",
+    "totalDeclarations": 1719,
+    "totalLines": 3357,
+    "undefinedTokens": 0,
+    "unreferencedCssModules": 2,
+    "unusedTokens": 8
+  },
+  "units": [
+    {
+      "count": 585,
+      "value": "px"
+    },
+    {
+      "count": 94,
+      "value": "rem"
+    },
+    {
+      "count": 59,
+      "value": "fr"
+    },
+    {
+      "count": 15,
+      "value": "mm"
+    },
+    {
+      "count": 11,
+      "value": "deg"
+    },
+    {
+      "count": 10,
+      "value": "em"
+    },
+    {
+      "count": 10,
+      "value": "vw"
+    },
+    {
+      "count": 8,
+      "value": "dvh"
+    },
+    {
+      "count": 5,
+      "value": "vh"
+    },
+    {
+      "count": 3,
+      "value": "ms"
+    }
+  ],
+  "unreferencedCssModules": [
+    "apps/web/src/features/auth/components/LogoutConfirmDialog.module.css",
+    "apps/web/src/shared/components/ui/FieldError.module.css"
+  ]
+}

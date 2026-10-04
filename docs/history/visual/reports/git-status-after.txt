@@ -1,0 +1,69 @@
+## main...origin/main
+ M .gitignore
+ M README.md
+ M apps/web/src/features/auth/components/LogoutConfirmDialog.tsx
+ M apps/web/src/features/auth/pages/LoginPage.module.css
+ M apps/web/src/features/orders/components/CompleteOrderDialog.tsx
+ M apps/web/src/features/orders/components/DeleteOrderDialog.tsx
+ M apps/web/src/features/orders/components/OrderCard.module.css
+ M apps/web/src/features/orders/components/OrderCard.test.tsx
+ M apps/web/src/features/orders/components/OrderCard.tsx
+ M apps/web/src/features/orders/components/OrderFilters.module.css
+ M apps/web/src/features/orders/components/OrderFormModal.module.css
+ M apps/web/src/features/orders/components/OrderFormModal.tsx
+ M apps/web/src/features/orders/components/ProductEditor.tsx
+ M apps/web/src/features/orders/hooks/useOrderForm.pickers.test.tsx
+ M apps/web/src/features/orders/hooks/useOrderForm.ts
+ M apps/web/src/features/orders/lib/formSubmissionError.test.ts
+ M apps/web/src/features/orders/lib/formSubmissionError.ts
+ M apps/web/src/features/orders/lib/orderFormMappers.test.ts
+ M apps/web/src/features/orders/lib/orderFormMappers.ts
+ M apps/web/src/features/orders/pages/OrdersPage.tsx
+ M apps/web/src/features/orders/schemas/orderSchema.test.ts
+ M apps/web/src/features/orders/schemas/orderSchema.ts
+ M apps/web/src/features/reports/components/PrintOptionsDialog.module.css
+ M apps/web/src/features/reports/components/PrintOptionsDialog.test.tsx
+ M apps/web/src/features/reports/components/PrintOptionsDialog.tsx
+ M apps/web/src/features/reports/hooks/usePrintOrders.test.tsx
+ M apps/web/src/features/reports/hooks/usePrintOrders.ts
+ M apps/web/src/features/settings/components/SettingsDeleteDialog.tsx
+ M apps/web/src/shared/components/ui/Alert.module.css
+ M apps/web/src/shared/components/ui/Combobox.tsx
+ M apps/web/src/shared/components/ui/ConfirmationDialog.module.css
+ M apps/web/src/shared/components/ui/DatePicker.module.css
+ M apps/web/src/shared/components/ui/Dialog.tsx
+ M apps/web/src/shared/components/ui/FieldError.tsx
+ M apps/web/src/shared/components/ui/Input.module.css
+ M apps/web/src/shared/components/ui/TimePicker.module.css
+ M apps/web/src/shared/components/ui/TimePicker.tsx
+ M apps/web/src/shared/components/ui/accessibility.test.tsx
+ M apps/web/src/shared/components/ui/index.ts
+ M apps/web/src/shared/lib/dateUtils.ts
+ M apps/web/src/shared/lib/domain.ts
+ M apps/web/src/shared/lib/orderUtils.test.ts
+ M apps/web/src/shared/lib/supabaseData.test.ts
+ M apps/web/src/shared/lib/supabaseData.ts
+ M apps/web/src/styles/global.css
+ M apps/web/src/styles/tokens.css
+ M docs/current-system.md
+ M docs/supabase-setup.md
+?? apps/web/src/features/orders/components/CustomerPicker.module.css
+?? apps/web/src/features/orders/components/CustomerPicker.test.tsx
+?? apps/web/src/features/orders/components/CustomerPicker.tsx
+?? apps/web/src/features/orders/lib/whatsapp.ts
+?? apps/web/src/shared/components/ui/DialogActions.module.css
+?? apps/web/src/shared/components/ui/DialogActions.tsx
+?? apps/web/src/shared/components/ui/DialogHeader.module.css
+?? apps/web/src/shared/components/ui/DialogHeader.tsx
+?? apps/web/src/shared/components/ui/FormMessage.module.css
+?? apps/web/src/shared/components/ui/FormMessage.tsx
+?? docs/frontend-visual-baseline.md
+?? docs/plano-aperfeicoamento-visual.md
+?? docs/reports/frontend-visual-baseline/
+?? scripts/
+?? supabase/maintenance/
+?? supabase/migrations/20260918_014_order_lifecycle_customers.sql
+?? supabase/migrations/20260921_015_customer_search_one_letter.sql
+?? supabase/migrations/20260921_016_add_lunch_category.sql
+?? supabase/migrations/20260921_017_seed_lunch_catalog.sql
+?? supabase/tests/

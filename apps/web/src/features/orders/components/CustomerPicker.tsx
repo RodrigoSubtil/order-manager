@@ -30,9 +30,8 @@ export function CustomerPicker({ methods, onOpen }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [debouncedName, setDebouncedName] = useState('');
   const changeOpen = (open: boolean) => {
-    const nextOpen = open && name.trim().length >= 1;
-    setIsOpen(nextOpen);
-    if (nextOpen) onOpen?.();
+    setIsOpen(open);
+    if (open) onOpen?.();
   };
 
   useEffect(() => {
@@ -69,9 +68,8 @@ export function CustomerPicker({ methods, onOpen }: Props) {
               aria-invalid={Boolean(errors.clientName)}
               onChange={(event) => {
                 field.onChange(event);
-                const hasQuery = event.currentTarget.value.trim().length >= 1;
-                setIsOpen(hasQuery);
-                if (hasQuery) onOpen?.();
+                setIsOpen(true);
+                onOpen?.();
               }}
               placeholder="Ex.: Ana Silva"
               autoComplete="off"
@@ -80,7 +78,9 @@ export function CustomerPicker({ methods, onOpen }: Props) {
         />
         <ComboboxTrigger aria-label="Mostrar clientes" />
         <ComboboxList>
-          {customers.isPending || debouncedName !== name.trim() ? (
+          {!name.trim() ? (
+            <ComboboxEmpty>Escreva o nome para procurar clientes.</ComboboxEmpty>
+          ) : customers.isPending || debouncedName !== name.trim() ? (
             <ComboboxEmpty>A procurar clientes...</ComboboxEmpty>
           ) : customers.isError ? (
             <ComboboxEmpty>Não foi possível procurar clientes.</ComboboxEmpty>

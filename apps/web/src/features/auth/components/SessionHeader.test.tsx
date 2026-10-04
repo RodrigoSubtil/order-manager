@@ -29,6 +29,7 @@ describe('SessionHeader permissions', () => {
     );
 
     expect(screen.getByRole('button', { name: 'Gerenciar' })).toBeInTheDocument();
+    expect(screen.getByText('v1.0.0')).toBeInTheDocument();
   });
 
   it('supports using the management action as a return to orders', () => {

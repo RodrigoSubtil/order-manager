@@ -25,6 +25,7 @@ describe('LoginPage account options', () => {
   it('exposes username and the persistent-session choice without recovery actions', () => {
     render(<LoginPage isCheckingSession={false} sessionError="" onLogin={vi.fn()} />);
 
+    expect(screen.getByText('v1.0.0')).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Utilizador' })).toBeInTheDocument();
     expect(screen.getByRole('checkbox', { name: 'Manter conectado' })).not.toBeChecked();
     expect(screen.queryByRole('button', { name: 'Trocar senha' })).not.toBeInTheDocument();

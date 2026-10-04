@@ -11,6 +11,7 @@ import {
   Input,
   Spinner,
 } from '../../../shared/components/ui';
+import { appVersion } from '../../../shared/lib/appVersion';
 import { loginSchema, type LoginFormValues } from '../schemas/loginSchema';
 import styles from './LoginPage.module.css';
 
@@ -127,6 +128,7 @@ export function LoginPage({ isCheckingSession, sessionError, onLogin }: LoginPag
           <Button className={styles.submit} variant="primary" type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'A entrar...' : 'Entrar'}
           </Button>
+          <span className={styles.version}>{appVersion}</span>
         </form>
       </Card>
     </main>

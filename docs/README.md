@@ -1,23 +1,22 @@
 # Documentação do Order Manager
 
-Atualizado em 26 de julho de 2026.
+**Versão do produto: 1.0.0.** O valor exibido no login e no cabeçalho vem de [`apps/web/package.json`](../apps/web/package.json). Esta é a versão da árvore de código; cada publicação precisa de validação no site publicado.
 
-## Fonte de verdade atual
+| Preciso de…                                    | Ler                                                |
+| ---------------------------------------------- | -------------------------------------------------- |
+| Usar o painel, encomendas, filtros e impressão | [Guia de utilização](product/guide.md)             |
+| Gerir catálogo, responsáveis e acessos         | [Guia de gestão](product/management.md)            |
+| Entender componentes, dados e decisões atuais  | [Arquitetura do sistema](architecture/system.md)   |
+| Entender o schema, as RPCs e as migrations     | [Dados e Supabase](architecture/data.md)           |
+| Preparar o ambiente e alterar código           | [Desenvolvimento](development/workflow.md)         |
+| Configurar o projeto Supabase                  | [Configuração do Supabase](operations/supabase.md) |
+| Publicar e validar uma versão                  | [Release e operação](operations/release.md)        |
+| Verificar backups ou lidar com incidentes      | [Backup e recuperação](operations/backup.md)       |
+| Consultar decisões e evidência antigas         | [Histórico](history/README.md)                     |
 
-- [Sistema atual](current-system.md): arquitetura, dados, responsabilidades e riscos.
-- [Arquitetura](architecture/overview.md): desenho técnico da aplicação em produção.
-- [Fluxo de desenvolvimento](development-workflow.md): instalação, scripts e convenções.
-- [Configuração Supabase](supabase-setup.md): schema, migrations, Auth, RLS e primeiro acesso.
-- [Publicação](deployment.md): Vercel, variáveis e validação pós-deploy.
-- [Guia do utilizador](user-guide.md): operação diária.
-- [Acesso gerencial](management-access.md): separação entre OWNER e OPERATOR.
-- [Checklist de segurança](security-checklist.md): controles e limites conhecidos.
-- [Prontidão de entrega](release-readiness.md): o que está validado e o que ainda exige ação humana.
-- [Runbook de produção](production-runbook.md): publicação, monitorização e incidente.
+## Como ler esta documentação
 
-## Documentos históricos
-
-Os restantes documentos registam decisões e etapas anteriores, inclusive propostas com NestJS,
-Prisma, Docker, OpenAPI e uma API própria. Essas propostas não fazem parte da aplicação atual e
-não devem ser usadas para executar, publicar ou operar o produto. Foram mantidas apenas para
-preservar o histórico das decisões.
+- Os guias acima descrevem **o código atual**. Migrations em [`supabase/migrations`](../supabase/migrations) e o código em [`apps/web/src`](../apps/web/src) prevalecem se houver divergência.
+- O estado do **banco real** só é confirmado por consulta ao projeto Supabase correto. O estado **publicado** só é confirmado no domínio e dispositivo usados pela pastelaria. Build e testes locais não substituem essas verificações.
+- [`history/`](history/README.md) guarda contexto de decisões e auditorias; não é manual de instalação. O plano antigo com NestJS, Prisma e Docker foi abandonado e continua recuperável pelo histórico Git.
+- Mudanças de comportamento precisam atualizar o guia correspondente nesta mesma alteração. Mudanças de schema exigem uma nova migration; não se edita uma migration já aplicada.

@@ -15,6 +15,7 @@ import { Icon } from './Icon';
 import styles from './Combobox.module.css';
 
 type ComboboxContextValue = {
+  closeAndBlur: () => void;
   inputId: string;
   isOpen: boolean;
   listId: string;
@@ -81,8 +82,16 @@ export function Combobox({
     }
   }
 
+  function closeAndBlur() {
+    onOpenChange(false);
+    const activeElement = document.activeElement;
+    if (activeElement instanceof HTMLElement && root.current?.contains(activeElement)) {
+      activeElement.blur();
+    }
+  }
+
   return (
-    <ComboboxContext.Provider value={{ inputId: id, isOpen, listId, onOpenChange }}>
+    <ComboboxContext.Provider value={{ closeAndBlur, inputId: id, isOpen, listId, onOpenChange }}>
       <div
         {...props}
         ref={root}
@@ -111,7 +120,10 @@ export const ComboboxInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HT
         aria-expanded={context.isOpen}
         onClick={(event) => {
           onClick?.(event);
-          if (!event.defaultPrevented) context.onOpenChange(true);
+          if (!event.defaultPrevented) {
+            if (context.isOpen) context.closeAndBlur();
+            else context.onOpenChange(true);
+          }
         }}
       />
     );
@@ -135,7 +147,10 @@ export function ComboboxTrigger({
       aria-haspopup="listbox"
       onClick={(event) => {
         onClick?.(event);
-        if (!event.defaultPrevented) context.onOpenChange(!context.isOpen);
+        if (!event.defaultPrevented) {
+          if (context.isOpen) context.closeAndBlur();
+          else context.onOpenChange(true);
+        }
       }}
     >
       {children ?? <Icon name="chevron-down" />}
@@ -158,9 +173,11 @@ export function ComboboxList({ className, ...props }: HTMLAttributes<HTMLDivElem
 
 export function ComboboxOption({
   className,
+  onClick,
   onKeyDown,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) {
+  const context = useComboboxContext();
   function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
     onKeyDown?.(event);
     if (event.defaultPrevented || !['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key))
@@ -188,6 +205,10 @@ export function ComboboxOption({
       type="button"
       role="option"
       tabIndex={-1}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) context.closeAndBlur();
+      }}
       onKeyDown={handleKeyDown}
     />
   );

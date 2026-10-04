@@ -1,0 +1,47 @@
+{
+  "method": "WCAG relative luminance contrast ratio",
+  "pairs": [
+    {
+      "foreground": "#4d4339",
+      "background": "#ffffff",
+      "usage": "ink on white",
+      "ratio": 9.64
+    },
+    {
+      "foreground": "#6b5c4d",
+      "background": "#ffffff",
+      "usage": "muted on white",
+      "ratio": 6.44
+    },
+    {
+      "foreground": "#a29487",
+      "background": "#ffffff",
+      "usage": "placeholder on white",
+      "ratio": 2.95
+    },
+    {
+      "foreground": "#765f4b",
+      "background": "#ffffff",
+      "usage": "accent on white",
+      "ratio": 5.98
+    },
+    {
+      "foreground": "#8b3f32",
+      "background": "#fff7f5",
+      "usage": "danger on danger-soft",
+      "ratio": 6.96
+    },
+    {
+      "foreground": "#35634a",
+      "background": "#f2faf5",
+      "usage": "success on success-soft",
+      "ratio": 6.51
+    },
+    {
+      "foreground": "#5b78c7",
+      "background": "#ffffff",
+      "usage": "focus on white",
+      "ratio": 4.24
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # Como contribuir
 
+Leia [AGENTS.md](AGENTS.md) e [docs/development/workflow.md](docs/development/workflow.md) para o mapa do projeto e as regras atuais.
+
 - Preserve o comportamento do frontend e valide as alterações.
 - Nunca coloque passwords, `service_role`, `DATABASE_URL` ou dados reais no Git.
 - O browser usa apenas a chave pública do Supabase.
