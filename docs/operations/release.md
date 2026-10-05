@@ -36,6 +36,12 @@ Referência validada: `127f535f10b70e4119d77fa858cb9b51e102ba1c`. Foram observad
 
 O ambiente de teste tem banco Supabase Free separado, domínio curto e login `pastelaria_teste`. Encomendas/itens/recibos foram zerados e os próximos números reiniciados em 1 nos dois bancos por solicitação explícita, fora do fluxo de deploy. Produção preservou seu cliente, catálogo, responsáveis e acessos. A documentação desta preparação não é uma nova release de aplicação e não exige aumento da versão 1.0.0.
 
+### 1.0.0 · validação e publicação final de 05/10/2026
+
+O [PR #2](https://github.com/RodrigoSubtil/order-manager/pull/2) levou a alteração validada de homologacao para main após seis checks aprovados. Homologação cf1fd71 / deployment AAY1pWeL3iRFKJdxAtrGECH7PpT7 e produção 8c32f84 / deployment BSsx4KE19eEWowuVnkhsssGFyA5A ficaram Ready. O Quality de main passou nos jobs de aplicação e PostgreSQL, com 151 testes.
+
+No domínio de produção foram verificados sessão autenticada, leitura de catálogo/responsáveis, criação do pedido 1, edição com versão 1→2 e conclusão pela interface. Em homologação foram verificados criação/exclusão depois do novo Preview e criação/edição/conclusão após reconciliação. Consultas cruzadas confirmaram que as fixtures não chegaram ao outro banco. O cabeçalho foi medido no DOM: marca e v1.0.0 com a mesma altura inferior nos dois domínios. A limpeza final retirou somente fixtures e deixou encomendas/itens/recibos zero e contador 1. O [relatório final](readiness-2026-10-05.md) guarda os detalhes e limites.
+
 ## Gate para a próxima publicação
 
 O caminho configurado é PR para homologação → Preview/testes → PR para main → revisão → build Production. Siga [Ambientes](environments.md). Não promova um bundle compilado com as variáveis de homologação para o domínio de produção.

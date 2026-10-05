@@ -43,7 +43,18 @@ Tipos/enums precisam de uma transação confirmada antes do schema. Uma mudança
 
 O commit inicial ecbc29c passou nos dois jobs do GitHub. Seu Preview foi bloqueado no Vercel exclusivamente por formatação de vercel.json. O build foi ajustado para formatar apenas esse JSON antes de verify:release; a verificação do arquivo original continua no GitHub. As Actions foram atualizadas para v6 e o runner fixado em Ubuntu 24.04 para retirar os avisos de runtime antigo e evitar uma troca automática de imagem durante a operação.
 
-Este registro inicial comprova as etapas acima. A publicação desta alteração e o smoke test após deploy serão registrados aqui somente depois de confirmar o commit, os dois jobs do GitHub, Ready do Vercel e os domínios. Consulte [release](release.md) para o procedimento; não inferir deploy a partir de testes locais.
+O [PR #2](https://github.com/RodrigoSubtil/order-manager/pull/2) foi revisto com seis checks aprovados antes do merge, incluindo quality/database em push e PR e Preview do Vercel.
+
+| Ambiente validado | Commit                                   | Deployment                   | Evidência                                                                                                                                                       |
+| ----------------- | ---------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Homologação       | cf1fd71db8f9774c7a2c2f110f8dd688428d402a | AAY1pWeL3iRFKJdxAtrGECH7PpT7 | Ready; domínio curto; sessão Pastelaria Teste; criação e exclusão pela interface; ausência da fixture em produção                                               |
+| Produção          | 8c32f847d7a876f482b03294de45ee611ea832f7 | BSsx4KE19eEWowuVnkhsssGFyA5A | Build Production Ready; domínio principal; sessão Pastelaria Vénus; pedido 1 criado, editado de versão 1 para 2 e concluído; ausência da fixture em homologação |
+
+O [Quality de main](https://github.com/RodrigoSubtil/order-manager/actions/runs/37379282271) passou nos dois jobs e registrou 151 testes aprovados. No DOM publicado dos dois ambientes, marca e versão terminaram na coordenada inferior de 44 px. Os bundles eram diferentes (homologação index-CKpZa5kQ.js, produção index-Bu1IBEYC.js), e a persistência em projetos distintos foi comprovada por consultas aos bancos após cada gravação. O bundle Preview não foi promovido a Production.
+
+Depois dos testes, os dois bancos tinham zero encomendas, itens e recibos e próximo número 1. Homologação: zero clientes, 215 produtos e Rodrigo/Maria Eduarda. Produção: um cliente anterior, 216 produtos e nove responsáveis preservados. Todas as tabelas públicas de produção foram comparadas com o backup anterior à migration e mantinham as mesmas linhas antes do smoke test. Após a limpeza do smoke test, apenas a data de atualização do tenant mudou por causa do avanço/reset autorizado do contador. Senhas do Auth e credenciais de gestão permaneceram iguais; nenhuma senha foi copiada para o Git.
+
+Uma alteração posterior somente de documentação registra estes resultados. Commits de documentação podem gerar outro build com o mesmo código de aplicação; cada Ready deve corresponder ao respectivo commit. Finais de linha foram fixados em LF via .gitattributes para manter a formatação consistente no Windows, CI e Vercel. Consulte [release](release.md).
 
 Os testes usam nomes QA identificáveis. A limpeza remove somente os IDs criados pelo teste e reinicia o contador apenas enquanto não houver encomendas, conforme autorização pontual. Deploys comuns preservam dados e numeração. Produção mantém seus cadastros operacionais anteriores; homologação mantém Rodrigo/Maria Eduarda e seu catálogo.
 
