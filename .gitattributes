@@ -1,0 +1,2 @@
+# Keep the same formatting on Windows, CI and Vercel; binary files stay binary.
+* text=auto eol=lf
