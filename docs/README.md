@@ -14,6 +14,14 @@
 | Verificar backups ou lidar com incidentes      | [Backup e recuperação](operations/backup.md)       |
 | Consultar decisões e evidência antigas         | [Histórico](history/README.md)                     |
 
+## Ambientes e preparação de homologação
+
+- [Ambientes e publicação segura](operations/environments.md): endereços, branches, project refs, variáveis, utilizadores e promoção para produção.
+- [Validação final para uso](operations/readiness-2026-10-05.md): base canónica, recuperação lógica, CI/build, testes publicados e limites.
+- [Auditoria inicial de 05/10/2026](operations/homologacao-audit-2026-10-05.md): o que foi configurado/testado, diferenças entre bancos, limpeza final e pendências.
+
+Não existem senhas ou chaves nesses documentos. As contagens da auditoria são um retrato datado; confirme o banco atual antes de qualquer limpeza ou migration.
+
 ## Como ler esta documentação
 
 - Os guias acima descrevem **o código atual**. Migrations em [`supabase/migrations`](../supabase/migrations) e o código em [`apps/web/src`](../apps/web/src) prevalecem se houver divergência.

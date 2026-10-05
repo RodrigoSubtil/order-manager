@@ -29,3 +29,12 @@ npm run build
 ```
 
 A documentação para utilizadores, operadores e manutenção começa em [docs/README.md](docs/README.md). Quem alterar o projeto deve ler também [AGENTS.md](AGENTS.md).
+
+## Ambientes
+
+- [Produção](https://order-manager-rs.vercel.app/): branch `main`, banco Supabase de produção.
+- [Homologação](https://homologacao-order-manager-rs.vercel.app/): branch `homologacao`, banco Supabase separado, utilizador `pastelaria_teste`.
+
+Consulte [ambientes e publicação segura](docs/operations/environments.md) para project refs, variáveis, acessos sem senhas e o caminho de PR de homologação para produção. A [auditoria de 05/10/2026](docs/operations/homologacao-audit-2026-10-05.md) registra configuração, testes reais, resets autorizados e limites. Deployments normais preservam dados e numeração.
+
+A [validação final da preparação](docs/operations/readiness-2026-10-05.md) registra reconciliação, recuperação lógica, checks e publicação. Use npm run verify:release para os checks de aplicação; os testes SQL estão em [supabase/tests](supabase/tests/README.md).

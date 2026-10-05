@@ -45,3 +45,9 @@ O estado remoto é gerido com TanStack Query; os formulários usam React Hook Fo
 ## Limites de verificação
 
 Os testes de código não confirmam por si a migration no projeto real, o conteúdo do domínio publicado, o backup ativo ou a impressão física. Use [release e operação](../operations/release.md) e [backup](../operations/backup.md) para essas verificações.
+
+## Ambientes publicados
+
+Um projeto Vercel publica `main` em Production e `homologacao` em Preview com filtro de branch. Cada build recebe URL/chave pública de seu próprio projeto Supabase. Banco, Auth e credencial gerencial são separados entre ambientes. Os project refs e domínios estão em [Ambientes](../operations/environments.md).
+
+As variáveis `VITE_*` entram no bundle no build. Publique produção por um novo build de `main` com seu par de variáveis; não reutilize um bundle Preview ligado ao banco de teste. Vercel não aplica SQL nem transfere dados de homologação para produção.

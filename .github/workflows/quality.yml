@@ -3,7 +3,14 @@ name: Quality
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, homologacao]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   quality:
@@ -20,3 +27,40 @@ jobs:
       - run: npm run typecheck
       - run: npm run test:coverage
       - run: npm run build
+
+  database:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17.11
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: order_manager_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: 5432
+      PGUSER: postgres
+      PGDATABASE: order_manager_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Bootstrap disposable Auth facade
+        run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/ci_auth_bootstrap.sql
+      - name: Apply canonical migrations
+        run: |
+          for migration in supabase/migrations/*.sql; do
+            psql -X -1 -v ON_ERROR_STOP=1 -f "$migration"
+          done
+      - name: Check schema and isolation contracts
+        run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/schema_contract.sql -f supabase/tests/ci_order_flows.sql
+      - name: Check concurrent saves and retries
+        run: node supabase/tests/concurrent_orders.mjs
