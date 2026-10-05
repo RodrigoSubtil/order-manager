@@ -41,6 +41,8 @@ Tipos/enums precisam de uma transação confirmada antes do schema. Uma mudança
 
 ## Publicação e limpeza
 
+O commit inicial ecbc29c passou nos dois jobs do GitHub. Seu Preview foi bloqueado no Vercel exclusivamente por formatação de vercel.json. O build foi ajustado para formatar apenas esse JSON antes de verify:release; a verificação do arquivo original continua no GitHub. As Actions foram atualizadas para v6 e o runner fixado em Ubuntu 24.04 para retirar os avisos de runtime antigo e evitar uma troca automática de imagem durante a operação.
+
 Este registro inicial comprova as etapas acima. A publicação desta alteração e o smoke test após deploy serão registrados aqui somente depois de confirmar o commit, os dois jobs do GitHub, Ready do Vercel e os domínios. Consulte [release](release.md) para o procedimento; não inferir deploy a partir de testes locais.
 
 Os testes usam nomes QA identificáveis. A limpeza remove somente os IDs criados pelo teste e reinicia o contador apenas enquanto não houver encomendas, conforme autorização pontual. Deploys comuns preservam dados e numeração. Produção mantém seus cadastros operacionais anteriores; homologação mantém Rodrigo/Maria Eduarda e seu catálogo.
