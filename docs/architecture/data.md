@@ -2,32 +2,36 @@
 
 ## Modelo atual
 
-`tenants`, `users` e `tenant_memberships` definem identidade, papel e isolamento. `orders` e `order_items` guardam encomendas e itens; `customers`, `responsibles` e `catalog_products` são cadastros por empresa. `tenant_settings` e estruturas de auditoria apoiam configuração e rastreabilidade. Para colunas, índices e constraints exatos, consulte as migrations em [`supabase/migrations`](../../supabase/migrations), não um desenho antigo.
+Produção e homologação têm o mesmo schema de aplicação, verificado em 05/10/2026: 13 tabelas públicas, 31 funções públicas e seis helpers privados em app_security. A comparação incluiu colunas, defaults, constraints, índices, RLS, políticas, corpos e privilégios de funções. PostgreSQL do fornecedor continua em versões diferentes (produção 17.6 e homologação 17.11); configurações gerenciadas do Supabase não são parte dessa paridade.
 
-O frontend chama RPCs por [`supabaseData.ts`](../../apps/web/src/shared/lib/supabaseData.ts). O contrato inclui `web_list_orders`, `web_search_customers`, `web_save_order_with_responsible`, `web_delete_order`, `web_complete_order` e operações gerenciais de catálogo/responsáveis. As leituras e escritas comerciais resolvem empresa e permissão a partir da sessão Auth. Não enviam `tenant_id` do browser.
+Identidade e isolamento: tenants, users e tenant_memberships. Encomendas: orders e order_items. Cadastros: customers, responsibles e catalog_products. Acesso de gestão: tenant_management_credentials e tenant_management_sessions. Gravação idempotente: order_save_receipts. audit_logs, tenant_settings e order_items.catalog_product_id permanecem por compatibilidade com estruturas legadas de produção, agora presentes também em homologação.
+
+O frontend chama 17 RPCs autenticadas por [supabaseData.ts](../../apps/web/src/shared/lib/supabaseData.ts). Empresa e papel vêm de Auth e membership, não de tenant_id informado pelo browser. As tabelas não concedem SELECT/INSERT/UPDATE/DELETE a anon ou authenticated; anon não executa funções públicas. Funções SECURITY DEFINER autenticadas validam sessão e autorização internamente.
 
 ## Integridade
 
-- RLS protege as tabelas; privilégios diretos do cliente são limitados. Funções `SECURITY DEFINER` expostas precisam validar sessão, membership, tenant e papel internamente.
-- Encomendas usam `version` para detetar edição concorrente e `requestId` para tornar a repetição de uma gravação segura. Responsável novo e encomenda são gravados na mesma transação.
-- Concluir/apagar removem a encomenda e os itens. A numeração não é reiniciada por estas operações.
-- O telefone persiste como dígitos internacionais (`351912345678`, por exemplo). A interface separa prefixo e número nacional e usa metadados por país para exibir `+351 912 345 678`. A formatação não deve entrar na coluna nem nas comparações de clientes.
-- Produtos e responsáveis têm identidade normalizada por empresa. Uma migration pode recusar dados duplicados antigos antes de alterar o schema; resolver o conflito é uma operação própria.
+- version detecta edição concorrente; requestId impede duplicação em uma repetição da mesma gravação. Responsável novo e encomenda são gravados na mesma transação.
+- Concluir/apagar removem imediatamente encomenda e itens. Não existe purge automático ou cron ativo, e essas ações não reiniciam a numeração.
+- Telefones são dígitos internacionais no banco; formatação e prefixo pertencem à interface. A identidade de clientes, produtos e responsáveis é normalizada por empresa.
+- OWNER e OPERATOR continuam os únicos papéis aceitos em memberships. ADMIN permanece como label legada do enum para compatibilidade; o CHECK impede novas memberships desse papel.
+- O papel legado order_manager_api existe com NOLOGIN, sem superuser ou BYPASSRLS. Não é concedido a anon/authenticated. Suas políticas preservam compatibilidade; não são o acesso usado pelo frontend.
 
-## Evolução do schema
+## Base de migrations
 
-As migrations SQL são numeradas e aplicadas **na ordem**. O conjunto atual vai de `20260723_000_schema.sql` até `20260930_019_order_responsible_creation.sql`. As mudanças mais relevantes após a base são:
+Os arquivos ativos em [supabase/migrations](../../supabase/migrations) são:
 
-| Migration                                           | Mudança                                                                                       |
-| --------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `014_order_lifecycle_customers`                     | Clientes, identidade dos produtos, remoção física de pedidos, `requestId` e janela de entrega |
-| `015_customer_search_one_letter`                    | Sugestões de cliente a partir de uma letra                                                    |
-| `016_add_lunch_category` / `017_seed_lunch_catalog` | Área Almoço e catálogo opcional da Vénus                                                      |
-| `018_international_phone`                           | Telefones internacionais                                                                      |
-| `019_order_responsible_creation`                    | Responsável novo criado ao guardar a encomenda                                                |
+| Versão         | Finalidade                                                              |
+| -------------- | ----------------------------------------------------------------------- |
+| 20261005205508 | Tipos/enums e extensão necessários; transação própria                   |
+| 20261005205821 | Schema e RPCs canónicos; reconciliação específica de objetos existentes |
+| 20261005214152 | Remoção de cinco índices duplicados e oito índices de apoio a FKs       |
 
-O conteúdo exato e a aplicabilidade de cada SQL estão em [`supabase/migrations`](../../supabase/migrations). Nunca edite uma migration já aplicada. O repositório não prova quais estão aplicadas em produção; compare o histórico do projeto Supabase antes de publicar código dependente delas. Scripts de manutenção histórica em [`supabase/maintenance`](../../supabase/maintenance) não fazem parte do fluxo normal de migrations.
+A base não cria utilizadores, empresas, senhas, dados de catálogo, encomendas ou agendamentos. Foi ensaiada em cópias restauradas dos dois projetos e em uma base vazia, incluindo repetição para verificar idempotência. Preserva constraints equivalentes por renomeação; substitui somente FKs individualmente identificadas que diferiam em ON UPDATE CASCADE. Definições inesperadas interrompem a transação. Não existe remoção global de constraints ou índices.
 
-## Segredos e acessos
+Os 20 scripts anteriores foram preservados sem alteração em [legacy_migrations](../../supabase/legacy_migrations/README.md). Não são executados por db push. O histórico anterior do conector foi guardado em backup privado; os três registros canónicos correspondem a SQL realmente aplicado, sem fingir aplicação integral da antiga 008.
 
-Apenas `VITE_SUPABASE_URL` e a chave pública entram no frontend. `service_role`, connection strings, passwords, dumps e dados de clientes ficam fora do Git e do bundle. O desbloqueio de **Gerenciar** é validado no banco, tem prazo e limite de tentativas; esconder o botão no React não é a proteção.
+Para uma nova alteração, use a CLI para gerar um novo arquivo, teste sobre a base atual e revise o diff. Nunca edite uma migration já aplicada. Vercel não migra o banco. Veja [Supabase](../operations/supabase.md), [testes SQL](../../supabase/tests/README.md) e [preparação final](../operations/readiness-2026-10-05.md).
+
+## Segredos e recuperação
+
+URL e chave pública pertencem ao frontend. service_role, connection strings, passwords, hashes, tokens, dumps e dados de clientes ficam fora do Git e do bundle. O desbloqueio de Gerenciar é validado no banco e tem prazo/limite de tentativas. A restauração lógica da aplicação foi ensaiada localmente; não equivale a restaurar o backup físico ou todos os serviços gerenciados do Supabase.

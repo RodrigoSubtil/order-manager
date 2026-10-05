@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm ci",
-  "buildCommand": "npm run build --workspace @order-manager/web",
+  "buildCommand": "npm exec -- prettier --write vercel.json && npm run verify:release",
   "outputDirectory": "apps/web/dist",
   "headers": [
     {

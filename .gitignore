@@ -17,3 +17,4 @@ apps/api/prisma/legacy/private/
 
 .vercel
 .env*
+supabase/.temp/

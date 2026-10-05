@@ -1,9 +1,8 @@
 .topbar {
-  position: relative;
-  display: flex;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 16px;
   align-items: flex-end;
-  justify-content: space-between;
   padding: 20px;
   color: var(--color-cream);
   background:
@@ -18,13 +17,19 @@
 }
 
 .topbar [data-eyebrow] {
+  margin-bottom: 0;
   color: var(--color-cream);
 }
 
+.brandRow {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .version {
-  position: absolute;
-  top: 8px;
-  right: 20px;
   color: rgb(255 255 255 / 70%);
   font-size: 0.72rem;
   font-weight: 700;
@@ -126,9 +131,5 @@
 @media (max-width: 560px) {
   .topbar {
     padding: 12px;
-  }
-
-  .version {
-    right: 12px;
   }
 }

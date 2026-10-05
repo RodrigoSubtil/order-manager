@@ -4,7 +4,14 @@ As versões descrevem o código desta árvore. A publicação e os testes reais 
 
 ## [Unreleased]
 
-Nenhuma alteração registada.
+- Documentação de ambientes de produção e homologação, variáveis por branch e publicação por PR/build Production.
+- Registo da preparação e auditoria de 05/10/2026: Supabase Free separado, domínio curto, limpeza de aliases, novo login de teste, responsáveis finais e resets de numeração autorizados.
+- Base canónica sem seeds/senhas/cron, reconciliação do schema e histórico dos dois bancos, com recuperação lógica ensaiada e testes SQL/concorrência.
+- Quality em main/homologacao e PRs, job PostgreSQL descartável e verificação de aplicação no build Vercel.
+- Dependências de teste/PostCSS atualizadas; sem vulnerabilidades nas dependências de produção observadas.
+- Versão v1.0.0 alinhada com a base da marca Order Manager no cabeçalho.
+
+Estas entradas documentam a preparação final, configuração e ajuste visual autorizado. A versão do produto permanece 1.0.0. Consulte [a auditoria](docs/operations/homologacao-audit-2026-10-05.md) para distinguir o estado publicado das alterações locais de documentação.
 
 ## [1.0.0] — primeira versão para uso oficial
 

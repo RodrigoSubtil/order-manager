@@ -19,12 +19,12 @@ export function SessionHeader({
 }: SessionHeaderProps) {
   return (
     <header className={styles.topbar}>
-      <div>
+      <div className={styles.brandRow}>
         <span data-eyebrow>Order Manager</span>
-        <h1>Painel de encomendas</h1>
+        <span className={styles.version}>{appVersion}</span>
       </div>
 
-      <span className={styles.version}>{appVersion}</span>
+      <h1>Painel de encomendas</h1>
 
       <div className={styles.actions}>
         {canManage && (
