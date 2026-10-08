@@ -11,6 +11,14 @@ O botão da câmara abre um modal pequeno para **Abrir câmara** ou **Escolher f
 - A [PR #4](https://github.com/RodrigoSubtil/order-manager/pull/4) publica a versão 1.1.0 somente em `homologacao`. `VITE_ORDER_SCAN_ENABLED=true` está configurado no ambiente Preview dessa branch; a produção continua fora desta publicação.
 - Não existe chave da OpenAI no código, no browser ou neste documento. Não foram feitas chamadas pagas de IA.
 
+### Primeiro teste real e diagnóstico · 08/10/2026
+
+O site foi publicado pela [PR #4](https://github.com/RodrigoSubtil/order-manager/pull/4), commit de merge `c5fd07e`, deployment Preview `2mDYHKKWx7Kp47HYBN96hpGHbdvX` Ready. O domínio de homologação mostrou `v1.1.0`, sessão Pastelaria Teste e o modal de fotografia. Produção permaneceu no commit `a9c70d0`.
+
+As primeiras tentativas do utilizador falharam quase imediatamente, sem tokens retornados. A função foi atualizada para registrar somente etapa, status HTTP, código/param do erro e ID de requisição do fornecedor; nunca chave, fotografia, texto da encomenda nem mensagem bruta do fornecedor. A versão 3 publicada em homologação registrou `count_tokens`, HTTP 401 e código `token_invalidated` numa tentativa controlada com uma imagem vazia de teste. O bloqueio confirmado é a credencial OpenAI invalidada, antes da geração da transcrição. A substituição de `OPENAI_API_KEY` deve ser feita diretamente nos secrets de homologação pelo utilizador.
+
+Falhas antes do envio da geração passam a registrar custo zero na reserva interna. Quando a geração já foi enviada e o consumo é desconhecido, a reserva continua mantida. Quatro testes simulados da função passaram, incluindo rejeição da contagem sem geração e sem registrar dados sensíveis. A leitura de uma encomenda real continua pendente da correção da chave e de novo teste.
+
 ### Verificação em 08/10/2026
 
 - PostgreSQL 17.11 local descartável: migrations, bloqueio da segunda análise da mesma empresa, limite diário de 50, orçamento mensal com reserva e independência entre empresas passaram. As fixtures foram revertidas e a base local foi encerrada.
