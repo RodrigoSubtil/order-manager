@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { appVersion } from '../../../shared/lib/appVersion';
 import { SessionHeader } from './SessionHeader';
 
 describe('SessionHeader permissions', () => {
@@ -29,7 +30,7 @@ describe('SessionHeader permissions', () => {
     );
 
     expect(screen.getByRole('button', { name: 'Gerenciar' })).toBeInTheDocument();
-    expect(screen.getByText('v1.0.0')).toBeInTheDocument();
+    expect(screen.getByText(appVersion)).toBeInTheDocument();
   });
 
   it('supports using the management action as a return to orders', () => {

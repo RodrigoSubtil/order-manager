@@ -13,6 +13,11 @@
   align-items: center;
 }
 
+.topRowWithScan {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.4fr) repeat(3, minmax(46px, 0.55fr));
+  grid-template-areas: 'area date-filter scan create print';
+}
+
 .topRow > * {
   width: 100%;
   min-width: 0;
@@ -103,6 +108,18 @@
   border: 2px solid var(--color-accent-soft);
 }
 
+.scan {
+  grid-area: scan;
+  color: var(--color-accent);
+  background: var(--color-soft-white);
+  border: 2px solid var(--color-line);
+}
+
+.scanIcon {
+  width: 26px;
+  height: 26px;
+}
+
 .printIcon {
   width: 25px;
   height: 25px;
@@ -186,6 +203,13 @@
       'print create'
       'area date-filter';
   }
+
+  .topRowWithScan {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      'scan create print'
+      'area area date-filter';
+  }
 }
 
 @media (max-width: 560px) {
@@ -195,6 +219,13 @@
       'area area'
       'date-filter date-filter';
     gap: 8px;
+  }
+
+  .topRowWithScan {
+    grid-template-areas:
+      'scan create print'
+      'area area area'
+      'date-filter date-filter date-filter';
   }
 
   .topRow > *,

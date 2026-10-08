@@ -1,0 +1,113 @@
+.dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(390px, calc(100vw - 24px));
+}
+
+.hiddenFile {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choice,
+.photoStage,
+.progressStage,
+.completeStage {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+}
+
+.choice p,
+.completeStage p {
+  margin: 0;
+}
+
+.choice p {
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.choice button {
+  width: 100%;
+  min-height: 44px;
+}
+
+.photoStage video,
+.photoPreview {
+  display: block;
+  width: 100%;
+  max-height: min(45vh, 300px);
+  object-fit: contain;
+  background: var(--color-soft-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.changePhoto {
+  justify-self: center;
+}
+
+.demoNote,
+.progressStage small {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.progressStage {
+  gap: 14px;
+  text-align: center;
+}
+
+.percentage {
+  color: var(--color-ink);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.progressTrack {
+  height: 8px;
+  overflow: hidden;
+  background: var(--color-line);
+  border-radius: 999px;
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  background: var(--color-taupe);
+  border-radius: inherit;
+  transition: width 0.25s ease;
+}
+
+.completeStage {
+  justify-items: center;
+  padding-block: 24px;
+  text-align: center;
+}
+
+.completeIcon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  color: var(--color-success);
+  background: var(--color-success-soft);
+  border-radius: 50%;
+  font-size: 1.3rem;
+}
+
+.completeStage button {
+  width: 100%;
+  margin-top: 6px;
+}

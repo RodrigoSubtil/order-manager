@@ -1,4 +1,4 @@
-# Release e operação · v1.0.0
+# Release e operação · v1.1.0
 
 O número de versão do site vem de [`apps/web/package.json`](../../apps/web/package.json), aparece abaixo de **Entrar** no login e na mesma linha inferior da marca Order Manager no cabeçalho e deve aumentar apenas quando uma nova versão for preparada. Atualize também este registo. A versão 1.0.0 é a primeira versão destinada ao uso oficial.
 
@@ -23,6 +23,18 @@ Antes de abrir, confirme acesso ao site publicado, data/hora do dispositivo, pap
 Rollback de frontend: promova um deployment anterior conhecido e valide-o. Rollback de schema: não apague nem altere migrations já aplicadas; planeie uma migration corretiva ou restauração aprovada. Para perda de dados, use [backup e recuperação](backup.md).
 
 ## Registo de versões
+
+### 1.1.0 · digitalização com IA em homologação · 08/10/2026
+
+Nova funcionalidade compatível com o fluxo anterior: fotografia pela câmara ou pelo aparelho, leitura com progresso estimado, conclusão e revisão no formulário existente com indicadores compactos **Provável** e **Conferir**. O botão **Salvar** continua a ser a única ação que grava a encomenda.
+
+Destino autorizado: branch `homologacao` e [site de homologação](https://homologacao-order-manager-rs.vercel.app/), com `pastelaria_teste`. A produção e a branch `main` continuam na versão 1.0.0; não fazem parte desta publicação. A classificação 1.1.0 identifica uma nova funcionalidade, sem alteração incompatível do contrato de encomendas.
+
+A migration `20261008190245_order_scan_limits.sql` e a função `interpret-order` versão 1 já foram aplicadas no Supabase de homologação (`czbrnxrpofdbbgbdyrad`). Uma análise simultânea por empresa, 50 por dia, orçamento estimado de US$ 1 por mês e tetos de tokens ficam no backend. A chave OpenAI permanece somente nos secrets. Consulte [limites e verificações](order-scan.md).
+
+A [PR #4](https://github.com/RodrigoSubtil/order-manager/pull/4), de `codex/order-scan-prep` para `homologacao`, contém a implementação `b8b60dc` e ajustes de testes `9c2d6fe`/`aadb7d9`. Os checks locais passaram com 156 testes, cobertura exigida, formatação, lint, tipos e build. A leitura real foi ativada no backend de homologação em 08/10/2026, às 21:41 UTC; cinco verificações HTTP confirmaram autenticação e restrições de origem/método, sem foto nem chamada paga. O frontend está habilitado somente no Preview de `homologacao`.
+
+A publicação depende do merge dessa PR com os checks remotos aprovados e do deployment Ready no domínio de homologação. A qualidade da interpretação de fotos reais e a correção dos dados continuam pendentes do teste do utilizador.
 
 ### 1.0.0 · 04/10/2026
 

@@ -1,4 +1,4 @@
-# Guia de utilização · v1.0.0
+# Guia de utilização · v1.1.0
 
 ## Entrar e consultar
 
@@ -17,6 +17,14 @@ Os indicadores **Total**, **Hoje** e **Próximas** abrangem as encomendas ativas
 7. Toque em **Salvar** e espere a confirmação; volte ao painel para ver a lista atualizada. Não repita uma gravação após erro de ligação sem verificar se já foi concluída.
 
 As listas de cliente/produto admitem escrita; os demais seletores usam as opções exibidas. Ao escolher uma opção, a lista fecha e o teclado do telemóvel recolhe. A roda de hora requer **Confirmar** depois de escolher a hora completa.
+
+## Digitalizar uma encomenda
+
+Quando a digitalização estiver ativada, toque no ícone da câmara junto de adicionar e imprimir. Escolha **Abrir câmara** ou **Escolher foto**, usando uma fotografia por leitura. Confira a imagem e toque em **Ler fotografia**.
+
+O carregamento mostra uma percentagem estimada. Após **Leitura concluída**, toque em **Revisar encomenda** para abrir o formulário habitual com os dados preenchidos. **Provável**, em verde, indica uma leitura aparentemente legível; **Conferir**, em vermelho, destaca um dado que precisa de atenção. Pode editar os campos no próprio formulário.
+
+Confira os dados e toque em **Salvar**. A leitura da fotografia não grava uma encomenda automaticamente. Se a foto não puder ser lida ou um limite de utilização for atingido, pode preencher a encomenda manualmente.
 
 ## Concluir, apagar e imprimir
 

@@ -1,4 +1,4 @@
--- Run after the two canonical migrations, in an isolated database or read-only audit.
+-- Run after the canonical migrations, in an isolated database or read-only audit.
 do $contract$
 declare exposed integer; app_functions integer;
 begin

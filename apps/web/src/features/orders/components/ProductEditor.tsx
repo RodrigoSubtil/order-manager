@@ -14,12 +14,15 @@ import {
 import { categories, type CatalogProduct, type Category } from '../../../shared/lib/domain';
 import { resizeTextArea } from '../lib/orderFormUtils';
 import { quantityUnits, type OrderFormValues } from '../schemas/orderSchema';
+import type { ScanDraft } from '../schemas/scanDraft';
+import { ScanFieldLabel } from './ScanFieldLabel';
 import styles from './ProductEditor.module.css';
 
 type ProductEditorProps = {
   catalogProductsByCategory: Map<Category, CatalogProduct[]>;
   itemFields: FieldArrayWithId<OrderFormValues, 'items', 'fieldKey'>[];
   methods: UseFormReturn<OrderFormValues>;
+  scanDraft?: ScanDraft | null;
   openCategoryPickerId: string | null;
   openProductPickerId: string | null;
   openQuantityPickerId: string | null;
@@ -38,6 +41,7 @@ export function ProductEditor({
   catalogProductsByCategory,
   itemFields,
   methods,
+  scanDraft,
   openCategoryPickerId,
   openProductPickerId,
   openQuantityPickerId,
@@ -58,7 +62,10 @@ export function ProductEditor({
   const items = useWatch({ control, name: 'items' });
 
   return (
-    <section className={styles.editor} aria-labelledby="product-editor-title">
+    <section
+      className={`${styles.editor} ${scanDraft ? styles.compact : ''}`}
+      aria-labelledby="product-editor-title"
+    >
       <div className={styles.title}>
         <h3 id="product-editor-title" data-eyebrow>
           Produtos
@@ -89,7 +96,12 @@ export function ProductEditor({
 
             <div className={styles.grid}>
               <div data-form-field>
-                <label htmlFor={`order-item-${index}-category`}>Área</label>
+                <ScanFieldLabel
+                  htmlFor={`order-item-${index}-category`}
+                  status={scanDraft?.items[index]?.status}
+                >
+                  Área
+                </ScanFieldLabel>
                 <Combobox
                   id={`order-item-${index}-category`}
                   isOpen={openCategoryPickerId === itemId}
@@ -126,7 +138,12 @@ export function ProductEditor({
               </div>
 
               <div data-form-field>
-                <label htmlFor={`order-item-${index}-product`}>Produto</label>
+                <ScanFieldLabel
+                  htmlFor={`order-item-${index}-product`}
+                  status={scanDraft?.items[index]?.status}
+                >
+                  Produto
+                </ScanFieldLabel>
                 <Combobox
                   id={`order-item-${index}-product`}
                   isOpen={openProductPickerId === itemId}
@@ -178,7 +195,12 @@ export function ProductEditor({
               </div>
 
               <div data-form-field>
-                <label htmlFor={`order-item-${index}-quantity`}>Quantidade</label>
+                <ScanFieldLabel
+                  htmlFor={`order-item-${index}-quantity`}
+                  status={scanDraft?.items[index]?.status}
+                >
+                  Quantidade
+                </ScanFieldLabel>
                 <div className={styles.quantityGrid}>
                   <Combobox
                     id={`order-item-${index}-quantity`}
@@ -261,25 +283,28 @@ export function ProductEditor({
               </div>
 
               <div className={styles.noteField} data-form-field>
-                <label htmlFor={`order-item-${index}-notes`}>
+                <ScanFieldLabel
+                  htmlFor={`order-item-${index}-notes`}
+                  status={scanDraft?.items[index]?.status}
+                >
                   Observação deste produto (opcional)
-                  <textarea
-                    {...notesRegistration}
-                    id={`order-item-${index}-notes`}
-                    className={styles.note}
-                    aria-describedby={
-                      itemErrors?.notes ? `order-item-${index}-notes-error` : undefined
-                    }
-                    aria-invalid={Boolean(itemErrors?.notes)}
-                    rows={3}
-                    onChange={(event) => {
-                      void notesRegistration.onChange(event);
-                      resizeTextArea(event.currentTarget);
-                    }}
-                    onFocus={(event) => resizeTextArea(event.currentTarget)}
-                    placeholder="Ex.: sem açúcar, mensagem no bolo, bem assado..."
-                  />
-                </label>
+                </ScanFieldLabel>
+                <textarea
+                  {...notesRegistration}
+                  id={`order-item-${index}-notes`}
+                  className={styles.note}
+                  aria-describedby={
+                    itemErrors?.notes ? `order-item-${index}-notes-error` : undefined
+                  }
+                  aria-invalid={Boolean(itemErrors?.notes)}
+                  rows={3}
+                  onChange={(event) => {
+                    void notesRegistration.onChange(event);
+                    resizeTextArea(event.currentTarget);
+                  }}
+                  onFocus={(event) => resizeTextArea(event.currentTarget)}
+                  placeholder="Ex.: sem açúcar, mensagem no bolo, bem assado..."
+                />
                 <FieldError
                   id={`order-item-${index}-notes-error`}
                   message={itemErrors?.notes?.message}

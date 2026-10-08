@@ -1,18 +1,19 @@
 # Documentação do Order Manager
 
-**Versão do produto: 1.0.0.** O valor exibido no login e no cabeçalho vem de [`apps/web/package.json`](../apps/web/package.json). Esta é a versão da árvore de código; cada publicação precisa de validação no site publicado.
+**Versão do produto: 1.1.0.** O valor exibido no login e no cabeçalho vem de [`apps/web/package.json`](../apps/web/package.json). Esta é a versão da árvore de código; cada publicação precisa de validação no site publicado.
 
-| Preciso de…                                    | Ler                                                |
-| ---------------------------------------------- | -------------------------------------------------- |
-| Usar o painel, encomendas, filtros e impressão | [Guia de utilização](product/guide.md)             |
-| Gerir catálogo, responsáveis e acessos         | [Guia de gestão](product/management.md)            |
-| Entender componentes, dados e decisões atuais  | [Arquitetura do sistema](architecture/system.md)   |
-| Entender o schema, as RPCs e as migrations     | [Dados e Supabase](architecture/data.md)           |
-| Preparar o ambiente e alterar código           | [Desenvolvimento](development/workflow.md)         |
-| Configurar o projeto Supabase                  | [Configuração do Supabase](operations/supabase.md) |
-| Publicar e validar uma versão                  | [Release e operação](operations/release.md)        |
-| Verificar backups ou lidar com incidentes      | [Backup e recuperação](operations/backup.md)       |
-| Consultar decisões e evidência antigas         | [Histórico](history/README.md)                     |
+| Preciso de…                                    | Ler                                                     |
+| ---------------------------------------------- | ------------------------------------------------------- |
+| Usar o painel, encomendas, filtros e impressão | [Guia de utilização](product/guide.md)                  |
+| Gerir catálogo, responsáveis e acessos         | [Guia de gestão](product/management.md)                 |
+| Entender componentes, dados e decisões atuais  | [Arquitetura do sistema](architecture/system.md)        |
+| Entender o schema, as RPCs e as migrations     | [Dados e Supabase](architecture/data.md)                |
+| Preparar o ambiente e alterar código           | [Desenvolvimento](development/workflow.md)              |
+| Configurar o projeto Supabase                  | [Configuração do Supabase](operations/supabase.md)      |
+| Publicar e validar uma versão                  | [Release e operação](operations/release.md)             |
+| Configurar e testar a digitalização com IA     | [Digitalização de encomendas](operations/order-scan.md) |
+| Verificar backups ou lidar com incidentes      | [Backup e recuperação](operations/backup.md)            |
+| Consultar decisões e evidência antigas         | [Histórico](history/README.md)                          |
 
 ## Ambientes e preparação de homologação
 

@@ -27,6 +27,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run test:coverage
       - run: npm run build
+      - run: node --experimental-strip-types --test supabase/tests/interpret_order_mock.mjs
 
   database:
     runs-on: ubuntu-24.04
@@ -64,3 +65,5 @@ jobs:
         run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/schema_contract.sql -f supabase/tests/ci_order_flows.sql
       - name: Check concurrent saves and retries
         run: node supabase/tests/concurrent_orders.mjs
+      - name: Check order scan limits
+        run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/ci_order_scan.sql
