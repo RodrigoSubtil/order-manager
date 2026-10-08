@@ -20,6 +20,8 @@ import { OrderFormModal } from '../components/OrderFormModal';
 import { OrderIndicators } from '../components/OrderIndicators';
 import { OrderList } from '../components/OrderList';
 import { OrderSuccessDialog } from '../components/OrderSuccessDialog';
+import { OrderScanModal } from '../components/OrderScanModal';
+import { orderScanEnabled } from '../lib/scanApi';
 import { useApiOrderData } from '../hooks/useApiOrderData';
 import { useOrderFilters, useOrderFilterState } from '../hooks/useOrderFilters';
 import { useOrderForm } from '../hooks/useOrderForm';
@@ -51,6 +53,7 @@ export default function OrdersPage() {
   const [completionMessage, setCompletionMessage] = useState('');
   const [deletionMessage, setDeletionMessage] = useState('');
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
+  const [isScanOpen, setIsScanOpen] = useState(false);
 
   const isSaving = removeMutation.isPending || completeMutation.isPending;
   const canChangeOrders = Boolean(session.authUser);
@@ -72,6 +75,7 @@ export default function OrdersPage() {
   useOutsidePointerDown(closeDropdowns, '[data-combobox]');
   useModalBodyClass(
     orderForm.isModalOpen ||
+      isScanOpen ||
       print.isPrintOptionsOpen ||
       Boolean(deleteOrderId) ||
       Boolean(completeOrderId) ||
@@ -105,6 +109,7 @@ export default function OrdersPage() {
       await session.logout();
       filters.resetFilters();
       orderForm.closeModal();
+      setIsScanOpen(false);
       setDeleteOrderId(null);
       setCompleteOrderId(null);
       setCompletionMessage('');
@@ -208,6 +213,7 @@ export default function OrdersPage() {
             onCategoryChange={filters.setCategoryFilter}
             onCategoryOpenChange={filters.setIsCategoryFilterOpen}
             onCreate={orderForm.openNewOrderModal}
+            onScan={orderScanEnabled ? () => setIsScanOpen(true) : undefined}
             onDateChange={filters.setDateFilter}
             onDateModeChange={filters.setDateFilterMode}
             onPrint={print.openPrintOptions}
@@ -247,11 +253,21 @@ export default function OrdersPage() {
           onReturnToOrders={orderForm.returnToOrders}
           onSubmit={orderForm.saveOrder}
           savedOrderMessage={orderForm.savedOrderMessage}
+          scanDraft={orderForm.scanDraft}
           setIsResponsiblePickerOpen={orderForm.setIsResponsiblePickerOpen}
           setOpenCategoryPickerId={orderForm.setOpenCategoryPickerId}
           setOpenProductPickerId={orderForm.setOpenProductPickerId}
           setOpenQuantityPickerId={orderForm.setOpenQuantityPickerId}
           setOpenUnitPickerId={orderForm.setOpenUnitPickerId}
+        />
+      )}
+      {isScanOpen && (
+        <OrderScanModal
+          onClose={() => setIsScanOpen(false)}
+          onReview={(draft) => {
+            setIsScanOpen(false);
+            orderForm.openScanDraft(draft);
+          }}
         />
       )}
       {orderToDelete && (

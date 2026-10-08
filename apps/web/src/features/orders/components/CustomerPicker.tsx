@@ -15,11 +15,17 @@ import {
 import { searchCustomers } from '../../../shared/lib/supabaseData';
 import { formatInternationalPhone, splitInternationalPhone } from '../lib/phoneNumber';
 import type { OrderFormValues } from '../schemas/orderSchema';
+import type { ScanStatus } from '../schemas/scanDraft';
+import { ScanFieldLabel } from './ScanFieldLabel';
 import styles from './CustomerPicker.module.css';
 
-type Props = { methods: UseFormReturn<OrderFormValues>; onOpen?: () => void };
+type Props = {
+  methods: UseFormReturn<OrderFormValues>;
+  onOpen?: () => void;
+  scanStatus?: ScanStatus;
+};
 
-export function CustomerPicker({ methods, onOpen }: Props) {
+export function CustomerPicker({ methods, onOpen, scanStatus }: Props) {
   const {
     control,
     formState: { errors },
@@ -48,7 +54,9 @@ export function CustomerPicker({ methods, onOpen }: Props) {
 
   return (
     <div data-form-field>
-      <label htmlFor="order-client-name">Nome do cliente</label>
+      <ScanFieldLabel htmlFor="order-client-name" status={scanStatus}>
+        Nome do cliente
+      </ScanFieldLabel>
       <Combobox
         id="order-client-name"
         isOpen={isOpen}

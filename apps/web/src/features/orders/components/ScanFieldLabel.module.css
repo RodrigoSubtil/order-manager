@@ -1,0 +1,45 @@
+.row {
+  display: flex;
+  min-width: 0;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.row label {
+  min-width: 0;
+}
+
+.badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.badge > span {
+  display: grid;
+  width: 13px;
+  height: 13px;
+  place-items: center;
+  border: 1.5px solid currentcolor;
+  border-radius: 50%;
+  font-size: 0.6rem;
+  line-height: 1;
+}
+
+.check {
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.likely {
+  color: var(--color-success);
+  background: var(--color-success-soft);
+}

@@ -27,6 +27,7 @@ type OrderFiltersProps = {
   onCategoryChange: (category: 'Todas' | Category) => void;
   onCategoryOpenChange: (open: boolean) => void;
   onCreate: () => void;
+  onScan?: () => void;
   onDateChange: (date: string) => void;
   onDateModeChange: (mode: DateFilterMode) => void;
   onPrint: () => void;
@@ -44,6 +45,7 @@ export function OrderFilters({
   onCategoryChange,
   onCategoryOpenChange,
   onCreate,
+  onScan,
   onDateChange,
   onDateModeChange,
   onPrint,
@@ -67,7 +69,7 @@ export function OrderFilters({
   return (
     <>
       <div className={styles.toolbar}>
-        <div className={styles.topRow}>
+        <div className={`${styles.topRow} ${onScan ? styles.topRowWithScan : ''}`}>
           <Combobox
             className={styles.areaFilter}
             id="category-filter"
@@ -151,6 +153,28 @@ export function OrderFilters({
             )}
           </Combobox>
 
+          {onScan && (
+            <Button
+              className={`${styles.action} ${styles.scan}`}
+              aria-label="Digitalizar encomenda"
+              title="Digitalizar encomenda"
+              onClick={onScan}
+            >
+              <svg
+                className={styles.scanIcon}
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 7h4l1.5-2h7L17 7h4v12H3z" />
+                <circle cx="12" cy="13" r="3.5" />
+              </svg>
+            </Button>
+          )}
           <Button
             className={`${styles.action} ${styles.create}`}
             variant="primary"

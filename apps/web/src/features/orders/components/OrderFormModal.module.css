@@ -4,6 +4,24 @@
   max-height: calc(100dvh - 36px);
 }
 
+.scanDialog {
+  width: min(660px, calc(100vw - 24px));
+}
+
+.scanDialog .fieldGrid {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.scanDialog .body {
+  gap: 12px;
+}
+
+.scanDialog .detailsSection {
+  gap: 12px;
+  padding: 14px;
+}
+
 .body {
   display: grid;
   gap: 22px;

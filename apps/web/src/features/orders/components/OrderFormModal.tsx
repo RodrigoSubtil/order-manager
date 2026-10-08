@@ -26,8 +26,10 @@ import { phoneCountries } from '../lib/phoneNumber';
 import { PhoneInput } from './PhoneInput';
 import { normalizeResponsibleName } from '../lib/responsibleName';
 import type { OrderFormValues } from '../schemas/orderSchema';
+import type { ScanDraft } from '../schemas/scanDraft';
 import { CustomerPicker } from './CustomerPicker';
 import { ProductEditor } from './ProductEditor';
+import { ScanFieldLabel } from './ScanFieldLabel';
 import styles from './OrderFormModal.module.css';
 
 type OrderFormModalProps = {
@@ -48,6 +50,7 @@ type OrderFormModalProps = {
   onReturnToOrders: () => Promise<void>;
   onSubmit: (event?: React.BaseSyntheticEvent) => Promise<void>;
   savedOrderMessage: string;
+  scanDraft?: ScanDraft | null;
   setIsResponsiblePickerOpen: (open: boolean) => void;
   setOpenCategoryPickerId: (itemId: string | null) => void;
   setOpenProductPickerId: (itemId: string | null) => void;
@@ -80,6 +83,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
     onReturnToOrders,
     onSubmit,
     savedOrderMessage,
+    scanDraft,
     setIsResponsiblePickerOpen,
     setOpenCategoryPickerId,
     setOpenProductPickerId,
@@ -111,7 +115,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
 
   return (
     <Dialog
-      className={styles.dialog}
+      className={`${styles.dialog} ${scanDraft ? styles.scanDialog : ''}`}
       size={savedOrderMessage ? 'small' : 'large'}
       titleId="modal-title"
       onClose={closeDialog}
@@ -119,7 +123,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
       <form noValidate onSubmit={onSubmit}>
         {!savedOrderMessage && (
           <DialogHeader
-            title={editingId ? 'Editar pedido' : 'Novo pedido'}
+            title={editingId ? 'Editar pedido' : scanDraft ? 'Revisar encomenda' : 'Novo pedido'}
             titleId="modal-title"
             onClose={closeDialog}
           />
@@ -145,7 +149,12 @@ export function OrderFormModal(props: OrderFormModalProps) {
                 </div>
                 <div className={styles.fieldGrid}>
                   <div data-form-field>
-                    <label htmlFor="order-responsible">Responsável pela encomenda</label>
+                    <ScanFieldLabel
+                      htmlFor="order-responsible"
+                      status={scanDraft?.responsibleName.status}
+                    >
+                      Responsável pela encomenda
+                    </ScanFieldLabel>
                     <Combobox
                       id="order-responsible"
                       isOpen={isResponsiblePickerOpen}
@@ -223,9 +232,15 @@ export function OrderFormModal(props: OrderFormModalProps) {
                     </Combobox>
                     <FieldError id="order-responsible-error" message={responsibleError} />
                   </div>
-                  <CustomerPicker methods={methods} onOpen={onCustomerPickerOpen} />
+                  <CustomerPicker
+                    methods={methods}
+                    onOpen={onCustomerPickerOpen}
+                    scanStatus={scanDraft?.clientName.status}
+                  />
                   <div data-form-field>
-                    <label htmlFor="order-phone">Telefone</label>
+                    <ScanFieldLabel htmlFor="order-phone" status={scanDraft?.phone.status}>
+                      Telefone
+                    </ScanFieldLabel>
                     <div className={styles.phoneGrid}>
                       <Combobox
                         id="order-phone-country"
@@ -330,7 +345,12 @@ export function OrderFormModal(props: OrderFormModalProps) {
                     <FieldError id="order-phone-error" message={errors.phone?.message} />
                   </div>
                   <div data-form-field>
-                    <label htmlFor="order-delivery-date">Data de entrega</label>
+                    <ScanFieldLabel
+                      htmlFor="order-delivery-date"
+                      status={scanDraft?.deliveryDate.status}
+                    >
+                      Data de entrega
+                    </ScanFieldLabel>
                     <Controller
                       control={control}
                       name="deliveryDate"
@@ -355,7 +375,12 @@ export function OrderFormModal(props: OrderFormModalProps) {
                     />
                   </div>
                   <div data-form-field>
-                    <label htmlFor="order-delivery-time">Hora</label>
+                    <ScanFieldLabel
+                      htmlFor="order-delivery-time"
+                      status={scanDraft?.deliveryTime.status}
+                    >
+                      Hora
+                    </ScanFieldLabel>
                     <Controller
                       control={control}
                       name="deliveryTime"
@@ -390,6 +415,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
               </section>
 
               <ProductEditor
+                scanDraft={scanDraft}
                 catalogProductsByCategory={catalogProductsByCategory}
                 itemFields={itemFields}
                 methods={methods}
