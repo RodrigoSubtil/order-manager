@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest';
 
 import { todayKey } from '../../../shared/lib/dateUtils';
 import { orderSchema } from './orderSchema';
-import { scanDraftSchema, scanDraftToOrderValues, type ScanDraft } from './scanDraft';
+import {
+  createBlankScanDraft,
+  scanDraftSchema,
+  scanDraftToOrderValues,
+  type ScanDraft,
+} from './scanDraft';
 
 function tomorrowKey() {
   const [year, month, day] = todayKey().split('-').map(Number);
@@ -31,6 +36,25 @@ function draft(): ScanDraft {
 }
 
 describe('rascunho de digitalização', () => {
+  it('deixa os dados ausentes para conferir e impede salvar o rascunho vazio', () => {
+    const blank = createBlankScanDraft();
+    expect(scanDraftSchema.safeParse(blank).success).toBe(true);
+    expect(blank.clientName).toEqual({ value: '', status: 'conferir' });
+    expect(blank.items[0]).toMatchObject({ product: '', status: 'conferir' });
+    expect(blank.items[0].id).not.toBe(createBlankScanDraft().items[0].id);
+    expect(orderSchema.safeParse(scanDraftToOrderValues(blank)).success).toBe(false);
+  });
+
+  it('não transforma categorias ou unidades desconhecidas em dados válidos', () => {
+    const uncertain = draft();
+    uncertain.items[0].category = 'Desconhecida';
+    uncertain.items[0].quantityUnit = 'CAIXA';
+    const values = scanDraftToOrderValues(uncertain);
+    expect(values.items[0].category).toBe('');
+    expect(values.items[0].quantityUnit).toBe('');
+    expect(orderSchema.safeParse(values).success).toBe(false);
+  });
+
   it('aceita apenas as duas situações combinadas e reutiliza a validação da encomenda', () => {
     const validDraft = draft();
     expect(scanDraftSchema.safeParse(validDraft).success).toBe(true);
