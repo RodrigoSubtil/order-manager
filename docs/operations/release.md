@@ -32,7 +32,9 @@ Destino autorizado: branch `homologacao` e [site de homologação](https://homol
 
 A migration `20261008190245_order_scan_limits.sql` e a função `interpret-order` versão 1 já foram aplicadas no Supabase de homologação (`czbrnxrpofdbbgbdyrad`). Uma análise simultânea por empresa, 50 por dia, orçamento estimado de US$ 1 por mês e tetos de tokens ficam no backend. A chave OpenAI permanece somente nos secrets. Consulte [limites e verificações](order-scan.md).
 
-A publicação do frontend e a ativação da leitura real foram autorizadas. Registar abaixo o commit, os checks, o deployment e a verificação do domínio após a conclusão. A qualidade da interpretação de fotos reais e a correção dos dados continuam pendentes do teste do utilizador.
+A [PR #4](https://github.com/RodrigoSubtil/order-manager/pull/4), de `codex/order-scan-prep` para `homologacao`, contém a implementação `b8b60dc` e ajustes de testes `9c2d6fe`/`aadb7d9`. Os checks locais passaram com 156 testes, cobertura exigida, formatação, lint, tipos e build. A leitura real foi ativada no backend de homologação em 08/10/2026, às 21:41 UTC; cinco verificações HTTP confirmaram autenticação e restrições de origem/método, sem foto nem chamada paga. O frontend está habilitado somente no Preview de `homologacao`.
+
+A publicação depende do merge dessa PR com os checks remotos aprovados e do deployment Ready no domínio de homologação. A qualidade da interpretação de fotos reais e a correção dos dados continuam pendentes do teste do utilizador.
 
 ### 1.0.0 · 04/10/2026
 
