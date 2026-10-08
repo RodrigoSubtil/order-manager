@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
+import { appVersion } from '../../../shared/lib/appVersion';
 import { LoginPage } from './LoginPage';
 
 describe('LoginPage account options', () => {
@@ -25,7 +26,7 @@ describe('LoginPage account options', () => {
   it('exposes username and the persistent-session choice without recovery actions', () => {
     render(<LoginPage isCheckingSession={false} sessionError="" onLogin={vi.fn()} />);
 
-    expect(screen.getByText('v1.0.0')).toBeInTheDocument();
+    expect(screen.getByText(appVersion)).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Utilizador' })).toBeInTheDocument();
     expect(screen.getByRole('checkbox', { name: 'Manter conectado' })).not.toBeChecked();
     expect(screen.queryByRole('button', { name: 'Trocar senha' })).not.toBeInTheDocument();
