@@ -175,15 +175,7 @@ export function OrderFilters({
               </svg>
             </Button>
           )}
-          <Button
-            className={`${styles.action} ${styles.create}`}
-            variant="primary"
-            aria-label="Nova encomenda"
-            title="Nova encomenda"
-            onClick={onCreate}
-          >
-            <span aria-hidden="true">+</span>
-          </Button>
+
           <Button
             className={`${styles.action} ${styles.print}`}
             aria-label="Imprimir todas"
@@ -205,6 +197,15 @@ export function OrderFilters({
               <path d="M6 14h12v7H6z" />
               <path d="M17 12h.01" />
             </svg>
+          </Button>
+          <Button
+            className={`${styles.action} ${styles.create}`}
+            variant="primary"
+            aria-label="Nova encomenda"
+            title="Nova encomenda"
+            onClick={onCreate}
+          >
+            <span aria-hidden="true">+</span>
           </Button>
         </div>
 

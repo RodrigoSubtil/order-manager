@@ -15,17 +15,19 @@ import {
 import { searchCustomers } from '../../../shared/lib/supabaseData';
 import { formatInternationalPhone, splitInternationalPhone } from '../lib/phoneNumber';
 import type { OrderFormValues } from '../schemas/orderSchema';
-import type { ScanStatus } from '../schemas/scanDraft';
+import type { ScanReviewStatus } from '../hooks/useScanReview';
 import { ScanFieldLabel } from './ScanFieldLabel';
 import styles from './CustomerPicker.module.css';
 
 type Props = {
   methods: UseFormReturn<OrderFormValues>;
   onOpen?: () => void;
-  scanStatus?: ScanStatus;
+  scanStatus?: ScanReviewStatus;
+  onReview?: () => void;
+  onPhoneReview?: () => void;
 };
 
-export function CustomerPicker({ methods, onOpen, scanStatus }: Props) {
+export function CustomerPicker({ methods, onOpen, scanStatus, onReview, onPhoneReview }: Props) {
   const {
     control,
     formState: { errors },
@@ -76,6 +78,7 @@ export function CustomerPicker({ methods, onOpen, scanStatus }: Props) {
               aria-invalid={Boolean(errors.clientName)}
               onChange={(event) => {
                 field.onChange(event);
+                onReview?.();
                 setIsOpen(true);
                 onOpen?.();
               }}
@@ -117,6 +120,8 @@ export function CustomerPicker({ methods, onOpen, scanStatus }: Props) {
                     shouldDirty: true,
                     shouldValidate: true,
                   });
+                  onReview?.();
+                  onPhoneReview?.();
                   setIsOpen(false);
                 }}
               >

@@ -37,8 +37,8 @@ describe('OrderFilters', () => {
     expect(area).toHaveValue('Todas as áreas');
     expect(date).toHaveValue('Todas as datas');
     expect(area.compareDocumentPosition(date)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
-    expect(date.compareDocumentPosition(create)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
-    expect(create.compareDocumentPosition(print)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(date.compareDocumentPosition(print)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(print.compareDocumentPosition(create)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(screen.getByText('data: todas')).toBeInTheDocument();
     expect(screen.getByText('área: todas')).toBeInTheDocument();
     expect(screen.getByText('12 resultados')).toBeInTheDocument();

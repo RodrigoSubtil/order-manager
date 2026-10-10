@@ -8,14 +8,9 @@
 .topRow {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-areas: 'area date-filter create print';
+  grid-template-areas: 'area date-filter print create';
   gap: 10px;
   align-items: center;
-}
-
-.topRowWithScan {
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.4fr) repeat(3, minmax(46px, 0.55fr));
-  grid-template-areas: 'area date-filter scan create print';
 }
 
 .topRow > * {
@@ -46,18 +41,7 @@
   left: auto;
 }
 
-.categoryInput {
-  height: 46px;
-  padding-right: 38px;
-  padding-left: 10px;
-  font-size: 0.9rem;
-  font-weight: 900;
-  line-height: 1;
-  text-align: center;
-  background: var(--color-white);
-  border-color: var(--color-line);
-}
-
+.categoryInput,
 .dateFilterInput {
   height: 46px;
   padding-right: 38px;
@@ -101,18 +85,20 @@
   box-shadow: 0 10px 24px rgb(77 67 57 / 8%);
 }
 
-.print {
-  grid-area: print;
+.print,
+.scan {
   color: var(--color-accent);
   background: var(--color-cream);
   border: 2px solid var(--color-accent-soft);
 }
 
+.print {
+  grid-area: print;
+}
+
 .scan {
+  display: none;
   grid-area: scan;
-  color: var(--color-accent);
-  background: var(--color-soft-white);
-  border: 2px solid var(--color-line);
 }
 
 .scanIcon {
@@ -196,7 +182,7 @@
   white-space: nowrap;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .topRow {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas:
@@ -205,17 +191,21 @@
   }
 
   .topRowWithScan {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-areas:
-      'scan create print'
-      'area area date-filter';
+      'scan scan'
+      'print create'
+      'area date-filter';
+  }
+
+  .scan {
+    display: inline-grid;
   }
 }
 
 @media (max-width: 560px) {
   .topRow {
     grid-template-areas:
-      'print create'
+      'create create'
       'area area'
       'date-filter date-filter';
     gap: 8px;
@@ -223,9 +213,13 @@
 
   .topRowWithScan {
     grid-template-areas:
-      'scan create print'
-      'area area area'
-      'date-filter date-filter date-filter';
+      'scan create'
+      'area area'
+      'date-filter date-filter';
+  }
+
+  .print {
+    display: none;
   }
 
   .topRow > *,

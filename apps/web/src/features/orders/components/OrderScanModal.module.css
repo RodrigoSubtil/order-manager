@@ -14,19 +14,14 @@
 
 .choice,
 .photoStage,
-.progressStage,
-.completeStage {
+.progressStage {
   display: grid;
   gap: 12px;
   padding: 20px;
 }
 
-.choice p,
-.completeStage p {
-  margin: 0;
-}
-
 .choice p {
+  margin: 0;
   margin-bottom: 4px;
   font-weight: 700;
 }
@@ -53,11 +48,6 @@
   justify-content: flex-end;
 }
 
-.changePhoto {
-  justify-self: center;
-}
-
-.demoNote,
 .progressStage small {
   margin: 0;
   color: var(--color-muted);
@@ -88,26 +78,4 @@
   background: var(--color-taupe);
   border-radius: inherit;
   transition: width 0.25s ease;
-}
-
-.completeStage {
-  justify-items: center;
-  padding-block: 24px;
-  text-align: center;
-}
-
-.completeIcon {
-  display: grid;
-  width: 44px;
-  height: 44px;
-  place-items: center;
-  color: var(--color-success);
-  background: var(--color-success-soft);
-  border-radius: 50%;
-  font-size: 1.3rem;
-}
-
-.completeStage button {
-  width: 100%;
-  margin-top: 6px;
 }

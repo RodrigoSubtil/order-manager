@@ -20,9 +20,11 @@ As listas de cliente/produto admitem escrita; os demais seletores usam as opçõ
 
 ## Digitalizar uma encomenda
 
-Quando a digitalização estiver ativada, toque no ícone da câmara junto de adicionar e imprimir. Escolha **Abrir câmara** ou **Escolher foto**, usando uma fotografia por leitura. Confira a imagem e toque em **Ler fotografia**.
+Quando a digitalização estiver ativada, toque no ícone da câmara. Escolha **Abrir câmara** ou **Escolher foto**, usando uma fotografia por leitura. Confira a imagem e toque em **Continuar**, ou em **Refazer** para escolher novamente.
 
-O carregamento mostra uma percentagem estimada. Após **Leitura concluída**, toque em **Revisar encomenda** para abrir o formulário habitual com os dados preenchidos. **Provável**, em verde, indica uma leitura aparentemente legível; **Conferir**, em vermelho, destaca um dado que precisa de atenção. Pode editar os campos no próprio formulário.
+A barra adapta-se à largura disponível: até **560 px**, mostra **Digitalizar** à esquerda e **Adicionar** à direita, com cada filtro numa linha; a impressão geral fica oculta. De **561 a 1024 px**, a câmara ocupa a primeira linha, **Imprimir / Adicionar** a segunda e os filtros dividem a terceira igualmente. Acima de **1024 px**, fica tudo numa linha: **Área / Data / Imprimir / Adicionar**, com a câmara oculta. Se a digitalização estiver desativada, o botão Adicionar ocupa a linha toda no telemóvel. A impressão individual no cartão também fica oculta até 560 px e volta a aparecer no tablet/computador. No telemóvel, os quatro ícones restantes ficam numa única linha, com botões de 44 px e espaço inferior.
+
+O carregamento mostra uma percentagem estimada. Após **Leitura concluída**, toque em **Revisar encomenda** para abrir o formulário habitual com os dados preenchidos. **Provável**, em laranja, indica uma leitura aparentemente legível; **Conferir**, em vermelho, destaca um dado que precisa de atenção. Uma alteração manual muda apenas o indicador desse campo para **Conferido**, em verde com um visto. Quantidade e unidade têm indicadores separados. O verde indica edição humana e não substitui a validação dos campos obrigatórios.
 
 Confira os dados e toque em **Salvar**. A leitura da fotografia não grava uma encomenda automaticamente. Se a foto não puder ser lida ou um limite de utilização for atingido, pode preencher a encomenda manualmente.
 

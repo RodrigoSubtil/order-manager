@@ -21,6 +21,7 @@ import {
   TimePicker,
 } from '../../../shared/components/ui';
 import type { CatalogProduct, Category, OrderResponsible } from '../../../shared/lib/domain';
+import { useScanReview } from '../hooks/useScanReview';
 import { currentTimeKey, todayKey } from '../../../shared/lib/dateUtils';
 import { phoneCountries } from '../lib/phoneNumber';
 import { PhoneInput } from './PhoneInput';
@@ -90,6 +91,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
     setOpenQuantityPickerId,
     setOpenUnitPickerId,
   } = props;
+  const scanReview = useScanReview(scanDraft);
   const {
     control,
     formState: { errors, isSubmitting },
@@ -151,7 +153,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                   <div data-form-field>
                     <ScanFieldLabel
                       htmlFor="order-responsible"
-                      status={scanDraft?.responsibleName.status}
+                      status={scanReview.fieldStatus('responsibleName')}
                     >
                       Responsável pela encomenda
                     </ScanFieldLabel>
@@ -176,6 +178,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                             aria-invalid={Boolean(responsibleError)}
                             onChange={(event) => {
                               field.onChange(event.target.value);
+                              scanReview.confirmField('responsibleName');
                               setValue('responsibleId', '', { shouldDirty: true });
                               setIsResponsiblePickerOpen(true);
                             }}
@@ -215,6 +218,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                                 shouldDirty: true,
                                 shouldValidate: true,
                               });
+                              scanReview.confirmField('responsibleName');
                               setIsResponsiblePickerOpen(false);
                             }}
                           >
@@ -235,10 +239,12 @@ export function OrderFormModal(props: OrderFormModalProps) {
                   <CustomerPicker
                     methods={methods}
                     onOpen={onCustomerPickerOpen}
-                    scanStatus={scanDraft?.clientName.status}
+                    scanStatus={scanReview.fieldStatus('clientName')}
+                    onReview={() => scanReview.confirmField('clientName')}
+                    onPhoneReview={() => scanReview.confirmField('phone')}
                   />
                   <div data-form-field>
-                    <ScanFieldLabel htmlFor="order-phone" status={scanDraft?.phone.status}>
+                    <ScanFieldLabel htmlFor="order-phone" status={scanReview.fieldStatus('phone')}>
                       Telefone
                     </ScanFieldLabel>
                     <div className={styles.phoneGrid}>
@@ -274,6 +280,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                                   shouldDirty: true,
                                   shouldValidate: true,
                                 });
+                                scanReview.confirmField('phone');
                                 setIsPhoneCountryOpen(false);
                               }}
                             >
@@ -288,6 +295,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                                 shouldDirty: true,
                                 shouldValidate: true,
                               });
+                              scanReview.confirmField('phone');
                               setIsPhoneCountryOpen(false);
                             }}
                           >
@@ -307,7 +315,10 @@ export function OrderFormModal(props: OrderFormModalProps) {
                               onBlur={field.onBlur}
                               countryCode={phoneCountryCode}
                               value={field.value}
-                              onValueChange={field.onChange}
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                                scanReview.confirmField('phone');
+                              }}
                               className={styles.inputWithIcon}
                               required
                               aria-describedby={errors.phone ? 'order-phone-error' : undefined}
@@ -330,12 +341,13 @@ export function OrderFormModal(props: OrderFormModalProps) {
                         maxLength={3}
                         placeholder="Prefixo: ex. 972"
                         value={phoneCountryCode}
-                        onChange={(event) =>
+                        onChange={(event) => {
                           setValue('phoneCountryCode', event.target.value.replace(/\D/g, ''), {
                             shouldDirty: true,
                             shouldValidate: true,
-                          })
-                        }
+                          });
+                          scanReview.confirmField('phone');
+                        }}
                       />
                     )}
                     <FieldError
@@ -347,7 +359,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                   <div data-form-field>
                     <ScanFieldLabel
                       htmlFor="order-delivery-date"
-                      status={scanDraft?.deliveryDate.status}
+                      status={scanReview.fieldStatus('deliveryDate')}
                     >
                       Data de entrega
                     </ScanFieldLabel>
@@ -365,7 +377,10 @@ export function OrderFormModal(props: OrderFormModalProps) {
                           }
                           aria-invalid={Boolean(errors.deliveryDate)}
                           value={field.value}
-                          onChange={field.onChange}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            scanReview.confirmField('deliveryDate');
+                          }}
                         />
                       )}
                     />
@@ -377,7 +392,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                   <div data-form-field>
                     <ScanFieldLabel
                       htmlFor="order-delivery-time"
-                      status={scanDraft?.deliveryTime.status}
+                      status={scanReview.fieldStatus('deliveryTime')}
                     >
                       Hora
                     </ScanFieldLabel>
@@ -402,7 +417,10 @@ export function OrderFormModal(props: OrderFormModalProps) {
                           }
                           aria-invalid={Boolean(errors.deliveryTime)}
                           value={field.value}
-                          onChange={field.onChange}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            scanReview.confirmField('deliveryTime');
+                          }}
                         />
                       )}
                     />
@@ -416,6 +434,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
 
               <ProductEditor
                 scanDraft={scanDraft}
+                scanReview={scanReview}
                 catalogProductsByCategory={catalogProductsByCategory}
                 itemFields={itemFields}
                 methods={methods}

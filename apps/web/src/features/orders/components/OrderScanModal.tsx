@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { Alert, Button, Dialog, DialogActions, DialogHeader } from '../../../shared/components/ui';
-import { interpretOrderPhoto, orderScanDemo } from '../lib/scanApi';
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogHeader,
+  SuccessMessage,
+} from '../../../shared/components/ui';
+import { interpretOrderPhoto } from '../lib/scanApi';
 import type { ScanDraft } from '../schemas/scanDraft';
 import styles from './OrderScanModal.module.css';
 
@@ -29,6 +36,12 @@ export function OrderScanModal({ onClose, onReview }: Props) {
       stream.current?.getTracks().forEach((track) => track.stop());
     };
   }, []);
+
+  useEffect(() => {
+    if (stage !== 'loading' || progress !== 100) return;
+    const timer = window.setTimeout(() => setStage('complete'), 350);
+    return () => window.clearTimeout(timer);
+  }, [stage, progress]);
 
   useEffect(() => {
     if (!photo) {
@@ -100,6 +113,7 @@ export function OrderScanModal({ onClose, onReview }: Props) {
     const blob = await new Promise<Blob | null>((resolve) =>
       canvas.toBlob(resolve, 'image/jpeg', 0.85),
     );
+    if (video.current !== currentVideo) return;
     if (!blob) {
       setError('Não foi possível tirar a fotografia. Tente novamente.');
       return;
@@ -117,12 +131,9 @@ export function OrderScanModal({ onClose, onReview }: Props) {
     }, 300);
     try {
       const result = await interpretOrderPhoto(photo);
-      if (orderScanDemo) await new Promise((resolve) => window.setTimeout(resolve, 1_800));
       if (!mounted.current) return;
       setDraft(result);
       setProgress(100);
-      await new Promise((resolve) => window.setTimeout(resolve, 350));
-      if (mounted.current) setStage('complete');
     } catch (cause) {
       if (!mounted.current) return;
       setError(cause instanceof Error ? cause.message : 'Não foi possível ler a fotografia.');
@@ -135,7 +146,9 @@ export function OrderScanModal({ onClose, onReview }: Props) {
 
   return (
     <Dialog className={styles.dialog} titleId="order-scan-title" onClose={onClose}>
-      <DialogHeader title="Digitalizar encomenda" titleId="order-scan-title" onClose={onClose} />
+      {stage !== 'complete' && (
+        <DialogHeader title="Digitalizar encomenda" titleId="order-scan-title" onClose={onClose} />
+      )}
       <input
         ref={fileInput}
         className={styles.hiddenFile}
@@ -180,11 +193,6 @@ export function OrderScanModal({ onClose, onReview }: Props) {
         <>
           <div className={styles.photoStage}>
             {error && <Alert tone="error">{error}</Alert>}
-            {orderScanDemo && (
-              <p className={styles.demoNote}>
-                Prévia de demonstração: esta fotografia ainda não é lida por IA.
-              </p>
-            )}
             {photoUrl && (
               <img
                 className={styles.photoPreview}
@@ -192,25 +200,19 @@ export function OrderScanModal({ onClose, onReview }: Props) {
                 alt="Fotografia selecionada para leitura"
               />
             )}
-            <Button
-              className={styles.changePhoto}
-              variant="ghost"
-              onClick={() => fileInput.current?.click()}
-            >
-              Escolher outra foto
-            </Button>
           </div>
           <DialogActions>
             <Button
               onClick={() => {
                 setPhoto(null);
+                setError('');
                 setStage('choose');
               }}
             >
-              Voltar
+              Refazer
             </Button>
             <Button variant="primary" onClick={() => void readPhoto()}>
-              {orderScanDemo ? 'Ver simulação' : 'Ler fotografia'}
+              Continuar
             </Button>
           </DialogActions>
         </>
@@ -218,7 +220,7 @@ export function OrderScanModal({ onClose, onReview }: Props) {
 
       {stage === 'loading' && (
         <div className={styles.progressStage} role="status" aria-live="polite">
-          <strong>{orderScanDemo ? 'A preparar o exemplo' : 'A ler a fotografia'}</strong>
+          <strong>A ler a fotografia</strong>
           <span className={styles.percentage}>{progress}%</span>
           <div
             className={styles.progressTrack}
@@ -235,20 +237,12 @@ export function OrderScanModal({ onClose, onReview }: Props) {
       )}
 
       {stage === 'complete' && (
-        <div className={styles.completeStage} role="status" aria-live="polite">
-          <span className={styles.completeIcon} aria-hidden="true">
-            ✓
-          </span>
-          <strong>{orderScanDemo ? 'Simulação concluída' : 'Leitura concluída'}</strong>
-          <p>
-            {orderScanDemo
-              ? 'Os dados de exemplo estão prontos.'
-              : 'Os dados estão prontos para revisão.'}
-          </p>
-          <Button variant="primary" disabled={!draft} onClick={() => draft && onReview(draft)}>
-            Revisar encomenda
-          </Button>
-        </div>
+        <SuccessMessage
+          title="Leitura concluída"
+          titleId="order-scan-title"
+          actionLabel="Revisar encomenda"
+          onAction={() => draft && onReview(draft)}
+        />
       )}
     </Dialog>
   );

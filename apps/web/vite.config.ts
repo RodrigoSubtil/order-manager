@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
     }
   }
   return {
+    server: { port: 5174, strictPort: true },
     cacheDir: '../../node_modules/.vite/order-manager-web',
     resolve: {
       dedupe: ['react', 'react-dom'],

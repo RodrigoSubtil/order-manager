@@ -12,6 +12,7 @@ import {
   Input,
 } from '../../../shared/components/ui';
 import { categories, type CatalogProduct, type Category } from '../../../shared/lib/domain';
+import type { ScanReview } from '../hooks/useScanReview';
 import { resizeTextArea } from '../lib/orderFormUtils';
 import { quantityUnits, type OrderFormValues } from '../schemas/orderSchema';
 import type { ScanDraft } from '../schemas/scanDraft';
@@ -23,6 +24,7 @@ type ProductEditorProps = {
   itemFields: FieldArrayWithId<OrderFormValues, 'items', 'fieldKey'>[];
   methods: UseFormReturn<OrderFormValues>;
   scanDraft?: ScanDraft | null;
+  scanReview?: ScanReview;
   openCategoryPickerId: string | null;
   openProductPickerId: string | null;
   openQuantityPickerId: string | null;
@@ -42,6 +44,7 @@ export function ProductEditor({
   itemFields,
   methods,
   scanDraft,
+  scanReview,
   openCategoryPickerId,
   openProductPickerId,
   openQuantityPickerId,
@@ -98,7 +101,7 @@ export function ProductEditor({
               <div data-form-field>
                 <ScanFieldLabel
                   htmlFor={`order-item-${index}-category`}
-                  status={scanDraft?.items[index]?.status}
+                  status={scanReview?.itemStatus(itemId, 'category')}
                 >
                   Área
                 </ScanFieldLabel>
@@ -121,10 +124,12 @@ export function ProductEditor({
                             shouldDirty: true,
                             shouldValidate: isSubmitted,
                           });
+                          scanReview?.confirmItemField(itemId, 'category');
                           setValue(`items.${index}.product`, '', {
                             shouldDirty: true,
                             shouldValidate: isSubmitted,
                           });
+                          scanReview?.resetItemField(itemId, 'product');
                           setOpenCategoryPickerId(null);
                           setOpenProductPickerId(null);
                           setOpenUnitPickerId(null);
@@ -140,7 +145,7 @@ export function ProductEditor({
               <div data-form-field>
                 <ScanFieldLabel
                   htmlFor={`order-item-${index}-product`}
-                  status={scanDraft?.items[index]?.status}
+                  status={scanReview?.itemStatus(itemId, 'product')}
                 >
                   Produto
                 </ScanFieldLabel>
@@ -158,6 +163,7 @@ export function ProductEditor({
                     aria-invalid={Boolean(itemErrors?.product)}
                     onChange={(event) => {
                       void productRegistration.onChange(event);
+                      scanReview?.confirmItemField(itemId, 'product');
                       setOpenProductPickerId(itemId);
                     }}
                     placeholder="Digite ou escolha o produto"
@@ -175,6 +181,7 @@ export function ProductEditor({
                             shouldDirty: true,
                             shouldValidate: true,
                           });
+                          scanReview?.confirmItemField(itemId, 'product');
                           setOpenProductPickerId(null);
                         }}
                       >
@@ -194,87 +201,101 @@ export function ProductEditor({
                 />
               </div>
 
-              <div data-form-field>
-                <ScanFieldLabel
-                  htmlFor={`order-item-${index}-quantity`}
-                  status={scanDraft?.items[index]?.status}
-                >
-                  Quantidade
-                </ScanFieldLabel>
+              <div>
                 <div className={styles.quantityGrid}>
-                  <Combobox
-                    id={`order-item-${index}-quantity`}
-                    isOpen={openQuantityPickerId === itemId}
-                    onOpenChange={(open) => setOpenQuantityPickerId(open ? itemId : null)}
-                  >
-                    <ComboboxInput
-                      {...register(`items.${index}.quantityAmount`)}
-                      required
-                      aria-describedby={
-                        itemErrors?.quantityAmount
-                          ? `order-item-${index}-quantity-error`
-                          : undefined
-                      }
-                      aria-invalid={Boolean(itemErrors?.quantityAmount)}
-                      type="number"
-                      inputMode="decimal"
-                      min="1"
-                      max="1000"
-                      step="0.01"
-                      placeholder="1 a 1000"
-                    />
-                    <ComboboxTrigger aria-label={`Mostrar quantidades do produto ${index + 1}`} />
-                    <ComboboxList className={styles.quantityList}>
-                      {quantityOptions.map((quantity) => (
-                        <ComboboxOption
-                          key={quantity}
-                          aria-selected={quantity === item.quantityAmount}
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => {
-                            setValue(`items.${index}.quantityAmount`, quantity, {
-                              shouldDirty: true,
-                              shouldValidate: true,
-                            });
-                            setOpenQuantityPickerId(null);
-                          }}
-                        >
-                          {quantity}
-                        </ComboboxOption>
-                      ))}
-                    </ComboboxList>
-                  </Combobox>
-                  <Combobox
-                    id={`order-item-${index}-unit`}
-                    isOpen={openUnitPickerId === itemId}
-                    onOpenChange={(open) => setOpenUnitPickerId(open ? itemId : null)}
-                  >
-                    <ComboboxInput
-                      className={styles.unitInput}
-                      aria-label={`Unidade do produto ${index + 1}`}
-                      value={item.quantityUnit.toLowerCase()}
-                      readOnly
-                    />
-                    <Input type="hidden" {...register(`items.${index}.quantityUnit`)} />
-                    <ComboboxTrigger aria-label={`Mostrar unidades do produto ${index + 1}`} />
-                    <ComboboxList>
-                      {quantityUnits.map((unit) => (
-                        <ComboboxOption
-                          key={unit}
-                          aria-selected={unit === item.quantityUnit}
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => {
-                            setValue(`items.${index}.quantityUnit`, unit, {
-                              shouldDirty: true,
-                              shouldValidate: true,
-                            });
-                            setOpenUnitPickerId(null);
-                          }}
-                        >
-                          {unit.toLowerCase()}
-                        </ComboboxOption>
-                      ))}
-                    </ComboboxList>
-                  </Combobox>
+                  <div data-form-field>
+                    <ScanFieldLabel
+                      htmlFor={`order-item-${index}-quantity`}
+                      status={scanReview?.itemStatus(itemId, 'quantityAmount')}
+                    >
+                      Quantidade
+                    </ScanFieldLabel>
+                    <Combobox
+                      id={`order-item-${index}-quantity`}
+                      isOpen={openQuantityPickerId === itemId}
+                      onOpenChange={(open) => setOpenQuantityPickerId(open ? itemId : null)}
+                    >
+                      <ComboboxInput
+                        {...register(`items.${index}.quantityAmount`, {
+                          onChange: () => scanReview?.confirmItemField(itemId, 'quantityAmount'),
+                        })}
+                        required
+                        aria-describedby={
+                          itemErrors?.quantityAmount
+                            ? `order-item-${index}-quantity-error`
+                            : undefined
+                        }
+                        aria-invalid={Boolean(itemErrors?.quantityAmount)}
+                        type="number"
+                        inputMode="decimal"
+                        min="1"
+                        max="1000"
+                        step="0.01"
+                        placeholder="1 a 1000"
+                      />
+                      <ComboboxTrigger aria-label={`Mostrar quantidades do produto ${index + 1}`} />
+                      <ComboboxList className={styles.quantityList}>
+                        {quantityOptions.map((quantity) => (
+                          <ComboboxOption
+                            key={quantity}
+                            aria-selected={quantity === item.quantityAmount}
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => {
+                              setValue(`items.${index}.quantityAmount`, quantity, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                              });
+                              scanReview?.confirmItemField(itemId, 'quantityAmount');
+                              setOpenQuantityPickerId(null);
+                            }}
+                          >
+                            {quantity}
+                          </ComboboxOption>
+                        ))}
+                      </ComboboxList>
+                    </Combobox>
+                  </div>
+                  <div data-form-field>
+                    <ScanFieldLabel
+                      htmlFor={`order-item-${index}-unit`}
+                      status={scanReview?.itemStatus(itemId, 'quantityUnit')}
+                    >
+                      Unidade
+                    </ScanFieldLabel>
+                    <Combobox
+                      id={`order-item-${index}-unit`}
+                      isOpen={openUnitPickerId === itemId}
+                      onOpenChange={(open) => setOpenUnitPickerId(open ? itemId : null)}
+                    >
+                      <ComboboxInput
+                        className={styles.unitInput}
+                        aria-label={`Unidade do produto ${index + 1}`}
+                        value={item.quantityUnit.toLowerCase()}
+                        readOnly
+                      />
+                      <Input type="hidden" {...register(`items.${index}.quantityUnit`)} />
+                      <ComboboxTrigger aria-label={`Mostrar unidades do produto ${index + 1}`} />
+                      <ComboboxList>
+                        {quantityUnits.map((unit) => (
+                          <ComboboxOption
+                            key={unit}
+                            aria-selected={unit === item.quantityUnit}
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => {
+                              setValue(`items.${index}.quantityUnit`, unit, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                              });
+                              scanReview?.confirmItemField(itemId, 'quantityUnit');
+                              setOpenUnitPickerId(null);
+                            }}
+                          >
+                            {unit.toLowerCase()}
+                          </ComboboxOption>
+                        ))}
+                      </ComboboxList>
+                    </Combobox>
+                  </div>
                 </div>
                 <FieldError
                   id={`order-item-${index}-quantity-error`}
@@ -285,7 +306,7 @@ export function ProductEditor({
               <div className={styles.noteField} data-form-field>
                 <ScanFieldLabel
                   htmlFor={`order-item-${index}-notes`}
-                  status={scanDraft?.items[index]?.status}
+                  status={scanReview?.itemStatus(itemId, 'notes')}
                 >
                   Observação deste produto (opcional)
                 </ScanFieldLabel>
@@ -300,6 +321,7 @@ export function ProductEditor({
                   rows={3}
                   onChange={(event) => {
                     void notesRegistration.onChange(event);
+                    scanReview?.confirmItemField(itemId, 'notes');
                     resizeTextArea(event.currentTarget);
                   }}
                   onFocus={(event) => resizeTextArea(event.currentTarget)}

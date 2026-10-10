@@ -142,7 +142,7 @@ export function OrderCard({
             </Button>
             <Button
               iconOnly
-              className={styles.actionButton}
+              className={`${styles.actionButton} ${styles.printAction}`}
               variant="ghost"
               aria-label="Imprimir"
               title="Imprimir"

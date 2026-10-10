@@ -2,7 +2,7 @@
 
 Leia [docs/README.md](docs/README.md) antes de alterar o projeto. Use os guias ativos como mapa e confirme detalhes no código. `docs/history/` contém contexto, não instruções operacionais atuais.
 
-- Produto 1.0.0: frontend React/Vite em `apps/web`, Supabase Auth e RPCs PostgreSQL em `supabase/migrations`. Não existe backend NestJS em uso.
+- Frontend React/Vite em `apps/web`, Supabase Auth e RPCs PostgreSQL em `supabase/migrations`. Não existe backend NestJS em uso.
 - Fonte da versão exibida: `apps/web/package.json`. Atualize-a ao preparar uma nova versão e registe o resultado em `docs/operations/release.md`.
 - Dados remotos: `apps/web/src/shared/lib/supabaseData.ts`. Nunca exponha `service_role`, passwords ou URLs de ligação ao banco em `VITE_*`, código cliente, testes ou documentação.
 - O `tenant_id` vem da sessão e da membership nas RPCs, nunca de entrada do navegador. Preserve RLS, papéis, desbloqueio gerencial, `version` e gravação idempotente/transacional.

@@ -1,6 +1,7 @@
 .card {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   min-height: 210px;
   overflow: hidden;
   border-color: var(--color-sand);
@@ -54,6 +55,7 @@
 
 .ticket {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
   min-width: 0;
 }
@@ -95,6 +97,7 @@
   color: var(--color-muted);
   font-size: 0.78rem;
   font-weight: 900;
+  overflow-wrap: anywhere;
 }
 
 .client p {
@@ -102,11 +105,13 @@
   color: var(--color-muted);
   font-size: 0.92rem;
   font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
 .products {
   display: grid;
   gap: 0;
+  min-width: 0;
   margin: 0 20px 16px;
   overflow: hidden;
   background: var(--color-white);
@@ -194,6 +199,7 @@
 
 .footer {
   display: grid;
+  min-width: 0;
   justify-items: end;
   padding: 12px 20px 16px;
   background: var(--color-soft-white);
@@ -246,18 +252,45 @@
     box-shadow: 0 8px 20px rgb(77 67 57 / 8%);
   }
 
+  .dateStrip {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 12px 10px;
+    gap: 4px 8px;
+  }
+
   .head {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 9px;
     padding: 14px 13px;
   }
 
+  .client {
+    display: contents;
+  }
+
+  .client > span,
+  .client h2,
+  .client p {
+    grid-column: 1 / -1;
+  }
+
+  .client h2,
+  .client p {
+    margin: 0;
+  }
+
   .number {
+    grid-row: 1;
+    grid-column: 2;
     font-size: 0.78rem;
   }
 
   .meta {
+    grid-row: 1;
+    grid-column: 1;
     gap: 4px;
+    margin-bottom: 0;
   }
 
   .meta span {
@@ -302,18 +335,54 @@
   }
 
   .footer {
-    padding: 10px;
+    justify-items: center;
+    padding: 12px 10px 16px;
   }
 
   .actions {
     display: flex;
     width: auto;
-    gap: 8px;
+    max-width: 100%;
+    min-width: 0;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 6px;
   }
 
   .actions button {
-    width: 46px;
-    min-height: 46px;
+    flex: 0 0 44px;
+    width: 44px;
+    min-height: 44px;
     padding: 0;
+  }
+
+  .actionButton svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .actionButton .whatsAppIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .printAction {
+    display: none;
+  }
+}
+
+@media (max-width: 390px) {
+  .dateStrip {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .dateStrip > span {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+
+  .dateStrip > strong {
+    justify-content: flex-start;
   }
 }
