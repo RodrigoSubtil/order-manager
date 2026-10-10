@@ -4,6 +4,20 @@ As versões descrevem o código desta árvore. A publicação e os testes reais 
 
 ## [Unreleased]
 
+- Barra responsiva: telemóvel com Digitalizar/Adicionar, tablet com os três botões e computador com Imprimir/Adicionar. Prévia compacta com Refazer/Continuar.
+- Cartões estreitos sem corte de conteúdo: no telemóvel, quatro ações numa única linha e impressão oculta; impressão disponível no tablet/computador.
+- Confirmação da leitura com o componente padrão do site; Conferir vermelho, Provável laranja e Conferido verde após edição individual do campo.
+- Critério conservador no prompt, sem novos pedidos à IA ou aumento de limites; retirada da simulação local e porta dev fixa em 5174.
+- Limpeza de estilos repetidos/referências removidas e cancelamento de capturas e temporizadores ao sair do modal.
+
+## [1.1.0] — digitalização com IA em homologação · 08/10/2026
+
+- Fotografia pela câmara ou pelo aparelho, leitura com progresso estimado e revisão no formulário de encomendas.
+- Função autenticada, chave somente no backend e limites de uso/custo por empresa.
+- Publicação pela PR #4 somente em homologação; produção continua fora desta atualização. Consulte [o registo de release](docs/operations/release.md).
+
+## Preparação operacional · 05/10/2026
+
 - Documentação de ambientes de produção e homologação, variáveis por branch e publicação por PR/build Production.
 - Registo da preparação e auditoria de 05/10/2026: Supabase Free separado, domínio curto, limpeza de aliases, novo login de teste, responsáveis finais e resets de numeração autorizados.
 - Base canónica sem seeds/senhas/cron, reconciliação do schema e histórico dos dois bancos, com recuperação lógica ensaiada e testes SQL/concorrência.
@@ -11,7 +25,7 @@ As versões descrevem o código desta árvore. A publicação e os testes reais 
 - Dependências de teste/PostCSS atualizadas; sem vulnerabilidades nas dependências de produção observadas.
 - Versão v1.0.0 alinhada com a base da marca Order Manager no cabeçalho.
 
-Estas entradas documentam a preparação final, configuração e ajuste visual autorizado. A versão do produto permanece 1.0.0. Consulte [a auditoria](docs/operations/homologacao-audit-2026-10-05.md) para distinguir o estado publicado das alterações locais de documentação.
+Estas entradas documentam a preparação final, configuração e ajuste visual de 05/10/2026, quando a versão era 1.0.0. Consulte [a auditoria](docs/operations/homologacao-audit-2026-10-05.md) para a evidência dessa preparação.
 
 ## [1.0.0] — primeira versão para uso oficial
 

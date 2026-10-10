@@ -1,15 +1,35 @@
 # Digitalização de encomendas
 
-O botão da câmara abre um modal pequeno para **Abrir câmara** ou **Escolher foto**. Uma fotografia por análise. Após a leitura, aparece o progresso estimado, a conclusão e **Revisar encomenda**. A revisão usa o formulário de Nova encomenda já existente. **Provável** aparece em verde e **Conferir** em vermelho. Só o botão **Salvar** do formulário grava a encomenda.
+O botão da câmara usa o mesmo fundo/borda de imprimir. Até 560 px, a barra mostra **Digitalizar / Adicionar**, sem impressão geral; de 561 a 1024 px, mostra a câmara em linha própria, **Imprimir / Adicionar** abaixo e filtros de igual largura; acima de 1024 px, oculta a câmara e mantém **Área / Data / Imprimir / Adicionar** na mesma linha. Os limites representam a largura disponível, não a identificação do aparelho. A impressão individual de cada cartão também fica oculta até 560 px e disponível acima desse limite.
+
+A câmara abre um modal pequeno para **Abrir câmara** ou **Escolher foto**. Uma fotografia por análise. A prévia mostra só a imagem e **Refazer / Continuar**. Após a leitura, aparece o progresso estimado, a confirmação no componente de sucesso padrão do site e **Revisar encomenda**. A revisão usa o formulário de Nova encomenda já existente. **Provável** aparece em laranja e **Conferir** em vermelho. Uma alteração manual marca somente o campo editado como **Conferido**, em verde com um visto. Quantidade e unidade são revistas separadamente. Só o botão **Salvar** do formulário grava a encomenda.
 
 ## Estado atual
 
-- O front e o contrato de dados estão implementados. A prévia local usa dados simulados e **não chama a IA**.
+- O front e o contrato de dados estão implementados. O caminho de simulação local foi retirado em 10/10/2026: dev e homologação chamam a mesma função, com as mesmas proteções. A variável antiga `VITE_ORDER_SCAN_DEMO` não tem efeito.
 - A função `supabase/functions/interpret-order/index.ts` está preparada para autenticar, validar uma foto, reservar o orçamento, contar tokens da imagem, consultar a OpenAI e devolver somente os dados extraídos. Falha fechada se a chave, a permissão de ativação ou as credenciais do Supabase faltarem.
 - A migration `20261008190245_order_scan_limits.sql` foi aplicada **somente em homologação**, no projeto `order-manager-homologacao` (`czbrnxrpofdbbgbdyrad`), em 08/10/2026. O histórico remoto foi alinhado com a versão canónica do arquivo após o conector gerar o seu timestamp de aplicação.
-- A função `interpret-order` foi publicada nesse projeto, versão 1, com o mesmo código preparado localmente. **A leitura real foi ativada em homologação em 08/10/2026, às 21:41 UTC**: `ORDER_SCAN_LIVE_ENABLED=true`. Os secrets `OPENAI_API_KEY` e `ORDER_SCAN_ALLOWED_ORIGINS` estão salvos. A validade da chave na OpenAI e a interpretação de uma fotografia real ainda dependem do teste do utilizador.
+- **A leitura real foi ativada em homologação em 08/10/2026, às 21:41 UTC**: `ORDER_SCAN_LIVE_ENABLED=true`. Os secrets `OPENAI_API_KEY` e `ORDER_SCAN_ALLOWED_ORIGINS` estão salvos. A versão 3 da função incluiu diagnóstico seguro de falhas; o utilizador substituiu a chave e concluiu uma leitura real às 22:02 UTC.
 - A [PR #4](https://github.com/RodrigoSubtil/order-manager/pull/4) publica a versão 1.1.0 somente em `homologacao`. `VITE_ORDER_SCAN_ENABLED=true` está configurado no ambiente Preview dessa branch; a produção continua fora desta publicação.
-- Não existe chave da OpenAI no código, no browser ou neste documento. Não foram feitas chamadas pagas de IA.
+- Não existe chave da OpenAI no código, no browser ou neste documento. Leituras reais são pagas e dependem da ação do utilizador; os testes automáticos usam serviços simulados.
+
+### Primeiro teste real e diagnóstico · 08/10/2026
+
+O site foi publicado pela [PR #4](https://github.com/RodrigoSubtil/order-manager/pull/4), commit de merge `c5fd07e`, deployment Preview `2mDYHKKWx7Kp47HYBN96hpGHbdvX` Ready. O domínio de homologação mostrou `v1.1.0`, sessão Pastelaria Teste e o modal de fotografia. Produção permaneceu no commit `a9c70d0`.
+
+As primeiras tentativas do utilizador falharam quase imediatamente, sem tokens retornados. A função foi atualizada para registrar somente etapa, status HTTP, código/param do erro e ID de requisição do fornecedor; nunca chave, fotografia, texto da encomenda nem mensagem bruta do fornecedor. A versão 3 publicada em homologação registrou `count_tokens`, HTTP 401 e código `token_invalidated` numa tentativa controlada com uma imagem vazia de teste. O bloqueio era a credencial OpenAI invalidada, antes da geração da transcrição. O utilizador substituiu `OPENAI_API_KEY` diretamente nos secrets de homologação.
+
+Falhas antes do envio da geração passam a registrar custo zero na reserva interna. Quando a geração já foi enviada e o consumo é desconhecido, a reserva continua mantida. Quatro testes simulados da função passaram, incluindo rejeição da contagem sem geração e sem registrar dados sensíveis. Após a troca da chave, a leitura iniciada pelo utilizador às 22:02:09 UTC terminou às 22:02:13 UTC, com 3.340 tokens de entrada, 118 de saída e custo estimado de US$ 0,003036. O rascunho foi aberto para revisão sem gravação automática. Isso comprova a chamada real, não a exatidão de todos os campos manuscritos.
+
+### Revisão da interface · 10/10/2026
+
+As alterações desta revisão são destinadas à PR para **`homologacao`**, com Preview automático autorizado e merge reservado ao utilizador. A produção exige autorização posterior. A alteração do prompt só entra em vigor após uma publicação separada da Edge Function, que não faz parte desta rodada.
+
+O prompt passa a usar `conferir` por padrão, reservando `provavel` para valores explícitos e inequívocos. Campos deduzidos/ambíguos pedem conferência. A resposta da IA continua aceitando só esses dois estados. `conferido` é exclusivamente visual, após edição humana; não é enviado pela IA nem gravado no banco. A associação dos indicadores de produtos usa o ID estável, preservando os estados ao remover outra linha. A confirmação fica ativa mesmo se a pessoa voltar ao valor original e é limpa numa nova revisão.
+
+Não há percentagem numérica de certeza calibrada nem garantia de reconhecimento perfeito. Estes ajustes não acrescentam novas chamadas, repetições automáticas, modelo alternativo ou aumento dos tetos. Os testes desta alteração são locais e simulados; não executar leituras nem CRUD de teste em homologação sem nova autorização do utilizador.
+
+A revisão responsiva local cobriu larguras de 320 a 1280 px no painel: sem rolagem lateral, sem corte dos botões do cartão e com a visibilidade da barra correspondente a cada faixa. Em 320 px, foram inspecionados também o formulário de nova encomenda, os campos de produtos, a escolha de fotografia e a tela de acesso gerencial, sem salvar dados, abrir a câmara ou chamar IA. A gestão após autenticação não foi acessada. No telemóvel, o cartão oculta Imprimir e mantém os quatro ícones restantes numa única linha, com botões de 44 px e mais espaço inferior; o cliente usa a largura inteira abaixo do responsável/número do pedido. Formatação, lint, tipos, 165 testes em 38 arquivos e quatro testes simulados do backend e build passaram localmente. A inspeção no navegador não substitui a verificação no aparelho físico.
 
 ### Verificação em 08/10/2026
 
@@ -44,8 +64,8 @@ Exemplo ilustrativo: 3.000 tokens de entrada e 700 de saída custariam cerca de 
 2. Conferir o orçamento e o modelo permitido no projeto OpenAI de homologação. A chave já está no secret `OPENAI_API_KEY`, nunca numa variável `VITE_`.
 3. A leitura real foi autorizada e `ORDER_SCAN_LIVE_ENABLED=true` está salvo em homologação. Para suspender novas leituras, mudar esse valor para `false`. `ORDER_SCAN_ALLOWED_ORIGINS` permite `http://localhost:5174` e `https://homologacao-order-manager-rs.vercel.app`. A função utiliza também as chaves de Supabase disponibilizadas pelo ambiente.
 4. Conferir a função `interpret-order` já publicada. Manter `verify_jwt=false` no gateway porque o handler valida o JWT do utilizador em `/auth/v1/user` antes de reservar orçamento e chamar a OpenAI.
-5. No site de homologação, ativar `VITE_ORDER_SCAN_ENABLED=true` e retirar `VITE_ORDER_SCAN_DEMO=true`. A fotografia passa pelo `supabase.functions.invoke('interpret-order')`; o browser nunca recebe a chave privada.
-6. Testar com fotos **não sensíveis**: legível, letra difícil, vários produtos, foto inválida, utilizador sem empresa ativa, duas análises simultâneas, limite diário e orçamento mensal. Verificar consumo real no painel OpenAI e na tabela privada. Conferir os dados no formulário e salvar apenas numa empresa de teste.
+5. No site de homologação e no `.env.development.local` de dev, usar `VITE_ORDER_SCAN_ENABLED=true`. O modo dev serve a porta 5174 para coincidir com a origem autorizada. A fotografia passa pelo `supabase.functions.invoke('interpret-order')`; o browser nunca recebe a chave privada. Não existe fallback para um rascunho de demonstração.
+6. O utilizador realiza os testes de leitura real com fotos **não sensíveis**: legível, letra difícil e vários produtos. Limites, falhas, concorrência e isolamento são verificados em testes simulados/PostgreSQL descartável. Conferir consumo no painel OpenAI/tabela privada e salvar apenas na empresa de teste, por ação do utilizador.
 7. Ajustar prompt, qualidade e tetos após as medições. Só considerar produção depois de validar isolamento por empresa, custo, erros, impressão e revisão humana com encomendas reais autorizadas.
 
 ## Referências oficiais consultadas

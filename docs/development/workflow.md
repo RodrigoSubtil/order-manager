@@ -2,7 +2,9 @@
 
 ## Ambiente
 
-Use Node.js 22 e npm. Execute `npm ci`, copie `apps/web/.env.example` para `apps/web/.env` e configure a URL e a chave pública de um Supabase autorizado para desenvolvimento. `npm run dev` serve `http://localhost:5173`. O frontend não exige banco local, Docker, Prisma ou API NestJS. Os testes SQL da integração usam PostgreSQL descartável separado.
+Use Node.js 22 e npm. Execute `npm ci`, copie `apps/web/.env.example` para `apps/web/.env.development.local` e configure a URL e a chave pública do Supabase de homologação (`czbrnxrpofdbbgbdyrad`). `npm run dev` serve `http://localhost:5174`, sem escolher outra porta se estiver ocupada. O Vite recusa iniciar o modo dev com outro projeto Supabase. O frontend não exige banco local, Docker, Prisma ou API NestJS. Os testes SQL da integração usam PostgreSQL descartável separado.
+
+Com `VITE_ORDER_SCAN_ENABLED=true`, **Continuar** envia a fotografia para a mesma Edge Function usada em homologação. A simulação local foi retirada; `VITE_ORDER_SCAN_DEMO` já não tem efeito. Não coloque `OPENAI_API_KEY` no frontend. Leituras iniciadas no localhost usam o orçamento da empresa de teste no backend de homologação. Testes automáticos devem simular os serviços; as leituras reais em homologação ficam com o utilizador, conforme orientação de 08/10/2026.
 
 | Comando                 | Validação                                |
 | ----------------------- | ---------------------------------------- |

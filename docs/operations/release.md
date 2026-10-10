@@ -24,6 +24,14 @@ Rollback de frontend: promova um deployment anterior conhecido e valide-o. Rollb
 
 ## Registo de versões
 
+### 1.1.0 · revisão da interface para homologação · 10/10/2026
+
+Mantida a versão 1.1.0: ajustes responsivos dos botões, cartões estreitos, prévia Refazer/Continuar e confirmação individual da revisão. O modo de demonstração foi retirado; dev usa a mesma função autenticada de homologação. Os critérios e limites estão no [guia de digitalização](order-scan.md).
+
+Destino desta PR: somente `homologacao`. O Preview automático da Vercel foi autorizado; o merge fica reservado ao utilizador. Produção exige autorização posterior. O prompt mais conservador consta do código, mas só entra em vigor após uma publicação separada da Edge Function; esta revisão não publica a função nem altera o banco.
+
+Validação desta rodada: verificações locais e serviços simulados. Não foram executadas leituras de IA nem operações de teste em homologação; o teste do site após o merge cabe ao utilizador.
+
 ### 1.1.0 · digitalização com IA em homologação · 08/10/2026
 
 Nova funcionalidade compatível com o fluxo anterior: fotografia pela câmara ou pelo aparelho, leitura com progresso estimado, conclusão e revisão no formulário existente com indicadores compactos **Provável** e **Conferir**. O botão **Salvar** continua a ser a única ação que grava a encomenda.
@@ -34,7 +42,7 @@ A migration `20261008190245_order_scan_limits.sql` e a função `interpret-order
 
 A [PR #4](https://github.com/RodrigoSubtil/order-manager/pull/4), de `codex/order-scan-prep` para `homologacao`, contém a implementação `b8b60dc` e ajustes de testes `9c2d6fe`/`aadb7d9`. Os checks locais passaram com 156 testes, cobertura exigida, formatação, lint, tipos e build. A leitura real foi ativada no backend de homologação em 08/10/2026, às 21:41 UTC; cinco verificações HTTP confirmaram autenticação e restrições de origem/método, sem foto nem chamada paga. O frontend está habilitado somente no Preview de `homologacao`.
 
-A publicação depende do merge dessa PR com os checks remotos aprovados e do deployment Ready no domínio de homologação. A qualidade da interpretação de fotos reais e a correção dos dados continuam pendentes do teste do utilizador.
+A PR foi integrada em `homologacao` pelo commit `c5fd07e`, com deployment Preview `2mDYHKKWx7Kp47HYBN96hpGHbdvX` Ready. O utilizador concluiu uma leitura real após substituir a chave OpenAI; isso comprova a integração, não a exatidão dos campos manuscritos. O [diagnóstico e as verificações](order-scan.md) registam esses limites.
 
 ### 1.0.0 · 04/10/2026
 

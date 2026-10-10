@@ -35,11 +35,16 @@
 }
 
 .check {
-  color: var(--color-danger);
-  background: var(--color-danger-soft);
+  color: var(--color-white);
+  background: var(--color-review-check);
 }
 
 .likely {
-  color: var(--color-success);
-  background: var(--color-success-soft);
+  color: var(--color-review-likely-ink);
+  background: var(--color-review-likely);
+}
+
+.reviewed {
+  color: var(--color-white);
+  background: var(--color-review-confirmed);
 }

@@ -136,7 +136,9 @@ test('imagem acima do teto de tokens não chama o modelo', async () => {
     if (url.endsWith('/web_begin_order_scan')) return Response.json('attempt-2');
     if (url.endsWith('/responses/input_tokens')) return Response.json({ input_tokens: 9000 });
     if (url.endsWith('/web_finish_order_scan')) {
-      assert.equal(JSON.parse(options.body).p_state, 'failed');
+      const body = JSON.parse(options.body);
+      assert.equal(body.p_state, 'failed');
+      assert.equal(body.p_actual_microusd, 0);
       return Response.json(null);
     }
     throw new Error(`Destino inesperado: ${url}`);
@@ -149,5 +151,47 @@ test('imagem acima do teto de tokens não chama o modelo', async () => {
     );
   } finally {
     globalThis.fetch = originalFetch;
+  }
+});
+
+test('rejeição na contagem não chama a leitura nem cobra a reserva interna', async () => {
+  configure();
+  const originalFetch = globalThis.fetch;
+  const originalWarn = console.warn;
+  const logs = [];
+  console.warn = (line) => logs.push(JSON.parse(line));
+  globalThis.fetch = async (input, options) => {
+    const url = String(input);
+    if (url.endsWith('/auth/v1/user')) return Response.json({ id: 'user-1' });
+    if (url.endsWith('/web_begin_order_scan')) return Response.json('attempt-count-failed');
+    if (url.endsWith('/responses/input_tokens'))
+      return Response.json(
+        { error: { code: 'invalid_api_key', message: 'Não deve aparecer nos logs: openai-test' } },
+        { status: 401, headers: { 'x-request-id': 'request-test' } },
+      );
+    if (url.endsWith('/web_finish_order_scan')) {
+      const body = JSON.parse(options.body);
+      assert.equal(body.p_state, 'failed');
+      assert.equal(body.p_actual_microusd, 0);
+      return Response.json(null);
+    }
+    throw new Error(`Não deve gerar leitura: ${url}`);
+  };
+  try {
+    assert.equal((await handler(request())).status, 503);
+    assert.deepEqual(logs, [
+      {
+        event: 'order_scan_failed',
+        stage: 'count_tokens',
+        provider_status: 401,
+        provider_code: 'invalid_api_key',
+        provider_param: null,
+        provider_request_id: 'request-test',
+      },
+    ]);
+    assert.equal(JSON.stringify(logs).includes('openai-test'), false);
+  } finally {
+    globalThis.fetch = originalFetch;
+    console.warn = originalWarn;
   }
 });
