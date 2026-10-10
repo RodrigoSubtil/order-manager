@@ -139,7 +139,8 @@
 
 .active {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px 12px;
   align-items: center;
   justify-content: space-between;
   padding: 10px 0 0;
@@ -151,7 +152,7 @@
 .activeSummary {
   display: flex;
   min-width: 0;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 6px;
   align-items: center;
 }
@@ -240,9 +241,6 @@
   }
 
   .active {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
     font-size: 0.78rem;
     line-height: 1.35;
   }
@@ -252,15 +250,11 @@
   }
 
   .chip {
-    max-width: 58%;
+    max-width: 100%;
     padding: 0;
     font-size: 0.78rem;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .chip + .chip {
-    max-width: 42%;
   }
 
   .resultCount {

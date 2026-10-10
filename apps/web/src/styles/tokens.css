@@ -13,10 +13,8 @@
   --color-line: #d8c8b7;
   --color-danger: #8b3f32;
   --color-danger-soft: #fff7f5;
-  --color-review-check: #b42318;
-  --color-review-likely: #ffb347;
-  --color-review-likely-ink: #6b2e00;
-  --color-review-confirmed: #16803c;
+  --color-warning: #94611f;
+  --color-warning-soft: #fff5e4;
   --color-success: #35634a;
   --color-success-soft: #f2faf5;
   --color-focus: #5b78c7;

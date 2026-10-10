@@ -6,6 +6,8 @@ Entre com **Utilizador** e **Senha**. Use **Manter conectado** só num equipamen
 
 Os indicadores **Total**, **Hoje** e **Próximas** abrangem as encomendas ativas e não mudam com os filtros. Na lista, escolha uma área e uma das opções de data: **Todas as datas**, **Hoje** ou **Definir data**. Esta última abre o calendário; depois de escolher, a data aparece no mesmo seletor. A pesquisa encontra cliente, telefone, responsável e produto. Toque no campo ou na seta para abrir/fechar as opções; uma escolha fecha a lista automaticamente.
 
+Quando faltar espaço ao lado do resumo dos filtros, a contagem de resultados passa para a linha de baixo, alinhada à esquerda sob a data, sem comprimir o texto.
+
 ## Criar ou editar uma encomenda
 
 1. Toque em **+** para abrir **Novo pedido**; para alterar, use **Editar** no cartão.
@@ -27,6 +29,8 @@ A câmara mostra um enquadramento horizontal 4:3. Posicione todo o papel dentro 
 A barra adapta-se à largura disponível: até **560 px**, mostra **Digitalizar** à esquerda e **Adicionar** à direita, com cada filtro numa linha; a impressão geral fica oculta. De **561 a 1024 px**, a câmara ocupa a primeira linha, **Imprimir / Adicionar** a segunda e os filtros dividem a terceira igualmente. Acima de **1024 px**, fica tudo numa linha: **Área / Data / Imprimir / Adicionar**, com a câmara oculta. Se a digitalização estiver desativada, o botão Adicionar ocupa a linha toda no telemóvel. A impressão individual no cartão também fica oculta até 560 px e volta a aparecer no tablet/computador. No telemóvel, os quatro ícones restantes ficam numa única linha, com botões de 44 px e espaço inferior.
 
 O carregamento mostra uma percentagem estimada. Após **Leitura concluída**, toque em **Revisar encomenda** para abrir o formulário habitual com os dados preenchidos. **Provável**, em laranja, indica uma leitura aparentemente legível; **Conferir**, em vermelho, destaca um dado que precisa de atenção. Uma alteração manual muda apenas o indicador desse campo para **Conferido**, em verde com um visto. Quantidade e unidade têm indicadores separados. O verde indica edição humana e não substitui a validação dos campos obrigatórios.
+
+Os três estados usam fundos claros e bordas discretas, mantendo o texto e os ícones para distinguir cada indicação.
 
 Confira os dados e toque em **Salvar**. A leitura da fotografia não grava uma encomenda automaticamente. Se a foto não puder ser lida ou um limite de utilização for atingido, pode preencher a encomenda manualmente.
 
