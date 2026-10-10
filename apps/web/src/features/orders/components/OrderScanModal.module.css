@@ -42,6 +42,12 @@
   border-radius: var(--radius-md);
 }
 
+.photoStage video {
+  justify-self: center;
+  width: min(100%, 60vh, 400px);
+  object-fit: cover;
+}
+
 .actions {
   display: flex;
   gap: 8px;

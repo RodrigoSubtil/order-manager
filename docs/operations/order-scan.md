@@ -6,6 +6,7 @@ A câmara abre um modal pequeno para **Abrir câmara** ou **Escolher foto**. Uma
 
 ## Estado atual
 
+- A prévia da câmara usa formato horizontal 4:3 e recorte central na captura, correspondente à área visível, mesmo quando o aparelho entrega vídeo vertical. Fotografias escolhidas do aparelho mantêm o formato original. A validação da câmara usa serviços simulados; o aparelho físico deve ser conferido pelo utilizador.
 - O front e o contrato de dados estão implementados. O caminho de simulação local foi retirado em 10/10/2026: dev e homologação chamam a mesma função, com as mesmas proteções. A variável antiga `VITE_ORDER_SCAN_DEMO` não tem efeito.
 - A função `supabase/functions/interpret-order/index.ts` está preparada para autenticar, validar uma foto, reservar o orçamento, contar tokens da imagem, consultar a OpenAI e devolver somente os dados extraídos. Falha fechada se a chave, a permissão de ativação ou as credenciais do Supabase faltarem.
 - A migration `20261008190245_order_scan_limits.sql` foi aplicada **somente em homologação**, no projeto `order-manager-homologacao` (`czbrnxrpofdbbgbdyrad`), em 08/10/2026. O histórico remoto foi alinhado com a versão canónica do arquivo após o conector gerar o seu timestamp de aplicação.
