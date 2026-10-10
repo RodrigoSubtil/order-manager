@@ -30,6 +30,47 @@ function selectPhoto(container: HTMLElement) {
 }
 
 describe('digitalização da encomenda', () => {
+  it.each([
+    { videoWidth: 480, videoHeight: 640, x: 0, y: 140, width: 480, height: 360 },
+    { videoWidth: 1280, videoHeight: 720, x: 160, y: 0, width: 960, height: 720 },
+  ])('captura o enquadramento horizontal de uma câmara $videoWidth×$videoHeight', async (frame) => {
+    const media = { getTracks: () => [{ stop: vi.fn() }] };
+    vi.stubGlobal('navigator', {
+      mediaDevices: { getUserMedia: vi.fn().mockResolvedValue(media) },
+    });
+    vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue();
+    const drawImage = vi.fn();
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({
+      drawImage,
+    } as unknown as CanvasRenderingContext2D);
+    vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation((callback) => {
+      callback(new Blob(['photo'], { type: 'image/jpeg' }));
+    });
+    render(<OrderScanModal onClose={vi.fn()} onReview={vi.fn()} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir câmara' }));
+    const preview = screen.getByLabelText<HTMLVideoElement>('Pré-visualização da câmara');
+    await waitFor(() => expect(preview.srcObject).toBe(media));
+    Object.defineProperties(preview, {
+      videoWidth: { value: frame.videoWidth },
+      videoHeight: { value: frame.videoHeight },
+    });
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Tirar foto' })));
+    expect(drawImage).toHaveBeenCalledExactlyOnceWith(
+      preview,
+      frame.x,
+      frame.y,
+      frame.width,
+      frame.height,
+      0,
+      0,
+      frame.width,
+      frame.height,
+    );
+    expect(screen.getByRole('img')).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Continuar' })).toBeVisible();
+    expect(interpret).not.toHaveBeenCalled();
+  });
+
   it('libera a câmara ao voltar e ignora uma captura que termina depois disso', async () => {
     const stop = vi.fn();
     const media = { getTracks: () => [{ stop }] };

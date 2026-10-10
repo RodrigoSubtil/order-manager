@@ -15,6 +15,8 @@ import styles from './OrderScanModal.module.css';
 type Stage = 'choose' | 'camera' | 'photo' | 'loading' | 'complete';
 type Props = { onClose: () => void; onReview: (draft: ScanDraft) => void };
 
+const cameraAspectRatio = 4 / 3;
+
 export function OrderScanModal({ onClose, onReview }: Props) {
   const fileInput = useRef<HTMLInputElement>(null);
   const video = useRef<HTMLVideoElement>(null);
@@ -60,7 +62,10 @@ export function OrderScanModal({ onClose, onReview }: Props) {
       try {
         const media = await navigator.mediaDevices.getUserMedia({
           audio: false,
-          video: { facingMode: { ideal: 'environment' } },
+          video: {
+            facingMode: { ideal: 'environment' },
+            aspectRatio: { ideal: cameraAspectRatio },
+          },
         });
         if (cancelled) {
           media.getTracks().forEach((track) => track.stop());
@@ -106,10 +111,24 @@ export function OrderScanModal({ onClose, onReview }: Props) {
   async function capturePhoto() {
     const currentVideo = video.current;
     if (!currentVideo?.videoWidth || !currentVideo.videoHeight) return;
+    const width = Math.min(currentVideo.videoWidth, currentVideo.videoHeight * cameraAspectRatio);
+    const height = width / cameraAspectRatio;
     const canvas = document.createElement('canvas');
-    canvas.width = currentVideo.videoWidth;
-    canvas.height = currentVideo.videoHeight;
-    canvas.getContext('2d')?.drawImage(currentVideo, 0, 0);
+    canvas.width = Math.round(width);
+    canvas.height = Math.round(height);
+    canvas
+      .getContext('2d')
+      ?.drawImage(
+        currentVideo,
+        (currentVideo.videoWidth - width) / 2,
+        (currentVideo.videoHeight - height) / 2,
+        width,
+        height,
+        0,
+        0,
+        canvas.width,
+        canvas.height,
+      );
     const blob = await new Promise<Blob | null>((resolve) =>
       canvas.toBlob(resolve, 'image/jpeg', 0.85),
     );
@@ -179,7 +198,14 @@ export function OrderScanModal({ onClose, onReview }: Props) {
       {stage === 'camera' && (
         <div className={styles.photoStage}>
           {error && <Alert tone="error">{error}</Alert>}
-          <video ref={video} autoPlay playsInline muted aria-label="Pré-visualização da câmara" />
+          <video
+            ref={video}
+            autoPlay
+            playsInline
+            muted
+            style={{ aspectRatio: cameraAspectRatio }}
+            aria-label="Pré-visualização da câmara"
+          />
           <div className={styles.actions}>
             <Button onClick={() => setStage('choose')}>Voltar</Button>
             <Button variant="primary" onClick={() => void capturePhoto()}>
