@@ -7,7 +7,8 @@ As versões descrevem o código desta árvore. A publicação e os testes reais 
 - Câmara com enquadramento horizontal 4:3 e captura correspondente à prévia, sem deformar a imagem. Fotografias escolhidas do aparelho mantêm o formato original.
 - Barra responsiva: telemóvel com Digitalizar/Adicionar, tablet com os três botões e computador com Imprimir/Adicionar. Prévia compacta com Refazer/Continuar.
 - Cartões estreitos sem corte de conteúdo: no telemóvel, quatro ações numa única linha e impressão oculta; impressão disponível no tablet/computador.
-- Confirmação da leitura com o componente padrão do site; Conferir vermelho, Provável laranja e Conferido verde após edição individual do campo.
+- Confirmação da leitura com o componente padrão do site; Conferir vermelho, Provável laranja e Conferido verde após edição individual do campo, com fundos claros e bordas discretas na paleta do site.
+- A contagem de resultados passa para a linha de baixo, alinhada à esquerda sob a data, quando falta espaço ao lado dos filtros, sem comprimir a data.
 - Critério conservador no prompt, sem novos pedidos à IA ou aumento de limites; retirada da simulação local e porta dev fixa em 5174.
 - Limpeza de estilos repetidos/referências removidas e cancelamento de capturas e temporizadores ao sair do modal.
 
