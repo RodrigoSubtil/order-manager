@@ -11,6 +11,7 @@ import {
 } from '../../../shared/lib/domain';
 import { saveOrder as saveOrderInSupabase } from '../../../shared/lib/supabaseData';
 import { getFormSubmissionError } from '../lib/formSubmissionError';
+import { resolveScanCategories } from '../lib/resolveScanCategories';
 import {
   createEmptyOrderFormValues,
   createEmptyOrderItem,
@@ -132,10 +133,11 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     setIsModalOpen(true);
   }
   function openScanDraft(draft: ScanDraft) {
+    const resolvedDraft = resolveScanCategories(draft, catalogProducts);
     pendingRequest.current = null;
-    methods.reset(scanDraftToOrderValues(draft));
+    methods.reset(scanDraftToOrderValues(resolvedDraft));
     setEditingOrder(null);
-    setScanDraft(draft);
+    setScanDraft(resolvedDraft);
     setAppError('');
     setAppSuccess('');
     setSavedOrderConfirmation(null);

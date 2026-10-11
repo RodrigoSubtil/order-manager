@@ -1,18 +1,23 @@
 .button {
   display: inline-flex;
-  min-height: 40px;
   align-items: center;
   justify-content: center;
-  padding: 0 14px;
   color: var(--color-ink);
   background: var(--color-white);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
-  font-weight: 900;
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast),
     transform var(--transition-fast);
+  font: var(--type-button);
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  white-space: normal;
+  text-align: center;
+  overflow-wrap: normal;
 }
 
 .button:hover:not(:disabled) {
@@ -31,6 +36,8 @@
   color: var(--color-white);
   background: var(--color-accent);
   border-color: var(--color-accent);
+  min-height: var(--control-height);
+  padding-block: var(--space-3);
 }
 
 .primary:hover:not(:disabled) {
@@ -55,13 +62,9 @@
 }
 
 .icon {
-  width: 40px;
+  font-size: var(--font-size-md);
+  width: var(--touch-target);
+  min-height: var(--touch-target);
   padding: 0;
-  font-size: 1.15rem;
-}
-
-@media (max-width: 560px) {
-  .button {
-    min-height: var(--touch-target);
-  }
+  flex-shrink: 0;
 }

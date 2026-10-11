@@ -69,6 +69,16 @@ test('uma foto autenticada retorna rascunho e regista o consumo', async () => {
       const payload = JSON.parse(options.body);
       assert.equal(payload.model, 'gpt-5.4-mini');
       assert.equal(payload.max_output_tokens, 6000);
+      assert.deepEqual(payload.text.format.schema.properties.items.items.properties.category.enum, [
+        'Pastelaria',
+        'Padaria',
+        'Salgados',
+        'Almoço',
+        '',
+      ]);
+      assert.ok(payload.instructions.includes('mesmo quando ela não estiver escrita'));
+      assert.ok(payload.instructions.includes('Não uses Pastelaria como valor padrão'));
+      assert.ok(payload.instructions.includes('conferência humana'));
       assert.equal(
         payload.input[0].content.filter((part) => part.type === 'input_image').length,
         1,
@@ -190,6 +200,69 @@ test('rejeição na contagem não chama a leitura nem cobra a reserva interna', 
       },
     ]);
     assert.equal(JSON.stringify(logs).includes('openai-test'), false);
+  } finally {
+    globalThis.fetch = originalFetch;
+    console.warn = originalWarn;
+  }
+});
+
+test('área fora do contrato rejeita o rascunho e mantém o registo do consumo', async () => {
+  configure();
+  const originalFetch = globalThis.fetch;
+  const originalWarn = console.warn;
+  const logs = [];
+  console.warn = (line) => logs.push(JSON.parse(line));
+  globalThis.fetch = async (input, options) => {
+    const url = String(input);
+    if (url.endsWith('/auth/v1/user')) return Response.json({ id: 'user-1' });
+    if (url.endsWith('/web_begin_order_scan')) return Response.json('attempt-invalid-area');
+    if (url.endsWith('/responses/input_tokens')) return Response.json({ input_tokens: 3000 });
+    if (url.endsWith('/v1/responses')) {
+      const field = { value: '', status: 'conferir' };
+      return Response.json({
+        status: 'completed',
+        usage: { input_tokens: 3000, output_tokens: 700 },
+        output: [
+          {
+            type: 'message',
+            content: [
+              {
+                type: 'output_text',
+                text: JSON.stringify({
+                  clientName: field,
+                  phone: field,
+                  responsibleName: field,
+                  deliveryDate: field,
+                  deliveryTime: field,
+                  items: [
+                    {
+                      category: 'Bebidas',
+                      product: 'Sumo',
+                      quantityAmount: '2',
+                      quantityUnit: 'UN',
+                      notes: '',
+                      status: 'provavel',
+                    },
+                  ],
+                }),
+              },
+            ],
+          },
+        ],
+      });
+    }
+    if (url.endsWith('/web_finish_order_scan')) {
+      const body = JSON.parse(options.body);
+      assert.equal(body.p_state, 'failed');
+      assert.equal(body.p_actual_microusd, 5400);
+      return Response.json(null);
+    }
+    throw new Error('Destino inesperado: ' + url);
+  };
+  try {
+    assert.equal((await handler(request())).status, 422);
+    assert.equal(logs[0].stage, 'validate_draft');
+    assert.equal(JSON.stringify(logs).includes('Sumo'), false);
   } finally {
     globalThis.fetch = originalFetch;
     console.warn = originalWarn;

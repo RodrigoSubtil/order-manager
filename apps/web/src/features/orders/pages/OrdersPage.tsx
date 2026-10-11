@@ -12,6 +12,7 @@ import { usePrintOrders } from '../../reports/hooks/usePrintOrders';
 import { Alert } from '../../../shared/components/ui';
 import { useModalBodyClass, useOutsidePointerDown } from '../../../shared/hooks';
 import { getApiErrorMessage } from '../../../shared/lib/apiError';
+import { todayKey } from '../../../shared/lib/dateUtils';
 import { completeOrder, deleteOrder } from '../../../shared/lib/supabaseData';
 import { CompleteOrderDialog } from '../components/CompleteOrderDialog';
 import { DeleteOrderDialog } from '../components/DeleteOrderDialog';
@@ -21,6 +22,9 @@ import { OrderIndicators } from '../components/OrderIndicators';
 import { OrderList } from '../components/OrderList';
 import { OrderSuccessDialog } from '../components/OrderSuccessDialog';
 import { OrderScanModal } from '../components/OrderScanModal';
+import { OverduePickupNotice } from '../components/OverduePickupNotice';
+import { useMinuteClock } from '../hooks/useMinuteClock';
+import { useOverduePickups } from '../hooks/useOverduePickups';
 import { orderScanEnabled } from '../lib/scanApi';
 import { useApiOrderData } from '../hooks/useApiOrderData';
 import { useOrderFilters, useOrderFilterState } from '../hooks/useOrderFilters';
@@ -31,9 +35,20 @@ export default function OrdersPage() {
   const navigate = useAppNavigate();
   const session = useSession();
   const queryClient = useQueryClient();
-  const filterState = useOrderFilterState();
+  const now = useMinuteClock(Boolean(session.authUser));
+  const currentDay = todayKey(new Date(now));
+  const filterState = useOrderFilterState(currentDay);
   const data = useApiOrderData(filterState.queryParams, Boolean(session.authUser));
-  const filters = useOrderFilters(data.orders, data.overviewOrders, data.responsibles, filterState);
+  const filters = useOrderFilters(
+    data.orders,
+    data.overviewOrders,
+    data.responsibles,
+    filterState,
+    currentDay,
+  );
+  const overdue = useOverduePickups(data.overviewOrders, now);
+  const [overdueOnly, setOverdueOnly] = useState(false);
+  const displayedOrders = overdueOnly ? overdue.orders : filters.filteredOrders;
   const [appError, setAppError] = useState('');
   const [appSuccess, setAppSuccess] = useState('');
   const orderForm = useOrderForm({
@@ -41,7 +56,11 @@ export default function OrdersPage() {
     setAppError,
     setAppSuccess,
   });
-  const print = usePrintOrders(filters.sortedOrders, filters.dateFilter, filters.categoryFilter);
+  const print = usePrintOrders(
+    displayedOrders,
+    overdueOnly ? '' : filters.dateFilter,
+    overdueOnly ? 'Todas' : filters.categoryFilter,
+  );
   const removeMutation = useMutation({
     mutationFn: ({ id, version }: { id: string; version: number }) => deleteOrder(id, version),
   });
@@ -85,12 +104,12 @@ export default function OrdersPage() {
   );
 
   const orderToDelete = useMemo(
-    () => data.orders.find((order) => order.id === deleteOrderId) ?? null,
-    [data.orders, deleteOrderId],
+    () => displayedOrders.find((order) => order.id === deleteOrderId) ?? null,
+    [displayedOrders, deleteOrderId],
   );
   const orderToComplete = useMemo(
-    () => data.orders.find((order) => order.id === completeOrderId) ?? null,
-    [completeOrderId, data.orders],
+    () => displayedOrders.find((order) => order.id === completeOrderId) ?? null,
+    [completeOrderId, displayedOrders],
   );
 
   async function refreshOrderData() {
@@ -108,6 +127,7 @@ export default function OrdersPage() {
     try {
       await session.logout();
       filters.resetFilters();
+      setOverdueOnly(false);
       orderForm.closeModal();
       setIsScanOpen(false);
       setDeleteOrderId(null);
@@ -201,31 +221,50 @@ export default function OrdersPage() {
         {appSuccess && <Alert tone="success">{appSuccess}</Alert>}
         {visibleError && <Alert tone="error">{visibleError}</Alert>}
         <OrderIndicators stats={filters.stats} total={data.overviewOrders.length} />
+        <OverduePickupNotice
+          count={overdue.orders.length}
+          oldestMinutes={overdue.oldestMinutes}
+          active={overdueOnly}
+          onToggle={() => setOverdueOnly((current) => !current)}
+        />
         <section className={styles.ordersPanel} aria-label="Encomendas">
           <OrderFilters
-            categoryFilter={filters.categoryFilter}
-            dateFilter={filters.dateFilter}
-            dateFilterMode={filters.dateFilterMode}
-            hasCustomDate={filters.hasCustomDate}
+            categoryFilter={overdueOnly ? 'Todas' : filters.categoryFilter}
+            dateFilter={overdueOnly ? '' : filters.dateFilter}
+            dateFilterMode={overdueOnly ? 'all' : filters.dateFilterMode}
+            hasCustomDate={!overdueOnly && filters.hasCustomDate}
             isCategoryFilterOpen={filters.isCategoryFilterOpen}
-            resultCount={data.resultTotal}
-            search={filters.search}
-            onCategoryChange={filters.setCategoryFilter}
+            resultCount={displayedOrders.length}
+            search={overdueOnly ? '' : filters.search}
+            onCategoryChange={(value) => {
+              setOverdueOnly(false);
+              filters.setCategoryFilter(value);
+            }}
             onCategoryOpenChange={filters.setIsCategoryFilterOpen}
             onCreate={orderForm.openNewOrderModal}
             onScan={orderScanEnabled ? () => setIsScanOpen(true) : undefined}
-            onDateChange={filters.setDateFilter}
-            onDateModeChange={filters.setDateFilterMode}
+            onDateChange={(value) => {
+              setOverdueOnly(false);
+              filters.setDateFilter(value);
+            }}
+            onDateModeChange={(value) => {
+              setOverdueOnly(false);
+              filters.setDateFilterMode(value);
+            }}
             onPrint={print.openPrintOptions}
-            onSearchChange={filters.setSearch}
+            onSearchChange={(value) => {
+              setOverdueOnly(false);
+              filters.setSearch(value);
+            }}
           />
           <OrderList
-            isLoading={data.isLoading}
+            isLoading={overdueOnly ? data.isOverviewLoading : data.isLoading}
+            now={now}
             canComplete={canChangeOrders}
             canDelete={canChangeOrders}
             canEdit={canChangeOrders}
-            orders={filters.filteredOrders}
-            search={filters.search}
+            orders={displayedOrders}
+            search={overdueOnly ? '' : filters.search}
             getResponsibleName={filters.getResponsibleName}
             onComplete={(order) => setCompleteOrderId(order.id)}
             onDelete={setDeleteOrderId}

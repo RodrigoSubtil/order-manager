@@ -54,7 +54,7 @@ describe('OrderCard', () => {
       />,
     );
 
-    expect(screen.getByText(/Telefone:/)).toHaveTextContent('+351 912 345 678');
+    expect(screen.getByText('+351 912 345 678')).toBeInTheDocument();
 
     const actions = within(screen.getByLabelText('Ações da encomenda')).getAllByRole('button');
 

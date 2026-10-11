@@ -7,13 +7,15 @@
 
 .body {
   display: grid;
-  gap: 12px;
-  padding: 18px;
+  gap: var(--space-3);
+  padding: var(--dialog-body-padding);
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .content p {
   color: var(--color-muted);
-  line-height: 1.45;
+  font: var(--type-body);
 }
 
 .content p strong {
@@ -23,8 +25,8 @@
 .details {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 10px;
+  gap: var(--space-2);
+  padding: var(--space-3);
   background: var(--color-soft-white);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
@@ -32,18 +34,17 @@
 
 .details span {
   color: var(--color-muted);
-  font-size: 0.86rem;
-  font-weight: 800;
+  font: var(--type-secondary);
 }
 
 .dateGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .dateField {
-  padding: 10px;
+  padding: var(--space-3);
   background: var(--color-soft-white);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
@@ -51,20 +52,16 @@
 
 .completeButton svg,
 .deleteButton svg {
-  width: 20px;
-  height: 20px;
   fill: none;
   stroke: currentcolor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2;
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  stroke-width: var(--icon-stroke);
 }
 
 @media (max-width: 560px) {
-  .body {
-    padding: 16px 14px;
-  }
-
   .dateGrid {
     grid-template-columns: 1fr;
   }

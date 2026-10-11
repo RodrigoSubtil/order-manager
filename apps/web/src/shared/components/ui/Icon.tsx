@@ -3,7 +3,18 @@ import type { SVGAttributes } from 'react';
 import styles from './Icon.module.css';
 
 export type IconName =
-  'calendar' | 'chevron-down' | 'clock' | 'eye' | 'eye-off' | 'phone' | 'plus' | 'search' | 'user';
+  | 'calendar'
+  | 'chevron-left'
+  | 'chevron-right'
+  | 'close'
+  | 'chevron-down'
+  | 'clock'
+  | 'eye'
+  | 'eye-off'
+  | 'phone'
+  | 'plus'
+  | 'search'
+  | 'user';
 
 type IconProps = Omit<SVGAttributes<SVGSVGElement>, 'children'> & {
   name: IconName;
@@ -19,6 +30,12 @@ function IconContent({ name }: { name: IconName }) {
           <rect x="4" y="5" width="16" height="16" rx="2" />
         </>
       );
+    case 'chevron-left':
+      return <path d="m14.5 5-7 7 7 7" />;
+    case 'chevron-right':
+      return <path d="m9.5 5 7 7-7 7" />;
+    case 'close':
+      return <path d="m6 6 12 12M18 6 6 18" />;
     case 'chevron-down':
       return <path d="m7 9.5 5 5 5-5" />;
     case 'clock':

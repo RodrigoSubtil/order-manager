@@ -1,11 +1,11 @@
 .spinner {
   display: inline-block;
-  width: 24px;
-  height: 24px;
   border: 3px solid var(--color-sand);
   border-top-color: var(--color-accent);
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   animation: spin 700ms linear infinite;
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
 }
 
 @keyframes spin {

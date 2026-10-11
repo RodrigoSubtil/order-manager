@@ -8,7 +8,7 @@ A câmara abre um modal pequeno para **Abrir câmara** ou **Escolher foto**. Uma
 
 - A prévia da câmara usa formato horizontal 4:3 e recorte central na captura, correspondente à área visível, mesmo quando o aparelho entrega vídeo vertical. Fotografias escolhidas do aparelho mantêm o formato original. A validação da câmara usa serviços simulados; o aparelho físico deve ser conferido pelo utilizador.
 - O front e o contrato de dados estão implementados. O caminho de simulação local foi retirado em 10/10/2026: dev e homologação chamam a mesma função, com as mesmas proteções. A variável antiga `VITE_ORDER_SCAN_DEMO` não tem efeito.
-- A função `supabase/functions/interpret-order/index.ts` está preparada para autenticar, validar uma foto, reservar o orçamento, contar tokens da imagem, consultar a OpenAI e devolver somente os dados extraídos. Falha fechada se a chave, a permissão de ativação ou as credenciais do Supabase faltarem.
+- A função `supabase/functions/interpret-order/index.ts` está preparada para autenticar, validar uma foto, reservar o orçamento, contar tokens da imagem, consultar a OpenAI e devolver o rascunho extraído com a sugestão de área. Falha fechada se a chave, a permissão de ativação ou as credenciais do Supabase faltarem.
 - A migration `20261008190245_order_scan_limits.sql` foi aplicada **somente em homologação**, no projeto `order-manager-homologacao` (`czbrnxrpofdbbgbdyrad`), em 08/10/2026. O histórico remoto foi alinhado com a versão canónica do arquivo após o conector gerar o seu timestamp de aplicação.
 - **A leitura real foi ativada em homologação em 08/10/2026, às 21:41 UTC**: `ORDER_SCAN_LIVE_ENABLED=true`. Os secrets `OPENAI_API_KEY` e `ORDER_SCAN_ALLOWED_ORIGINS` estão salvos. A versão 3 da função incluiu diagnóstico seguro de falhas; o utilizador substituiu a chave e concluiu uma leitura real às 22:02 UTC.
 - A [PR #4](https://github.com/RodrigoSubtil/order-manager/pull/4) publica a versão 1.1.0 somente em `homologacao`. `VITE_ORDER_SCAN_ENABLED=true` está configurado no ambiente Preview dessa branch; a produção continua fora desta publicação.
@@ -41,6 +41,16 @@ A revisão responsiva local cobriu larguras de 320 a 1280 px no painel: sem rola
 - Após a ativação, cinco verificações HTTP passaram: POST sem sessão de localhost e homologação retornou 401; preflight permitido 204; origem não autorizada 403; GET 405. A ativação não removeu a autenticação e estes testes não chamaram a OpenAI.
 - Aplicação: formatação, lint, tipos, cobertura exigida e build passaram, com 156 testes em 35 arquivos. Os checks remotos do GitHub e o deployment devem ser confirmados antes de considerar o site publicado.
 - Advisor: os avisos existentes não mudaram. A nova tabela privada acrescenta o informativo de RLS sem políticas, intencional para bloquear acesso direto. Não se deve criar uma política pública para remover esse informativo.
+
+## Associação da área ao produto · 11/10/2026
+
+Na revisão de uma fotografia, o catálogo já carregado da empresa tem prioridade: nomes iguais, ignorando maiúsculas, acentos e espaços repetidos, recebem a área cadastrada. Não há busca por aproximação nem por parte do nome. Se o nome estiver em mais de uma área, a área fica vazia para escolha humana. O produto transcrito, a quantidade, a unidade e o ID da linha são preservados; não se cadastram produtos automaticamente.
+
+Para produtos ainda ausentes do catálogo, o prompt permite sugerir Pastelaria, Padaria, Salgados ou Almoço a partir do produto, mesmo sem a área escrita na fotografia. Sem base suficiente, devolve área vazia. O contrato limita as categorias e o backend rejeita valores fora dele; isso não garante a correção da classificação. A área começa sempre como **Conferir**, independentemente da legibilidade dos demais campos. Selecionar a própria área sugerida marca **Conferido** sem apagar o produto; trocar para outra área mantém a limpeza já existente do campo Produto.
+
+Publicação e testes autorizados **somente em homologação** nesta rodada. A função `interpret-order` versão 5 foi publicada e está ACTIVE no projeto `czbrnxrpofdbbgbdyrad`; a prioridade do catálogo acompanha o frontend atualizado. Dev continua chamando a função remota configurada. Modelo, autenticação, orçamento e tetos permanecem iguais, sem segunda geração ou novas consultas ao banco. A validação automática usa respostas simuladas e não comprova a qualidade da IA em fotografias reais. A produção está excluída desta autorização.
+
+Verificação local desta alteração: formatação, lint, tipos, 173 testes em 39 arquivos, cobertura exigida e build passaram. Cinco testes simulados da função passaram, incluindo a rejeição de categoria fora do contrato com registo do consumo. Nenhuma leitura real de IA ou gravação de teste em homologação foi executada.
 
 ## Limites preparados
 

@@ -2,42 +2,31 @@
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: 18px;
-  padding: 32px 28px;
   text-align: center;
+  padding: var(--dialog-body-padding);
+  gap: var(--space-4);
 }
 
 .content h3 {
   margin: 0;
   color: var(--color-success);
-  font-size: clamp(1.35rem, 3vw, 1.8rem);
+  font: var(--type-title);
 }
 
 .icon {
   display: grid;
-  width: 64px;
-  height: 64px;
   place-items: center;
   color: var(--color-white);
   background: var(--color-success);
-  border-radius: 50%;
-  font-size: 2rem;
-  font-weight: 900;
+  border-radius: var(--radius-circle);
+  font: var(--type-metric);
+  font-size: var(--font-size-3xl);
+  line-height: var(--line-height-symbol);
+  width: calc(var(--icon-size-xl) * 2);
+  height: calc(var(--icon-size-xl) * 2);
 }
 
 .content button {
-  min-width: 230px;
-  margin-top: 2px;
-}
-
-@media (max-width: 560px) {
-  .content {
-    gap: 16px;
-    padding: 26px 18px 18px;
-  }
-
-  .content button {
-    width: 100%;
-    min-width: 0;
-  }
+  min-width: 0;
+  width: 100%;
 }

@@ -24,6 +24,12 @@ Rollback de frontend: promova um deployment anterior conhecido e valide-o. Rollb
 
 ## Registo de versões
 
+### 1.1.0 · recolhas atrasadas, padrão visual e áreas · 11/10/2026
+
+Publicação autorizada **somente em homologação**: style guides de tipografia/espaçamentos e ajustes visuais aprovados, aviso de recolhas atrasadas com contador por minuto e filtro global de pendências, e associação de área ao produto com revisão humana. Mantida a versão nesta rodada de homologação; não há promoção para produção, migration ou alteração dos secrets. A Edge Function `interpret-order` foi publicada separadamente no projeto `czbrnxrpofdbbgbdyrad` para ativar a nova instrução da área, preservando a autenticação já implementada no handler.
+
+O utilizador autorizou publicação, merge e testes em homologação nesta rodada. Fixtures devem ser identificadas e limpas sem alterar encomendas existentes; produção continua expressamente excluída. A função `interpret-order` versão 5 está ACTIVE em homologação, com o novo contrato de áreas e a autenticação preservada. Verificações locais: formatação, lint, tipos, 183 testes em 42 arquivos, cobertura exigida e build; cinco testes simulados da função. O painel real, servido localmente com dados simulados, passou em 320, 390, 768 e 1280 px sem corte lateral, com aviso global, ordenação das pendências e retorno aos filtros. O commit, os checks, o merge, o deployment do frontend e os testes remotos são confirmados após a publicação.
+
 ### 1.1.0 · revisão da interface para homologação · 10/10/2026
 
 Mantida a versão 1.1.0: ajustes responsivos dos botões, cartões estreitos, prévia Refazer/Continuar e confirmação individual da revisão. O modo de demonstração foi retirado; dev usa a mesma função autenticada de homologação. Os critérios e limites estão no [guia de digitalização](order-scan.md).

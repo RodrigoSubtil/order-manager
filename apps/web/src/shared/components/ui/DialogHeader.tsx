@@ -1,4 +1,5 @@
 import { Button } from './Button';
+import { Icon } from './Icon';
 import styles from './DialogHeader.module.css';
 
 type DialogHeaderProps = {
@@ -19,7 +20,7 @@ export function DialogHeader({ onClose, title, titleId }: DialogHeaderProps) {
         aria-label="Fechar"
         onClick={onClose}
       >
-        ×
+        <Icon name="close" />
       </Button>
     </header>
   );
