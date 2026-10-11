@@ -1,11 +1,12 @@
 :root {
   color: var(--color-ink);
   background: #f6f9f8;
-  font-family: var(--font-sans);
   font-synthesis: none;
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font: var(--type-body);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 body {
@@ -21,57 +22,54 @@ body {
 
 [data-eyebrow] {
   display: inline-flex;
-  margin-bottom: 6px;
+  margin-bottom: var(--space-2);
   color: var(--color-accent);
-  font-size: 0.76rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
+  font: var(--type-overline);
+  letter-spacing: var(--letter-spacing-overline);
 }
 
 [data-form-field] {
   display: grid;
   align-content: start;
-  gap: 7px;
   min-width: 0;
+  gap: var(--space-2);
 }
 
 label,
 fieldset {
   display: grid;
-  gap: 7px;
   margin: 0;
   color: var(--color-ink);
-  font-size: 0.9rem;
-  font-weight: 800;
+  gap: var(--space-2);
 }
 
 fieldset {
   padding: 0;
   border: 0;
+  font: var(--type-body);
 }
 
 legend {
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 }
 
 textarea {
   width: 100%;
   min-height: 96px;
-  padding: 12px;
+  padding: var(--space-3);
   color: var(--color-ink);
   background: var(--color-white);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
-  font-weight: 700;
   outline: none;
   resize: vertical;
+  font: var(--type-body);
 }
 
 input::placeholder,
 textarea::placeholder {
   color: var(--color-placeholder);
-  font-weight: 600;
   opacity: 1;
 }
 
@@ -81,18 +79,35 @@ textarea:focus-visible {
   outline: none;
 }
 
-@media (max-width: 560px), (hover: none) and (pointer: coarse) {
-  input:not([type='checkbox'], [type='radio']),
-  select,
-  textarea {
-    font-size: 1rem;
-  }
-}
-
 textarea[aria-invalid='true'] {
   border-color: var(--color-danger);
 }
 
 .modal-open {
   overflow: hidden;
+}
+
+:where(h1):not(:where([data-print-root] *)) {
+  font: var(--type-page);
+}
+
+:where(h2):not(:where([data-print-root] *)) {
+  font: var(--type-title);
+}
+
+:where(h3, h4):not(:where([data-print-root] *)) {
+  font: var(--type-section);
+}
+
+:where(strong, b):not(:where([data-print-root] *)) {
+  font-weight: var(--font-weight-semibold);
+}
+
+:where(small):not(:where([data-print-root] *)) {
+  font: var(--type-secondary);
+}
+
+label,
+legend {
+  font: var(--type-label);
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { categories } from '../../../shared/lib/domain';
 import { quantityUnits } from '../schemas/orderSchema';
 import type { ScanDraft, ScanStatus } from '../schemas/scanDraft';
 
@@ -29,8 +28,8 @@ export function useScanReview(draft?: ScanDraft | null) {
     const item = draft.items.find((candidate) => candidate.id === id);
     if (!item) return undefined;
     if (!item[field].trim()) return 'conferir';
-    if (field === 'category' && !categories.includes(item.category as (typeof categories)[number]))
-      return 'conferir';
+    // Suggested areas always need human review, even for a precise catalog match.
+    if (field === 'category') return 'conferir';
     if (
       field === 'quantityUnit' &&
       !quantityUnits.includes(item.quantityUnit as (typeof quantityUnits)[number])

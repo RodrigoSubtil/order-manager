@@ -3,13 +3,14 @@
   width: var(--field-icon-size);
   height: var(--field-icon-size);
   flex: 0 0 auto;
+  stroke-width: var(--icon-stroke);
 }
 
 .field {
   position: absolute;
   top: 50%;
-  right: 11px;
   color: var(--color-accent);
   pointer-events: none;
   transform: translateY(-50%);
+  right: var(--space-3);
 }

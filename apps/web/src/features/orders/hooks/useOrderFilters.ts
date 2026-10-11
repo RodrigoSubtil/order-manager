@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { todayKey } from '../../../shared/lib/dateUtils';
 import type { Category, Order, OrderResponsible } from '../../../shared/lib/domain';
@@ -28,7 +28,7 @@ export function getOrderStats(orders: Order[], today = todayKey()) {
   );
 }
 
-export function useOrderFilterState() {
+export function useOrderFilterState(currentDay = todayKey()) {
   const [search, setSearch] = useState('');
   const [dateFilter, setDateFilter] = useState(todayKey());
   const [dateFilterMode, setDateFilterMode] = useState<DateFilterMode>('today');
@@ -36,6 +36,10 @@ export function useOrderFilterState() {
   const [hasCustomDate, setHasCustomDate] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<'Todas' | Category>('Todas');
   const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(false);
+
+  useEffect(() => {
+    if (dateFilterMode === 'today') setDateFilter(currentDay);
+  }, [currentDay, dateFilterMode]);
 
   const queryParams = useMemo<OrderListParams>(
     () => ({
@@ -99,6 +103,7 @@ export function useOrderFilters(
   overviewOrders: Order[],
   responsibles: OrderResponsible[],
   state: OrderFilterState,
+  currentDay = todayKey(),
 ) {
   const sortedOrders = useMemo(() => [...orders].sort(compareOrdersByDelivery), [orders]);
 
@@ -114,8 +119,8 @@ export function useOrderFilters(
   );
 
   const stats = useMemo(() => {
-    return getOrderStats(overviewOrders);
-  }, [overviewOrders]);
+    return getOrderStats(overviewOrders, currentDay);
+  }, [overviewOrders, currentDay]);
 
   return {
     ...state,

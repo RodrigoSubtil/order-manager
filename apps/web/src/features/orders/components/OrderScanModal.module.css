@@ -1,7 +1,7 @@
 .dialog {
   display: flex;
   flex-direction: column;
-  width: min(390px, calc(100vw - 24px));
+  width: min(390px, 100%);
 }
 
 .hiddenFile {
@@ -16,19 +16,21 @@
 .photoStage,
 .progressStage {
   display: grid;
-  gap: 12px;
-  padding: 20px;
+  gap: var(--space-3);
+  padding: var(--dialog-body-padding);
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .choice p {
   margin: 0;
-  margin-bottom: 4px;
-  font-weight: 700;
+  margin-bottom: var(--space-1);
+  font: var(--type-body);
 }
 
 .choice button {
   width: 100%;
-  min-height: 44px;
+  min-height: var(--control-height);
 }
 
 .photoStage video,
@@ -49,33 +51,32 @@
 }
 
 .actions {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
 }
 
 .progressStage small {
   margin: 0;
   color: var(--color-muted);
-  font-size: 0.8rem;
+  font: var(--type-secondary);
 }
 
 .progressStage {
-  gap: 14px;
+  gap: var(--space-4);
   text-align: center;
 }
 
 .percentage {
   color: var(--color-ink);
-  font-size: 2rem;
-  font-weight: 800;
+  font: var(--type-metric);
 }
 
 .progressTrack {
   height: 8px;
   overflow: hidden;
   background: var(--color-line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 .progressTrack span {

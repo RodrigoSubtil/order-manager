@@ -1,22 +1,24 @@
 .toolbar {
   display: grid;
-  gap: 12px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--color-line);
+  gap: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--orders-panel-padding);
+  background: var(--color-soft-white);
 }
 
 .topRow {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-template-areas: 'area date-filter print create';
-  gap: 10px;
-  align-items: center;
+  gap: var(--space-3);
+  align-items: stretch;
 }
 
 .topRow > * {
   width: 100%;
   min-width: 0;
-  height: 46px;
+  min-height: var(--control-height);
 }
 
 .dateFilter .dateControl {
@@ -41,120 +43,95 @@
   left: auto;
 }
 
-.categoryInput,
-.dateFilterInput {
-  height: 46px;
-  padding-right: 38px;
-  padding-left: 10px;
-  font-size: 0.9rem;
-  font-weight: 900;
-  line-height: 1;
+.areaFilter .categoryInput,
+.dateFilter .dateFilterInput {
   text-align: center;
   background: var(--color-white);
   border-color: var(--color-line);
-}
-
-.categoryTrigger {
-  top: 6px;
+  font: var(--type-body);
+  min-height: var(--control-height);
+  padding-inline: var(--control-height);
 }
 
 .search {
-  height: 48px;
-  padding: 0 48px 0 16px;
   border-radius: var(--radius-lg);
-  font-size: 0.9rem;
-  font-weight: 900;
-  line-height: 1;
   text-align: center;
   box-shadow: 0 10px 24px rgb(77 67 57 / 6%);
+  font: var(--type-body);
+  min-height: var(--control-height);
+  padding: var(--space-2) var(--field-content-inset) var(--space-2) var(--space-3);
 }
 
 .searchControl {
   position: relative;
 }
 
-.action {
+.topRow .action {
   display: inline-grid;
   width: 100%;
-  height: 46px;
   place-items: center;
-  padding: 0;
   border-radius: var(--radius-lg);
-  font-size: 1.35rem;
-  line-height: 1;
   box-shadow: 0 10px 24px rgb(77 67 57 / 8%);
+  font: var(--type-button);
+  min-height: var(--control-height);
+  padding: 0;
+  padding-block: 0;
 }
 
-.print,
-.scan {
+.topRow .print,
+.topRow .scan {
   color: var(--color-accent);
   background: var(--color-cream);
   border: 2px solid var(--color-accent-soft);
 }
 
-.print {
+.topRow .print {
   grid-area: print;
 }
 
-.scan {
+.topRow .scan {
   display: none;
   grid-area: scan;
 }
 
 .scanIcon {
-  width: 26px;
-  height: 26px;
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+  stroke-width: var(--icon-stroke);
 }
 
 .printIcon {
-  width: 25px;
-  height: 25px;
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+  stroke-width: var(--icon-stroke);
 }
 
-.create {
+.topRow .create {
   position: relative;
   grid-area: create;
-}
-
-.create span {
-  font-size: 0;
-}
-
-.create::before,
-.create::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 18px;
-  height: 4px;
-  background: currentcolor;
-  border-radius: 999px;
-  transform: translate(-50%, -50%);
-}
-
-.create::after {
-  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 .active {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 12px;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 0 0;
   color: var(--color-muted);
-  font-size: 0.92rem;
-  font-weight: 800;
+  font: var(--type-secondary);
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-3);
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-soft-white);
+  border: 1px solid var(--color-sand);
 }
 
 .activeSummary {
   display: flex;
   min-width: 0;
   flex-wrap: wrap;
-  gap: 6px;
   align-items: center;
+  gap: var(--space-2);
 }
 
 .chip {
@@ -166,20 +143,21 @@
   background: transparent;
   border: 0;
   border-radius: 0;
-  font-size: 0.86rem;
+  font-size: inherit;
   white-space: nowrap;
 }
 
 .chip + .chip::before {
-  content: '-';
-  margin-right: 6px;
+  content: '·';
+  margin-right: var(--space-2);
   color: var(--color-taupe);
 }
 
 .resultCount {
   flex: 0 0 auto;
-  color: var(--color-accent);
-  font-size: 0.9rem;
+  color: var(--color-muted);
+  font-size: inherit;
+  font-weight: var(--font-weight-medium);
   white-space: nowrap;
 }
 
@@ -198,7 +176,7 @@
       'area date-filter';
   }
 
-  .scan {
+  .topRow .scan {
     display: inline-grid;
   }
 }
@@ -209,7 +187,7 @@
       'create create'
       'area area'
       'date-filter date-filter';
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .topRowWithScan {
@@ -219,17 +197,8 @@
       'date-filter date-filter';
   }
 
-  .print {
+  .topRow .print {
     display: none;
-  }
-
-  .topRow > *,
-  .categoryInput,
-  .dateFilterInput,
-  .search,
-  .action {
-    height: 48px;
-    border-radius: 10px;
   }
 
   .dateControl [role='dialog'] {
@@ -240,24 +209,19 @@
     transform: translate(-50%, -50%);
   }
 
-  .active {
-    font-size: 0.78rem;
-    line-height: 1.35;
-  }
-
   .activeSummary {
-    gap: 4px;
+    gap: var(--space-1);
   }
 
   .chip {
     max-width: 100%;
     padding: 0;
-    font-size: 0.78rem;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
 
-  .resultCount {
-    font-size: 0.8rem;
-  }
+.topRow .create svg {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
 }

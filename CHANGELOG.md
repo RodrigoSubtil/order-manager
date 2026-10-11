@@ -4,11 +4,20 @@ As versões descrevem o código desta árvore. A publicação e os testes reais 
 
 ## [Unreleased]
 
+- Recolhas atrasadas: selo no cartão com tempo decorrido, aviso global com a pendência mais antiga e atalho que inclui dias anteriores e permite voltar aos filtros. Relógio único por minuto no horário de Lisboa, sem IA nem alteração do banco.
+
+- Digitalização: área sugerida com prioridade para o catálogo da empresa e inferência da IA para produtos ainda não cadastrados; conflitos ficam para escolha humana. Área sempre pede Conferir; confirmar a mesma área preserva o produto. Prompt/contrato da função preparados localmente, pendentes de publicação autorizada.
+
+- Style guide de espaçamentos e controles aplicado à interface: escala centralizada, botões/campos/ícones/raios consistentes, diálogos adaptados à janela e cabeçalho compacto com toque ampliado. Filtros centralizados, resumo agrupado acima dos resultados e remoção sem divisão de palavras; ficha térmica preservada.
+
 - Câmara com enquadramento horizontal 4:3 e captura correspondente à prévia, sem deformar a imagem. Fotografias escolhidas do aparelho mantêm o formato original.
 - Barra responsiva: telemóvel com Digitalizar/Adicionar, tablet com os três botões e computador com Imprimir/Adicionar. Prévia compacta com Refazer/Continuar.
 - Cartões estreitos sem corte de conteúdo: no telemóvel, quatro ações numa única linha e impressão oculta; impressão disponível no tablet/computador.
 - Confirmação da leitura com o componente padrão do site; Conferir vermelho, Provável laranja e Conferido verde após edição individual do campo, com fundos claros e bordas discretas na paleta do site.
 - A contagem de resultados passa para a linha de baixo, alinhada à esquerda sob a data, quando falta espaço ao lado dos filtros, sem comprimir a data.
+- Cabeçalho do cartão apenas com a data à esquerda e a hora à direita, sem a palavra Entrega.
+- Style guide de tipografia aplicado à interface inteira, com escala e papéis centralizados, campos de 16 px e verificação automática contra valores soltos; ficha térmica preservada.
+- Lista e cartões com visual claro: espaçamentos uniformes, tipografia com hierarquia, produtos sem caixas adicionais e ações centradas com alvos de 44 px.
 - Critério conservador no prompt, sem novos pedidos à IA ou aumento de limites; retirada da simulação local e porta dev fixa em 5174.
 - Limpeza de estilos repetidos/referências removidas e cancelamento de capturas e temporizadores ao sair do modal.
 

@@ -205,7 +205,7 @@ export function OrderFilters({
             title="Nova encomenda"
             onClick={onCreate}
           >
-            <span aria-hidden="true">+</span>
+            <Icon name="plus" />
           </Button>
         </div>
 

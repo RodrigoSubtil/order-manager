@@ -202,11 +202,11 @@ export function DatePicker({
               disabled={!canGoToPreviousMonth}
               onClick={() => changeMonth(-1)}
             >
-              ‹
+              <Icon name="chevron-left" />
             </button>
             <strong>{monthTitle}</strong>
             <button type="button" aria-label="Próximo mês" onClick={() => changeMonth(1)}>
-              ›
+              <Icon name="chevron-right" />
             </button>
           </header>
 

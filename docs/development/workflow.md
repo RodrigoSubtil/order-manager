@@ -32,6 +32,14 @@ Use npm run verify:release para executar todos os checks de aplicação. Para SQ
 
 Dados sintéticos nos testes; nunca adicionar senhas, tokens, `.env`, exports de clientes ou dumps ao Git. Toda migration é gerada pela CLI com um novo timestamp e inclui validação do caminho real de uso. Preserve a segurança de tenant, `version` e `requestId`. Ao mudar uma função, atualize o guia ativo correspondente e execute os testes proporcionais ao risco. Para prontidão de produção, siga o [smoke test publicado](../operations/release.md).
 
+## Tipografia da interface
+
+Siga o [style guide de tipografia](../design/typography.md). A escala e os papéis ficam em `apps/web/src/styles/typography.css`; componentes usam `font: var(--type-...)` em vez de definir tamanhos e pesos próprios. Campos usam 16 px em todas as larguras. O Stylelint impede valores tipográficos literais na interface. A ficha térmica tem uma exceção explícita e mantém a formatação de impressão.
+
+## Espaçamentos e controles
+
+Siga o [style guide de espaçamentos e controles](../design/spacing-and-controls.md), aplicado no código local. Reutilize os tokens de espaço, altura, raio, ícone e margens em `styles/tokens.css` e os controles compartilhados. O Stylelint protege `gap` e `border-radius`, além da tipografia. Preserve o cabeçalho compacto com alvo de toque ampliado, o cartão aprovado e a ficha térmica. Confira componentes em larguras de celular, tablet e computador, incluindo texto ampliado e janela baixa. O [índice do style guide](../design/README.md) informa a aplicação local e distingue publicação.
+
 ## Branches e promoção
 
 `main` representa produção e `homologacao` representa o ambiente de validação. A branch remota `staging` foi renomeada; uma referência local antiga pode continuar a existir até atualizar o checkout. Confirme o remoto antes de usar um nome de branch antigo.

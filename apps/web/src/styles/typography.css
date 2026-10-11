@@ -1,0 +1,55 @@
+:root {
+  --font-sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-page: var(--font-size-3xl);
+  --font-size-metric: var(--font-size-3xl);
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --line-height-body: 1.5;
+  --line-height-heading: 1.25;
+  --line-height-symbol: 1;
+  --letter-spacing-normal: 0;
+  --letter-spacing-overline: 0.04em;
+  --type-page: var(--font-weight-bold) var(--font-size-page) / var(--line-height-heading)
+    var(--font-sans);
+  --type-title: var(--font-weight-semibold) var(--font-size-xl) / var(--line-height-heading)
+    var(--font-sans);
+  --type-section: var(--font-weight-semibold) var(--font-size-lg) / var(--line-height-heading)
+    var(--font-sans);
+  --type-body: var(--font-weight-regular) var(--font-size-md) / var(--line-height-body)
+    var(--font-sans);
+  --type-body-strong: var(--font-weight-semibold) var(--font-size-md) / var(--line-height-body)
+    var(--font-sans);
+  --type-button: var(--font-weight-semibold) var(--font-size-md) / var(--line-height-heading)
+    var(--font-sans);
+  --type-button-sm: var(--font-weight-semibold) var(--font-size-sm) / var(--line-height-heading)
+    var(--font-sans);
+  --type-label: var(--font-weight-semibold) var(--font-size-sm) / var(--line-height-body)
+    var(--font-sans);
+  --type-secondary: var(--font-weight-regular) var(--font-size-sm) / var(--line-height-body)
+    var(--font-sans);
+  --type-caption: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-body)
+    var(--font-sans);
+  --type-overline: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-body)
+    var(--font-sans);
+  --type-status: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-heading)
+    var(--font-sans);
+  --type-metric: var(--font-weight-semibold) var(--font-size-metric) / var(--line-height-heading)
+    var(--font-sans);
+}
+
+@media (max-width: 560px) {
+  :root {
+    --font-size-page: var(--font-size-2xl);
+    --font-size-metric: var(--font-size-2xl);
+  }
+}

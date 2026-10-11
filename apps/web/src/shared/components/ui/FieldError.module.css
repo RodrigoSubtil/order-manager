@@ -1,5 +1,4 @@
 .error {
   color: var(--color-danger);
-  font-size: 0.8rem;
-  font-weight: 800;
+  font: var(--type-label);
 }

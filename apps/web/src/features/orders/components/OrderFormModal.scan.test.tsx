@@ -8,6 +8,7 @@ vi.mock('../../../shared/lib/supabaseData', () => ({
   saveOrder: vi.fn(),
 }));
 
+import type { CatalogProduct } from '../../../shared/lib/domain';
 import { useOrderForm } from '../hooks/useOrderForm';
 import { createBlankScanDraft, type ScanDraft } from '../schemas/scanDraft';
 import { OrderFormModal } from './OrderFormModal';
@@ -28,9 +29,9 @@ function fixture(): ScanDraft {
   return draft;
 }
 
-function Harness() {
+function Harness({ catalog = [] }: { catalog?: CatalogProduct[] }) {
   const form = useOrderForm({
-    catalogProducts: [],
+    catalogProducts: catalog,
     setAppError: vi.fn(),
     setAppSuccess: vi.fn(),
   });
@@ -53,13 +54,13 @@ function Harness() {
   );
 }
 
-async function openForm() {
+async function openForm(catalog: CatalogProduct[] = []) {
   const user = userEvent.setup();
   render(
     <QueryClientProvider
       client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
     >
-      <Harness />
+      <Harness catalog={catalog} />
     </QueryClientProvider>,
   );
   await user.click(screen.getByRole('button', { name: 'Abrir revisão' }));
@@ -72,6 +73,34 @@ function fieldStatus(label: string) {
 }
 
 describe('revisão dos campos digitalizados', () => {
+  it('associa a área do catálogo e permite confirmá-la sem apagar o produto', async () => {
+    const user = await openForm([{ id: 'catalog-1', name: 'Bolo 1', category: 'Padaria' }]);
+    const area = screen.getByLabelText('Área', { selector: '#order-item-0-category' });
+    const product = screen.getByLabelText('Produto', { selector: '#order-item-0-product' });
+    const areaField = within(area.closest('[data-form-field]') as HTMLElement);
+    expect(area).toHaveValue('Padaria');
+    expect(areaField.getByText('Conferir')).toBeVisible();
+    expect(
+      within(product.closest('[data-form-field]') as HTMLElement).getByText('Provável'),
+    ).toBeVisible();
+    await user.click(screen.getByRole('button', { name: 'Mostrar áreas do produto 1' }));
+    await user.click(screen.getByRole('option', { name: 'Padaria' }));
+    expect(areaField.getByText('Conferido')).toBeVisible();
+    expect(product).toHaveValue('Bolo 1');
+    expect(
+      within(product.closest('[data-form-field]') as HTMLElement).queryByText('Conferido'),
+    ).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Cancelar' }));
+    await user.click(screen.getByRole('button', { name: 'Abrir revisão' }));
+    expect(
+      within(
+        screen
+          .getByLabelText('Área', { selector: '#order-item-0-category' })
+          .closest('[data-form-field]') as HTMLElement,
+      ).getByText('Conferir'),
+    ).toBeVisible();
+  }, 15_000);
+
   it('marca apenas os campos editados e mantém a confirmação ao voltar ao valor original', async () => {
     const user = await openForm();
     expect(fieldStatus('Nome do cliente').getByText('Conferir')).toBeVisible();

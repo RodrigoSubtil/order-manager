@@ -125,11 +125,13 @@ export function ProductEditor({
                             shouldValidate: isSubmitted,
                           });
                           scanReview?.confirmItemField(itemId, 'category');
-                          setValue(`items.${index}.product`, '', {
-                            shouldDirty: true,
-                            shouldValidate: isSubmitted,
-                          });
-                          scanReview?.resetItemField(itemId, 'product');
+                          if (category !== item.category) {
+                            setValue(`items.${index}.product`, '', {
+                              shouldDirty: true,
+                              shouldValidate: isSubmitted,
+                            });
+                            scanReview?.resetItemField(itemId, 'product');
+                          }
                           setOpenCategoryPickerId(null);
                           setOpenProductPickerId(null);
                           setOpenUnitPickerId(null);

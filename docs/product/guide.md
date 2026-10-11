@@ -8,6 +8,10 @@ Os indicadores **Total**, **Hoje** e **Próximas** abrangem as encomendas ativas
 
 Quando faltar espaço ao lado do resumo dos filtros, a contagem de resultados passa para a linha de baixo, alinhada à esquerda sob a data, sem comprimir o texto.
 
+No cabeçalho de cada cartão, a data aparece à esquerda e a hora à direita. Quando não há hora definida, aparece **Sem hora**.
+
+Os cartões usam fundo branco, faixa clara na data e espaçamentos uniformes. O nome do cliente tem destaque; responsável, número da encomenda e telefone aparecem com menor peso visual. Os produtos são separados por linhas discretas, com quantidade à direita e observações abaixo do nome. As ações ficam centradas em botões de 44 px; a impressão individual continua disponível a partir de tablet.
+
 ## Criar ou editar uma encomenda
 
 1. Toque em **+** para abrir **Novo pedido**; para alterar, use **Editar** no cartão.
@@ -45,3 +49,11 @@ A página de cada talão usa 80 mm de largura e altura calculada pelo conteúdo.
 ## Quando houver falha
 
 Se o Supabase estiver indisponível, a aplicação mostra erro e não simula dados locais. Recarregue depois de confirmar a ligação. Para perda ou indisponibilidade prolongada, siga [backup e recuperação](../operations/backup.md).
+
+## Recolhas atrasadas
+
+Uma encomenda pendente passa a mostrar **Recolha atrasada · há…** depois da data e hora marcadas em Lisboa. O contador atualiza a cada minuto e ao regressar à aba; depende de o relógio do aparelho estar correto. Encomendas sem data/hora válidas não recebem um atraso calculado. Na mudança de hora de outono, o horário repetido é interpretado pela ocorrência mais tardia para não avisar antes do prazo; um horário inexistente na mudança de primavera pede correção dos dados.
+
+O aviso acima dos filtros conta todas as encomendas pendentes atrasadas, incluindo dias anteriores ou encomendas ocultas pelos filtros. **Ver atrasadas** mostra essas encomendas da mais antiga para a mais recente; **Voltar aos filtros** recupera a pesquisa, a área e a data anteriores. Alterar um filtro sai dessa visualização. Se todas forem concluídas, a visualização mantém um botão de retorno.
+
+**Concluir** continua a exigir confirmação e retira a encomenda da lista de pendentes após a operação ser aceite. O aviso indica horário ultrapassado sem conclusão registada: o sistema não deteta a chegada física do cliente. Não há chamadas à IA, som ou popups repetidos para calcular o atraso. A leitura dos dados mantém a atualização normal do painel.
