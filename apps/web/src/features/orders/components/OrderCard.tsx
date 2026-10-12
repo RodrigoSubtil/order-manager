@@ -141,7 +141,7 @@ export function OrderCard({
             <Button
               iconOnly
               className={styles.actionButton}
-              variant="secondary"
+              variant="success-subtle"
               aria-label="Abrir conversa no WhatsApp"
               title="Abrir conversa no WhatsApp"
               disabled={!whatsAppUrl}
@@ -154,7 +154,7 @@ export function OrderCard({
             <Button
               iconOnly
               className={styles.actionButton}
-              variant="secondary"
+              variant="warning"
               aria-label="Editar"
               title="Editar"
               disabled={!onEdit}
@@ -180,7 +180,7 @@ export function OrderCard({
               <Button
                 iconOnly
                 className={styles.actionButton}
-                variant="danger-subtle"
+                variant="danger"
                 aria-label="Apagar"
                 title="Apagar"
                 onClick={onDelete}

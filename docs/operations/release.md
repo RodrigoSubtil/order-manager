@@ -1,4 +1,4 @@
-# Release e operação · v1.1.0
+# Release e operação · v1.1.1
 
 O número de versão do site vem de [`apps/web/package.json`](../../apps/web/package.json), aparece abaixo de **Entrar** no login e na mesma linha inferior da marca Order Manager no cabeçalho e deve aumentar apenas quando uma nova versão for preparada. Atualize também este registo. A versão 1.0.0 é a primeira versão destinada ao uso oficial.
 
@@ -23,6 +23,14 @@ Antes de abrir, confirme acesso ao site publicado, data/hora do dispositivo, pap
 Rollback de frontend: promova um deployment anterior conhecido e valide-o. Rollback de schema: não apague nem altere migrations já aplicadas; planeie uma migration corretiva ou restauração aprovada. Para perda de dados, use [backup e recuperação](backup.md).
 
 ## Registo de versões
+
+### 1.1.1 · consistência da interface e conferência direta · 12/10/2026
+
+Destino autorizado: **somente homologacao**. A versão central foi atualizada para 1.1.1. Raio global de 0,6rem; Salvar/Concluir em verde forte, Apagar em vermelho forte, WhatsApp e + em verde suave, Editar em amarelo suave. Cada produto tem cartão creme e lixeira vermelha suave de 44 px, com + do mesmo tamanho. Títulos de seção ficam sem fundo e dias indisponíveis do calendário não recebem caixa.
+
+Os modais não têm X. Confirmações de apagar, concluir e sair usam Não; digitalização e impressão usam Cancelar. O formulário conserva a lixeira vermelha e o visto verde. A confirmação de exclusão destaca o cliente num resumo verde suave, com retorno no rodapé. O resumo dos filtros usa ícones sem caixa e mantém contagem, data e área numa linha compacta. Ao terminar a leitura com IA, abrir diretamente o formulário de conferência; salvar continua dependendo da ação humana. Cancelar durante a leitura ignora respostas tardias e libera a câmara.
+
+Verificações locais aprovadas: instalação limpa, formatação, lint, tipos, 189 testes em 42 arquivos, cobertura exigida e build. O navegador local passou em 40 cenários de modais, fluxo direto da IA e filtros, oito casos de formulário normal/revisão e quatro casos de cores/calendário, nas larguras 320, 390, 768 e 1280 px. Nomes longos e a confirmação de exclusão também foram conferidos. Os componentes são reais; os dados e a resposta da IA são sintéticos, com acessos externos bloqueados. Conferir os resultados finais e o deployment na PR da branch codex/order-action-colors para homologacao. Esta publicação não altera banco, migrations, Edge Function ou secrets. Produção e main permanecem fora do destino autorizado. Testes simulados não certificam câmara, impressão física nem a exatidão de novas leituras reais.
 
 ### 1.1.0 · paleta, formulário e raio único · 12/10/2026
 

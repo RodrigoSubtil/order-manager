@@ -48,7 +48,7 @@ export function OrderList({
       ) : orders.length === 0 ? (
         <EmptyState
           title="Nenhuma encomenda encontrada."
-          description='Aperte o botão "+" para criar uma encomenda.'
+          description="Altere os filtros ou use o botão + para criar uma encomenda."
         />
       ) : (
         orders.map((order) => (

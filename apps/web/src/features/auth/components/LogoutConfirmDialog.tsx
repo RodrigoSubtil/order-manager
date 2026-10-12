@@ -16,7 +16,7 @@ export function LogoutConfirmDialog({
 }: LogoutConfirmDialogProps) {
   return (
     <Dialog className={styles.content} titleId="logout-title" onClose={onCancel}>
-      <DialogHeader title="Confirmar saída" titleId="logout-title" onClose={onCancel} />
+      <DialogHeader title="Confirmar saída" titleId="logout-title" />
       <div className={styles.body}>
         <p>Ao sair, será necessário iniciar sessão novamente para voltar ao painel.</p>
         <div className={styles.details}>
@@ -25,7 +25,7 @@ export function LogoutConfirmDialog({
       </div>
       <DialogActions>
         <Button data-autofocus variant="danger-subtle" disabled={isSaving} onClick={onCancel}>
-          Cancelar
+          Não
         </Button>
         <Button variant="danger" disabled={isSaving} onClick={onConfirm}>
           {isSaving ? 'A sair...' : 'Sair'}

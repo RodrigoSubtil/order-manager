@@ -39,9 +39,14 @@ describe('OrderFilters', () => {
     expect(area.compareDocumentPosition(date)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(date.compareDocumentPosition(print)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(print.compareDocumentPosition(create)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
-    expect(screen.getByText('data: todas')).toBeInTheDocument();
-    expect(screen.getByText('área: todas')).toBeInTheDocument();
-    expect(screen.getByText('12 resultados')).toBeInTheDocument();
+    expect(screen.getByRole('status', { name: 'Resumo dos filtros' })).toHaveTextContent(
+      'Todas as datas',
+    );
+    expect(screen.getByRole('status', { name: 'Resumo dos filtros' })).toBeInTheDocument();
+    expect(screen.getByRole('status', { name: 'Resumo dos filtros' })).toHaveTextContent(
+      'Todas as áreas',
+    );
+    expect(screen.getByText('12 encomendas')).toBeInTheDocument();
 
     await user.click(date);
     expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual([

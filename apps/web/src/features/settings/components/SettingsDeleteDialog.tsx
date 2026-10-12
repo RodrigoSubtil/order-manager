@@ -18,11 +18,7 @@ export function SettingsDeleteDialog({
 }: SettingsDeleteDialogProps) {
   return (
     <Dialog className={styles.content} titleId="settings-delete-title" onClose={onCancel}>
-      <DialogHeader
-        title={`Apagar ${itemType}?`}
-        titleId="settings-delete-title"
-        onClose={onCancel}
-      />
+      <DialogHeader title={`Apagar ${itemType}?`} titleId="settings-delete-title" />
       <div className={styles.body}>
         <p>Esta ação não poderá ser anulada.</p>
         <div className={styles.details}>
@@ -31,7 +27,7 @@ export function SettingsDeleteDialog({
       </div>
       <DialogActions>
         <Button data-autofocus variant="danger-subtle" disabled={isSaving} onClick={onCancel}>
-          Cancelar
+          Não
         </Button>
         <Button variant="danger" disabled={isSaving} onClick={onConfirm}>
           {isSaving ? 'A apagar...' : 'Apagar'}

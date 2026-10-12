@@ -1,4 +1,4 @@
-import { useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
+import { useLayoutEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
 
 import styles from './Dialog.module.css';
 
@@ -28,7 +28,7 @@ export function Dialog({
 }: DialogProps) {
   const panelRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const previousFocus =
       document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const panel = panelRef.current;

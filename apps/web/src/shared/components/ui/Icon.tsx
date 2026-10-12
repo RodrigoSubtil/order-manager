@@ -3,6 +3,7 @@ import type { SVGAttributes } from 'react';
 import styles from './Icon.module.css';
 
 export type IconName =
+  | 'layers'
   | 'calendar'
   | 'check'
   | 'trash'
@@ -25,6 +26,13 @@ type IconProps = Omit<SVGAttributes<SVGSVGElement>, 'children'> & {
 
 function IconContent({ name }: { name: IconName }) {
   switch (name) {
+    case 'layers':
+      return (
+        <>
+          <path d="m12 3 9 5-9 5-9-5 9-5Z" />
+          <path d="m3 12 9 5 9-5M3 16l9 5 9-5" />
+        </>
+      );
     case 'calendar':
       return (
         <>

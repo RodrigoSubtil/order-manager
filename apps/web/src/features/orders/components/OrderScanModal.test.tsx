@@ -99,7 +99,7 @@ describe('digitalização da encomenda', () => {
     expect(interpret).not.toHaveBeenCalled();
   });
 
-  it('permite refazer sem analisar e mostra só a foto com as duas ações', async () => {
+  it('permite refazer sem analisar e mantém cancelar e continuar disponíveis', async () => {
     const user = userEvent.setup();
     const { container } = render(<OrderScanModal onClose={vi.fn()} onReview={vi.fn()} />);
     expect(screen.getByText('Como deseja adicionar a fotografia?')).toBeVisible();
@@ -115,7 +115,7 @@ describe('digitalização da encomenda', () => {
     expect(interpret).not.toHaveBeenCalled();
   });
 
-  it('analisa uma vez após continuar, mostra progresso e só entrega o rascunho ao revisar', async () => {
+  it('analisa uma vez e abre diretamente a conferência ao terminar', async () => {
     const user = userEvent.setup();
     const draft = createBlankScanDraft();
     let complete!: (value: typeof draft) => void;
@@ -132,12 +132,61 @@ describe('digitalização da encomenda', () => {
     expect(screen.getByRole('progressbar')).toBeVisible();
     expect(onReview).not.toHaveBeenCalled();
     await act(async () => complete(draft));
-    await waitFor(() =>
-      expect(screen.getByRole('heading', { name: 'Leitura concluída' })).toBeVisible(),
-    );
-    await user.click(screen.getByRole('button', { name: 'Revisar encomenda' }));
     expect(onReview).toHaveBeenCalledExactlyOnceWith(draft);
+    expect(screen.queryByRole('heading', { name: 'Leitura concluída' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Revisar encomenda' })).not.toBeInTheDocument();
   });
+
+  it.each(['choose', 'camera', 'photo', 'loading'] as const)(
+    'permite cancelar na etapa %s sem entregar um rascunho',
+    async (stage) => {
+      const user = userEvent.setup();
+      const onClose = vi.fn();
+      const onReview = vi.fn();
+      const stop = vi.fn();
+      const draft = createBlankScanDraft();
+      let finishRead: ((value: typeof draft) => void) | undefined;
+      if (stage === 'camera') {
+        vi.stubGlobal('navigator', {
+          mediaDevices: {
+            getUserMedia: vi.fn().mockResolvedValue({ getTracks: () => [{ stop }] }),
+          },
+        });
+        vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue();
+      }
+      interpret.mockImplementation(() =>
+        stage === 'loading'
+          ? new Promise((resolve) => {
+              finishRead = resolve;
+            })
+          : Promise.resolve(draft),
+      );
+      const { container, unmount } = render(
+        <OrderScanModal onClose={onClose} onReview={onReview} />,
+      );
+      if (stage === 'camera') {
+        await user.click(screen.getByRole('button', { name: 'Abrir câmara' }));
+        await waitFor(() =>
+          expect(
+            screen.getByLabelText<HTMLVideoElement>('Pré-visualização da câmara').srcObject,
+          ).toBeTruthy(),
+        );
+      } else if (stage !== 'choose') {
+        selectPhoto(container);
+        if (stage === 'loading') {
+          await user.click(screen.getByRole('button', { name: 'Continuar' }));
+          expect(screen.getByRole('progressbar')).toBeVisible();
+        }
+      }
+      expect(screen.queryByRole('button', { name: 'Fechar' })).not.toBeInTheDocument();
+      await user.click(screen.getByRole('button', { name: 'Cancelar' }));
+      expect(onClose).toHaveBeenCalledOnce();
+      unmount();
+      if (stage === 'camera') expect(stop).toHaveBeenCalled();
+      if (finishRead) await act(async () => finishRead?.(draft));
+      expect(onReview).not.toHaveBeenCalled();
+    },
+  );
 
   it('preserva a foto e as opções de refazer ou tentar novamente após uma falha', async () => {
     interpret.mockRejectedValue(new Error('Limite de leitura atingido.'));

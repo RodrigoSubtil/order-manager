@@ -128,7 +128,6 @@ export function OrderFormModal(props: OrderFormModalProps) {
           <DialogHeader
             title={editingId ? 'Editar pedido' : scanDraft ? 'Revisar encomenda' : 'Novo pedido'}
             titleId="modal-title"
-            onClose={closeDialog}
           />
         )}
 
@@ -451,7 +450,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
             <DialogActions>
               <Button
                 iconOnly
-                variant="danger-subtle"
+                variant="danger"
                 aria-label="Cancelar"
                 title="Cancelar"
                 disabled={isSubmitting}

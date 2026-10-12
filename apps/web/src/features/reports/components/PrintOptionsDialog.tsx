@@ -70,7 +70,7 @@ export function PrintOptionsDialog({
 
   return (
     <Dialog className={styles.content} titleId="print-options-title" onClose={onCancel}>
-      <DialogHeader title="Impressão" titleId="print-options-title" onClose={onCancel} />
+      <DialogHeader title="Impressão" titleId="print-options-title" />
       <div className={styles.body}>
         {error && <Alert tone="error">{error}</Alert>}
         <fieldset className={styles.section}>

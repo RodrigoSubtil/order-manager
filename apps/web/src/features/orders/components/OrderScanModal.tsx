@@ -1,18 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
-import {
-  Alert,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogHeader,
-  SuccessMessage,
-} from '../../../shared/components/ui';
+import { Alert, Button, Dialog, DialogActions, DialogHeader } from '../../../shared/components/ui';
 import { interpretOrderPhoto } from '../lib/scanApi';
 import type { ScanDraft } from '../schemas/scanDraft';
 import styles from './OrderScanModal.module.css';
 
-type Stage = 'choose' | 'camera' | 'photo' | 'loading' | 'complete';
+type Stage = 'choose' | 'camera' | 'photo' | 'loading';
 type Props = { onClose: () => void; onReview: (draft: ScanDraft) => void };
 
 const cameraAspectRatio = 4 / 3;
@@ -26,7 +19,6 @@ export function OrderScanModal({ onClose, onReview }: Props) {
   const [stage, setStage] = useState<Stage>('choose');
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState('');
-  const [draft, setDraft] = useState<ScanDraft | null>(null);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
 
@@ -38,12 +30,6 @@ export function OrderScanModal({ onClose, onReview }: Props) {
       stream.current?.getTracks().forEach((track) => track.stop());
     };
   }, []);
-
-  useEffect(() => {
-    if (stage !== 'loading' || progress !== 100) return;
-    const timer = window.setTimeout(() => setStage('complete'), 350);
-    return () => window.clearTimeout(timer);
-  }, [stage, progress]);
 
   useEffect(() => {
     if (!photo) {
@@ -103,7 +89,6 @@ export function OrderScanModal({ onClose, onReview }: Props) {
       return;
     }
     setPhoto(file);
-    setDraft(null);
     setError('');
     setStage('photo');
   }
@@ -151,8 +136,8 @@ export function OrderScanModal({ onClose, onReview }: Props) {
     try {
       const result = await interpretOrderPhoto(photo);
       if (!mounted.current) return;
-      setDraft(result);
       setProgress(100);
+      onReview(result);
     } catch (cause) {
       if (!mounted.current) return;
       setError(cause instanceof Error ? cause.message : 'Não foi possível ler a fotografia.');
@@ -165,9 +150,7 @@ export function OrderScanModal({ onClose, onReview }: Props) {
 
   return (
     <Dialog className={styles.dialog} titleId="order-scan-title" onClose={onClose}>
-      {stage !== 'complete' && (
-        <DialogHeader title="Digitalizar encomenda" titleId="order-scan-title" onClose={onClose} />
-      )}
+      <DialogHeader title="Digitalizar encomenda" titleId="order-scan-title" />
       <input
         ref={fileInput}
         className={styles.hiddenFile}
@@ -206,12 +189,7 @@ export function OrderScanModal({ onClose, onReview }: Props) {
             style={{ aspectRatio: cameraAspectRatio }}
             aria-label="Pré-visualização da câmara"
           />
-          <div className={styles.actions}>
-            <Button onClick={() => setStage('choose')}>Voltar</Button>
-            <Button variant="primary" onClick={() => void capturePhoto()}>
-              Tirar foto
-            </Button>
-          </div>
+          <Button onClick={() => setStage('choose')}>Voltar</Button>
         </div>
       )}
 
@@ -226,8 +204,6 @@ export function OrderScanModal({ onClose, onReview }: Props) {
                 alt="Fotografia selecionada para leitura"
               />
             )}
-          </div>
-          <DialogActions>
             <Button
               onClick={() => {
                 setPhoto(null);
@@ -237,10 +213,7 @@ export function OrderScanModal({ onClose, onReview }: Props) {
             >
               Refazer
             </Button>
-            <Button variant="primary" onClick={() => void readPhoto()}>
-              Continuar
-            </Button>
-          </DialogActions>
+          </div>
         </>
       )}
 
@@ -262,14 +235,23 @@ export function OrderScanModal({ onClose, onReview }: Props) {
         </div>
       )}
 
-      {stage === 'complete' && (
-        <SuccessMessage
-          title="Leitura concluída"
-          titleId="order-scan-title"
-          actionLabel="Revisar encomenda"
-          onAction={() => draft && onReview(draft)}
-        />
-      )}
+      <DialogActions
+        className={stage === 'choose' || stage === 'loading' ? styles.cancelOnly : undefined}
+      >
+        <Button variant="danger-subtle" onClick={onClose}>
+          Cancelar
+        </Button>
+        {stage === 'camera' && (
+          <Button variant="primary" onClick={() => void capturePhoto()}>
+            Tirar foto
+          </Button>
+        )}
+        {stage === 'photo' && (
+          <Button variant="primary" onClick={() => void readPhoto()}>
+            Continuar
+          </Button>
+        )}
+      </DialogActions>
     </Dialog>
   );
 }

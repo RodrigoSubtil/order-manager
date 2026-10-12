@@ -7,6 +7,7 @@
 
 .hint {
   color: var(--color-muted);
+  font: var(--type-caption);
 }
 
 .error {
