@@ -1,6 +1,6 @@
 # Documentação do Order Manager
 
-**Versão do produto: 1.1.0.** O valor exibido no login e no cabeçalho vem de [`apps/web/package.json`](../apps/web/package.json). Esta é a versão da árvore de código; cada publicação precisa de validação no site publicado.
+**Versão do produto: 1.1.1.** O valor exibido no login e no cabeçalho vem de [`apps/web/package.json`](../apps/web/package.json). Esta é a versão da árvore de código; cada publicação precisa de validação no site publicado.
 
 | Preciso de…                                      | Ler                                                        |
 | ------------------------------------------------ | ---------------------------------------------------------- |

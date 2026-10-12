@@ -23,7 +23,7 @@
 | Marca / ação principal     | `--color-accent`         | `#765F4B` | Continuar, adicionar encomenda, ícones de navegação                         |
 | Marca ao passar o ponteiro | `--color-accent-hover`   | `#604C3B` | Hover da ação principal e extremo do gradiente da marca                     |
 | Contorno secundário        | `--color-accent-soft`    | `#A58E74` | Botões secundários e ações da barra principal                               |
-| Creme                      | `--color-cream`          | `#F4EDE3` | Ação secundária, faixa de data, cabeçalhos de seção, seleção                |
+| Creme                      | `--color-cream`          | `#F4EDE3` | Ação secundária, faixa de data, cartões de produto, seleção                 |
 | Areia                      | `--color-sand`           | `#E7D9CC` | Separadores leves e hover secundário                                        |
 | Taupe                      | `--color-taupe`          | `#BBA58E` | Detalhes decorativos; não usar em texto necessário para realizar uma tarefa |
 | Fundo da página            | `--color-stone`          | `#F1EEE8` | Base quente do fundo e controles desativados                                |
@@ -42,10 +42,10 @@ Os gradientes `--gradient-brand`, `--gradient-page` e `--gradient-login` reutili
 | Família          | Texto / ícone | Fundo suave | Borda     | Significado                                                            |
 | ---------------- | ------------- | ----------- | --------- | ---------------------------------------------------------------------- |
 | Vermelho telha   | `#A83F3A`     | `#FCECE9`   | `#E5AAA3` | Conferir, recolha atrasada, erro, cancelar, fechar, remoção e exclusão |
-| Laranja caramelo | `#99550F`     | `#FFF1DC`   | `#E2BB7E` | Provável / informação que ainda requer atenção                         |
-| Verde            | `#2F6D50`     | `#E8F4EC`   | `#A5CDB4` | Conferido, operação bem-sucedida, salvar e concluir                    |
+| Laranja caramelo | `#99550F`     | `#FFF1DC`   | `#E2BB7E` | Provável, editar / informação que ainda requer atenção                 |
+| Verde            | `#2F6D50`     | `#E8F4EC`   | `#A5CDB4` | Conferido, operação bem-sucedida, WhatsApp, salvar e concluir          |
 
-Cada família expõe `--color-danger`, `--color-warning` ou `--color-success`, acompanhada de `-soft` e `-border`. Não calcular uma borda diferente em cada componente. Hover da confirmação destrutiva usa `--color-danger-hover` (`#8F302D`).
+Cada família expõe `--color-danger`, `--color-warning` ou `--color-success`, acompanhada de `-soft` e `-border`. Não calcular uma borda diferente em cada componente. Hover das ações preenchidas usa `--color-danger-hover` (`#8F302D`) no vermelho e `--color-success-hover` (`#25563F`) no verde.
 
 ### Revisão da digitalização
 
@@ -69,26 +69,28 @@ Os três selos têm o mesmo tamanho, peso, raio e preenchimento. Permanecem à d
 ### Mensagens gerais
 
 - **Erro:** trio vermelho; acompanhado de uma mensagem que explique o problema.
-- **Sucesso:** trio verde; reservado a uma operação concluída.
+- **Sucesso:** trio verde; reservado a uma operação concluída. O modal de sucesso tem um resumo verde suave com texto verde centralizado, sem visto, ilustração ou X. Na exclusão, o nome do cliente fica em destaque entre o contexto e o resultado da operação. O rodapé branco separado contém a ação secundária “Voltar para as encomendas”. A leitura com IA abre diretamente o formulário de conferência; não apresenta um modal intermediário de leitura concluída e não salva automaticamente. Depois de apagar, a mensagem identifica o cliente: “Encomenda de [nome do cliente] apagada com sucesso.”
 - **Informação:** texto castanho sobre creme com borda neutra. Não introduzir uma quarta família de alerta sem necessidade.
 - **Erro de campo:** borda vermelha e mensagem; manter o campo branco para preservar a leitura do valor.
 
 ## 4. Hierarquia dos botões
 
-| Papel / variante                      | Aparência                                      | Exemplos                                                         |
-| ------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------------- |
-| Principal · `primary`                 | Castanho preenchido, texto branco              | Continuar, nova encomenda                                        |
-| Secundário · `secondary`              | Creme, texto castanho, contorno castanho suave | Voltar de uma etapa, adicionar mais um produto, editar, imprimir |
-| Auxiliar · `ghost`                    | Branco, texto secundário, borda neutra         | Ação complementar discreta                                       |
-| Destrutivo discreto · `danger-subtle` | Vermelho suave, texto e borda vermelhos        | Fechar ou cancelar um modal, remover produto, iniciar Apagar     |
-| Confirmação destrutiva · `danger`     | Vermelho preenchido, texto branco              | Confirmar Apagar no diálogo                                      |
-| Confirmação positiva · `success`      | Verde suave, texto e borda verdes              | Salvar encomenda e Concluir no cartão ou diálogo                 |
+| Papel / variante                        | Aparência                                      | Exemplos                                                  |
+| --------------------------------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| Principal · `primary`                   | Castanho preenchido, texto branco              | Continuar, nova encomenda                                 |
+| Secundário · `secondary`                | Creme, texto castanho, contorno castanho suave | Voltar de uma etapa, imprimir                             |
+| Auxiliar · `ghost`                      | Branco, texto secundário, borda neutra         | Ação complementar discreta                                |
+| Cancelamento em texto · `danger-subtle` | Vermelho suave, texto e borda vermelhos        | Cancelar/Não em texto, lixeira de remover produto         |
+| Remover / descartar · `danger`          | Vermelho preenchido, texto ou ícone branco     | Apagar encomenda, lixeira de cancelar, confirmar exclusão |
+| Confirmar · `success`                   | Verde preenchido, texto ou ícone branco        | Salvar encomenda, concluir recolha no cartão ou diálogo   |
+| Contacto / adicionar · `success-subtle` | Verde suave, texto e borda verdes              | WhatsApp, adicionar mais um produto (+)                   |
+| Editar · `warning`                      | Amarelo suave, texto e borda caramelo          | Editar encomenda, produto ou responsável                  |
 
 Regras de composição:
 
-- No formulário, **Salvar é a confirmação principal em verde suave**. Adicionar mais um produto usa o secundário; Remover usa o destrutivo discreto. Não dar às três ações a mesma aparência.
-- **Salvar encomenda:** visto verde sobre fundo verde suave; **Cancelar:** lixeira vermelha sobre fundo vermelho suave. Ficam nas duas colunas do rodapé, sem texto visível, com nomes acessíveis e títulos que descrevem a ação. A lixeira deste formulário apenas cancela a edição atual; não apaga uma encomenda guardada.
-- **Fechar modais:** X vermelho com fundo e borda vermelhos suaves, usando o cabeçalho compartilhado. Cancelar/Não nos rodapés também usa vermelho suave. Voltar de uma etapa continua secundário.
+- No formulário, **Salvar usa verde forte**, **Adicionar mais um produto usa + verde sobre fundo verde suave** e **Remover produto usa lixeira vermelha sobre fundo vermelho suave**. Os botões de adicionar e remover produto têm 44 × 44 px. O botão + fica a 12 px do último cartão, conserva o nome acessível e o título “Adicionar mais um produto” e adiciona um item por clique. Reutilizar as cores da marca e de estado, sem criar tons exclusivos para esses botões.
+- **Salvar encomenda:** visto branco sobre fundo verde forte; **Cancelar:** lixeira branca sobre fundo vermelho forte. Ficam nas duas colunas do rodapé, sem texto visível, com nomes acessíveis e títulos que descrevem a ação. A lixeira deste formulário apenas cancela a edição atual; não apaga uma encomenda guardada.
+- **Sair dos modais:** não usar X no cabeçalho. Confirmações usam “Não” em vermelho suave; digitalização e impressão usam “Cancelar” em vermelho suave; o formulário de encomenda mantém a lixeira branca sobre vermelho forte. Digitalizar oferece Cancelar em todas as etapas. Confirmações de sucesso usam Voltar para as encomendas. Voltar de uma etapa continua secundário.
 - Salvar a encomenda e concluir a recolha usam a mesma família verde, preservando seus nomes e comportamentos distintos. Outros formulários mantêm sua ação principal castanha quando não usam esse rodapé de confirmação.
 - Hover altera apenas o tom da mesma família; o secundário usa areia e texto castanho mais escuro para preservar contraste; uma ação vermelha não ganha contorno castanho ao passar o ponteiro.
 - Controles desativados usam texto secundário sobre fundo neutro. Não reduzir a opacidade de todo o botão até a legenda desaparecer.
@@ -97,13 +99,14 @@ Regras de composição:
 
 ## 5. Seções, ícones e leitura
 
-- **Raio único:** `--radius: 0.8rem` (12,8 px na base de 16 px) para botões, campos, cartões, painéis, alertas, menus e modais. Não criar uma escala de raios por tamanho de componente.
+- **Raio único:** `--radius: 0.6rem` (9,6 px na base de 16 px) para botões, campos, cartões, painéis, alertas, menus e modais. Não criar uma escala de raios por tamanho de componente.
 
-- Dados da encomenda e Produtos usam o mesmo cabeçalho de seção em creme, com borda areia, raio de 0,8rem e padding de 8 × 12 px. O cabeçalho ocupa a mesma largura dos campos; não volta a criar um cartão interno com recuos.
+- Dados da encomenda e Produtos usam títulos sem fundo, com uma linha areia abaixo e 12 px até os campos ou o primeiro cartão. Cada produto tem seu próprio cartão em creme suave e raio de 0,6rem. O fundo avança 8 px para cada lado e o padding devolve esses 8 px, mantendo os campos alinhados aos dados da encomenda. Não envolver a seção inteira em outro cartão.
 - A faixa de data usa texto de 16 px com peso regular, padding vertical de 8 px e ícones de calendário/relógio de 16 px. Data e hora ficam nas extremidades, com quebra de linha quando necessário.
 - O cliente aparece com ícone de perfil diretamente antes do nome. Não repetir uma linha visível “Cliente” acima dele. Nome e telefone compartilham o alinhamento do ícone e do texto; o nome conserva a hierarquia de título.
 - Ícones adotam `currentColor`, os tamanhos e o traço do capítulo de controles. Não escolher uma cor adicional para cada ícone.
-- Fundo branco para dados de leitura; creme para agrupamento e ações secundárias; fundos coloridos suaves para estados.
+- Fundo branco para campos e dados de leitura; creme para cartões de produto e ações secundárias; fundos coloridos suaves para estados.
+- No calendário, dias indisponíveis exibem somente o número com opacidade de 40%, sem fundo ou borda visível. A data selecionada válida mantém o preenchimento castanho; a restrição de seleção permanece intacta.
 
 ## 6. Foco, seleção e contraste
 
@@ -111,7 +114,7 @@ O foco de teclado usa `--color-focus` (`#5B78C7`) e o halo `--color-focus-soft`.
 
 A seleção comum usa castanho/creme. A data selecionada no calendário usa castanho preenchido e texto branco. Destaque de pesquisa usa `--color-highlight` (`#F6DEA6`) com texto principal; não reutilizar esse fundo como estado Provável.
 
-Meta para texto normal: contraste mínimo de **4,5:1**. Os pares de texto e fundo suave dos três estados têm aproximadamente **5,15:1 a 5,43:1**; branco sobre as ações castanha e vermelha também supera 4,5:1. Placeholder é mais escuro que o anterior para continuar legível. Esses cálculos não representam uma auditoria completa de acessibilidade do produto.
+Meta para texto normal: contraste mínimo de **4,5:1**. Os pares de texto e fundo suave dos três estados têm aproximadamente **5,15:1 a 5,43:1**; branco sobre as ações castanha, vermelha e verde também supera 4,5:1. Placeholder é mais escuro que o anterior para continuar legível. Esses cálculos não representam uma auditoria completa de acessibilidade do produto.
 
 Referências: [W3C · contraste mínimo](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) e [W3C · uso de cor](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html).
 

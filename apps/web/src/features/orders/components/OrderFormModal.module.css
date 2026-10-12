@@ -31,7 +31,7 @@
 .detailsSection {
   display: grid;
   min-width: 0;
-  gap: var(--space-6);
+  gap: var(--space-3);
 }
 
 .dateInput {

@@ -221,16 +221,24 @@ export function OrderFilters({
         </div>
       </div>
 
-      <div className={styles.active} aria-live="polite">
-        <div className={styles.activeSummary}>
-          <span className={styles.chip}>data: {dateFilter ? formatDate(dateFilter) : 'todas'}</span>
-          <span className={styles.chip}>
-            área: {categoryFilter === 'Todas' ? 'todas' : categoryFilter}
-          </span>
+      <div className={styles.summaryFrame}>
+        <div className={styles.active} role="status" aria-label="Resumo dos filtros">
+          <div className={styles.activeSummary}>
+            <span className={styles.chip}>
+              <Icon name="calendar" />
+              <span>{dateFilter ? formatDate(dateFilter) : 'Todas as datas'}</span>
+            </span>
+            <span className={styles.chip}>
+              <Icon name="layers" />
+              <span>{categoryFilter === 'Todas' ? 'Todas as áreas' : categoryFilter}</span>
+            </span>
+          </div>
+          {resultCount > 0 && (
+            <strong className={styles.resultCount}>
+              {resultCount} {resultCount === 1 ? 'encomenda' : 'encomendas'}
+            </strong>
+          )}
         </div>
-        <strong className={styles.resultCount}>
-          {resultCount} {resultCount === 1 ? 'resultado' : 'resultados'}
-        </strong>
       </div>
     </>
   );

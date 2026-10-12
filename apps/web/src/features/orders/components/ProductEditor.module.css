@@ -1,18 +1,21 @@
 .editor {
   display: grid;
   min-width: 0;
-  gap: var(--space-6);
+  gap: var(--space-3);
 }
 
 .card {
   display: grid;
   min-width: 0;
   gap: var(--space-6);
+  margin-inline: calc(-1 * var(--space-2));
+  padding: var(--space-4) var(--space-2);
+  background: var(--color-cream);
+  border-radius: var(--radius);
 }
 
 .card + .card {
-  border-top: 1px solid var(--color-sand);
-  padding-top: var(--space-6);
+  margin-top: var(--space-3);
 }
 
 .cardTop {
@@ -77,13 +80,8 @@
 }
 
 .addProduct {
-  gap: var(--space-2);
   justify-self: end;
-  min-width: 240px;
-  margin-top: var(--space-1);
-  min-height: var(--control-height);
-  padding-inline: var(--space-4);
-  border-radius: var(--radius);
+  margin-top: 0;
 }
 
 @media (max-width: 900px) {
@@ -95,12 +93,6 @@
 }
 
 @media (max-width: 560px) {
-  .addProduct {
-    width: 100%;
-    min-width: 0;
-    white-space: normal;
-  }
-
   .compact .quantityGrid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -109,7 +101,7 @@
 .cardTop button {
   flex-shrink: 0;
   white-space: nowrap;
-  padding-inline: var(--space-3);
+  padding: 0;
 }
 
 @media (max-width: 390px) {

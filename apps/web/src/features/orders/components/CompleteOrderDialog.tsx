@@ -17,7 +17,7 @@ export function CompleteOrderDialog({
 }: CompleteOrderDialogProps) {
   return (
     <Dialog className={styles.content} titleId="complete-order-title" onClose={onCancel}>
-      <DialogHeader title="Concluir encomenda?" titleId="complete-order-title" onClose={onCancel} />
+      <DialogHeader title="Concluir encomenda?" titleId="complete-order-title" />
       <div className={styles.body}>
         <p>Confirma a conclusão da encomenda?</p>
         <div className={styles.details}>

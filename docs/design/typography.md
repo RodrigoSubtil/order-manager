@@ -36,11 +36,13 @@ Há quatro pesos: **400 regular** para leitura, **500 médio** para pequenas ên
 | `--type-button`      | 16 px                   | 600  | 1.25       | Ações principais e secundárias                                                |
 | `--type-button-sm`   | 14 px                   | 600  | 1.25       | Ações compactas do cabeçalho e calendário                                     |
 | `--type-label`       | 14 px                   | 600  | 1.5        | Nome do campo, mensagem de erro ou aviso                                      |
-| `--type-secondary`   | 14 px                   | 400  | 1.5        | Responsável, número do pedido, filtros ativos, observações e ajuda            |
-| `--type-caption`     | 12 px                   | 500  | 1.5        | Versão e informação auxiliar curta                                            |
+| `--type-secondary`   | 14 px                   | 400  | 1.5        | Responsável, número do pedido, filtros ativos e observações                   |
+| `--type-caption`     | 12 px                   | 500  | 1.5        | Versão, informação auxiliar e orientação opcional abaixo dos campos           |
 | `--type-overline`    | 12 px                   | 600  | 1.5        | Marca, categorias e rótulos dos indicadores                                   |
 | `--type-status`      | 12 px                   | 600  | 1.25       | Conferir, Provável e Conferido                                                |
 | `--type-metric`      | 32 px; 24 px até 560 px | 600  | 1.25       | Totais e percentagem de leitura                                               |
+
+Orientações opcionais de formulário usam `FormMessage` com tom `hint`: **12 px**, cor secundária e sem reduzir opacidade. Mensagens de erro ou avisos que exigem ação conservam o papel de rótulo de **14 px**. O texto “Cliente selecionado. Alterar nome ou telefone atualiza este cadastro.” segue o papel auxiliar de 12 px.
 
 ## Regras de uso
 

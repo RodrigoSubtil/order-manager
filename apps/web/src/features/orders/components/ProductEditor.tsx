@@ -10,6 +10,7 @@ import {
   ComboboxTrigger,
   FieldError,
   FormSectionHeading,
+  Icon,
   Input,
 } from '../../../shared/components/ui';
 import { categories, type CatalogProduct, type Category } from '../../../shared/lib/domain';
@@ -89,8 +90,14 @@ export function ProductEditor({
           <article className={styles.card} key={itemField.fieldKey}>
             <div className={styles.cardTop}>
               <strong>Produto {index + 1}</strong>
-              <Button variant="danger-subtle" onClick={() => onRemove(index)}>
-                Remover
+              <Button
+                iconOnly
+                variant="danger-subtle"
+                aria-label="Remover"
+                title={'Remover produto ' + (index + 1)}
+                onClick={() => onRemove(index)}
+              >
+                <Icon name="trash" />
               </Button>
             </div>
 
@@ -337,12 +344,15 @@ export function ProductEditor({
       })}
 
       <Button
+        iconOnly
         className={styles.addProduct}
-        variant="secondary"
+        variant="success-subtle"
+        aria-label="Adicionar mais um produto"
+        title="Adicionar mais um produto"
         disabled={itemFields.length >= 100}
         onClick={onAdd}
       >
-        Adicionar mais um produto
+        <Icon name="plus" />
       </Button>
     </section>
   );

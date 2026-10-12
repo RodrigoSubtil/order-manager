@@ -24,6 +24,7 @@
   --color-warning-soft: #fff1dc;
   --color-warning-border: #e2bb7e;
   --color-success: #2f6d50;
+  --color-success-hover: #25563f;
   --color-success-soft: #e8f4ec;
   --color-success-border: #a5cdb4;
   --color-focus: #5b78c7;
@@ -57,7 +58,7 @@
   --shadow-panel: 0 16px 34px rgb(77 67 57 / 8%);
   --shadow-dialog: 0 24px 90px rgb(0 0 0 / 28%);
   /* Raio unico de superficies e controles; circulo apenas para o spinner. */
-  --radius: 0.8rem;
+  --radius: 0.6rem;
   --radius-circle: 50%;
   --space-1: 4px;
   --space-2: 8px;

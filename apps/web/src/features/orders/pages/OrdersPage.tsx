@@ -70,7 +70,9 @@ export default function OrdersPage() {
   const [deleteOrderId, setDeleteOrderId] = useState<string | null>(null);
   const [completeOrderId, setCompleteOrderId] = useState<string | null>(null);
   const [completionMessage, setCompletionMessage] = useState('');
-  const [deletionMessage, setDeletionMessage] = useState('');
+  const [deletedClientName, setDeletedClientName] = useState<string | null>(null);
+  const deletionMessage =
+    deletedClientName === null ? '' : `Encomenda de ${deletedClientName} apagada com sucesso.`;
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
   const [isScanOpen, setIsScanOpen] = useState(false);
 
@@ -133,7 +135,7 @@ export default function OrdersPage() {
       setDeleteOrderId(null);
       setCompleteOrderId(null);
       setCompletionMessage('');
-      setDeletionMessage('');
+      setDeletedClientName(null);
       setIsLogoutConfirmOpen(false);
     } catch (error) {
       setAppError(getApiErrorMessage(error, 'Não foi possível terminar sessão.'));
@@ -158,7 +160,7 @@ export default function OrdersPage() {
       return;
     }
     setDeleteOrderId(null);
-    setDeletionMessage(`Encomenda #${orderToDelete.orderNumber ?? '-'} apagada com sucesso.`);
+    setDeletedClientName(orderToDelete.clientName);
     try {
       await refreshOrderData();
     } catch {
@@ -333,11 +335,11 @@ export default function OrdersPage() {
           }}
         />
       )}
-      {deletionMessage && (
+      {deletedClientName !== null && (
         <OrderSuccessDialog
-          message={deletionMessage}
+          customerName={deletedClientName}
           onClose={() => {
-            setDeletionMessage('');
+            setDeletedClientName(null);
             setAppSuccess(deletionMessage);
           }}
         />

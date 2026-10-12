@@ -171,7 +171,6 @@
   outline: none;
 }
 
-.day:disabled,
 .header button:disabled,
 .todayAction:disabled {
   cursor: not-allowed;
@@ -199,6 +198,14 @@
   color: var(--color-white);
   background: var(--color-accent);
   border-color: var(--color-accent);
+}
+
+.day:disabled {
+  cursor: not-allowed;
+  color: var(--color-ink);
+  background: transparent;
+  border-color: transparent;
+  opacity: 0.4;
 }
 
 .footer {

@@ -151,6 +151,7 @@ export function CatalogManager({
                   </div>
                   <div className={styles.itemActions}>
                     <Button
+                      variant="warning"
                       onClick={() =>
                         onDraftChange({
                           id: item.id,
@@ -162,11 +163,7 @@ export function CatalogManager({
                     >
                       Editar
                     </Button>
-                    <Button
-                      variant="danger-subtle"
-                      disabled={isSaving}
-                      onClick={() => onDelete(item)}
-                    >
+                    <Button variant="danger" disabled={isSaving} onClick={() => onDelete(item)}>
                       Apagar
                     </Button>
                   </div>
