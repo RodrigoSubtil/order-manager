@@ -9,6 +9,7 @@ import {
   ComboboxOption,
   ComboboxTrigger,
   FieldError,
+  FormSectionHeading,
   Input,
 } from '../../../shared/components/ui';
 import { categories, type CatalogProduct, type Category } from '../../../shared/lib/domain';
@@ -69,11 +70,7 @@ export function ProductEditor({
       className={`${styles.editor} ${scanDraft ? styles.compact : ''}`}
       aria-labelledby="product-editor-title"
     >
-      <div className={styles.title}>
-        <h3 id="product-editor-title" data-eyebrow>
-          Produtos
-        </h3>
-      </div>
+      <FormSectionHeading id="product-editor-title">Produtos</FormSectionHeading>
 
       <FieldError id="order-items-error" message={errors.items?.root?.message} />
 
@@ -92,7 +89,7 @@ export function ProductEditor({
           <article className={styles.card} key={itemField.fieldKey}>
             <div className={styles.cardTop}>
               <strong>Produto {index + 1}</strong>
-              <Button variant="ghost" onClick={() => onRemove(index)}>
+              <Button variant="danger-subtle" onClick={() => onRemove(index)}>
                 Remover
               </Button>
             </div>
@@ -341,7 +338,7 @@ export function ProductEditor({
 
       <Button
         className={styles.addProduct}
-        variant="primary"
+        variant="secondary"
         disabled={itemFields.length >= 100}
         onClick={onAdd}
       >

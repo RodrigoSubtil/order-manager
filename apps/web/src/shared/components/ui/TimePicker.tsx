@@ -298,7 +298,9 @@ export function TimePicker({
             )}
 
             <footer className={styles.actions}>
-              <Button onClick={() => setIsOpen(false)}>Cancelar</Button>
+              <Button variant="danger-subtle" onClick={() => setIsOpen(false)}>
+                Cancelar
+              </Button>
               <Button
                 variant="primary"
                 disabled={!hasAvailableTime || isBeforeMinimum || isAfterMaximum}

@@ -174,7 +174,9 @@ export function PrintOptionsDialog({
         </div>
       </div>
       <DialogActions>
-        <Button onClick={onCancel}>Cancelar</Button>
+        <Button variant="danger-subtle" onClick={onCancel}>
+          Cancelar
+        </Button>
         <Button
           variant="primary"
           disabled={!orderCount || isPreparing || !hasValidDateTimeRange || Boolean(error)}

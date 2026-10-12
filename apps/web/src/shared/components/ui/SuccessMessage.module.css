@@ -18,7 +18,7 @@
   place-items: center;
   color: var(--color-white);
   background: var(--color-success);
-  border-radius: var(--radius-circle);
+  border-radius: var(--radius);
   font: var(--type-metric);
   font-size: var(--font-size-3xl);
   line-height: var(--line-height-symbol);

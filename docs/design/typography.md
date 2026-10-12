@@ -1,8 +1,8 @@
 # Style guide · Tipografia
 
-[Índice do style guide](README.md) · [Espaçamentos e controles](spacing-and-controls.md)
+[Índice do style guide](README.md) · [Espaçamentos e controles](spacing-and-controls.md) · [Cores e estados](colors.md)
 
-Este é o padrão de tipografia da interface do Order Manager: login, painel, encomendas, formulários, digitalização, gestão e diálogos. Espaçamentos e dimensões de componentes pertencem ao capítulo de controles; um sistema completo de cores ainda não foi definido.
+Este é o padrão de tipografia da interface do Order Manager: login, painel, encomendas, formulários, digitalização, gestão e diálogos. Espaçamentos e dimensões de componentes pertencem ao capítulo de controles; a paleta e os estados pertencem ao capítulo de cores.
 
 ## Família
 
@@ -17,7 +17,7 @@ Não se adiciona uma família diferente em um cartão, página ou modal. Os cont
 | XS      | 12 px / 0.75rem  | Etiquetas curtas, categorias, versão, dias da semana e estados da revisão |
 | SM      | 14 px / 0.875rem | Informações secundárias, ajuda, rótulos e botões compactos                |
 | MD      | 16 px / 1rem     | Texto principal, valores de campos, telefone, produtos e botões           |
-| LG      | 18 px / 1.125rem | Subtítulos e data/hora da encomenda                                       |
+| LG      | 18 px / 1.125rem | Subtítulos                                                                |
 | XL      | 20 px / 1.25rem  | Títulos de cartões, painéis e diálogos                                    |
 | 2XL     | 24 px / 1.5rem   | Título de página e indicadores no telemóvel                               |
 | 3XL     | 32 px / 2rem     | Título de página e indicadores acima de 560 px                            |
@@ -26,21 +26,21 @@ Há quatro pesos: **400 regular** para leitura, **500 médio** para pequenas ên
 
 ## Papéis da tipografia
 
-| Papel / variável     | Tamanho                 | Peso | Entrelinha | Onde aplicar                                                                 |
-| -------------------- | ----------------------- | ---- | ---------- | ---------------------------------------------------------------------------- |
-| `--type-page`        | 32 px; 24 px até 560 px | 700  | 1.25       | Título principal do login, painel e gestão                                   |
-| `--type-title`       | 20 px                   | 600  | 1.25       | Nome do cliente no cartão, título do painel de gestão, diálogo e confirmação |
-| `--type-section`     | 18 px                   | 600  | 1.25       | Subtítulos, listas da gestão e data/hora no cartão                           |
-| `--type-body`        | 16 px                   | 400  | 1.5        | Parágrafos, campos, opções, telefone e textos de leitura                     |
-| `--type-body-strong` | 16 px                   | 600  | 1.5        | Produto, quantidade, nome na lista de gestão e destaque dentro do texto      |
-| `--type-button`      | 16 px                   | 600  | 1.25       | Ações principais e secundárias                                               |
-| `--type-button-sm`   | 14 px                   | 600  | 1.25       | Ações compactas do cabeçalho e calendário                                    |
-| `--type-label`       | 14 px                   | 600  | 1.5        | Nome do campo, mensagem de erro ou aviso                                     |
-| `--type-secondary`   | 14 px                   | 400  | 1.5        | Responsável, número do pedido, filtros ativos, observações e ajuda           |
-| `--type-caption`     | 12 px                   | 500  | 1.5        | Versão e informação auxiliar curta                                           |
-| `--type-overline`    | 12 px                   | 600  | 1.5        | Marca, categorias e rótulos dos indicadores                                  |
-| `--type-status`      | 12 px                   | 600  | 1.25       | Conferir, Provável e Conferido                                               |
-| `--type-metric`      | 32 px; 24 px até 560 px | 600  | 1.25       | Totais e percentagem de leitura                                              |
+| Papel / variável     | Tamanho                 | Peso | Entrelinha | Onde aplicar                                                                  |
+| -------------------- | ----------------------- | ---- | ---------- | ----------------------------------------------------------------------------- |
+| `--type-page`        | 32 px; 24 px até 560 px | 700  | 1.25       | Título principal do login, painel e gestão                                    |
+| `--type-title`       | 20 px                   | 600  | 1.25       | Nome do cliente no cartão, título do painel de gestão, diálogo e confirmação  |
+| `--type-section`     | 18 px                   | 600  | 1.25       | Subtítulos, listas da gestão                                                  |
+| `--type-body`        | 16 px                   | 400  | 1.5        | Parágrafos, campos, opções, telefone, data/hora no cartão e textos de leitura |
+| `--type-body-strong` | 16 px                   | 600  | 1.5        | Produto, quantidade, nome na lista de gestão e destaque dentro do texto       |
+| `--type-button`      | 16 px                   | 600  | 1.25       | Ações principais e secundárias                                                |
+| `--type-button-sm`   | 14 px                   | 600  | 1.25       | Ações compactas do cabeçalho e calendário                                     |
+| `--type-label`       | 14 px                   | 600  | 1.5        | Nome do campo, mensagem de erro ou aviso                                      |
+| `--type-secondary`   | 14 px                   | 400  | 1.5        | Responsável, número do pedido, filtros ativos, observações e ajuda            |
+| `--type-caption`     | 12 px                   | 500  | 1.5        | Versão e informação auxiliar curta                                            |
+| `--type-overline`    | 12 px                   | 600  | 1.5        | Marca, categorias e rótulos dos indicadores                                   |
+| `--type-status`      | 12 px                   | 600  | 1.25       | Conferir, Provável e Conferido                                                |
+| `--type-metric`      | 32 px; 24 px até 560 px | 600  | 1.25       | Totais e percentagem de leitura                                               |
 
 ## Regras de uso
 

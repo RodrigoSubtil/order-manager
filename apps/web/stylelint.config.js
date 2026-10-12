@@ -7,6 +7,24 @@ export default {
     'color-function-alias-notation': null,
     'color-function-notation': null,
     'color-hex-length': null,
+    'color-no-hex': true,
+    'function-disallowed-list': [
+      'rgb',
+      'rgba',
+      'hsl',
+      'hsla',
+      'hwb',
+      'lab',
+      'lch',
+      'oklab',
+      'oklch',
+      'color',
+      'color-mix',
+    ],
+    'declaration-property-value-disallowed-list': {
+      '/^(?:color|background(?:-color)?|border(?:-.+)?|outline(?:-color)?|fill|stroke|box-shadow|text-shadow)$/':
+        ['/(?:^|[\\s,(])(?:white|black|red|orange|green|blue)(?:$|[\\s,)])/'],
+    },
     'comment-empty-line-before': null,
     'declaration-block-no-redundant-longhand-properties': null,
     'declaration-property-value-keyword-no-deprecated': null,
@@ -22,7 +40,7 @@ export default {
       ],
       'border-radius': [
         'inherit',
-        '/^(?:0|var\\(--radius-(?:sm|md|lg|xl|pill|circle)\\))(?: (?:0|var\\(--radius-(?:sm|md|lg|xl|pill|circle)\\))){0,3}$/',
+        '/^(?:0|var\\(--radius(?:-circle)?\\))(?: (?:0|var\\(--radius(?:-circle)?\\))){0,3}$/',
       ],
       'letter-spacing': ['inherit', '/^var\\(--letter-spacing-[a-z-]+\\)$/'],
     },
@@ -34,6 +52,18 @@ export default {
     'value-keyword-case': null,
   },
   overrides: [
+    {
+      files: [
+        'src/styles/tokens.css',
+        'src/styles/print.css',
+        'src/features/reports/components/PrintableOrders.module.css',
+      ],
+      rules: {
+        'color-no-hex': null,
+        'function-disallowed-list': null,
+        'declaration-property-value-disallowed-list': null,
+      },
+    },
     {
       files: ['src/features/reports/components/PrintableOrders.module.css'],
       rules: { 'declaration-property-value-allowed-list': null },

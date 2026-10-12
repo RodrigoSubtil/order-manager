@@ -25,7 +25,7 @@ export function DeleteOrderDialog({
         </div>
       </div>
       <DialogActions>
-        <Button data-autofocus disabled={isSaving} onClick={onCancel}>
+        <Button data-autofocus variant="danger-subtle" disabled={isSaving} onClick={onCancel}>
           Cancelar
         </Button>
         <Button

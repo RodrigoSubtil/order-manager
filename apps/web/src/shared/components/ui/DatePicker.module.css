@@ -14,8 +14,8 @@
   color: var(--color-ink);
   text-align: left;
   background: var(--color-white);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius);
   outline: none;
   font: var(--type-body);
   min-height: var(--control-height);
@@ -29,7 +29,7 @@
 
 .control:focus-visible {
   border-color: var(--color-focus);
-  box-shadow: 0 0 0 3px rgb(91 120 199 / 20%);
+  box-shadow: var(--shadow-focus);
 }
 
 .control[aria-invalid='true'] {
@@ -38,7 +38,8 @@
 
 .control:disabled {
   cursor: not-allowed;
-  opacity: 0.65;
+  color: var(--color-muted);
+  background: var(--color-stone);
 }
 
 .value,
@@ -61,7 +62,7 @@
   padding: var(--space-1) var(--space-2);
   color: var(--color-accent);
   background: var(--color-cream);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   vertical-align: middle;
   font: var(--type-caption);
 }
@@ -74,7 +75,7 @@
   padding: var(--space-3);
   background: var(--color-white);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   box-shadow: var(--shadow-dialog);
   width: min(352px, calc(100vw - var(--dialog-margin) * 2));
   top: calc(100% + var(--space-2));
@@ -113,7 +114,7 @@
 .clear {
   border: 0;
   font: var(--type-button-sm);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
 }
 
 .header button {
@@ -157,7 +158,7 @@
   color: var(--color-ink);
   background: transparent;
   border: 1px solid transparent;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius);
   font: var(--type-secondary);
   height: var(--touch-target);
   min-width: var(--touch-target);
@@ -174,12 +175,18 @@
 .header button:disabled,
 .todayAction:disabled {
   cursor: not-allowed;
-  opacity: 0.35;
+  color: var(--color-placeholder);
+  background: var(--color-stone);
 }
 
 .outsideMonth {
-  color: var(--color-taupe);
+  color: var(--color-placeholder);
   font: var(--type-secondary);
+}
+
+.outsideMonth:not(.selected):hover,
+.outsideMonth:not(.selected):focus-visible {
+  color: var(--color-muted);
 }
 
 .today {

@@ -162,7 +162,11 @@ export function CatalogManager({
                     >
                       Editar
                     </Button>
-                    <Button variant="danger" disabled={isSaving} onClick={() => onDelete(item)}>
+                    <Button
+                      variant="danger-subtle"
+                      disabled={isSaving}
+                      onClick={() => onDelete(item)}
+                    >
                       Apagar
                     </Button>
                   </div>

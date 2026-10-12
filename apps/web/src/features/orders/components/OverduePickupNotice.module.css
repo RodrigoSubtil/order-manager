@@ -1,14 +1,20 @@
 .notice {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  flex-wrap: wrap;
   gap: var(--space-3);
-  border: 1px solid color-mix(in srgb, var(--color-warning) 28%, var(--color-white));
-  border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-warning-soft);
-  color: var(--color-warning);
+  border: 1px solid var(--color-danger-border);
+  border-radius: var(--radius);
+  padding: 0 var(--space-3);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
   min-width: 0;
+}
+
+.clear {
+  color: var(--color-muted);
+  background: var(--color-cream);
+  border-color: var(--color-line);
 }
 
 .noticeIcon {
@@ -16,38 +22,42 @@
 }
 
 .copy {
-  display: grid;
-  gap: var(--space-1);
-  flex: 1 1 180px;
   min-width: 0;
-}
-
-.copy strong {
+  overflow-wrap: anywhere;
   font: var(--type-label);
-}
-
-.copy span {
-  font: var(--type-caption);
 }
 
 .toggle {
   min-height: var(--touch-target);
-  padding: var(--space-2) var(--space-3);
-  border-color: color-mix(in srgb, var(--color-warning) 28%, var(--color-white));
-  background: var(--color-white);
-  color: var(--color-warning);
+  padding: var(--space-1) var(--space-2);
+  border-color: transparent;
+  background: transparent;
+  color: inherit;
   font: var(--type-label);
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.toggle:hover:not(:disabled) {
+  border-color: transparent;
+  background: transparent;
+  color: var(--color-danger-hover);
+}
+
+.clear .toggle:hover:not(:disabled) {
+  color: var(--color-ink);
 }
 
 .badge {
   display: inline-flex;
   align-items: center;
+  justify-self: start;
   gap: var(--space-1);
   max-width: 100%;
-  border: 1px solid color-mix(in srgb, currentcolor 28%, transparent);
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-danger-border);
+  border-radius: var(--radius);
   padding: var(--space-1) var(--space-2);
-  margin-bottom: var(--space-4);
   background: var(--color-danger-soft);
   color: var(--color-danger);
   font: var(--type-status);
@@ -66,11 +76,6 @@
 
 @media (max-width: 560px) {
   .notice {
-    padding: var(--space-3);
     gap: var(--space-2);
-  }
-
-  .copy {
-    flex-basis: 150px;
   }
 }

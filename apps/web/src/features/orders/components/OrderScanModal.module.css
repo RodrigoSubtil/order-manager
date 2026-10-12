@@ -41,7 +41,7 @@
   object-fit: contain;
   background: var(--color-soft-white);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
 }
 
 .photoStage video {
@@ -76,7 +76,7 @@
   height: 8px;
   overflow: hidden;
   background: var(--color-line);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius);
 }
 
 .progressTrack span {

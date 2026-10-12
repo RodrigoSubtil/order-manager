@@ -48,22 +48,32 @@ export function OrderCard({
   return (
     <Card as="article" className={styles.card}>
       <aside className={styles.dateStrip} aria-label="Data de entrega">
-        <strong>{formatDate(order.deliveryDate)}</strong>
-        <small>{order.deliveryTime || 'Sem hora'}</small>
+        <strong>
+          <Icon name="calendar" />
+          {formatDate(order.deliveryDate)}
+        </strong>
+        <small>
+          <Icon name="clock" />
+          {order.deliveryTime || 'Sem hora'}
+        </small>
       </aside>
       <div className={styles.ticket}>
-        {delayMinutes !== null && <OverduePickupBadge minutes={delayMinutes} />}
         <header className={styles.head}>
-          <div className={styles.meta}>
-            <span>
-              Responsável: <SearchHighlight query={search} text={responsibleName} />
-            </span>
-            <span className={styles.number}>Pedido #{order.orderNumber ?? '-'}</span>
+          <div className={styles.overview}>
+            {delayMinutes !== null && <OverduePickupBadge minutes={delayMinutes} />}
+            <div className={styles.meta}>
+              <span>
+                Responsável: <SearchHighlight query={search} text={responsibleName} />
+              </span>
+              <span className={styles.number}>Pedido #{order.orderNumber ?? '-'}</span>
+            </div>
           </div>
           <div className={styles.client}>
-            <span>Cliente</span>
             <h2>
-              <SearchHighlight query={search} text={order.clientName} />
+              <Icon name="user" />
+              <span>
+                <SearchHighlight query={search} text={order.clientName} />
+              </span>
             </h2>
             <p className={styles.phone}>
               <Icon name="phone" className={styles.phoneIcon} />
@@ -118,7 +128,7 @@ export function OrderCard({
             <Button
               iconOnly
               className={styles.actionButton}
-              variant="primary"
+              variant="success"
               aria-label="Concluir"
               title="Concluir"
               disabled={!onComplete}
@@ -130,8 +140,8 @@ export function OrderCard({
             </Button>
             <Button
               iconOnly
-              className={`${styles.actionButton} ${styles.secondaryAction}`}
-              variant="ghost"
+              className={styles.actionButton}
+              variant="secondary"
               aria-label="Abrir conversa no WhatsApp"
               title="Abrir conversa no WhatsApp"
               disabled={!whatsAppUrl}
@@ -143,8 +153,8 @@ export function OrderCard({
             </Button>
             <Button
               iconOnly
-              className={`${styles.actionButton} ${styles.secondaryAction}`}
-              variant="ghost"
+              className={styles.actionButton}
+              variant="secondary"
               aria-label="Editar"
               title="Editar"
               disabled={!onEdit}
@@ -156,8 +166,8 @@ export function OrderCard({
             </Button>
             <Button
               iconOnly
-              className={`${styles.actionButton} ${styles.secondaryAction} ${styles.printAction}`}
-              variant="ghost"
+              className={`${styles.actionButton} ${styles.printAction}`}
+              variant="secondary"
               aria-label="Imprimir"
               title="Imprimir"
               onClick={onPrint}
@@ -169,8 +179,8 @@ export function OrderCard({
             {onDelete && (
               <Button
                 iconOnly
-                className={`${styles.actionButton} ${styles.secondaryAction} ${styles.deleteAction}`}
-                variant="ghost"
+                className={styles.actionButton}
+                variant="danger-subtle"
                 aria-label="Apagar"
                 title="Apagar"
                 onClick={onDelete}

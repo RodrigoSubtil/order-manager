@@ -1,33 +1,18 @@
 .editor {
   display: grid;
-  background: var(--color-white);
-  border: 1px solid var(--color-sand);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  gap: var(--space-4);
-}
-
-.title {
-  display: flex;
-  gap: var(--space-3);
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--color-sand);
-}
-
-.title h3 {
-  margin: 0;
+  min-width: 0;
+  gap: var(--space-6);
 }
 
 .card {
   display: grid;
   min-width: 0;
-  background: var(--color-soft-white);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  gap: var(--space-4);
+  gap: var(--space-6);
+}
+
+.card + .card {
+  border-top: 1px solid var(--color-sand);
+  padding-top: var(--space-6);
 }
 
 .cardTop {
@@ -46,7 +31,7 @@
 .grid {
   display: grid;
   grid-template-columns: minmax(150px, 0.5fr) minmax(260px, 1.15fr) minmax(150px, 0.6fr);
-  gap: var(--space-4);
+  gap: var(--space-6);
   align-items: start;
   min-width: 0;
 }
@@ -96,14 +81,12 @@
   justify-self: end;
   min-width: 240px;
   margin-top: var(--space-1);
-  box-shadow: 0 10px 22px rgb(77 67 57 / 16%);
   min-height: var(--control-height);
   padding-inline: var(--space-4);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
 }
 
 @media (max-width: 900px) {
-  .title,
   .grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -112,10 +95,6 @@
 }
 
 @media (max-width: 560px) {
-  .title {
-    gap: var(--space-3);
-  }
-
   .addProduct {
     width: 100%;
     min-width: 0;

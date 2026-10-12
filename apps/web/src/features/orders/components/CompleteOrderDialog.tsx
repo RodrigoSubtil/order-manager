@@ -25,12 +25,12 @@ export function CompleteOrderDialog({
         </div>
       </div>
       <DialogActions>
-        <Button data-autofocus disabled={isSaving} onClick={onCancel}>
+        <Button data-autofocus variant="danger-subtle" disabled={isSaving} onClick={onCancel}>
           Não
         </Button>
         <Button
           className={styles.completeButton}
-          variant="primary"
+          variant="success"
           aria-label={isSaving ? 'A concluir encomenda' : 'Concluir encomenda'}
           title={isSaving ? 'A concluir encomenda' : 'Concluir encomenda'}
           disabled={isSaving}

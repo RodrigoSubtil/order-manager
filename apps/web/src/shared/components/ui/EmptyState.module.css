@@ -9,7 +9,7 @@
   text-align: center;
   background: var(--color-white);
   border: 1px dashed var(--color-taupe);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   font: var(--type-body);
 }
 

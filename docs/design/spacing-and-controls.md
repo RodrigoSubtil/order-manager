@@ -1,8 +1,8 @@
 # Style guide · Espaçamentos e controles
 
-[Índice do style guide](README.md) · [Tipografia](typography.md)
+[Índice do style guide](README.md) · [Tipografia](typography.md) · [Cores e estados](colors.md)
 
-**Estado em 11/10/2026: aplicado no código local.** Este capítulo define as medidas da interface do Order Manager. Variáveis, componentes compartilhados e páginas seguem o padrão, com as exceções explícitas abaixo. A publicação não foi realizada nesta etapa; a ficha térmica de 80 mm mantém suas regras próprias.
+**Estado em 12/10/2026: aplicado no código desta revisão.** Este capítulo define as medidas da interface do Order Manager. Variáveis, componentes compartilhados e páginas seguem o padrão, com as exceções explícitas abaixo. Esta revisão destina-se somente a homologação; a ficha térmica de 80 mm mantém suas regras próprias.
 
 ## 1. Princípios
 
@@ -26,7 +26,7 @@ A unidade base é **4 px**. A escala principal tem seis valores; o nome da vari�
 | 24 px | `--space-6`        | Seções de formulário; blocos distintos; conteúdo interno de painéis amplos     |
 | 32 px | `--space-7`        | Grupos principais de uma página ampla, quando 24 px não separa suficientemente |
 
-A variável legada de 18 px foi removida por não ter uso. Espaços usam a escala principal, escolhida pela relação entre os elementos. Bordas, traços de ícones, foco e raios têm escalas próprias.
+A variável legada de 18 px foi removida por não ter uso. Espaços usam a escala principal, escolhida pela relação entre os elementos. Bordas, traços de ícones e foco têm medidas próprias; os cantos usam um único raio de 0,8rem.
 
 ### Espaços por relação
 
@@ -66,14 +66,14 @@ Containers flex e grid que recebem conteúdo variável usam `min-width: 0`; colu
 
 As medidas incluem borda e preenchimento (`box-sizing: border-box`). **44 × 44 px é a área mínima de interação adotada pelo projeto**, também para fechar, sair, abrir calendário ou mostrar senha. Não é o tamanho obrigatório do desenho interno.
 
-| Tipo                                              | Altura mínima                   | Largura                          | Padding vertical / horizontal | Ícone                | Espaço ícone–texto | Raio    |
-| ------------------------------------------------- | ------------------------------- | -------------------------------- | ----------------------------- | -------------------- | ------------------ | ------- |
-| Padrão com texto                                  | 44 px                           | Conforme conteúdo                | 8 / 16 px                     | 20 px, quando houver | 8 px               | 8 px    |
-| Destaque / ação principal de uma etapa            | 48 px                           | Conforme grupo; pode ocupar 100% | 12 / 16 px                    | 20 px, quando houver | 8 px               | 8 px    |
-| Somente ícone                                     | 44 px                           | 44 px                            | 0; conteúdo centralizado      | 20 px                | —                  | 8 px    |
-| Barra principal: digitalizar, imprimir, adicionar | 48 px                           | Conforme grade responsiva        | 0; conteúdo centralizado      | 24 px                | —                  | 14 px   |
-| Calendário                                        | 44 px                           | Pelo menos 44 px                 | 8 / 12 px                     | 20 px                | 8 px               | 8 px    |
-| Sessão no cabeçalho                               | Desenho de 32 px; Sair de 30 px | Conforme conteúdo                | 0 / 12 px; Sair sem padding   | 16 px                | 8 px               | Cápsula |
+| Tipo                                              | Altura mínima                   | Largura                          | Padding vertical / horizontal | Ícone                | Espaço ícone–texto | Raio   |
+| ------------------------------------------------- | ------------------------------- | -------------------------------- | ----------------------------- | -------------------- | ------------------ | ------ |
+| Padrão com texto                                  | 44 px                           | Conforme conteúdo                | 8 / 16 px                     | 20 px, quando houver | 8 px               | 0,8rem |
+| Destaque / ação principal de uma etapa            | 48 px                           | Conforme grupo; pode ocupar 100% | 12 / 16 px                    | 20 px, quando houver | 8 px               | 0,8rem |
+| Somente ícone                                     | 44 px                           | 44 px                            | 0; conteúdo centralizado      | 20 px                | —                  | 0,8rem |
+| Barra principal: digitalizar, imprimir, adicionar | 48 px                           | Conforme grade responsiva        | 0; conteúdo centralizado      | 24 px                | —                  | 0,8rem |
+| Calendário                                        | 44 px                           | Pelo menos 44 px                 | 8 / 12 px                     | 20 px                | 8 px               | 0,8rem |
+| Sessão no cabeçalho                               | Desenho de 32 px; Sair de 30 px | Conforme conteúdo                | 0 / 12 px; Sair sem padding   | 16 px                | 8 px               | 0,8rem |
 
 Os controles de sessão conservam o desenho compacto. Uma área transparente amplia o toque para pelo menos 44 × 44 px; o container não a recorta. Não aumente a aparência desses botões para cumprir o alvo de toque.
 
@@ -81,11 +81,14 @@ Texto usa `--type-button`; o compacto pode usar `--type-button-sm`. Uma frase lo
 
 ### Hierarquia e agrupamento
 
-- **Primário:** ação principal da etapa, como Salvar, Continuar ou Adicionar. Use a variante existente.
-- **Secundário:** alternativa, como Cancelar, Voltar ou Refazer. Conserva a mesma altura e tipografia do primário ao lado.
+- **Primário:** ação principal da etapa, como Continuar ou Adicionar. Use a variante existente.
+- **Secundário:** alternativa, como Voltar ou Refazer. Conserva a mesma altura e tipografia do primário ao lado.
 - **Discreto:** ações auxiliares e ações do cartão. Use as variantes existentes sem criar um formato diferente em cada página.
-- **Destrutivo:** Eliminar e confirmações destrutivas usam a variante própria. O formato não muda apenas por ser uma ação de risco.
-- Rodapé de diálogo: secundário à esquerda e primário à direita, duas colunas de igual largura e intervalo de 12 px. Se o texto não couber, quebre dentro dos botões; empilhe somente se ainda faltar espaço.
+- **Destrutivo:** Remover e iniciar Apagar usam vermelho suave; a confirmação final usa vermelho preenchido.
+- **Confirmação positiva:** Salvar encomenda e Concluir usam verde suave, texto e borda verdes. No rodapé da encomenda, Salvar é um visto verde e Cancelar é uma lixeira vermelha, ambos com nome acessível e título.
+- **Fechar e cancelar:** X no cabeçalho dos modais e Cancelar/Não no rodapé usam vermelho suave. O fechamento mantém a ação original e não exclui dados guardados.
+- **Ação de texto:** Ver e Voltar no aviso de atrasos usam texto sublinhado e mantêm 44 px de área de toque.
+- Rodapé de diálogo: cancelar à esquerda e confirmar à direita, duas colunas de igual largura e intervalo de 12 px. Se o texto não couber, quebre dentro dos botões; empilhe somente se ainda faltar espaço.
 - Cartão: ações centralizadas, intervalo de 8 px. No celular, os quatro botões usam 44 px e permanecem na mesma linha; a impressão aparece a partir de 561 px.
 - Não coloque ações apenas em hover. Todo botão com somente ícone tem nome acessível, como `aria-label="Editar encomenda"`.
 
@@ -98,7 +101,7 @@ Texto usa `--type-button`; o compacto pode usar `--type-button-sm`. Uma frase lo
 | Ações da barra principal                                   | 24 × 24 px          | Altura de 48 px, largura definida pela grade |
 | Ilustração de sucesso ou confirmação                       | 32 × 32 px          | Decorativa; não substitui um botão           |
 
-Use SVG com `viewBox="0 0 24 24"`, proporção preservada, traço de **1.8** na base, pontas e junções arredondadas. Não desenhe a mesma ação com emoji, caractere de outra fonte ou dois conjuntos de ícones diferentes. Fechar, navegação do calendário e adicionar usam o componente SVG compartilhado. Marcadores de estado decorativos conservam seus símbolos acompanhados de texto.
+Use SVG com `viewBox="0 0 24 24"`, proporção preservada, traço de **1.8** na base, pontas e junções arredondadas. Não desenhe a mesma ação com emoji, caractere de outra fonte ou dois conjuntos de ícones diferentes. Salvar (visto), descartar a edição (lixeira), fechar, navegação do calendário e adicionar usam o componente SVG compartilhado. Marcadores de estado decorativos conservam seus símbolos acompanhados de texto.
 
 O símbolo oficial do WhatsApp conserva o desenho preenchido e a dimensão óptica de **22 px** já usada no cartão; é uma exceção de marca. Não aplique traço ao desenho preenchido.
 
@@ -106,15 +109,7 @@ Um ícone de 20 px dentro de um botão de 44 px deixa aproximadamente 12 px de e
 
 ## 6. Raios e bordas
 
-| Valor             | Variável / regra                    | Onde usar                                                                 |
-| ----------------- | ----------------------------------- | ------------------------------------------------------------------------- |
-| 6 px              | `--radius-sm`                       | Etiquetas e pequenos marcadores não interativos                           |
-| 8 px              | `--radius-md`                       | Botões comuns, campos, selects e grupos internos de formulário            |
-| 14 px             | `--radius-lg`                       | Cartões de encomenda, painéis, diálogos, busca e ações da barra principal |
-| 24 px             | `--radius-xl`                       | Container de destaque do login; não é o raio padrão de todo cartão        |
-| Cápsula / círculo | `--radius-pill` / `--radius-circle` | Grupo de sessão, barra de progresso e marcador circular de estado         |
-
-O mesmo componente mantém o raio nas diferentes larguras. Não troque 14 por 10 px apenas por entrar no celular. Um container interno não precisa repetir a borda e o raio do container externo.
+**Raio único: 0,8rem**, equivalente a 12,8 px com a base normal de 16 px. Use `border-radius: var(--radius)` em campos, botões, cartões, painéis, menus, alertas, indicadores, cabeçalhos e modais, em todas as larguras. Não existem raios maiores para login ou diálogos nem cápsulas para a sessão. Cantos internos de grupos conectados podem permanecer retos; o contorno externo usa o raio único. O círculo do spinner é geometria do desenho, não uma variação de superfície.
 
 Use borda de **1 px** em campos, cartões e separadores. A borda de **2 px** fica reservada ao tratamento já existente das ações de imprimir e digitalizar. O anel de foco não altera a espessura da borda nem desloca o layout. As cores continuam vindo das variáveis atuais; este capítulo não cria uma paleta nova.
 
@@ -122,11 +117,12 @@ Use borda de **1 px** em campos, cartões e separadores. A borda de **2 px** fic
 
 ### Campos e formulários
 
-- Campos, selects e busca: altura mínima de **48 px**, padding horizontal de **12 px**, raio de **8 px**; busca da barra principal usa **14 px**.
+- Campos, selects e busca: altura mínima de **48 px**, padding horizontal de **12 px**, raio único de **0,8rem**.
 - Texto de entrada: **16 px**, conforme o guia de tipografia. Não reduzir em telas estreitas.
 - Textarea: altura mínima de **96 px**, padding de **12 px**, crescimento vertical permitido.
 - Ícone decorativo: **20 px**, a **12 px** da borda; reserve **44 px** no padding desse lado para não sobrepor o texto. Se for clicável, reserve a área de interação de **44 px**, sem encobrir o valor.
-- Espaço entre colunas e linhas de campos: **16 px**; seções: **24 px**. Até **900 px**, formulários gerais usam uma coluna. Na revisão da digitalização, mantenha uma coluna também em telas maiores.
+- Espaço geral entre colunas e linhas de campos: **16 px**; seções: **24 px**. No formulário de encomenda, os campos usam **24 px** e as seções **32 px**, para facilitar a leitura. Até **900 px**, formulários gerais usam uma coluna. Na revisão da digitalização, mantenha uma coluna também em telas maiores.
+- No formulário de encomenda, use somente a margem lateral do corpo do diálogo: **16 px** no celular e **24 px** nas demais larguras. Dados da encomenda e produtos compartilham as mesmas bordas de alinhamento. Não acrescente cartões ou padding lateral ao redor dos campos dessas seções. Títulos usam o cabeçalho compartilhado em creme, com padding de **8 × 12 px** e raio de **0,8rem**; produtos adicionais recebem uma linha e **24 px** de espaço, sem um novo recuo.
 - Prefixo de país e telefone podem compartilhar a linha; até **390 px**, ficam empilhados. Um texto maior pode exigir a quebra antes disso.
 - Quantidade e unidade ficam empilhadas até **390 px**; na revisão compacta, até **560 px**.
 - Calendário: botões e dias têm pelo menos **44 px**. Até **360 px**, há uma exceção de margem de **4 px** e sem padding lateral no corpo, para acomodar sete dias sem diminuir o alvo de toque.
@@ -136,19 +132,19 @@ Use borda de **1 px** em campos, cartões e separadores. A borda de **2 px** fic
 
 | Região                                     | Medida                                                                        |
 | ------------------------------------------ | ----------------------------------------------------------------------------- |
-| Faixa com data e hora                      | Padding de 12 px vertical e 16 px horizontal; gap de 8 px; `space-between`    |
+| Faixa com data e hora                      | Padding de 8 px vertical e 16 px horizontal; gap de 8 px; `space-between`     |
 | Bloco de responsável, número e cliente     | Padding de 16 px; intervalo entre grupos de 16 px                             |
-| Informação relacionada no bloco do cliente | 4 px entre rótulo e nome; 8 px até o telefone                                 |
+| Informação relacionada no bloco do cliente | Nome com ícone de perfil; 8 px até o telefone                                 |
 | Lista de produtos                          | Margens laterais de 16 px; linha com padding vertical de 12 px e gap de 12 px |
 | Categoria de produtos                      | 16 px acima do rótulo; sem adicionar outra caixa decorativa                   |
 | Rodapé                                     | Margens laterais de 16 px; padding vertical de 16 px; gap de 8 px entre ações |
 | Próxima encomenda                          | 16 px                                                                         |
 
-Data à esquerda e hora à direita, sem o rótulo “Entrega”. Responsável pode quebrar linha; número do pedido permanece legível. O nome do produto ocupa a coluna flexível e a quantidade fica à direita. Esses espaços seguem o cartão aprovado, sem mudar sua hierarquia.
+Data à esquerda e hora à direita, sem o rótulo “Entrega”, com ícones de 16 px, texto de 16 px regular e padding vertical de 8 px. Responsável pode quebrar linha; número do pedido permanece legível. O nome do produto ocupa a coluna flexível e a quantidade fica à direita. Esses espaços seguem o cartão aprovado, sem mudar sua hierarquia.
 
 ### Diálogos
 
-- Raio externo de **14 px** em todas as larguras.
+- Raio externo de **0,8rem** em todas as larguras.
 - Cabeçalho e rodapé: padding de **16 px**, gap de **12 px**. Corpo: **16 px** no celular e **24 px** acima de 560 px.
 - Título usa `--type-title`; fechar usa área de **44 × 44 px**.
 - Margem entre diálogo e janela: **12 px** até 560 px e **24 px** acima. Preserve a área segura e use `100dvh` para o limite de altura.
@@ -158,8 +154,8 @@ Data à esquerda e hora à direita, sem o rótulo “Entrega”. Responsável po
 ### Barra de filtros e lista
 
 - Gap entre controles: **12 px**, reduzido para **8 px** no celular.
-- Controles e busca formam um bloco fechado, com borda de 1 px, raio de 14 px e padding de **12 px** no celular ou **16 px** nas demais larguras. O espaço entre controles e busca é **12 px**.
-- O resumo fica **12 px** abaixo da barra, num grupo discreto com padding de **4 px** vertical e **12 px** horizontal, raio de **8 px**, borda suave de 1 px e fundo claro. A lista fica **16 px** abaixo do resumo, com intervalo de **16 px** entre cartões.
+- Controles e busca formam um bloco fechado, com borda de 1 px, raio de 0,8rem e padding de **12 px** no celular ou **16 px** nas demais larguras. O espaço entre controles e busca é **12 px**.
+- O resumo fica **12 px** abaixo da barra, num grupo discreto com padding de **4 px** vertical e **12 px** horizontal, raio de **0,8rem**, borda suave de 1 px e fundo claro. A lista fica **16 px** abaixo do resumo, com intervalo de **16 px** entre cartões.
 - Área e data ocupam partes iguais quando compartilham uma linha; no celular, cada filtro ocupa sua própria linha. O texto é centralizado usando reservas laterais iguais de **48 px**; a seta não desloca o centro da escrita.
 - Quando filtros ativos e contagem não couberem na mesma linha com pelo menos **12 px** de separação, a contagem passa para a linha abaixo, **alinhada à esquerda, abaixo da data**. Não a mantenha isolada à direita.
 - Evite um segundo painel sombreado envolvendo os cartões. A separação vem do espaço e das superfícies existentes.
@@ -183,7 +179,7 @@ Em **320 px**, mantenha quatro ações de 44 px com três gaps de 8 px: o grupo 
 - Erro e confirmação não aumentam bordas nem mudam pesos de texto. Mensagens entram no fluxo abaixo do campo, com **8 px** de separação.
 - Um botão desabilitado mantém espaço, rótulo e significado. Não use apenas a cor para comunicar estados.
 
-Use as variáveis de [tokens.css](../../apps/web/src/styles/tokens.css): `--space-*`, `--touch-target`, `--control-height`, `--icon-size-*`, `--radius-*`, `--page-inset`, `--page-gap`, `--orders-panel-padding` e `--dialog-*`. Dimensões compartilhadas ficam centralizadas; não crie cópias em cada componente. Sobrescritas locais dos controles usam o contexto do componente para não depender da ordem de carregamento do CSS.
+Use as variáveis de [tokens.css](../../apps/web/src/styles/tokens.css): `--space-*`, `--touch-target`, `--control-height`, `--icon-size-*`, `--radius`, `--page-inset`, `--page-gap`, `--orders-panel-padding` e `--dialog-*`. Dimensões compartilhadas ficam centralizadas; não crie cópias em cada componente. Sobrescritas locais dos controles usam o contexto do componente para não depender da ordem de carregamento do CSS.
 
 ```css
 .group {
@@ -200,7 +196,7 @@ Use as variáveis de [tokens.css](../../apps/web/src/styles/tokens.css): `--spac
   box-sizing: border-box;
   min-width: var(--touch-target);
   min-height: var(--touch-target);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
 }
 ```
 
@@ -214,7 +210,7 @@ O Stylelint protege os papéis tipográficos e também rejeita `gap` e `border-r
 | Controles compartilhados | Botões com alvo de 44 px, campos de 48 px, fechar/calendário/senha com área de toque preservada             |
 | Cabeçalho                | Sessão compacta com toque ampliado; versão e marca usam a mesma cor                                         |
 | Formulários e gestão     | Espaços por relação, campos de 16 px, remoção sem divisão de palavras e reorganização em telas estreitas    |
-| Diálogos                 | Raio de 14 px, áreas seguras, limite pela altura disponível e corpo com rolagem                             |
+| Diálogos                 | Raio de 0,8rem, áreas seguras, limite pela altura disponível e corpo com rolagem                            |
 | Painel e lista           | Filtros centralizados em bloco fechado; resumo agrupado acima dos resultados; cartões aprovados preservados |
 | Impressão                | CSS térmico e regras de 80 mm preservados                                                                   |
 

@@ -24,6 +24,14 @@ Rollback de frontend: promova um deployment anterior conhecido e valide-o. Rollb
 
 ## Registo de versões
 
+### 1.1.0 · paleta, formulário e raio único · 12/10/2026
+
+Revisão autorizada somente para **homologacao**, mantendo 1.1.0 durante este ciclo de validação. Inclui o style guide de cores e estados, paleta compartilhada e validação de cores/raios no Stylelint; formulário de encomenda com campos alinhados e mais espaço, seções Dados da encomenda e Produtos, Salvar com visto verde suave, Cancelar com lixeira vermelha suave e fechamento dos modais em vermelho. Todos os cantos de superfícies e controles usam 0,8rem. O aviso de recolhas atrasadas fica compacto, vermelho, com Ver/Voltar; o cartão recebe calendário, relógio e perfil, com espaçamento revisto.
+
+Verificação local: formatação, lint, tipos, 183 testes em 42 arquivos, cobertura exigida e build. A revisão visual com componentes reais e dados sintéticos bloqueou acessos externos e passou em 320, 390, 768 e 1280 px, incluindo alinhamento, inclusão/remoção de produtos, fechamento dos modais, área de toque, foco e contraste dos estados. Esses resultados não substituem os testes funcionais do utilizador em homologação nem a impressão física.
+
+Esta revisão não inclui migrations, publicação da Edge Function, mudanças em credenciais ou escrita no banco. Produção e **main** ficam excluídas. Os checks remotos, o commit integrado e o resultado do deployment devem ser conferidos na PR desta revisão e no domínio de homologação.
+
 ### 1.1.0 · recolhas atrasadas, padrão visual e áreas · 11/10/2026
 
 Publicação autorizada **somente em homologação**: style guides de tipografia/espaçamentos e ajustes visuais aprovados, aviso de recolhas atrasadas com contador por minuto e filtro global de pendências, e associação de área ao produto com revisão humana. Mantida a versão nesta rodada de homologação; não há promoção para produção, migration ou alteração dos secrets. A Edge Function `interpret-order` foi publicada separadamente no projeto `czbrnxrpofdbbgbdyrad` para ativar a nova instrução da área, preservando a autenticação já implementada no handler.

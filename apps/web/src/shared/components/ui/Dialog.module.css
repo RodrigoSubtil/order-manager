@@ -4,7 +4,7 @@
   z-index: var(--z-dialog);
   display: grid;
   place-items: center;
-  background: rgb(77 67 57 / 56%);
+  background: var(--color-overlay);
   padding: var(--dialog-inset-top) max(var(--dialog-margin), env(safe-area-inset-right))
     var(--dialog-inset-bottom) max(var(--dialog-margin), env(safe-area-inset-left));
 }
@@ -17,7 +17,7 @@
   box-shadow: var(--shadow-dialog);
   max-height: var(--dialog-max-height);
   min-width: 0;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
 }
 
 .large {

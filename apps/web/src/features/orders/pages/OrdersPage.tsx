@@ -223,7 +223,6 @@ export default function OrdersPage() {
         <OrderIndicators stats={filters.stats} total={data.overviewOrders.length} />
         <OverduePickupNotice
           count={overdue.orders.length}
-          oldestMinutes={overdue.oldestMinutes}
           active={overdueOnly}
           onToggle={() => setOverdueOnly((current) => !current)}
         />

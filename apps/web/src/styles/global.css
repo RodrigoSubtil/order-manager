@@ -1,6 +1,6 @@
 :root {
   color: var(--color-ink);
-  background: #f6f9f8;
+  background: var(--color-soft-white);
   font-synthesis: none;
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
@@ -60,8 +60,8 @@ textarea {
   padding: var(--space-3);
   color: var(--color-ink);
   background: var(--color-white);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius);
   outline: none;
   resize: vertical;
   font: var(--type-body);
@@ -75,12 +75,20 @@ textarea::placeholder {
 
 textarea:focus-visible {
   border-color: var(--color-focus);
-  box-shadow: 0 0 0 3px rgb(91 120 199 / 20%);
+  box-shadow: var(--shadow-focus);
   outline: none;
 }
 
 textarea[aria-invalid='true'] {
   border-color: var(--color-danger);
+}
+
+:is(input, select, textarea):disabled {
+  color: var(--color-muted);
+  background: var(--color-stone);
+  border-color: var(--color-line);
+  opacity: 1;
+  cursor: not-allowed;
 }
 
 .modal-open {
