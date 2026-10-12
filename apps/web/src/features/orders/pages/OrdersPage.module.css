@@ -2,9 +2,7 @@
   display: grid;
   grid-template-rows: auto auto auto minmax(0, 1fr);
   width: 100%;
-  background:
-    radial-gradient(circle at top left, rgb(187 165 142 / 13%), transparent 34%),
-    linear-gradient(180deg, var(--color-white) 0%, var(--color-stone) 100%);
+  background: var(--gradient-page);
   padding: max(var(--page-inset), env(safe-area-inset-top))
     max(var(--page-inset), env(safe-area-inset-right))
     max(var(--page-inset), var(--space-4), env(safe-area-inset-bottom))

@@ -95,7 +95,7 @@ describe('recolhas atrasadas no painel', () => {
     fireEvent.change(screen.getByRole('textbox', { name: 'Pesquisar encomendas' }), {
       target: { value: 'Ana' },
     });
-    await user.click(screen.getByRole('button', { name: 'Ver atrasadas' }));
+    await user.click(screen.getByRole('button', { name: 'Ver recolhas atrasadas' }));
     const cards = orderCards();
     expect(within(cards[0]).getByRole('heading', { name: 'João Costa' })).toBeVisible();
     expect(within(cards[1]).getByRole('heading', { name: 'Ana Martins' })).toBeVisible();
@@ -109,7 +109,7 @@ describe('recolhas atrasadas no painel', () => {
   it('conclui uma encomenda de outro dia com a versão correta e atualiza o aviso', async () => {
     const user = userEvent.setup();
     openPage();
-    await user.click(screen.getByRole('button', { name: 'Ver atrasadas' }));
+    await user.click(screen.getByRole('button', { name: 'Ver recolhas atrasadas' }));
     await user.click(within(orderCards()[0]).getByRole('button', { name: 'Concluir' }));
     await user.click(screen.getByRole('button', { name: 'Concluir encomenda' }));
     await waitFor(() => expect(complete).toHaveBeenCalledWith('previous', 3));

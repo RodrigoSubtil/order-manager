@@ -16,6 +16,6 @@
 
 @media (max-width: 560px) {
   .actions {
-    box-shadow: 0 -10px 24px rgb(77 67 57 / 8%);
+    box-shadow: var(--shadow-sticky);
   }
 }

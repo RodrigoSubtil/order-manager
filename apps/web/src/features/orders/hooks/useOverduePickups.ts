@@ -8,7 +8,6 @@ export function useOverduePickups(orders: Order[], now: number) {
     const overdue = schedule.filter((item) => pickupDelayMinutes(item.deadline, now) !== null);
     return {
       orders: overdue.map((item) => item.order),
-      oldestMinutes: overdue.length ? pickupDelayMinutes(overdue[0].deadline, now) : null,
     };
   }, [schedule, now]);
 }

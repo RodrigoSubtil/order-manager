@@ -4,7 +4,7 @@
   min-width: 0;
   overflow: hidden;
   border-color: var(--color-sand);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   box-shadow: none;
 }
 
@@ -14,14 +14,17 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-4);
   background: var(--color-cream);
 }
 
 .dateStrip > strong,
 .dateStrip > small {
-  color: var(--color-ink);
-  font: var(--type-section);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-muted);
+  font: var(--type-body);
 }
 
 .ticket {
@@ -35,6 +38,26 @@
   gap: var(--space-4);
   min-width: 0;
   padding: var(--space-4);
+}
+
+.overview {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-3);
+}
+
+.dateStrip svg {
+  flex: 0 0 auto;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+  color: currentcolor;
+}
+
+.client h2 svg {
+  flex: 0 0 auto;
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  color: var(--color-accent);
 }
 
 .meta {
@@ -60,15 +83,17 @@
   min-width: 0;
 }
 
-.client > span {
-  color: var(--color-muted);
-  font: var(--type-secondary);
-}
-
 .card h2 {
-  margin-top: var(--space-1);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 0;
   overflow-wrap: anywhere;
   font: var(--type-title);
+}
+
+.client h2 > span {
+  min-width: 0;
 }
 
 .phone {
@@ -177,14 +202,8 @@
   min-width: var(--touch-target);
   min-height: var(--touch-target);
   padding: 0;
-  border-color: transparent;
   height: var(--touch-target);
   padding-block: 0;
-}
-
-.secondaryAction {
-  color: var(--color-accent);
-  background: var(--color-cream);
 }
 
 .actions .actionButton svg {
@@ -202,10 +221,6 @@
   stroke: none;
   width: var(--icon-size-brand);
   height: var(--icon-size-brand);
-}
-
-.deleteAction {
-  color: var(--color-danger);
 }
 
 .srOnly {

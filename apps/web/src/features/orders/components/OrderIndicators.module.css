@@ -26,8 +26,7 @@
 
 .total {
   color: var(--color-white);
-  background:
-    linear-gradient(135deg, rgb(118 95 75 / 98%), rgb(87 68 53 / 96%)), var(--color-accent);
+  background: var(--gradient-brand);
   border-color: transparent;
 }
 

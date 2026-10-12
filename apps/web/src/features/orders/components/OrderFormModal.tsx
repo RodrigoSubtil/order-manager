@@ -15,6 +15,7 @@ import {
   DialogActions,
   DialogHeader,
   FieldError,
+  FormSectionHeading,
   Icon,
   Input,
   SuccessMessage,
@@ -144,11 +145,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
               {submissionError && <Alert tone="error">{submissionError}</Alert>}
 
               <section className={styles.detailsSection} aria-labelledby="order-details-title">
-                <div className={styles.sectionTitle}>
-                  <h3 id="order-details-title" data-eyebrow>
-                    Encomenda
-                  </h3>
-                </div>
+                <FormSectionHeading id="order-details-title">Dados da encomenda</FormSectionHeading>
                 <div className={styles.fieldGrid}>
                   <div data-form-field>
                     <ScanFieldLabel
@@ -452,11 +449,26 @@ export function OrderFormModal(props: OrderFormModalProps) {
             </div>
 
             <DialogActions>
-              <Button disabled={isSubmitting} onClick={onClose}>
-                Cancelar
+              <Button
+                iconOnly
+                variant="danger-subtle"
+                aria-label="Cancelar"
+                title="Cancelar"
+                disabled={isSubmitting}
+                onClick={onClose}
+              >
+                <Icon name="trash" />
               </Button>
-              <Button variant="primary" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'A salvar...' : 'Salvar'}
+              <Button
+                iconOnly
+                variant="success"
+                type="submit"
+                aria-label={isSubmitting ? 'A salvar...' : 'Salvar'}
+                title={isSubmitting ? 'A salvar...' : 'Salvar'}
+                aria-busy={isSubmitting}
+                disabled={isSubmitting}
+              >
+                <Icon name="check" />
               </Button>
             </DialogActions>
           </>

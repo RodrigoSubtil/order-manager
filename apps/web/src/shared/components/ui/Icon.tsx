@@ -4,6 +4,8 @@ import styles from './Icon.module.css';
 
 export type IconName =
   | 'calendar'
+  | 'check'
+  | 'trash'
   | 'chevron-left'
   | 'chevron-right'
   | 'close'
@@ -30,6 +32,10 @@ function IconContent({ name }: { name: IconName }) {
           <rect x="4" y="5" width="16" height="16" rx="2" />
         </>
       );
+    case 'check':
+      return <path d="m5 12 4 4L19 6" />;
+    case 'trash':
+      return <path d="M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6" />;
     case 'chevron-left':
       return <path d="m14.5 5-7 7 7 7" />;
     case 'chevron-right':

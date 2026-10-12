@@ -30,7 +30,7 @@ export function SettingsDeleteDialog({
         </div>
       </div>
       <DialogActions>
-        <Button data-autofocus disabled={isSaving} onClick={onCancel}>
+        <Button data-autofocus variant="danger-subtle" disabled={isSaving} onClick={onCancel}>
           Cancelar
         </Button>
         <Button variant="danger" disabled={isSaving} onClick={onConfirm}>

@@ -16,6 +16,7 @@ export { DatePicker } from './DatePicker';
 export { EmptyState } from './EmptyState';
 export { FieldError } from './FieldError';
 export { FormMessage } from './FormMessage';
+export { FormSectionHeading } from './FormSectionHeading';
 export { Icon } from './Icon';
 export { Input } from './Input';
 export { Select } from './Select';

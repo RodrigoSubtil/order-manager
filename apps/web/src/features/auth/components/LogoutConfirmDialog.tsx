@@ -24,7 +24,7 @@ export function LogoutConfirmDialog({
         </div>
       </div>
       <DialogActions>
-        <Button data-autofocus variant="secondary" disabled={isSaving} onClick={onCancel}>
+        <Button data-autofocus variant="danger-subtle" disabled={isSaving} onClick={onCancel}>
           Cancelar
         </Button>
         <Button variant="danger" disabled={isSaving} onClick={onConfirm}>

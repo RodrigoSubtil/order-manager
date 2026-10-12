@@ -2,7 +2,7 @@
   display: grid;
   gap: var(--space-3);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   padding: var(--orders-panel-padding);
   background: var(--color-soft-white);
 }
@@ -47,16 +47,16 @@
 .dateFilter .dateFilterInput {
   text-align: center;
   background: var(--color-white);
-  border-color: var(--color-line);
+  border-color: var(--color-control-border);
   font: var(--type-body);
   min-height: var(--control-height);
   padding-inline: var(--control-height);
 }
 
 .search {
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   text-align: center;
-  box-shadow: 0 10px 24px rgb(77 67 57 / 6%);
+  box-shadow: var(--shadow-control);
   font: var(--type-body);
   min-height: var(--control-height);
   padding: var(--space-2) var(--field-content-inset) var(--space-2) var(--space-3);
@@ -70,8 +70,8 @@
   display: inline-grid;
   width: 100%;
   place-items: center;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 10px 24px rgb(77 67 57 / 8%);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-control);
   font: var(--type-button);
   min-height: var(--control-height);
   padding: 0;
@@ -120,7 +120,7 @@
   font: var(--type-secondary);
   gap: var(--space-2) var(--space-3);
   margin-top: var(--space-3);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   padding: var(--space-1) var(--space-3);
   background: var(--color-soft-white);
   border: 1px solid var(--color-sand);

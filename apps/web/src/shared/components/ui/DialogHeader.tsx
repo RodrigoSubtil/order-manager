@@ -16,7 +16,7 @@ export function DialogHeader({ onClose, title, titleId }: DialogHeaderProps) {
         data-autofocus
         className={styles.close}
         iconOnly
-        variant="ghost"
+        variant="danger-subtle"
         aria-label="Fechar"
         onClick={onClose}
       >

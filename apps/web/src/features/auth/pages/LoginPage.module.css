@@ -2,9 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background:
-    radial-gradient(circle at top left, rgb(187 165 142 / 20%), transparent 35%),
-    linear-gradient(135deg, var(--color-cream), var(--color-white));
+  background: var(--gradient-login);
   padding: var(--page-inset);
   min-height: 100dvh;
 }
@@ -13,9 +11,9 @@
   width: 100%;
   max-width: 420px;
   padding: var(--space-7);
-  border-color: rgb(77 67 57 / 10%);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 24px 70px rgb(77 67 57 / 14%);
+  border-color: var(--color-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-login);
 }
 
 .brand {
@@ -59,10 +57,10 @@
 }
 
 .input {
-  border-color: rgb(77 67 57 / 14%);
+  border-color: var(--color-control-border);
   font: var(--type-body);
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
 }
 
 .passwordInput {
@@ -83,7 +81,7 @@
   color: var(--color-muted);
   background: transparent;
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   cursor: pointer;
   transform: translateY(-50%);
   transition:
@@ -104,7 +102,7 @@
 .passwordVisibility:focus-visible {
   color: var(--color-ink);
   border-color: var(--color-focus);
-  box-shadow: 0 0 0 3px rgb(91 120 199 / 20%);
+  box-shadow: var(--shadow-focus);
   outline: none;
 }
 
@@ -145,8 +143,8 @@
   position: relative;
   background: var(--color-white);
   border: 1px solid var(--color-taupe);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 1px 2px rgb(77 67 57 / 8%);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-subtle);
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast),
@@ -162,7 +160,7 @@
 
 .rememberMe input:focus-visible + .checkbox {
   border-color: var(--color-focus);
-  box-shadow: 0 0 0 3px rgb(91 120 199 / 20%);
+  box-shadow: var(--shadow-focus);
 }
 
 .rememberMe input:checked + .checkbox {
