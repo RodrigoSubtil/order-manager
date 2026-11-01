@@ -9,9 +9,9 @@ A câmara abre um modal pequeno para **Abrir câmara** ou **Escolher foto**. Uma
 - A prévia da câmara usa formato horizontal 4:3 e recorte central na captura, correspondente à área visível, mesmo quando o aparelho entrega vídeo vertical. Fotografias escolhidas do aparelho mantêm o formato original. A validação da câmara usa serviços simulados; o aparelho físico deve ser conferido pelo utilizador.
 - O front e o contrato de dados estão implementados. O caminho de simulação local foi retirado em 10/10/2026: dev e homologação chamam a mesma função, com as mesmas proteções. A variável antiga `VITE_ORDER_SCAN_DEMO` não tem efeito.
 - A função `supabase/functions/interpret-order/index.ts` está preparada para autenticar, validar uma foto, reservar o orçamento, contar tokens da imagem, consultar a OpenAI e devolver o rascunho extraído com a sugestão de área. Falha fechada se a chave, a permissão de ativação ou as credenciais do Supabase faltarem.
-- A migration `20261008190245_order_scan_limits.sql` foi aplicada **somente em homologação**, no projeto `order-manager-homologacao` (`czbrnxrpofdbbgbdyrad`), em 08/10/2026. O histórico remoto foi alinhado com a versão canónica do arquivo após o conector gerar o seu timestamp de aplicação.
+- A migration `20261008190245_order_scan_limits.sql` foi aplicada em homologação (`czbrnxrpofdbbgbdyrad`) em 08/10/2026 e em produção (`otwriruoqqwjwzzgicru`) em 01/11/2026, após aprovação do utilizador. Os históricos remotos foram alinhados com a versão canónica do arquivo após o conector gerar o seu timestamp de aplicação. RLS e execução das duas RPCs somente por `service_role` foram conferidos em produção, preservando os dados existentes.
 - **A leitura real foi ativada em homologação em 08/10/2026, às 21:41 UTC**: `ORDER_SCAN_LIVE_ENABLED=true`. Os secrets `OPENAI_API_KEY` e `ORDER_SCAN_ALLOWED_ORIGINS` estão salvos. A versão 3 da função incluiu diagnóstico seguro de falhas; o utilizador substituiu a chave e concluiu uma leitura real às 22:02 UTC.
-- A [PR #4](https://github.com/RodrigoSubtil/order-manager/pull/4) publica a versão 1.1.0 somente em `homologacao`. `VITE_ORDER_SCAN_ENABLED=true` está configurado no ambiente Preview dessa branch; a produção continua fora desta publicação.
+- A [PR #4](https://github.com/RodrigoSubtil/order-manager/pull/4) iniciou a publicação 1.1.0 em `homologacao`. Após aprovar os testes, o utilizador autorizou a promoção para `main` e produção em 01/11/2026, mantendo 1.1.0. A função `interpret-order` versão 1 foi publicada no projeto de produção com o mesmo código testado. A configuração de cada ambiente e a evidência da publicação estão no [registo de release](release.md).
 - Não existe chave da OpenAI no código, no browser ou neste documento. Leituras reais são pagas e dependem da ação do utilizador; os testes automáticos usam serviços simulados.
 
 ### Primeiro teste real e diagnóstico · 08/10/2026
@@ -68,6 +68,14 @@ Verificação local desta alteração: formatação, lint, tipos, 173 testes em 
 O orçamento no banco é uma proteção da aplicação, não um limite de faturação da OpenAI. A reserva de US$ 0,04 cobre os tetos de tokens configurados para `gpt-5.4-mini` aos preços consultados em 08/10/2026. Confirmar preços antes da ativação. Uma falha sem informação de consumo mantém a reserva por prudência. Configurar também um limite de gastos no projeto da OpenAI. O limite de 50 por dia não significa que 50 por dia caberão no orçamento de US$ 1 mensal; o primeiro limite atingido bloqueia novas leituras.
 
 Exemplo ilustrativo: 3.000 tokens de entrada e 700 de saída custariam cerca de US$ 0,0054 com preço de US$ 0,75/M na entrada e US$ 4,50/M na saída, antes de variações de preço ou processamento. Uma foto com letra difícil pode gastar mais tokens, pedir revisão manual ou falhar. A percentagem mostrada no front é estimativa de espera; 100% só aparece após uma resposta concluída.
+
+## Configuração em produção · promoção de 01/11/2026
+
+A promoção foi aprovada após o teste do utilizador em homologação. No projeto `otwriruoqqwjwzzgicru`, a migration e a função foram instaladas separadamente do frontend. Configure `OPENAI_API_KEY` diretamente nos secrets desse projeto; mantenha a chave fora do chat, do Git e de `VITE_*`. Não copie chaves ou dados de homologação.
+
+Use `ORDER_SCAN_ALLOWED_ORIGINS=https://order-manager-rs.vercel.app` e `ORDER_SCAN_LIVE_ENABLED=true` no backend de produção. Para suspender novas leituras, mude apenas a ativação para `false`. No Vercel, o build Production usa `VITE_ORDER_SCAN_ENABLED=true` e as variáveis Supabase de produção. A função falha fechada se faltar alguma configuração.
+
+Confirme o deployment e o domínio, além das respostas de preflight, origem indevida, método e sessão ausente/inválida. Essas verificações não enviam fotografias nem chamam a OpenAI. Uma leitura real depende da ação do utilizador e requer revisão antes de Salvar. O teste feito em homologação não comprova a chave, o saldo ou a autorização do modelo no projeto OpenAI de produção.
 
 ## Configuração e teste em homologação
 

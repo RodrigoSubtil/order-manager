@@ -2,11 +2,16 @@
 
 As versões descrevem o código desta árvore. A publicação e os testes reais são registados em [docs/operations/release.md](docs/operations/release.md).
 
-## [Unreleased]
+## [1.1.0] — IA e novo design · promoção aprovada em 01/11/2026
+
+- Ciclo testado em homologação e aprovado pelo utilizador para `main` e produção, mantendo 1.1.0. A preparação e os resultados da publicação ficam no [registo de release](docs/operations/release.md).
+- Telefone sempre ao lado do prefixo de país, com seletor compacto de 104 px e mais espaço para o número, inclusive em ecrãs estreitos.
+- Documentação distingue aprovação, preparação do backend e verificação do deployment, sem aumentar a versão automaticamente.
+- Zod fixado em 4.6.6 para corrigir o consumo excessivo de memória de versões anteriores, com instalação limpa e resolução única no workspace.
 
 - Recolhas atrasadas: selo no cartão com tempo decorrido, aviso global com a pendência mais antiga e atalho que inclui dias anteriores e permite voltar aos filtros. Relógio único por minuto no horário de Lisboa, sem IA nem alteração do banco.
 
-- Digitalização: área sugerida com prioridade para o catálogo da empresa e inferência da IA para produtos ainda não cadastrados; conflitos ficam para escolha humana. Área sempre pede Conferir; confirmar a mesma área preserva o produto. Prompt/contrato da função preparados localmente, pendentes de publicação autorizada.
+- Digitalização: área sugerida com prioridade para o catálogo da empresa e inferência da IA para produtos ainda não cadastrados; conflitos ficam para escolha humana. Área sempre pede Conferir; confirmar a mesma área preserva o produto. Prompt e contrato da função publicados nos projetos autorizados, preservando autenticação e limites.
 
 - Style guide de espaçamentos e controles aplicado à interface: escala centralizada, botões/campos/ícones/raios consistentes, diálogos adaptados à janela e cabeçalho compacto com toque ampliado. Filtros centralizados, resumo agrupado acima dos resultados e remoção sem divisão de palavras; ficha térmica preservada.
 
@@ -21,11 +26,9 @@ As versões descrevem o código desta árvore. A publicação e os testes reais 
 - Critério conservador no prompt, sem novos pedidos à IA ou aumento de limites; retirada da simulação local e porta dev fixa em 5174.
 - Limpeza de estilos repetidos/referências removidas e cancelamento de capturas e temporizadores ao sair do modal.
 
-## [1.1.0] — digitalização com IA em homologação · 08/10/2026
-
 - Fotografia pela câmara ou pelo aparelho, leitura com progresso estimado e revisão no formulário de encomendas.
 - Função autenticada, chave somente no backend e limites de uso/custo por empresa.
-- Publicação pela PR #4 somente em homologação; produção continua fora desta atualização. Consulte [o registo de release](docs/operations/release.md).
+- Primeira publicação pela PR #4 em homologação em 08/10/2026; promoção para produção aprovada em 01/11/2026 depois dos testes do utilizador.
 
 ## Preparação operacional · 05/10/2026
 

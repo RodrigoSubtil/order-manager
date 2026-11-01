@@ -1,6 +1,6 @@
 # Style guide do Order Manager
 
-Referência da versão **1.1.0**, com novo design aplicado em desenvolvimento e publicado somente em homologação. A produção permanece em **1.0.0**; este style guide não comprova nem autoriza a promoção do design para o site real. Cada capítulo define uma parte do sistema e informa o estado da sua aplicação.
+Referência da versão **1.1.0**, com novo design aplicado no código e testado em homologação. O utilizador aprovou a promoção para produção em 01/11/2026, mantendo 1.1.0. Cada capítulo define uma parte do sistema e informa o estado da sua aplicação; a evidência da publicação pertence ao [registo de release](../operations/release.md).
 
 ## Capítulos
 
@@ -10,7 +10,7 @@ Referência da versão **1.1.0**, com novo design aplicado em desenvolvimento e 
 | [Espaçamentos e controles](spacing-and-controls.md) | Espaços, botões, campos, raios, ícones e composição responsiva | Aplicado nesta revisão; destino: homologação |
 | [Cores e estados](colors.md)                        | Paleta, alertas, hierarquia de ações, contraste e interação    | Aplicado nesta revisão; destino: homologação |
 
-Os três capítulos estão aplicados no código desta revisão, com publicação destinada somente a homologação. O resultado da integração e do deployment deve ser confirmado na PR; consulte o [registo de release](../operations/release.md). A validação visual usa componentes reais com dados sintéticos e acessos externos bloqueados; não equivale a teste em aparelhos físicos nem a publicação. As exceções ficam documentadas em cada capítulo.
+Os três capítulos estão aplicados no código desta revisão, aprovado para promoção de homologação para produção. O resultado da integração e do deployment deve ser confirmado na PR; consulte o [registo de release](../operations/release.md). A validação visual usa componentes reais com dados sintéticos e acessos externos bloqueados; não equivale a teste em aparelhos físicos nem a publicação. As exceções ficam documentadas em cada capítulo.
 
 ## Como usar
 
