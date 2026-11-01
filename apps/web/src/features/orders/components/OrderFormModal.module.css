@@ -41,8 +41,8 @@
 .phoneGrid {
   display: grid;
   min-width: 0;
-  grid-template-columns: minmax(124px, 0.42fr) minmax(0, 1fr);
-  gap: var(--space-3);
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: var(--space-2);
 }
 
 .phoneGrid > * {
@@ -51,8 +51,20 @@
 
 .phoneGrid [role='combobox'] {
   font: var(--type-body);
-  padding-right: var(--control-height);
-  padding-left: var(--space-3);
+  padding-right: calc(var(--field-icon-size) + var(--space-2));
+  padding-left: var(--space-2);
+}
+
+.phoneGrid [aria-haspopup='listbox'] {
+  right: 0;
+  justify-items: end;
+  width: 100%;
+  height: var(--control-height);
+  padding-right: var(--space-1);
+}
+
+.phoneGrid [aria-haspopup='listbox']:is(:hover, :focus-visible) {
+  background: transparent;
 }
 
 .phoneGrid [role='listbox'] {
@@ -75,14 +87,12 @@
   }
 }
 
-@media (max-width: 560px) {
-  .phoneGrid {
-    grid-template-columns: minmax(124px, 0.72fr) minmax(0, 1.28fr);
-  }
-}
-
 @media (max-width: 390px) {
-  .phoneGrid {
-    grid-template-columns: 1fr;
+  .phoneGrid .inputWithIcon {
+    padding-right: var(--space-3);
+  }
+
+  .phoneGrid .iconInput > svg {
+    display: none;
   }
 }

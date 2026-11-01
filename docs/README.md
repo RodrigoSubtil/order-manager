@@ -1,6 +1,6 @@
 # Documentação do Order Manager
 
-**Versão do produto: 1.1.1.** O valor exibido no login e no cabeçalho vem de [`apps/web/package.json`](../apps/web/package.json). Esta é a versão da árvore de código; cada publicação precisa de validação no site publicado.
+**Versão do ciclo de desenvolvimento e homologação: 1.1.0.** O valor exibido no login e no cabeçalho vem de [`apps/web/package.json`](../apps/web/package.json). A produção permanece em **1.0.0**, sem a IA e o novo design deste ciclo. O utilizador testa e aprova homologação antes de autorizar promoção para `main` e publicação Production. Ajustes e republicações em homologação não aumentam a versão automaticamente.
 
 | Preciso de…                                      | Ler                                                        |
 | ------------------------------------------------ | ---------------------------------------------------------- |
