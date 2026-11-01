@@ -5,7 +5,7 @@
 }
 
 html {
-  min-width: var(--content-min-width);
+  min-width: 0;
 }
 
 body,

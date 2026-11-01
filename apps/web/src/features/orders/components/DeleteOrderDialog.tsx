@@ -17,7 +17,7 @@ export function DeleteOrderDialog({
 }: DeleteOrderDialogProps) {
   return (
     <Dialog className={styles.content} titleId="delete-title" onClose={onCancel}>
-      <DialogHeader title="Apagar encomenda?" titleId="delete-title" onClose={onCancel} />
+      <DialogHeader title="Apagar encomenda?" titleId="delete-title" />
       <div className={styles.body}>
         <p>Confirma a exclusão permanente da encomenda?</p>
         <div className={styles.details}>
@@ -25,8 +25,8 @@ export function DeleteOrderDialog({
         </div>
       </div>
       <DialogActions>
-        <Button data-autofocus disabled={isSaving} onClick={onCancel}>
-          Cancelar
+        <Button data-autofocus variant="danger-subtle" disabled={isSaving} onClick={onCancel}>
+          Não
         </Button>
         <Button
           className={styles.deleteButton}

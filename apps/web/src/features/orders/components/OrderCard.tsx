@@ -1,14 +1,19 @@
-import { Button, Card } from '../../../shared/components/ui';
+import { useMemo } from 'react';
+
+import { Button, Card, Icon } from '../../../shared/components/ui';
 import { formatDate } from '../../../shared/lib/dateUtils';
 import type { Order } from '../../../shared/lib/domain';
 import { groupProducts } from '../../../shared/lib/productGrouping';
 import { formatInternationalPhone } from '../lib/phoneNumber';
 import { getWhatsAppUrl } from '../lib/whatsapp';
+import { pickupDeadline, pickupDelayMinutes } from '../lib/overduePickups';
+import { OverduePickupBadge } from './OverduePickupNotice';
 import { SearchHighlight } from './SearchHighlight';
 import styles from './OrderCard.module.css';
 
 type OrderCardProps = {
   order: Order;
+  now?: number;
   search: string;
   responsibleName: string;
   onDelete?: () => void;
@@ -19,6 +24,7 @@ type OrderCardProps = {
 
 export function OrderCard({
   order,
+  now,
   search,
   responsibleName,
   onDelete,
@@ -27,6 +33,11 @@ export function OrderCard({
   onPrint,
 }: OrderCardProps) {
   const whatsAppUrl = getWhatsAppUrl(order.phone);
+  const deadline = useMemo(
+    () => pickupDeadline(order.deliveryDate, order.deliveryTime),
+    [order.deliveryDate, order.deliveryTime],
+  );
+  const delayMinutes = now === undefined ? null : pickupDelayMinutes(deadline, now);
 
   const openWhatsApp = () => {
     if (!whatsAppUrl) return;
@@ -37,31 +48,44 @@ export function OrderCard({
   return (
     <Card as="article" className={styles.card}>
       <aside className={styles.dateStrip} aria-label="Data de entrega">
-        <span>Entrega</span>
-        <strong>{formatDate(order.deliveryDate)}</strong>
-        <small>{order.deliveryTime || 'Sem hora'}</small>
+        <strong>
+          <Icon name="calendar" />
+          {formatDate(order.deliveryDate)}
+        </strong>
+        <small>
+          <Icon name="clock" />
+          {order.deliveryTime || 'Sem hora'}
+        </small>
       </aside>
       <div className={styles.ticket}>
         <header className={styles.head}>
-          <div className={styles.client}>
+          <div className={styles.overview}>
+            {delayMinutes !== null && <OverduePickupBadge minutes={delayMinutes} />}
             <div className={styles.meta}>
               <span>
                 Responsável: <SearchHighlight query={search} text={responsibleName} />
               </span>
+              <span className={styles.number}>Pedido #{order.orderNumber ?? '-'}</span>
             </div>
-            <span>Cliente</span>
+          </div>
+          <div className={styles.client}>
             <h2>
-              <SearchHighlight query={search} text={order.clientName} />
+              <Icon name="user" />
+              <span>
+                <SearchHighlight query={search} text={order.clientName} />
+              </span>
             </h2>
-            <p>
-              Telefone:{' '}
-              <SearchHighlight
-                query={search}
-                text={order.phone ? formatInternationalPhone(order.phone) : 'Sem telefone'}
-              />
+            <p className={styles.phone}>
+              <Icon name="phone" className={styles.phoneIcon} />
+              <span>
+                <span className={styles.srOnly}>Telefone: </span>
+                <SearchHighlight
+                  query={search}
+                  text={order.phone ? formatInternationalPhone(order.phone) : 'Sem telefone'}
+                />
+              </span>
             </p>
           </div>
-          <span className={styles.number}>Pedido #{order.orderNumber ?? '-'}</span>
         </header>
 
         <div className={styles.products} aria-label="Produtos da encomenda">
@@ -89,7 +113,7 @@ export function OrderCard({
                       )}
                     </div>
                     <span className={styles.quantity}>
-                      <small>Qtd.</small>
+                      <span className={styles.srOnly}>Quantidade: </span>
                       {product.quantity || 'Não indicada'}
                     </span>
                   </div>
@@ -104,7 +128,7 @@ export function OrderCard({
             <Button
               iconOnly
               className={styles.actionButton}
-              variant="primary"
+              variant="success"
               aria-label="Concluir"
               title="Concluir"
               disabled={!onComplete}
@@ -117,7 +141,7 @@ export function OrderCard({
             <Button
               iconOnly
               className={styles.actionButton}
-              variant="ghost"
+              variant="success-subtle"
               aria-label="Abrir conversa no WhatsApp"
               title="Abrir conversa no WhatsApp"
               disabled={!whatsAppUrl}
@@ -130,7 +154,7 @@ export function OrderCard({
             <Button
               iconOnly
               className={styles.actionButton}
-              variant="ghost"
+              variant="warning"
               aria-label="Editar"
               title="Editar"
               disabled={!onEdit}
@@ -142,8 +166,8 @@ export function OrderCard({
             </Button>
             <Button
               iconOnly
-              className={styles.actionButton}
-              variant="ghost"
+              className={`${styles.actionButton} ${styles.printAction}`}
+              variant="secondary"
               aria-label="Imprimir"
               title="Imprimir"
               onClick={onPrint}
@@ -155,8 +179,8 @@ export function OrderCard({
             {onDelete && (
               <Button
                 iconOnly
-                className={`${styles.actionButton} ${styles.deleteAction}`}
-                variant="ghost"
+                className={styles.actionButton}
+                variant="danger"
                 aria-label="Apagar"
                 title="Apagar"
                 onClick={onDelete}

@@ -1,0 +1,4 @@
+[functions.interpret-order]
+# O handler valida o JWT em /auth/v1/user antes de qualquer chamada paga.
+# O gateway não precisa interpretar chaves publishable/secret como JWT.
+verify_jwt = false

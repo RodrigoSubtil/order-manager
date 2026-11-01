@@ -2,16 +2,18 @@
   display: grid;
   place-items: center;
   align-content: center;
-  gap: 8px;
+  gap: var(--space-2);
   min-height: 300px;
-  padding: 24px;
+  padding: var(--space-6);
   color: var(--color-muted);
   text-align: center;
   background: var(--color-white);
   border: 1px dashed var(--color-taupe);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
+  font: var(--type-body);
 }
 
 .emptyState strong {
   color: var(--color-ink);
+  font: var(--type-body-strong);
 }

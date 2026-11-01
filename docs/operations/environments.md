@@ -2,6 +2,10 @@
 
 Configuração verificada em **05/10/2026**. As contagens abaixo são um retrato da conclusão da preparação, não valores permanentes. Consulte a [auditoria inicial](homologacao-audit-2026-10-05.md) e a [validação final](readiness-2026-10-05.md).
 
+## Estado do ciclo em 01/11/2026
+
+O utilizador testou a versão **1.1.0** em homologação e aprovou a promoção para `main` e produção em 01/11/2026, incluindo IA e novo design. A promoção mantém **1.1.0** e exige um novo build Production com as variáveis de produção. O banco recebeu a migration de limites e a função de IA separadamente; a publicação do frontend não as instala. Consulte [release](release.md) para a preparação e a evidência da publicação. Não aumentar a versão sem instrução explícita do utilizador.
+
 ## Endereços e identidade dos ambientes
 
 | Configuração                   | Produção                                                                | Homologação                                                                                 |
@@ -28,6 +32,7 @@ Em [Environment Variables](https://vercel.com/rodrigo-freitas-subtils-projects/o
 
 - Production aponta para `https://otwriruoqqwjwzzgicru.supabase.co` com a chave pública do projeto de produção.
 - Preview, com filtro de branch `homologacao`, aponta para `https://czbrnxrpofdbbgbdyrad.supabase.co` com a chave publishable de homologação.
+- A digitalização usa `VITE_ORDER_SCAN_ENABLED=true` no build de cada ambiente habilitado. A chave OpenAI, a ativação do backend e as origens permitidas ficam somente nos secrets do projeto Supabase correspondente; consulte [digitalização](order-scan.md).
 
 As três variáveis de Production são campos diferentes, URL e chave; não são dois ambientes de produção. Não remova uma delas para tentar reduzir a lista a um único campo. Nunca coloque `service_role`, uma chave secreta ou a senha do banco em `VITE_*`.
 

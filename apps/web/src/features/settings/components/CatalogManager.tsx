@@ -151,6 +151,7 @@ export function CatalogManager({
                   </div>
                   <div className={styles.itemActions}>
                     <Button
+                      variant="warning"
                       onClick={() =>
                         onDraftChange({
                           id: item.id,

@@ -2,7 +2,9 @@
 
 ## Ambiente
 
-Use Node.js 22 e npm. Execute `npm ci`, copie `apps/web/.env.example` para `apps/web/.env` e configure a URL e a chave pública de um Supabase autorizado para desenvolvimento. `npm run dev` serve `http://localhost:5173`. O frontend não exige banco local, Docker, Prisma ou API NestJS. Os testes SQL da integração usam PostgreSQL descartável separado.
+Use Node.js 22 e npm. Execute `npm ci`, copie `apps/web/.env.example` para `apps/web/.env.development.local` e configure a URL e a chave pública do Supabase de homologação (`czbrnxrpofdbbgbdyrad`). `npm run dev` serve `http://localhost:5174`, sem escolher outra porta se estiver ocupada. O Vite recusa iniciar o modo dev com outro projeto Supabase. O frontend não exige banco local, Docker, Prisma ou API NestJS. Os testes SQL da integração usam PostgreSQL descartável separado.
+
+Com `VITE_ORDER_SCAN_ENABLED=true`, **Continuar** envia a fotografia para a mesma Edge Function usada em homologação. A simulação local foi retirada; `VITE_ORDER_SCAN_DEMO` já não tem efeito. Não coloque `OPENAI_API_KEY` no frontend. Leituras iniciadas no localhost usam o orçamento da empresa de teste no backend de homologação. Testes automáticos devem simular os serviços; as leituras reais em homologação ficam com o utilizador, conforme orientação de 08/10/2026.
 
 | Comando                 | Validação                                |
 | ----------------------- | ---------------------------------------- |
@@ -29,6 +31,14 @@ Use npm run verify:release para executar todos os checks de aplicação. Para SQ
 ## Regras para alterações
 
 Dados sintéticos nos testes; nunca adicionar senhas, tokens, `.env`, exports de clientes ou dumps ao Git. Toda migration é gerada pela CLI com um novo timestamp e inclui validação do caminho real de uso. Preserve a segurança de tenant, `version` e `requestId`. Ao mudar uma função, atualize o guia ativo correspondente e execute os testes proporcionais ao risco. Para prontidão de produção, siga o [smoke test publicado](../operations/release.md).
+
+## Tipografia da interface
+
+Siga o [style guide de tipografia](../design/typography.md). A escala e os papéis ficam em `apps/web/src/styles/typography.css`; componentes usam `font: var(--type-...)` em vez de definir tamanhos e pesos próprios. Campos usam 16 px em todas as larguras. O Stylelint impede valores tipográficos literais na interface. A ficha térmica tem uma exceção explícita e mantém a formatação de impressão.
+
+## Espaçamentos e controles
+
+Siga o [style guide de espaçamentos e controles](../design/spacing-and-controls.md), aplicado no código local. Reutilize os tokens de espaço, altura, raio, ícone e margens em `styles/tokens.css` e os controles compartilhados. O Stylelint protege `gap` e `border-radius`, além da tipografia. Preserve o cabeçalho compacto com alvo de toque ampliado, o cartão aprovado e a ficha térmica. Confira componentes em larguras de celular, tablet e computador, incluindo texto ampliado e janela baixa. O [índice do style guide](../design/README.md) informa a aplicação local e distingue publicação.
 
 ## Branches e promoção
 

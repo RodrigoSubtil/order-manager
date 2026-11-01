@@ -116,6 +116,7 @@ export function ResponsiblesManager({
                   </div>
                   <div className={styles.itemActions}>
                     <Button
+                      variant="warning"
                       onClick={() =>
                         onDraftChange({
                           id: item.id,

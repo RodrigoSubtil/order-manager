@@ -1,52 +1,46 @@
 .editor {
   display: grid;
-  gap: 18px;
-  padding: 18px;
-  background: var(--color-white);
-  border: 1px solid var(--color-sand);
-  border-radius: var(--radius-md);
-}
-
-.title {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-sand);
-}
-
-.title h3 {
-  margin: 0;
+  min-width: 0;
+  gap: var(--space-3);
 }
 
 .card {
   display: grid;
-  gap: 18px;
   min-width: 0;
-  padding: 14px;
-  background: var(--color-soft-white);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  gap: var(--space-6);
+  margin-inline: calc(-1 * var(--space-2));
+  padding: var(--space-4) var(--space-2);
+  background: var(--color-cream);
+  border-radius: var(--radius);
+}
+
+.card + .card {
+  margin-top: var(--space-3);
 }
 
 .cardTop {
   display: flex;
-  gap: 10px;
+  gap: var(--space-3);
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .cardTop strong {
-  font-size: 1rem;
+  font: var(--type-body-strong);
+  white-space: nowrap;
 }
 
 .grid {
   display: grid;
   grid-template-columns: minmax(150px, 0.5fr) minmax(260px, 1.15fr) minmax(150px, 0.6fr);
-  gap: 16px;
+  gap: var(--space-6);
   align-items: start;
   min-width: 0;
+}
+
+.compact .grid {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .noteField {
@@ -54,17 +48,17 @@
 }
 
 .note {
-  min-height: 116px;
   overflow: hidden;
-  line-height: 1.35;
   resize: none;
+  font: var(--type-body);
+  min-height: calc(var(--control-height) * 2);
 }
 
 .quantityGrid {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(88px, 1fr);
-  gap: 10px;
   min-width: 0;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 2fr) minmax(96px, 1fr);
 }
 
 .quantityGrid input[type='number'] {
@@ -86,18 +80,11 @@
 }
 
 .addProduct {
-  gap: 8px;
   justify-self: end;
-  min-width: 240px;
-  min-height: 46px;
-  margin-top: 4px;
-  padding-inline: 18px;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 10px 22px rgb(77 67 57 / 16%);
+  margin-top: 0;
 }
 
 @media (max-width: 900px) {
-  .title,
   .grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -106,40 +93,19 @@
 }
 
 @media (max-width: 560px) {
-  .editor {
-    gap: 16px;
-    padding: 14px;
+  .compact .quantityGrid {
+    grid-template-columns: minmax(0, 1fr);
   }
+}
 
-  .title {
-    gap: 10px;
-  }
+.cardTop button {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 0;
+}
 
-  .addProduct {
-    width: 100%;
-    min-width: 0;
-    padding-inline: 10px;
-    font-size: clamp(0.875rem, 4.2vw, 1rem);
-    white-space: nowrap;
-  }
-
-  .card {
-    padding: 12px;
-  }
-
-  .cardTop button {
-    min-height: 34px;
-  }
-
-  .grid {
-    gap: 14px;
-  }
-
+@media (max-width: 390px) {
   .quantityGrid {
-    grid-template-columns: minmax(0, 2fr) minmax(88px, 1fr);
-  }
-
-  .note {
-    min-height: 140px;
+    grid-template-columns: minmax(0, 1fr);
   }
 }

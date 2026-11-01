@@ -2,7 +2,15 @@ import { forwardRef, type ButtonHTMLAttributes } from 'react';
 
 import styles from './Button.module.css';
 
-type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
+type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'danger'
+  | 'danger-subtle'
+  | 'success'
+  | 'success-subtle'
+  | 'warning'
+  | 'ghost';
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   iconOnly?: boolean;

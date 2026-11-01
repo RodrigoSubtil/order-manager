@@ -1,0 +1,86 @@
+.dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(390px, 100%);
+}
+
+.hiddenFile {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choice,
+.photoStage,
+.progressStage {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--dialog-body-padding);
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.choice p {
+  margin: 0;
+  margin-bottom: var(--space-1);
+  font: var(--type-body);
+}
+
+.choice button {
+  width: 100%;
+  min-height: var(--control-height);
+}
+
+.photoStage video,
+.photoPreview {
+  display: block;
+  width: 100%;
+  max-height: min(45vh, 300px);
+  object-fit: contain;
+  background: var(--color-soft-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+}
+
+.photoStage video {
+  justify-self: center;
+  width: min(100%, 60vh, 400px);
+  object-fit: cover;
+}
+
+.dialog > .cancelOnly {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.progressStage small {
+  margin: 0;
+  color: var(--color-muted);
+  font: var(--type-secondary);
+}
+
+.progressStage {
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.percentage {
+  color: var(--color-ink);
+  font: var(--type-metric);
+}
+
+.progressTrack {
+  height: 8px;
+  overflow: hidden;
+  background: var(--color-line);
+  border-radius: var(--radius);
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  background: var(--color-taupe);
+  border-radius: inherit;
+  transition: width 0.25s ease;
+}

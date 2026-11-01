@@ -1,46 +1,37 @@
 .dialog form {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
-  max-height: calc(100dvh - 36px);
+  max-height: var(--dialog-max-height);
+}
+
+.scanDialog {
+  width: min(660px, 100%);
+}
+
+.scanDialog .fieldGrid {
+  grid-template-columns: 1fr;
 }
 
 .body {
   display: grid;
-  gap: 22px;
   min-height: 0;
-  padding: 18px;
   overflow-x: hidden;
   overflow-y: auto;
+  gap: var(--space-7);
+  padding: var(--dialog-body-padding);
 }
 
 .fieldGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
   min-width: 0;
+  gap: var(--space-6);
 }
 
 .detailsSection {
   display: grid;
-  gap: 18px;
-  padding: 18px;
-  background: var(--color-soft-white);
-  border: 1px solid var(--color-sand);
-  border-left: 4px solid var(--color-taupe);
-  border-radius: var(--radius-md);
-}
-
-.sectionTitle {
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-sand);
-}
-
-.sectionTitle h3 {
-  margin: 0;
-}
-
-.actions {
-  border-top: 1px solid var(--color-line);
+  min-width: 0;
+  gap: var(--space-3);
 }
 
 .dateInput {
@@ -49,9 +40,9 @@
 
 .phoneGrid {
   display: grid;
-  grid-template-columns: minmax(118px, 0.42fr) minmax(0, 1fr);
-  gap: 10px;
   min-width: 0;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: var(--space-2);
 }
 
 .phoneGrid > * {
@@ -59,9 +50,21 @@
 }
 
 .phoneGrid [role='combobox'] {
-  padding-right: 36px;
-  padding-left: 8px;
-  font-size: 0.88rem;
+  font: var(--type-body);
+  padding-right: calc(var(--field-icon-size) + var(--space-2));
+  padding-left: var(--space-2);
+}
+
+.phoneGrid [aria-haspopup='listbox'] {
+  right: 0;
+  justify-items: end;
+  width: 100%;
+  height: var(--control-height);
+  padding-right: var(--space-1);
+}
+
+.phoneGrid [aria-haspopup='listbox']:is(:hover, :focus-visible) {
+  background: transparent;
 }
 
 .phoneGrid [role='listbox'] {
@@ -75,7 +78,7 @@
 }
 
 .inputWithIcon {
-  padding-right: 44px;
+  padding-right: var(--field-content-inset);
 }
 
 @media (max-width: 900px) {
@@ -84,32 +87,12 @@
   }
 }
 
-@media (max-width: 560px) {
-  .dialog form {
-    max-height: calc(100dvh - 24px);
+@media (max-width: 390px) {
+  .phoneGrid .inputWithIcon {
+    padding-right: var(--space-3);
   }
 
-  .body {
-    gap: 18px;
-    padding: 12px;
-  }
-
-  .fieldGrid {
-    gap: 16px;
-  }
-
-  .phoneGrid {
-    grid-template-columns: minmax(110px, 0.72fr) minmax(0, 1.28fr);
-  }
-
-  .detailsSection {
-    gap: 16px;
-    padding: 14px;
-  }
-}
-
-@media (max-width: 340px) {
-  .phoneGrid {
-    grid-template-columns: 1fr;
+  .phoneGrid .iconInput > svg {
+    display: none;
   }
 }

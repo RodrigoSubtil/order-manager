@@ -1,29 +1,30 @@
 .card {
   width: min(560px, 100%);
-  margin: clamp(18px, 5vh, 52px) auto;
-  padding: clamp(22px, 5vw, 34px);
   text-align: center;
+  margin: var(--space-6) auto;
+  padding: var(--panel-padding);
 }
 
 .lockIcon {
   display: grid;
-  width: 54px;
-  height: 54px;
-  margin: 0 auto 16px;
+  margin: 0 auto var(--space-4);
   place-items: center;
   color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent) 12%, white);
-  border-radius: 50%;
+  background: var(--color-cream);
+  border-radius: var(--radius);
+  width: var(--control-height);
+  height: var(--control-height);
 }
 
 .lockIcon svg {
-  width: 26px;
-  height: 26px;
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+  stroke-width: var(--icon-stroke);
 }
 
 .copy {
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .copy [data-eyebrow] {
@@ -32,18 +33,18 @@
 
 .copy h1 {
   margin: 0;
-  font-size: clamp(1.55rem, 4vw, 2rem);
+  font: var(--type-page);
 }
 
 .form {
   display: grid;
-  gap: 10px;
-  margin-top: 22px;
   text-align: left;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
 }
 
 .form label {
-  font-weight: 800;
+  font: var(--type-label);
 }
 
 .passwordField {
@@ -52,47 +53,40 @@
 
 .passwordField input {
   min-height: 48px;
-  padding: 14px 50px 14px 16px;
-  border-color: rgb(77 67 57 / 14%);
-  border-radius: var(--radius-lg);
-  font-weight: 800;
+  border-color: var(--color-control-border);
+  font: var(--type-body);
+  padding: var(--space-2) var(--control-height) var(--space-2) var(--space-3);
+  border-radius: var(--radius);
 }
 
 .visibility {
   position: absolute;
   top: 50%;
-  right: 8px;
   display: grid;
-  width: 34px;
-  height: 34px;
   padding: 0;
   place-items: center;
   color: var(--color-accent);
   background: transparent;
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   transform: translateY(-50%);
   cursor: pointer;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  right: 2px;
 }
 
 .visibility:hover,
 .visibility:focus-visible {
   color: var(--color-accent);
-  background: rgb(77 67 57 / 8%);
+  background: var(--color-cream);
 }
 
 .actions {
   display: grid;
-  margin-top: 8px;
+  margin-top: var(--space-2);
 }
 
 .actions button {
   width: 100%;
-}
-
-@media (max-width: 520px) {
-  .card {
-    margin-top: 10px;
-    padding: 22px 18px;
-  }
 }

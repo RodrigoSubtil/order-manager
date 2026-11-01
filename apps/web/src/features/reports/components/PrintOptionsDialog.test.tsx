@@ -34,10 +34,10 @@ function renderDialog(overrides: Partial<ComponentProps<typeof PrintOptionsDialo
 }
 
 describe('PrintOptionsDialog', () => {
-  it('fecha pelo botão no cabeçalho', () => {
+  it('fecha pelo botão de cancelar no rodapé', () => {
     const props = renderDialog();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Fechar' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
 
     expect(props.onCancel).toHaveBeenCalledOnce();
   });

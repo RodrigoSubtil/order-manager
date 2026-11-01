@@ -2,36 +2,36 @@
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   width: min(620px, 100%);
-  max-height: calc(100dvh - 36px);
   padding: 0;
   overflow: hidden;
+  max-height: var(--dialog-max-height);
 }
 
 .body {
   display: grid;
-  gap: 12px;
   min-height: 0;
-  padding: 18px;
   overflow-x: hidden;
   overflow-y: auto;
+  padding: var(--dialog-body-padding);
+  gap: var(--space-6);
 }
 
 .section {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
   margin: 0;
 }
 
 .section > strong {
   color: var(--color-ink);
-  font-size: 0.92rem;
+  font: var(--type-body-strong);
 }
 
 .radioGrid,
 .dateGrid,
 .timeGrid {
   display: grid;
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .radioGrid {
@@ -48,51 +48,43 @@
 
 .radio {
   display: flex;
-  min-height: 44px;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3);
   color: var(--color-ink);
   background: var(--color-soft-white);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   cursor: pointer;
+  min-height: var(--control-height);
 }
 
 .radio:has(input:checked) {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgb(118 95 75 / 16%);
+  box-shadow: var(--shadow-selection);
 }
 
 .radio input {
-  width: 18px;
-  height: 18px;
   accent-color: var(--color-accent);
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  flex-shrink: 0;
 }
 
 .radio span {
-  font-weight: 900;
+  font: var(--type-body);
 }
 
 .details {
-  padding: 10px;
+  padding: var(--space-3);
   color: var(--color-muted);
   background: var(--color-soft-white);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
-  font-size: 0.86rem;
-  font-weight: 800;
+  border-radius: var(--radius);
+  font: var(--type-secondary);
 }
 
 @media (max-width: 560px) {
-  .content {
-    max-height: calc(100dvh - 24px);
-  }
-
-  .body {
-    padding: 14px 16px;
-  }
-
   .radioGrid,
   .dateGrid,
   .timeGrid {

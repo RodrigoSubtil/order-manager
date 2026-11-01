@@ -1,43 +1,36 @@
 .content {
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 18px;
-  padding: 32px 28px;
+  min-width: 0;
+}
+
+.summary {
+  padding: var(--space-7) var(--space-6);
+  color: var(--color-success);
+  background: var(--color-success-soft);
   text-align: center;
 }
 
-.content h3 {
-  margin: 0;
-  color: var(--color-success);
-  font-size: clamp(1.35rem, 3vw, 1.8rem);
-}
-
-.icon {
+.summary h3 {
   display: grid;
-  width: 64px;
-  height: 64px;
-  place-items: center;
-  color: var(--color-white);
-  background: var(--color-success);
-  border-radius: 50%;
-  font-size: 2rem;
-  font-weight: 900;
+  gap: var(--space-2);
+  margin: 0;
+  min-width: 0;
+  color: inherit;
+  font: var(--type-title);
+  overflow-wrap: anywhere;
 }
 
-.content button {
-  min-width: 230px;
-  margin-top: 2px;
+.context {
+  font: var(--type-secondary);
 }
 
-@media (max-width: 560px) {
-  .content {
-    gap: 16px;
-    padding: 26px 18px 18px;
-  }
+.subject {
+  font: var(--type-title);
+}
 
-  .content button {
-    width: 100%;
-    min-width: 0;
-  }
+.detail {
+  font: var(--type-body);
+}
+
+.content > .singleAction {
+  grid-template-columns: minmax(0, 1fr);
 }

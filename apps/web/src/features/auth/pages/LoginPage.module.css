@@ -1,40 +1,37 @@
 .shell {
   display: flex;
-  min-height: 100vh;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  background:
-    radial-gradient(circle at top left, rgb(187 165 142 / 20%), transparent 35%),
-    linear-gradient(135deg, var(--color-cream), var(--color-white));
+  background: var(--gradient-login);
+  padding: var(--page-inset);
+  min-height: 100dvh;
 }
 
 .card {
   width: 100%;
   max-width: 420px;
-  padding: 32px;
-  border-color: rgb(77 67 57 / 10%);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 24px 70px rgb(77 67 57 / 14%);
+  padding: var(--space-7);
+  border-color: var(--color-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-login);
 }
 
 .brand {
-  margin-bottom: 28px;
+  margin-bottom: var(--space-6);
   text-align: center;
 }
 
 .version {
   align-self: center;
-  margin-top: 4px;
+  margin-top: var(--space-1);
   color: var(--color-muted);
-  font-size: 0.72rem;
-  font-weight: 700;
+  font: var(--type-caption);
 }
 
 .brand h1 {
-  margin: 8px 0;
+  margin: var(--space-2) 0;
   color: var(--color-ink);
-  font-size: 2rem;
+  font: var(--type-page);
 }
 
 .brand p {
@@ -44,27 +41,26 @@
 .loading {
   display: grid;
   justify-items: center;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .form label {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .input {
-  height: auto;
-  padding: 14px 16px;
-  border-color: rgb(77 67 57 / 14%);
-  border-radius: var(--radius-lg);
-  font-weight: 800;
+  border-color: var(--color-control-border);
+  font: var(--type-body);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
 }
 
 .passwordInput {
@@ -72,29 +68,29 @@
 }
 
 .passwordInput .input {
-  padding-right: 50px;
+  padding-right: var(--control-height);
 }
 
 .passwordVisibility {
   position: absolute;
   top: 50%;
-  right: 8px;
   display: inline-flex;
-  width: 36px;
-  height: 36px;
   align-items: center;
   justify-content: center;
   padding: 0;
   color: var(--color-muted);
   background: transparent;
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   cursor: pointer;
   transform: translateY(-50%);
   transition:
     color var(--transition-fast),
     background-color var(--transition-fast),
     border-color var(--transition-fast);
+  right: 2px;
+  width: var(--touch-target);
+  height: var(--touch-target);
 }
 
 .passwordVisibility:hover {
@@ -106,7 +102,7 @@
 .passwordVisibility:focus-visible {
   color: var(--color-ink);
   border-color: var(--color-focus);
-  box-shadow: 0 0 0 3px rgb(91 120 199 / 20%);
+  box-shadow: var(--shadow-focus);
   outline: none;
 }
 
@@ -126,10 +122,12 @@
   position: relative;
   display: inline-flex;
   flex-direction: row;
-  gap: 8px;
+  gap: var(--space-2);
   align-items: center;
   min-width: 0;
   cursor: pointer;
+  min-height: var(--touch-target);
+  flex-wrap: wrap;
 }
 
 .rememberMe input {
@@ -143,16 +141,17 @@
 
 .checkbox {
   position: relative;
-  width: 20px;
-  height: 20px;
   background: var(--color-white);
   border: 1px solid var(--color-taupe);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 1px 2px rgb(77 67 57 / 8%);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-subtle);
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast),
     box-shadow var(--transition-fast);
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  flex-shrink: 0;
 }
 
 .rememberMe:hover .checkbox {
@@ -161,7 +160,7 @@
 
 .rememberMe input:focus-visible + .checkbox {
   border-color: var(--color-focus);
-  box-shadow: 0 0 0 3px rgb(91 120 199 / 20%);
+  box-shadow: var(--shadow-focus);
 }
 
 .rememberMe input:checked + .checkbox {
@@ -183,18 +182,12 @@
 
 .rememberLabel {
   color: var(--color-ink);
-  font-size: 0.82rem;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
+  font: var(--type-secondary);
+  white-space: normal;
 }
 
 @media (max-width: 560px) {
-  .shell {
-    padding: 16px;
-  }
-
   .card {
-    padding: 24px;
+    padding: var(--space-6);
   }
 }

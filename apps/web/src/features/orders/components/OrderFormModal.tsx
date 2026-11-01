@@ -15,19 +15,23 @@ import {
   DialogActions,
   DialogHeader,
   FieldError,
+  FormSectionHeading,
   Icon,
   Input,
   SuccessMessage,
   TimePicker,
 } from '../../../shared/components/ui';
 import type { CatalogProduct, Category, OrderResponsible } from '../../../shared/lib/domain';
+import { useScanReview } from '../hooks/useScanReview';
 import { currentTimeKey, todayKey } from '../../../shared/lib/dateUtils';
 import { phoneCountries } from '../lib/phoneNumber';
 import { PhoneInput } from './PhoneInput';
 import { normalizeResponsibleName } from '../lib/responsibleName';
 import type { OrderFormValues } from '../schemas/orderSchema';
+import type { ScanDraft } from '../schemas/scanDraft';
 import { CustomerPicker } from './CustomerPicker';
 import { ProductEditor } from './ProductEditor';
+import { ScanFieldLabel } from './ScanFieldLabel';
 import styles from './OrderFormModal.module.css';
 
 type OrderFormModalProps = {
@@ -48,6 +52,7 @@ type OrderFormModalProps = {
   onReturnToOrders: () => Promise<void>;
   onSubmit: (event?: React.BaseSyntheticEvent) => Promise<void>;
   savedOrderMessage: string;
+  scanDraft?: ScanDraft | null;
   setIsResponsiblePickerOpen: (open: boolean) => void;
   setOpenCategoryPickerId: (itemId: string | null) => void;
   setOpenProductPickerId: (itemId: string | null) => void;
@@ -80,12 +85,14 @@ export function OrderFormModal(props: OrderFormModalProps) {
     onReturnToOrders,
     onSubmit,
     savedOrderMessage,
+    scanDraft,
     setIsResponsiblePickerOpen,
     setOpenCategoryPickerId,
     setOpenProductPickerId,
     setOpenQuantityPickerId,
     setOpenUnitPickerId,
   } = props;
+  const scanReview = useScanReview(scanDraft);
   const {
     control,
     formState: { errors, isSubmitting },
@@ -111,7 +118,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
 
   return (
     <Dialog
-      className={styles.dialog}
+      className={`${styles.dialog} ${scanDraft ? styles.scanDialog : ''}`}
       size={savedOrderMessage ? 'small' : 'large'}
       titleId="modal-title"
       onClose={closeDialog}
@@ -119,9 +126,8 @@ export function OrderFormModal(props: OrderFormModalProps) {
       <form noValidate onSubmit={onSubmit}>
         {!savedOrderMessage && (
           <DialogHeader
-            title={editingId ? 'Editar pedido' : 'Novo pedido'}
+            title={editingId ? 'Editar pedido' : scanDraft ? 'Revisar encomenda' : 'Novo pedido'}
             titleId="modal-title"
-            onClose={closeDialog}
           />
         )}
 
@@ -138,14 +144,15 @@ export function OrderFormModal(props: OrderFormModalProps) {
               {submissionError && <Alert tone="error">{submissionError}</Alert>}
 
               <section className={styles.detailsSection} aria-labelledby="order-details-title">
-                <div className={styles.sectionTitle}>
-                  <h3 id="order-details-title" data-eyebrow>
-                    Encomenda
-                  </h3>
-                </div>
+                <FormSectionHeading id="order-details-title">Dados da encomenda</FormSectionHeading>
                 <div className={styles.fieldGrid}>
                   <div data-form-field>
-                    <label htmlFor="order-responsible">Responsável pela encomenda</label>
+                    <ScanFieldLabel
+                      htmlFor="order-responsible"
+                      status={scanReview.fieldStatus('responsibleName')}
+                    >
+                      Responsável pela encomenda
+                    </ScanFieldLabel>
                     <Combobox
                       id="order-responsible"
                       isOpen={isResponsiblePickerOpen}
@@ -167,6 +174,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                             aria-invalid={Boolean(responsibleError)}
                             onChange={(event) => {
                               field.onChange(event.target.value);
+                              scanReview.confirmField('responsibleName');
                               setValue('responsibleId', '', { shouldDirty: true });
                               setIsResponsiblePickerOpen(true);
                             }}
@@ -206,6 +214,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                                 shouldDirty: true,
                                 shouldValidate: true,
                               });
+                              scanReview.confirmField('responsibleName');
                               setIsResponsiblePickerOpen(false);
                             }}
                           >
@@ -223,9 +232,17 @@ export function OrderFormModal(props: OrderFormModalProps) {
                     </Combobox>
                     <FieldError id="order-responsible-error" message={responsibleError} />
                   </div>
-                  <CustomerPicker methods={methods} onOpen={onCustomerPickerOpen} />
+                  <CustomerPicker
+                    methods={methods}
+                    onOpen={onCustomerPickerOpen}
+                    scanStatus={scanReview.fieldStatus('clientName')}
+                    onReview={() => scanReview.confirmField('clientName')}
+                    onPhoneReview={() => scanReview.confirmField('phone')}
+                  />
                   <div data-form-field>
-                    <label htmlFor="order-phone">Telefone</label>
+                    <ScanFieldLabel htmlFor="order-phone" status={scanReview.fieldStatus('phone')}>
+                      Telefone
+                    </ScanFieldLabel>
                     <div className={styles.phoneGrid}>
                       <Combobox
                         id="order-phone-country"
@@ -259,6 +276,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                                   shouldDirty: true,
                                   shouldValidate: true,
                                 });
+                                scanReview.confirmField('phone');
                                 setIsPhoneCountryOpen(false);
                               }}
                             >
@@ -273,6 +291,7 @@ export function OrderFormModal(props: OrderFormModalProps) {
                                 shouldDirty: true,
                                 shouldValidate: true,
                               });
+                              scanReview.confirmField('phone');
                               setIsPhoneCountryOpen(false);
                             }}
                           >
@@ -292,7 +311,10 @@ export function OrderFormModal(props: OrderFormModalProps) {
                               onBlur={field.onBlur}
                               countryCode={phoneCountryCode}
                               value={field.value}
-                              onValueChange={field.onChange}
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                                scanReview.confirmField('phone');
+                              }}
                               className={styles.inputWithIcon}
                               required
                               aria-describedby={errors.phone ? 'order-phone-error' : undefined}
@@ -315,12 +337,13 @@ export function OrderFormModal(props: OrderFormModalProps) {
                         maxLength={3}
                         placeholder="Prefixo: ex. 972"
                         value={phoneCountryCode}
-                        onChange={(event) =>
+                        onChange={(event) => {
                           setValue('phoneCountryCode', event.target.value.replace(/\D/g, ''), {
                             shouldDirty: true,
                             shouldValidate: true,
-                          })
-                        }
+                          });
+                          scanReview.confirmField('phone');
+                        }}
                       />
                     )}
                     <FieldError
@@ -330,7 +353,12 @@ export function OrderFormModal(props: OrderFormModalProps) {
                     <FieldError id="order-phone-error" message={errors.phone?.message} />
                   </div>
                   <div data-form-field>
-                    <label htmlFor="order-delivery-date">Data de entrega</label>
+                    <ScanFieldLabel
+                      htmlFor="order-delivery-date"
+                      status={scanReview.fieldStatus('deliveryDate')}
+                    >
+                      Data de entrega
+                    </ScanFieldLabel>
                     <Controller
                       control={control}
                       name="deliveryDate"
@@ -345,7 +373,10 @@ export function OrderFormModal(props: OrderFormModalProps) {
                           }
                           aria-invalid={Boolean(errors.deliveryDate)}
                           value={field.value}
-                          onChange={field.onChange}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            scanReview.confirmField('deliveryDate');
+                          }}
                         />
                       )}
                     />
@@ -355,7 +386,12 @@ export function OrderFormModal(props: OrderFormModalProps) {
                     />
                   </div>
                   <div data-form-field>
-                    <label htmlFor="order-delivery-time">Hora</label>
+                    <ScanFieldLabel
+                      htmlFor="order-delivery-time"
+                      status={scanReview.fieldStatus('deliveryTime')}
+                    >
+                      Hora
+                    </ScanFieldLabel>
                     <Controller
                       control={control}
                       name="deliveryTime"
@@ -377,7 +413,10 @@ export function OrderFormModal(props: OrderFormModalProps) {
                           }
                           aria-invalid={Boolean(errors.deliveryTime)}
                           value={field.value}
-                          onChange={field.onChange}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            scanReview.confirmField('deliveryTime');
+                          }}
                         />
                       )}
                     />
@@ -390,6 +429,8 @@ export function OrderFormModal(props: OrderFormModalProps) {
               </section>
 
               <ProductEditor
+                scanDraft={scanDraft}
+                scanReview={scanReview}
                 catalogProductsByCategory={catalogProductsByCategory}
                 itemFields={itemFields}
                 methods={methods}
@@ -407,11 +448,26 @@ export function OrderFormModal(props: OrderFormModalProps) {
             </div>
 
             <DialogActions>
-              <Button disabled={isSubmitting} onClick={onClose}>
-                Cancelar
+              <Button
+                iconOnly
+                variant="danger"
+                aria-label="Cancelar"
+                title="Cancelar"
+                disabled={isSubmitting}
+                onClick={onClose}
+              >
+                <Icon name="trash" />
               </Button>
-              <Button variant="primary" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'A salvar...' : 'Salvar'}
+              <Button
+                iconOnly
+                variant="success"
+                type="submit"
+                aria-label={isSubmitting ? 'A salvar...' : 'Salvar'}
+                title={isSubmitting ? 'A salvar...' : 'Salvar'}
+                aria-busy={isSubmitting}
+                disabled={isSubmitting}
+              >
+                <Icon name="check" />
               </Button>
             </DialogActions>
           </>

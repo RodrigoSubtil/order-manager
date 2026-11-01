@@ -51,6 +51,7 @@ export function useApiOrderData(params: OrderListParams, enabled: boolean) {
     appError,
     catalogProducts: catalogQuery.data ?? [],
     isLoading: ordersQuery.isLoading,
+    isOverviewLoading: overviewQuery.isLoading,
     orders: ordersQuery.data ?? [],
     overviewOrders: overviewQuery.data ?? [],
     resultTotal: ordersQuery.data?.length ?? 0,

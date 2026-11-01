@@ -17,7 +17,7 @@ export function CompleteOrderDialog({
 }: CompleteOrderDialogProps) {
   return (
     <Dialog className={styles.content} titleId="complete-order-title" onClose={onCancel}>
-      <DialogHeader title="Concluir encomenda?" titleId="complete-order-title" onClose={onCancel} />
+      <DialogHeader title="Concluir encomenda?" titleId="complete-order-title" />
       <div className={styles.body}>
         <p>Confirma a conclusão da encomenda?</p>
         <div className={styles.details}>
@@ -25,12 +25,12 @@ export function CompleteOrderDialog({
         </div>
       </div>
       <DialogActions>
-        <Button data-autofocus disabled={isSaving} onClick={onCancel}>
+        <Button data-autofocus variant="danger-subtle" disabled={isSaving} onClick={onCancel}>
           Não
         </Button>
         <Button
           className={styles.completeButton}
-          variant="primary"
+          variant="success"
           aria-label={isSaving ? 'A concluir encomenda' : 'Concluir encomenda'}
           title={isSaving ? 'A concluir encomenda' : 'Concluir encomenda'}
           disabled={isSaving}

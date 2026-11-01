@@ -4,18 +4,20 @@
   z-index: var(--z-dialog);
   display: grid;
   place-items: center;
-  padding: 18px;
-  background: rgb(77 67 57 / 56%);
+  background: var(--color-overlay);
+  padding: var(--dialog-inset-top) max(var(--dialog-margin), env(safe-area-inset-right))
+    var(--dialog-inset-bottom) max(var(--dialog-margin), env(safe-area-inset-left));
 }
 
 .panel {
   width: min(440px, 100%);
-  max-height: calc(100dvh - 36px);
   overflow: auto;
   background: var(--color-white);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
   box-shadow: var(--shadow-dialog);
+  max-height: var(--dialog-max-height);
+  min-width: 0;
+  border-radius: var(--radius);
 }
 
 .large {
@@ -26,12 +28,5 @@
 @media (max-width: 560px) {
   .backdrop {
     align-items: end;
-    padding: 12px;
-  }
-
-  .panel {
-    width: 100%;
-    max-height: calc(100dvh - 24px);
-    border-radius: 14px;
   }
 }

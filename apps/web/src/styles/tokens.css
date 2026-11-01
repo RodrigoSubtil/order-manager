@@ -1,43 +1,109 @@
 :root {
-  --color-stone: #eeefe9;
+  /* Base da marca e superficies. */
+  --color-stone: #f1eee8;
   --color-cream: #f4ede3;
   --color-sand: #e7d9cc;
   --color-taupe: #bba58e;
   --color-accent: #765f4b;
+  --color-accent-hover: #604c3b;
   --color-accent-soft: #a58e74;
   --color-white: #ffffff;
   --color-soft-white: #fbfaf7;
   --color-ink: #4d4339;
   --color-muted: #6b5c4d;
-  --color-placeholder: #a29487;
+  --color-placeholder: #7b6d60;
   --color-line: #d8c8b7;
-  --color-danger: #8b3f32;
-  --color-danger-soft: #fff7f5;
-  --color-success: #35634a;
-  --color-success-soft: #f2faf5;
+  --color-control-border: #a68c76;
+
+  /* Estados: texto, fundo suave e borda sempre em conjunto. */
+  --color-danger: #a83f3a;
+  --color-danger-hover: #8f302d;
+  --color-danger-soft: #fcece9;
+  --color-danger-border: #e5aaa3;
+  --color-warning: #99550f;
+  --color-warning-soft: #fff1dc;
+  --color-warning-border: #e2bb7e;
+  --color-success: #2f6d50;
+  --color-success-hover: #25563f;
+  --color-success-soft: #e8f4ec;
+  --color-success-border: #a5cdb4;
   --color-focus: #5b78c7;
+  --color-focus-soft: rgb(91 120 199 / 20%);
+  --color-highlight: #f6dea6;
+
+  /* Contraste invertido e sobreposicoes. */
+  --color-on-accent: var(--color-cream);
+  --color-on-accent-surface: rgb(255 255 255 / 10%);
+  --color-on-accent-surface-hover: rgb(255 255 255 / 18%);
+  --color-on-accent-border: rgb(255 255 255 / 28%);
+  --color-overlay: rgb(77 67 57 / 56%);
+  --gradient-brand: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+  --gradient-page:
+    radial-gradient(circle at top left, rgb(187 165 142 / 13%), transparent 34%),
+    linear-gradient(180deg, var(--color-white), var(--color-stone));
+  --gradient-login:
+    radial-gradient(circle at top left, rgb(187 165 142 / 20%), transparent 35%),
+    linear-gradient(135deg, var(--color-cream), var(--color-white));
+
+  /* Sombras compartilhadas; nao alteram a hierarquia das cores. */
+  --shadow-subtle: 0 1px 2px rgb(77 67 57 / 8%);
+  --shadow-control: 0 10px 24px rgb(77 67 57 / 8%);
+  --shadow-header: 0 14px 30px rgb(77 67 57 / 15%);
+  --shadow-popover: 0 18px 40px rgb(77 67 57 / 18%);
+  --shadow-login: 0 24px 70px rgb(77 67 57 / 14%);
+  --shadow-sticky: 0 -10px 24px rgb(77 67 57 / 8%);
+  --shadow-focus: 0 0 0 3px var(--color-focus-soft);
+  --shadow-selection: 0 0 0 2px rgb(118 95 75 / 16%);
   --shadow-card: 0 14px 34px rgb(77 67 57 / 9%);
   --shadow-panel: 0 16px 34px rgb(77 67 57 / 8%);
   --shadow-dialog: 0 24px 90px rgb(0 0 0 / 28%);
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 14px;
-  --radius-xl: 24px;
+  /* Raio unico de superficies e controles; circulo apenas para o spinner. */
+  --radius: 0.6rem;
+  --radius-circle: 50%;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
-  --space-5: 18px;
   --space-6: 24px;
   --space-7: 32px;
-  --font-sans:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --transition-fast: 160ms ease;
-  --content-min-width: 320px;
   --touch-target: 44px;
-  --field-icon-size: 20px;
-  --field-icon-slot-size: 34px;
-  --field-icon-inset: 4px;
+  --icon-size-sm: 16px;
+  --icon-size-md: 20px;
+  --icon-size-lg: 24px;
+  --icon-size-xl: 32px;
+  --icon-size-brand: 22px;
+  --icon-stroke: 1.8;
+  --control-height: 48px;
+  --field-content-inset: 44px;
+  --field-icon-size: var(--icon-size-md);
   --z-dropdown: 20;
   --z-dialog: 100;
+  --page-inset: var(--space-6);
+  --page-gap: var(--space-6);
+  --panel-padding: var(--space-6);
+  --orders-panel-padding: var(--space-4);
+  --dialog-margin: var(--space-6);
+  --dialog-body-padding: var(--space-6);
+  --dialog-inset-top: max(var(--dialog-margin), env(safe-area-inset-top));
+  --dialog-inset-bottom: max(var(--dialog-margin), env(safe-area-inset-bottom));
+  --dialog-max-height: calc(100dvh - var(--dialog-inset-top) - var(--dialog-inset-bottom));
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --page-inset: var(--space-3);
+    --page-gap: var(--space-4);
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --page-inset: var(--space-2);
+    --page-gap: var(--space-3);
+    --panel-padding: var(--space-4);
+    --orders-panel-padding: var(--space-3);
+    --dialog-margin: var(--space-3);
+    --dialog-body-padding: var(--space-4);
+  }
 }

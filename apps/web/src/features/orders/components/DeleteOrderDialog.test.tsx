@@ -41,7 +41,7 @@ describe('DeleteOrderDialog', () => {
     await user.click(screen.getByRole('button', { name: 'Apagar encomenda' }));
     expect(onConfirm).toHaveBeenCalledOnce();
 
-    await user.click(screen.getByRole('button', { name: 'Cancelar' }));
+    await user.click(screen.getByRole('button', { name: 'Não' }));
     expect(onCancel).toHaveBeenCalledOnce();
   });
 });

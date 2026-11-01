@@ -1,140 +1,141 @@
 .card {
   display: grid;
-  grid-template-columns: 1fr;
-  min-height: 210px;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   overflow: hidden;
   border-color: var(--color-sand);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
+  box-shadow: none;
 }
 
 .dateStrip {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 13px 20px;
-  color: var(--color-ink);
-  text-align: center;
-  background: linear-gradient(180deg, var(--color-cream), var(--color-soft-white));
-  border-bottom: 1px solid var(--color-line);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-cream);
 }
 
-.client > span {
-  color: var(--color-muted);
-  font-size: 0.76rem;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.dateStrip > span,
 .dateStrip > strong,
 .dateStrip > small {
-  display: flex;
-  width: auto;
-  min-height: 1.4rem;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: var(--space-2);
   color: var(--color-muted);
-  font-size: 1rem;
-  font-weight: 900;
-  line-height: 1.12;
-  letter-spacing: 0.03em;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.dateStrip > span {
-  justify-content: flex-start;
-}
-
-.dateStrip > small {
-  justify-content: flex-end;
+  font: var(--type-body);
 }
 
 .ticket {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   min-width: 0;
 }
 
 .head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: start;
-  padding: 18px 20px 16px;
+  gap: var(--space-4);
+  min-width: 0;
+  padding: var(--space-4);
 }
 
-.number {
-  display: inline-flex;
-  align-items: center;
+.overview {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-3);
+}
+
+.dateStrip svg {
+  flex: 0 0 auto;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+  color: currentcolor;
+}
+
+.client h2 svg {
+  flex: 0 0 auto;
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
   color: var(--color-accent);
-  font-size: 0.82rem;
-  font-weight: 900;
-  white-space: nowrap;
-}
-
-.card h2 {
-  margin-top: 4px;
-  font-size: 1.45rem;
-  line-height: 1.12;
-  overflow-wrap: anywhere;
 }
 
 .meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  margin-bottom: 12px;
-  padding-bottom: 11px;
-  border-bottom: 1px solid var(--color-sand);
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  color: var(--color-muted);
+  font: var(--type-secondary);
 }
 
-.meta span {
-  color: var(--color-muted);
-  font-size: 0.78rem;
-  font-weight: 900;
+.meta > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
-.client p {
-  margin-top: 8px;
+.number {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.client {
+  min-width: 0;
+}
+
+.card h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 0;
+  overflow-wrap: anywhere;
+  font: var(--type-title);
+}
+
+.client h2 > span {
+  min-width: 0;
+}
+
+.phone {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
   color: var(--color-muted);
-  font-size: 0.92rem;
-  font-weight: 800;
+  font: var(--type-body);
+}
+
+.phone > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.phoneIcon {
+  flex: 0 0 var(--icon-size-md);
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
 }
 
 .products {
   display: grid;
-  gap: 0;
-  margin: 0 20px 16px;
-  overflow: hidden;
-  background: var(--color-white);
-  border: 1px solid var(--color-sand);
-  border-radius: var(--radius-md);
+  min-width: 0;
+  margin: 0 var(--space-4);
 }
 
 .productGroup {
   display: grid;
   min-width: 0;
-}
-
-.productGroup + .productGroup {
   border-top: 1px solid var(--color-sand);
 }
 
 .category {
   margin: 0;
-  padding: 9px 14px;
+  padding-top: var(--space-4);
   color: var(--color-muted);
-  background: var(--color-soft-white);
-  border-bottom: 1px solid var(--color-sand);
-  font-size: 0.74rem;
-  font-weight: 900;
-  line-height: 1.25;
-  letter-spacing: 0.04em;
   text-transform: uppercase;
   overflow-wrap: anywhere;
+  font: var(--type-overline);
+  letter-spacing: var(--letter-spacing-overline);
 }
 
 .groupProducts {
@@ -144,15 +145,15 @@
 
 .product {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(96px, auto);
-  gap: 16px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) fit-content(35%);
+  align-items: baseline;
+  gap: var(--space-3);
   min-width: 0;
-  padding: 14px;
+  padding: var(--space-3) 0;
 }
 
-.groupProducts .product + .product {
-  border-top: 1px dashed var(--color-line);
+.product + .product {
+  border-top: 1px solid var(--color-sand);
 }
 
 .copy {
@@ -161,159 +162,79 @@
 
 .copy strong {
   display: block;
-  font-size: 1.02rem;
   overflow-wrap: anywhere;
+  font: var(--type-body-strong);
 }
 
 .copy small {
   display: block;
-  margin-top: 5px;
+  margin-top: var(--space-1);
   color: var(--color-muted);
-  font-size: 0.86rem;
-  font-weight: 700;
-  line-height: 1.35;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
+  font: var(--type-secondary);
 }
 
 .quantity {
-  display: grid;
-  gap: 2px;
-  max-width: 190px;
+  min-width: 0;
+  max-width: 160px;
   text-align: right;
-  font-size: 1rem;
-  font-weight: 900;
   overflow-wrap: anywhere;
-}
-
-.quantity small {
-  color: var(--color-muted);
-  font-size: 0.68rem;
-  text-transform: uppercase;
+  font: var(--type-body-strong);
 }
 
 .footer {
-  display: grid;
-  justify-items: end;
-  padding: 12px 20px 16px;
-  background: var(--color-soft-white);
+  min-width: 0;
+  margin: 0 var(--space-4);
+  padding: var(--space-4) 0;
   border-top: 1px solid var(--color-sand);
 }
 
 .actions {
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
-  gap: 8px;
+  justify-content: center;
+  gap: var(--space-2);
 }
 
-.actionButton {
-  width: 44px;
-  min-width: 44px;
-  min-height: 44px;
+.actions .actionButton {
+  flex: 0 0 var(--touch-target);
+  width: var(--touch-target);
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  padding: 0;
+  height: var(--touch-target);
+  padding-block: 0;
 }
 
-.actionButton svg {
-  width: 20px;
-  height: 20px;
+.actions .actionButton svg {
   fill: none;
   stroke: currentcolor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2;
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  stroke-width: var(--icon-stroke);
 }
 
-.actionButton .whatsAppIcon {
-  width: 22px;
-  height: 22px;
+.actions .actionButton .whatsAppIcon {
   fill: currentcolor;
   stroke: none;
+  width: var(--icon-size-brand);
+  height: var(--icon-size-brand);
 }
 
-.deleteAction {
-  color: var(--color-danger);
-}
-
-@media (max-width: 900px) {
-  .product {
-    grid-template-columns: minmax(0, 1fr) minmax(110px, auto);
-  }
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (max-width: 560px) {
-  .card {
-    min-height: 0;
-    box-shadow: 0 8px 20px rgb(77 67 57 / 8%);
-  }
-
-  .head {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 9px;
-    padding: 14px 13px;
-  }
-
-  .number {
-    font-size: 0.78rem;
-  }
-
-  .meta {
-    gap: 4px;
-  }
-
-  .meta span {
-    width: 100%;
-    font-size: 0.74rem;
-  }
-
-  .card h2 {
-    font-size: 1.3rem;
-  }
-
-  .products {
-    margin: 0 10px 10px;
-  }
-
-  .product {
-    grid-template-columns: minmax(0, 1fr) minmax(62px, auto);
-    gap: 8px;
-    align-items: start;
-    padding: 12px 10px;
-  }
-
-  .category {
-    padding: 8px 10px;
-    font-size: 0.7rem;
-  }
-
-  .copy strong {
-    font-size: 0.96rem;
-  }
-
-  .copy small {
-    font-size: 0.8rem;
-  }
-
-  .quantity {
-    align-self: center;
-    width: auto;
-    max-width: 92px;
-    text-align: right;
-    font-size: 0.9rem;
-  }
-
-  .footer {
-    padding: 10px;
-  }
-
-  .actions {
-    display: flex;
-    width: auto;
-    gap: 8px;
-  }
-
-  .actions button {
-    width: 46px;
-    min-height: 46px;
-    padding: 0;
+  .actions .printAction {
+    display: none;
   }
 }

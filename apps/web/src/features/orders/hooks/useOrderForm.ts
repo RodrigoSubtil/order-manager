@@ -11,6 +11,7 @@ import {
 } from '../../../shared/lib/domain';
 import { saveOrder as saveOrderInSupabase } from '../../../shared/lib/supabaseData';
 import { getFormSubmissionError } from '../lib/formSubmissionError';
+import { resolveScanCategories } from '../lib/resolveScanCategories';
 import {
   createEmptyOrderFormValues,
   createEmptyOrderItem,
@@ -18,6 +19,7 @@ import {
   orderToFormValues,
 } from '../lib/orderFormMappers';
 import { orderSchema, type OrderFormValues } from '../schemas/orderSchema';
+import { scanDraftToOrderValues, type ScanDraft } from '../schemas/scanDraft';
 
 type UseOrderFormOptions = {
   catalogProducts: CatalogProduct[];
@@ -62,6 +64,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
   } = useFieldArray({ control: methods.control, keyName: 'fieldKey', name: 'items' });
   const [openPicker, setOpenPicker] = useState<OpenOrderPicker>(null);
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const [scanDraft, setScanDraft] = useState<ScanDraft | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [savedOrderConfirmation, setSavedOrderConfirmation] =
     useState<SavedOrderConfirmation | null>(null);
@@ -122,6 +125,19 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     pendingRequest.current = null;
     methods.reset(createEmptyOrderFormValues());
     setEditingOrder(null);
+    setScanDraft(null);
+    setAppError('');
+    setAppSuccess('');
+    setSavedOrderConfirmation(null);
+    closePickers();
+    setIsModalOpen(true);
+  }
+  function openScanDraft(draft: ScanDraft) {
+    const resolvedDraft = resolveScanCategories(draft, catalogProducts);
+    pendingRequest.current = null;
+    methods.reset(scanDraftToOrderValues(resolvedDraft));
+    setEditingOrder(null);
+    setScanDraft(resolvedDraft);
     setAppError('');
     setAppSuccess('');
     setSavedOrderConfirmation(null);
@@ -133,6 +149,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     setIsModalOpen(false);
     methods.reset(createEmptyOrderFormValues());
     setEditingOrder(null);
+    setScanDraft(null);
     setSavedOrderConfirmation(null);
     closePickers();
   }
@@ -140,6 +157,7 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     pendingRequest.current = null;
     methods.reset(orderToFormValues(order));
     setEditingOrder(order);
+    setScanDraft(null);
     setAppError('');
     setAppSuccess('');
     setSavedOrderConfirmation(null);
@@ -240,12 +258,14 @@ export function useOrderForm({ catalogProducts, setAppError, setAppSuccess }: Us
     methods,
     openCategoryPickerId,
     openNewOrderModal,
+    openScanDraft,
     openProductPickerId,
     openQuantityPickerId,
     openUnitPickerId,
     removeProductLine,
     returnToOrders,
     saveOrder,
+    scanDraft,
     savedOrderMessage: savedOrderConfirmation?.message ?? '',
     setIsModalOpen,
     setIsResponsiblePickerOpen,
