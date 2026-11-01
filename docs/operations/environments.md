@@ -6,6 +6,8 @@ Configuração verificada em **05/10/2026**. As contagens abaixo são um retrato
 
 O utilizador testou a versão **1.1.0** em homologação e aprovou a promoção para `main` e produção em 01/11/2026, incluindo IA e novo design. A promoção mantém **1.1.0** e exige um novo build Production com as variáveis de produção. O banco recebeu a migration de limites e a função de IA separadamente; a publicação do frontend não as instala. Consulte [release](release.md) para a preparação e a evidência da publicação. Não aumentar a versão sem instrução explícita do utilizador.
 
+A promoção foi concluída pela [PR #12](https://github.com/RodrigoSubtil/order-manager/pull/12), commit `6b42492`. O deployment Production ficou Ready e o domínio público mostrou `v1.1.0`, com o bundle apontando somente para o Supabase de produção. Os dados existentes foram preservados. O [registo de release](release.md) contém deployment, testes e limites da validação.
+
 ## Endereços e identidade dos ambientes
 
 | Configuração                   | Produção                                                                | Homologação                                                                                 |
