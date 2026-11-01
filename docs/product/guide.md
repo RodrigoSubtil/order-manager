@@ -1,4 +1,6 @@
-# Guia de utilização · v1.1.1
+# Guia de utilização · v1.1.0 (desenvolvimento e homologação)
+
+Este guia descreve o ciclo 1.1.0, com IA e novo design, em desenvolvimento e homologação. A produção permanece em 1.0.0 até aprovação explícita da promoção.
 
 ## Entrar e consultar
 

@@ -1,6 +1,6 @@
 # Style guide do Order Manager
 
-Referência para manter a interface consistente no login, painel, encomendas, formulários, digitalização, gestão e diálogos. Cada capítulo define uma parte do sistema e informa o estado da sua aplicação.
+Referência da versão **1.1.0**, com novo design aplicado em desenvolvimento e publicado somente em homologação. A produção permanece em **1.0.0**; este style guide não comprova nem autoriza a promoção do design para o site real. Cada capítulo define uma parte do sistema e informa o estado da sua aplicação.
 
 ## Capítulos
 

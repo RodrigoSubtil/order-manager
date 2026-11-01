@@ -1,6 +1,13 @@
-# Release e operação · v1.1.1
+# Release e operação · ciclo v1.1.0
 
-O número de versão do site vem de [`apps/web/package.json`](../../apps/web/package.json), aparece abaixo de **Entrar** no login e na mesma linha inferior da marca Order Manager no cabeçalho e deve aumentar apenas quando uma nova versão for preparada. Atualize também este registo. A versão 1.0.0 é a primeira versão destinada ao uso oficial.
+## Estado atual · 01/11/2026
+
+- **Desenvolvimento e homologação: 1.1.0**, ciclo que reúne a digitalização por IA e o novo design. Os ajustes e as republicações de homologação permanecem nesta versão.
+- **Produção e main: 1.0.0**, sem promoção da IA ou do novo design deste ciclo.
+- O utilizador testa homologação e dá aprovação explícita antes de qualquer promoção para main e deployment Production. Não aumentar a numeração por iniciativa do agente.
+- A numeração 1.1.1 exibida anteriormente em homologação foi aplicada sem aprovação e fica corrigida para 1.1.0. A preparação local de 1.1.2 também foi cancelada antes de qualquer push ou publicação. Esses rótulos não representam releases aprovadas.
+
+O número de versão do site vem de [`apps/web/package.json`](../../apps/web/package.json), aparece abaixo de **Entrar** no login e na mesma linha inferior da marca Order Manager no cabeçalho e só deve aumentar mediante instrução explícita do utilizador para uma nova versão. Atualize também este registo. A versão 1.0.0 é a primeira versão destinada ao uso oficial.
 
 ## Preparação da release
 
@@ -24,9 +31,17 @@ Rollback de frontend: promova um deployment anterior conhecido e valide-o. Rollb
 
 ## Registo de versões
 
-### 1.1.1 · consistência da interface e conferência direta · 12/10/2026
+### 1.1.0 · telefone compacto e documentação dos ambientes · 01/11/2026
 
-Destino autorizado: **somente homologacao**. A versão central foi atualizada para 1.1.1. Raio global de 0,6rem; Salvar/Concluir em verde forte, Apagar em vermelho forte, WhatsApp e + em verde suave, Editar em amarelo suave. Cada produto tem cartão creme e lixeira vermelha suave de 44 px, com + do mesmo tamanho. Títulos de seção ficam sem fundo e dias indisponíveis do calendário não recebem caixa.
+Destino autorizado: **somente homologacao**, para teste do utilizador antes de qualquer promoção para main ou produção. O prefixo de país mantém 104 px e o número ocupa todo o espaço restante, com intervalo de 8 px. Ambos permanecem lado a lado em todas as larguras. O seletor conserva texto de 16 px e toda a superfície de 104 × 48 px abre o menu; até 390 px, o ícone decorativo do número é ocultado para ampliar a escrita.
+
+A revisão local do formulário normal e da conferência manteve os dois campos na mesma linha, sem rolagem horizontal. O seletor foi conferido por clique e teclado nas larguras de 320 a 1280 px. Esta publicação não altera banco, migrations, Edge Function ou secrets. O diagnóstico da sessão inválida confirmou uma sessão anterior inexistente e aceitação de uma sessão nova pelo endpoint da IA, sem fotografia nem chamada paga. A leitura real continua a ser testada pelo utilizador.
+
+Validação local aprovada nesta revisão: instalação limpa com o lockfile, formatação, lint, tipos, cobertura exigida, 189 testes em 42 arquivos, cinco testes simulados da função e build. Os oito cenários de navegador (formulário normal e conferência em 320, 390, 768 e 1280 px) passaram no alinhamento do telefone, inclusão/remoção de produtos e Cancelar, sem rolagem horizontal. A biblioteca de validação Zod foi fixada em 4.6.6 para corrigir o consumo excessivo de memória descrito em [GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5), mantendo a versão do produto em 1.1.0. Os resultados do CI e do deployment devem ser conferidos na PR desta revisão de 1.1.0. A aprovação do utilizador em homologação é necessária antes da promoção para main e produção.
+
+### 1.1.0 · consistência da interface e conferência direta · 12/10/2026
+
+Destino autorizado: **somente homologacao**. Esta revisão pertence ao ciclo 1.1.0; a numeração 1.1.1 aplicada anteriormente não foi aprovada e foi corrigida. Raio global de 0,6rem; Salvar/Concluir em verde forte, Apagar em vermelho forte, WhatsApp e + em verde suave, Editar em amarelo suave. Cada produto tem cartão creme e lixeira vermelha suave de 44 px, com + do mesmo tamanho. Títulos de seção ficam sem fundo e dias indisponíveis do calendário não recebem caixa.
 
 Os modais não têm X. Confirmações de apagar, concluir e sair usam Não; digitalização e impressão usam Cancelar. O formulário conserva a lixeira vermelha e o visto verde. A confirmação de exclusão destaca o cliente num resumo verde suave, com retorno no rodapé. O resumo dos filtros usa ícones sem caixa e mantém contagem, data e área numa linha compacta. Ao terminar a leitura com IA, abrir diretamente o formulário de conferência; salvar continua dependendo da ação humana. Cancelar durante a leitura ignora respostas tardias e libera a câmara.
 

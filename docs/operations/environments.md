@@ -2,6 +2,10 @@
 
 Configuração verificada em **05/10/2026**. As contagens abaixo são um retrato da conclusão da preparação, não valores permanentes. Consulte a [auditoria inicial](homologacao-audit-2026-10-05.md) e a [validação final](readiness-2026-10-05.md).
 
+## Estado do ciclo em 01/11/2026
+
+Desenvolvimento e homologação pertencem à versão **1.1.0**, que inclui a IA e o novo design. As publicações e os ajustes deste ciclo ocorreram somente em homologação. A produção e `main` permanecem na base **1.0.0**, sem estas alterações. A sequência autorizada é validar localmente → publicar em `homologacao` → teste e aprovação do utilizador → somente então promover para `main` e executar o build Production. Não aumentar a versão sem instrução explícita do utilizador.
+
 ## Endereços e identidade dos ambientes
 
 | Configuração                   | Produção                                                                | Homologação                                                                                 |
