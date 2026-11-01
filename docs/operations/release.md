@@ -2,7 +2,7 @@
 
 ## Estado atual · 01/11/2026
 
-- **Versão aprovada para main e produção: 1.1.0**, ciclo que reúne a digitalização por IA e o novo design.
+- **Versão publicada em main e produção: 1.1.0**, ciclo que reúne a digitalização por IA e o novo design. O domínio de produção mostrou `v1.1.0` após o build Production.
 - O utilizador confirmou que os testes em homologação passaram e autorizou expressamente a promoção e o deployment Production em 01/11/2026, mantendo 1.1.0.
 - A promoção parte de `homologacao` no commit `eea568daa6454288a82c2b633c5e6e64ab5d3c7c`, publicado pela [PR #11](https://github.com/RodrigoSubtil/order-manager/pull/11). A preparação acrescenta apenas documentação ao código testado. Não aumentar a numeração por iniciativa do agente.
 - A numeração 1.1.1 exibida anteriormente em homologação foi aplicada sem aprovação e fica corrigida para 1.1.0. A preparação local de 1.1.2 também foi cancelada antes de qualquer push ou publicação. Esses rótulos não representam releases aprovadas.
@@ -31,15 +31,15 @@ Rollback de frontend: promova um deployment anterior conhecido e valide-o. Rollb
 
 ## Registo de versões
 
-### 1.1.0 · promoção aprovada para produção · 01/11/2026
+### 1.1.0 · publicação em produção · 01/11/2026
 
-O utilizador testou homologação e aprovou IA, novo design e telefone compacto para produção. Esta promoção mantém `apps/web/package.json` em **1.1.0**, sem nova versão de patch. O frontend deve ser recompilado pelo Vercel em Production, com o Supabase `otwriruoqqwjwzzgicru`; não reutilizar o bundle Preview de homologação.
+O utilizador testou homologação e aprovou IA, novo design e telefone compacto para produção. A [PR #12](https://github.com/RodrigoSubtil/order-manager/pull/12) foi integrada em `main` pelo commit `6b4249217e30c8eccefc65661c9ceca1e9a1583c`, mantendo `apps/web/package.json` em **1.1.0**, sem nova versão de patch. O Vercel gerou o [deployment Production `2nz7CZwhNnxGX4iAKZAmwkhYfWjf`](https://vercel.com/rodrigo-freitas-subtils-projects/order-manager/2nz7CZwhNnxGX4iAKZAmwkhYfWjf), confirmado Ready. O domínio público mostrou `v1.1.0`; o bundle usa somente o Supabase de produção `otwriruoqqwjwzzgicru`, inclui a digitalização e preserva o CSS do prefixo de 104 px. O bundle Preview de homologação não foi reutilizado.
 
 Preparação do backend executada no projeto de produção: backup diário de 31/10/2026 às 23:24:13 UTC confirmado antes da alteração; migration `20261008190245_order_scan_limits.sql` aplicada e histórico alinhado com o arquivo canónico; função `interpret-order` versão 1 publicada com o mesmo código testado em homologação. A autenticação ocorre no handler antes de reservar orçamento e chamar a OpenAI. A tabela privada tem RLS, sem acesso de `anon`/`authenticated`, e as duas RPCs de limites são exclusivas de `service_role`.
 
-As contagens antes e depois da migration foram iguais: zero encomendas e itens, quatro clientes, nove responsáveis, 216 produtos e uma membership. Nenhum reset ou cópia de dados de homologação foi executado. Os limites existentes permanecem: uma análise simultânea por empresa, 50 por dia e orçamento estimado de US$ 1 por mês, com revisão humana antes de Salvar. A chave OpenAI é configurada diretamente pelo utilizador nos secrets de produção e não é copiada de homologação.
+As contagens antes e depois da migration e da publicação foram iguais: zero encomendas e itens, quatro clientes, nove responsáveis, 216 produtos e uma membership. Nenhum reset ou cópia de dados de homologação foi executado. Os limites existentes permanecem: uma análise simultânea por empresa, 50 por dia e orçamento estimado de US$ 1 por mês, com revisão humana antes de Salvar. O utilizador confirmou a criação e o salvamento da chave OpenAI diretamente nos secrets de produção; a chave não foi copiada de homologação.
 
-Validação da base promovida: instalação limpa, `verify:release`, 189 testes em 42 arquivos, cinco testes simulados da função e checks quality/database aprovados na PR #11 e no push para homologação. O utilizador aprovou o site de homologação após esta publicação. Confirmar também os checks da PR de promoção, o deployment Ready, o commit servido, a versão no domínio de produção e o destino Supabase do bundle. Testes HTTP de autenticação/origem não fazem uma leitura paga nem comprovam a qualidade de novas fotografias ou a impressão física.
+Validação da base promovida: instalação limpa, `verify:release`, 189 testes em 42 arquivos, cinco testes simulados da função e checks quality/database aprovados na PR #11 e no push para homologação. O utilizador aprovou o site de homologação após esta publicação. A PR de promoção passou nos quatro checks; o [Quality #55 de main](https://github.com/RodrigoSubtil/order-manager/actions/runs/41349900087) também passou nos jobs quality e database. Seis verificações HTTP de produção passaram: preflight permitido 204, origem de homologação e origem indevida 403, GET 405, ausência de sessão e sessão inválida 401. Nenhuma fotografia, leitura paga ou encomenda de teste foi criada pelo agente em produção. A leitura real com a nova chave e a impressão física continuam dependendo do teste do utilizador; os testes HTTP não comprovam essas etapas.
 
 ### 1.1.0 · telefone compacto e documentação dos ambientes · 01/11/2026
 

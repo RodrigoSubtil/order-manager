@@ -32,7 +32,7 @@ A documentação para utilizadores, operadores e manutenção começa em [docs/R
 
 ## Ambientes
 
-- [Produção](https://order-manager-rs.vercel.app/): promoção aprovada da **1.1.0**, branch `main`, banco Supabase de produção. Exige build Production com as suas próprias variáveis.
+- [Produção](https://order-manager-rs.vercel.app/): **1.1.0 publicada em 01/11/2026**, branch `main`, build Production e banco Supabase de produção. Consulte o [registo da publicação](docs/operations/release.md).
 - [Homologação](https://homologacao-order-manager-rs.vercel.app/): ciclo **1.1.0** de IA e redesign, branch `homologacao`, banco Supabase separado, utilizador `pastelaria_teste`. Ajustes desta fase mantêm 1.1.0; publicação em homologação não significa publicação em produção.
 
 Consulte [ambientes e publicação segura](docs/operations/environments.md) para project refs, variáveis, acessos sem senhas e o caminho de PR de homologação para produção. A [auditoria de 05/10/2026](docs/operations/homologacao-audit-2026-10-05.md) registra configuração, testes reais, resets autorizados e limites. Deployments normais preservam dados e numeração.
